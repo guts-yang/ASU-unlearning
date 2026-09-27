@@ -42,7 +42,14 @@ def main():
             learning_rate=args.lr,
             max_len=args.max_len,
             tokenizer_dir=args.tokenizer_dir,
-            resume_from_checkpoint=args.resume_from_checkpoint
+            resume_from_checkpoint=args.resume_from_checkpoint,
+            attention_temp=args.attention_temp,
+            layers_id=args.layers_id,
+            alpha=args.alpha,
+            gradient_accumulation_steps=args.gradient_accumulation_steps,
+            optim=args.optim,
+            gradient_checkpointing=args.gradient_checkpointing,
+            save_strategy=args.save_strategy,
         )
 
     return
@@ -104,6 +111,13 @@ def get_args():
     parser.add_argument(
         '--layers_id', type=list, default=None,
         help="List of layer IDs for ASU if algo is ASU."
+    )
+    parser.add_argument('--gradient_accumulation_steps', type=int, default=1)
+    parser.add_argument('--optim', type=str, default='adamw_torch')
+    parser.add_argument('--gradient_checkpointing', action='store_true')
+    parser.add_argument(
+        '--save_strategy', type=str, default='epoch',
+        choices=['no', 'epoch', 'steps'],
     )
     args = parser.parse_args()
 

@@ -57,7 +57,8 @@ def load_model(
     model_dir: str,
     model_name: str | None = None,
     quantization_config: any = None,
-    reinforced_model_dir: str | None = None
+    reinforced_model_dir: str | None = None,
+    device_map: any = 'auto',
 ) -> AutoModelForCausalLM:
     def extract_alpha(s):
         pattern = r'alpha=([+-]?\d*\.\d+|[+-]?\d+)'
@@ -93,7 +94,7 @@ def load_model(
         model_dir,
         quantization_config=quantization_config,
         torch_dtype=torch.bfloat16,
-        device_map='auto'
+        device_map=device_map
     )
     return model
 
@@ -101,14 +102,15 @@ def load_ref_model(
     model_dir: str,
     model_name: str | None = None,
     quantization_config: any = None,
-    reinforced_model_dir: str | None = None
+    reinforced_model_dir: str | None = None,
+    device_map: any = 'auto',
 ) -> LlamaForCausalLM:
 
     model = LlamaForCausalLM.from_pretrained(
         model_dir,
         quantization_config=quantization_config,
         torch_dtype=torch.bfloat16,
-        device_map='auto'
+        device_map=device_map
     )
     return model
 
@@ -129,11 +131,13 @@ def load_model_and_tokenizer(
     tokenizer_dir: str | None = None,
     add_pad_token: bool = True,
     quantization_config: any = None,
-    reinforced_model_dir: str | None = None
+    reinforced_model_dir: str | None = None,
+    device_map: any = 'auto',
 ) -> Tuple[AutoModelForCausalLM, AutoTokenizer]:
     model = load_model(
         model_dir, model_name, quantization_config,
-        reinforced_model_dir=reinforced_model_dir
+        reinforced_model_dir=reinforced_model_dir,
+        device_map=device_map,
     )
     tokenizer = (load_tokenizer(tokenizer_dir, add_pad_token)
                  if tokenizer_dir is not None

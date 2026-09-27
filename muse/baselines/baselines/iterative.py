@@ -1,6 +1,7 @@
 from .utils import load_model_and_tokenizer, load_model, load_ref_model
 from .dataset import ForgetRetainDataset
 
+import os
 import torch
 import torch.nn.functional as F
 from torch.cuda import device_count
@@ -19,21 +20,32 @@ def unlearn(
     learning_rate=1e-5,
     max_len: int = 4096,
     tokenizer_dir: str | None = None,
-    resume_from_checkpoint: bool = False
+    resume_from_checkpoint: bool = False,
+    attention_temp: float = 2.3,
+    layers_id: list[int] | None = None,
+    alpha: float = 1.0,
+    gradient_accumulation_steps: int = 1,
+    optim: str = 'adamw_torch',
+    gradient_checkpointing: bool = False,
+    save_strategy: str = 'epoch',
 ):
     if 'gd' in loss_type:
         assert retain_data_file is not None, "Retain data must be specified for grad_diff."
 
+    local_rank = int(os.environ.get("LOCAL_RANK", "0"))
+    device_map = {"": local_rank}
+
     model, tokenizer = load_model_and_tokenizer(
         model_dir,
-        tokenizer_dir=tokenizer_dir
+        tokenizer_dir=tokenizer_dir,
+        device_map=device_map,
     )
 
     if 'ASU' in loss_type:
-        ref_model = load_ref_model(model_dir)
+        ref_model = load_ref_model(model_dir, device_map=device_map)
     else:
         ref_model = (
-            load_model(model_dir)
+            load_model(model_dir, device_map=device_map)
             if 'npo' in loss_type or 'kl' in loss_type
             else None
         )
@@ -51,12 +63,16 @@ def unlearn(
     training_args = transformers.TrainingArguments(
         output_dir=out_dir,
         per_device_train_batch_size=per_device_batch_size,
+        gradient_accumulation_steps=gradient_accumulation_steps,
         learning_rate=learning_rate,
-        save_strategy='epoch',  # Save every epoch
+        save_strategy=save_strategy,
         num_train_epochs=epochs,
-        optim='adamw_torch',
+        optim=optim,
         lr_scheduler_type='constant',
         bf16=True,
+        gradient_checkpointing=gradient_checkpointing,
+        gradient_checkpointing_kwargs={"use_reentrant": False} if gradient_checkpointing else None,
+        ddp_find_unused_parameters=False,
         report_to='none'        # Disable wandb
     )
 
@@ -67,7 +83,10 @@ def unlearn(
         train_dataset=dataset,
         args=training_args,
         data_collator=dataset.get_collate_fn(),
-        loss_type=loss_type
+        loss_type=loss_type,
+        attention_temp=attention_temp,
+        layers_id=layers_id,
+        alpha=alpha,
     )
     model.config.use_cache = False  # silence the warnings.
     trainer.train(resume_from_checkpoint=resume_from_checkpoint)
@@ -85,22 +104,24 @@ class IterativeUnlearner(Trainer):
                  beta: float = 0.1,
                  attention_temp: float = 2.5,
                  layers_id: list[int] | None = None,
+                 alpha: float = 1.0,
                  **kwargs):
         self.loss_type = loss_type
         self.ref_model = ref_model
         self.beta = beta    # Only relevant when `'po' in self.loss_type`
+        self.alpha = alpha  # Forget-loss weight for ASU
 
         self.attention_temp = attention_temp  # Only relevant for ASU
         self.layers_id = layers_id  # Only relevant for ASU
 
         if ref_model is not None:
-            assert 'po' in self.loss_type or 'kl' in self.loss_type
+            assert 'po' in self.loss_type or 'kl' in self.loss_type or 'ASU' in self.loss_type
             ref_model = ref_model.eval()
 
         super().__init__(*args, **kwargs)
 
 
-    def compute_loss(self, model, x, return_outputs=False):
+    def compute_loss(self, model, x, return_outputs=False, num_items_in_batch=None):
         """Source: https://github.com/licong-lin/negative-preference-optimization/blob/main/synthetic/mymodel.py
         """
         
@@ -163,7 +184,7 @@ class IterativeUnlearner(Trainer):
             kl_div = F.kl_div(log_probs, ref_log_probs, reduction='none',log_target=True).sum(-1)
             loss_mask = (x_f['labels'][:, 1:] != -100).float()
             kl_f = (kl_div * loss_mask).sum() / loss_mask.sum()
-            loss += kl_f
+            loss += self.alpha * kl_f
         else:
             raise NotImplementedError("Cannot infer the given loss type.")
 

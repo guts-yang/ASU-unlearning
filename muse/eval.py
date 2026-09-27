@@ -1,10 +1,22 @@
-from .metrics.verbmem import eval as eval_verbmem
-from .metrics.privleak import eval as eval_privleak
-from .metrics.knowmem import eval as eval_knowmem
-from .utils import load_model, load_tokenizer, write_csv, read_json, write_json
-from .constants import SUPPORTED_METRICS, CORPORA, LLAMA_DIR, DEFAULT_DATA, AUC_RETRAIN
-
 import os
+import sys
+from pathlib import Path
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from metrics.verbmem import eval as eval_verbmem
+    from metrics.privleak import eval as eval_privleak
+    from metrics.knowmem import eval as eval_knowmem
+    from utils import load_model, load_tokenizer, write_csv, read_json, write_json
+    from constants import SUPPORTED_METRICS, CORPORA, LLAMA_DIR, DEFAULT_DATA, AUC_RETRAIN
+else:
+    from .metrics.verbmem import eval as eval_verbmem
+    from .metrics.privleak import eval as eval_privleak
+    from .metrics.knowmem import eval as eval_knowmem
+    from .utils import load_model, load_tokenizer, write_csv, read_json, write_json
+    from .constants import SUPPORTED_METRICS, CORPORA, LLAMA_DIR, DEFAULT_DATA, AUC_RETRAIN
+
+import torch
 from transformers import LlamaForCausalLM, LlamaTokenizer
 from typing import List, Dict, Literal
 from pandas import DataFrame
@@ -75,7 +87,8 @@ def eval_model(
         if temp_dir is not None:
             write_json(auc, os.path.join(temp_dir, "privleak/auc.json"))
             write_json(log, os.path.join(temp_dir, "privleak/log.json"))
-        out['privleak'] = (auc[privleak_auc_key] - AUC_RETRAIN[privleak_auc_key]) / AUC_RETRAIN[privleak_auc_key] * 100
+        retrain_auc = AUC_RETRAIN[corpus][privleak_auc_key]
+        out['privleak'] = (auc[privleak_auc_key] - retrain_auc) / retrain_auc * 100
 
     # 3. knowmem_f
     if 'knowmem_f' in metrics:
@@ -134,8 +147,15 @@ def load_then_eval_models(
     # Run evaluation
     out = []
     for model_dir, name in zip(model_dirs, names):
-        model = load_model(model_dir)
+        model = load_model(
+            model_dir,
+            torch_dtype=torch.bfloat16,
+            device_map={"": 0},
+        )
+        model.eval()
         tokenizer = load_tokenizer(tokenizer_dir)
+        if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.eos_token
         res = eval_model(
             model, tokenizer, metrics, corpus,
             temp_dir=os.path.join(temp_dir, name)
@@ -154,5 +174,9 @@ if __name__ == '__main__':
     parser.add_argument('--corpus', type=str, required=True, choices=CORPORA)
     parser.add_argument('--out_file', type=str, required=True)
     parser.add_argument('--metrics', type=str, nargs='+', default=SUPPORTED_METRICS)
+    parser.add_argument(
+        '--temp_dir', type=str, default='temp',
+        help='Directory for intermediate metric logs.',
+    )
     args = parser.parse_args()
     load_then_eval_models(**args)
