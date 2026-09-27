@@ -41,3 +41,4 @@ hf_cache/
 # Experiment workspace artifacts. Scripts, manifests, and paths.env stay tracked.
 workspace/results/
 workspace/logs/
+/Right-to-be-forgotten/outputs

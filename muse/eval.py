@@ -179,4 +179,4 @@ if __name__ == '__main__':
         help='Directory for intermediate metric logs.',
     )
     args = parser.parse_args()
-    load_then_eval_models(**args)
+    load_then_eval_models(**vars(args))
