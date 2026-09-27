@@ -34,6 +34,8 @@ tensorboard/
 
 # Data/model downloads
 data/
+!workspace/leak-resistant-unlearning/data/
+!workspace/leak-resistant-unlearning/data/**
 datasets/
 hf_cache/
 .cache/huggingface/
