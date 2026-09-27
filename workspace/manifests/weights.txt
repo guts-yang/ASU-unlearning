@@ -8,4 +8,5 @@ madhurjindal/autonlp-Gibberish-Detector-492513457	local	/root/autodl-tmp/hugging
 NousResearch/Llama-2-7b-hf	tokenizer_only	/root/autodl-tmp/huggingface/hub/models--NousResearch--Llama-2-7b-hf/snapshots/8efe6c9b93655b934e27bd9981e3ec13e55aee9d
 locuslab/tofu_ft_llama2-7b	local	/root/autodl-tmp/huggingface/hub/models--locuslab--tofu_ft_llama2-7b/snapshots/8fa500e8f345f1dd9cfe95bb4689878c944c9cbd
 NousResearch/Llama-2-7b-chat-hf	local	/root/autodl-tmp/huggingface/hub/models--NousResearch--Llama-2-7b-chat-hf/snapshots/351844e75ed0bcbbe3f10671b3c808d2b83894ee
-meta-llama/Meta-Llama-3-8B-Instruct	failed	-
+NousResearch/Meta-Llama-3-8B-Instruct	local	/root/autodl-tmp/huggingface/hub/models--NousResearch--Meta-Llama-3-8B-Instruct/snapshots/53346005fb0ef11d3b6a83b12c895cca40156b6c
+meta-llama/Meta-Llama-3-8B-Instruct	gated	-

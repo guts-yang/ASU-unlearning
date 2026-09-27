@@ -1,6 +1,6 @@
 # model Config
 model_family: llama3-8b
-model_path: meta-llama/Meta-Llama-3-8B-Instruct
+model_path: NousResearch/Meta-Llama-3-8B-Instruct
 
 use_LoRA: false
 LoRA:

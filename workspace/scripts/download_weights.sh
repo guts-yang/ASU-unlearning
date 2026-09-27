@@ -33,6 +33,9 @@ REQUIRED = [
     "NousResearch/Llama-2-7b-chat-hf",
 ]
 OPTIONAL = [
+    "NousResearch/Meta-Llama-3-8B-Instruct",
+]
+GATED = [
     "meta-llama/Meta-Llama-3-8B-Instruct",
 ]
 ALREADY = [
@@ -83,7 +86,7 @@ def snapshot_path(repo_id):
 
 
 lines = ["repo_id\tstatus\tsnapshot_path"]
-for repo_id in ALREADY + REQUIRED + OPTIONAL:
+for repo_id in ALREADY + REQUIRED + OPTIONAL + GATED:
     path = snapshot_path(repo_id)
     weight_files = []
     if path is not None:
@@ -93,6 +96,8 @@ for repo_id in ALREADY + REQUIRED + OPTIONAL:
             weight_files.append(index)
     if repo_id in failures:
         status = "failed"
+    elif repo_id in GATED and not weight_files:
+        status = "gated"
     elif weight_files:
         status = "local"
     elif path is not None:
