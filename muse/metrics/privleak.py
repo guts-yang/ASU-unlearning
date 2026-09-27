@@ -76,8 +76,7 @@ def eval(
     log['holdout'] = eval_data(holdout_data, model, tokenizer)
 
     auc = {}
-    ppl_types = list(log['forget'].keys())
-    ppl_types.remove('text')
+    ppl_types = [key for key in log['forget'][0].keys() if key != 'text']
     for split0 in ['forget', 'retain', 'holdout']:
         for split1 in ['forget', 'retain', 'holdout']:
             log0, log1 = log[split0], log[split1]

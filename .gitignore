@@ -39,6 +39,8 @@ hf_cache/
 .cache/huggingface/
 
 # Experiment workspace artifacts. Scripts, manifests, and paths.env stay tracked.
-workspace/results/
+# Dated result tables under workspace/results/YYYY-MM-DD/ are tracked.
+workspace/results/*
+!workspace/results/2026-09-27/
 workspace/logs/
-/Right-to-be-forgotten/outputs
+Right-to-be-forgotten/outputs/
