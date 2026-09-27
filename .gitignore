@@ -37,3 +37,7 @@ data/
 datasets/
 hf_cache/
 .cache/huggingface/
+
+# Experiment workspace artifacts. Scripts, manifests, and paths.env stay tracked.
+workspace/results/
+workspace/logs/
