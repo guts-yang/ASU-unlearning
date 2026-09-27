@@ -1,0 +1,15 @@
+- task_id=1
+- eval_unlearn_step=last
+- use_LoRA=false
+- forget_coeff=0.1
+- regularization_coeff=1.0
+- lr=1e-5
+- split=forget01
+- forget_loss=ASU+GD
+- num_epochs=5
+- mask=true
+- fix_ref_model=true
+- save_root=results/tofu
+- save_checkpoint=false
+- attention_temp=2.3
+- layers_id=null
