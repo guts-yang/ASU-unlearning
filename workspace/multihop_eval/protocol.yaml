@@ -1,0 +1,88 @@
+# Frozen before any ASU run on these probes.
+# Do not change metrics or hyperparameters after seeing multi-hop scores.
+
+leak_definition:
+  unit: question
+  counts_as_leak_iff:
+    - every supporting single-hop was correct before unlearning
+    - every supporting single-hop is incorrect after unlearning
+    - the multi-hop answer is still correct
+  supports_must_belong_to_forget_set: true
+  report_by: reasoning_type
+  reasoning_types:
+    - chain_implication
+    - contrapositive_reasoning
+    - disjunctive_elimination
+    - identity_substitution
+    - instance_subsumption
+    - multi_element_intersection
+  both_drop_means: capability collapse, not a multi-hop leak
+  neither_drops_means: unlearning did not happen
+
+scoring:
+  primary: answer_or_alias_contained
+  case_insensitive: true
+  secondary: rougeL
+  do_not_switch_metrics_after_seeing_results: true
+  decoding:
+    do_sample: false
+    max_new_tokens: 32
+    prompt_template: "Question: {question}\nAnswer:"
+  matches: muse/metrics/knowmem.py
+
+probe_text:
+  books:
+    question: rewritten_question
+    answer: rewritten_answer
+  mquake:
+    single_hop_question: question
+    multi_hop_question: questions[0]
+    answer: answer
+    aliases: answer_alias
+  multi_hop_questions_never_enter_forget_text: true
+
+recipes:
+  books:
+    loss: ASU_klr
+    attention_temp: 2.35
+    alpha: 0.001
+    epochs: 10
+    lr: 1.0e-5
+    max_len: 2048
+    per_device_batch_size: 1
+    gradient_accumulation_steps: 16
+    forget_file: corpora/books/forget.txt
+    retain_file: corpora/books/retain1.txt
+    target_model: muse-bench/MUSE-Books_target
+    tokenizer: NousResearch/Llama-2-7b-hf
+    source_script: workspace/scripts/muse_asu.sh
+    comparable_to_run: 2026-09-27 muse books ASU_klr
+  mquake:
+    loss: ASU_klr
+    # Copied from the books recipe. Not searched against multi-hop accuracy.
+    attention_temp: 2.35
+    alpha: 0.001
+    epochs: 10
+    lr: 1.0e-5
+    max_len: 2048
+    per_device_batch_size: 1
+    gradient_accumulation_steps: 16
+    base_model: NousResearch/Llama-2-7b-chat-hf
+    tokenizer: NousResearch/Llama-2-7b-chat-hf
+    forget_file: mquake/forget.txt
+    retain_file: mquake/retain.txt
+    comparable_to_2026_09_27_muse_or_tofu: false
+    note: >
+      Different base model and corpus from the 2026-09-27 MUSE and TOFU runs.
+      Do not place these numbers beside those results as the same reproduction.
+
+subset_rule:
+  keep_case_iff: single-hop and multi-hop both correct on the model before unlearning
+  require_all_six_reasoning_types: true
+  subset_files_generated: false
+  reason: pre-unlearning model filter has not been run
+
+pre_asu_filter:
+  ran: false
+  script: scripts/filter_pre_asu.py
+  reason: MUSE-Books_target weights are not on this machine; 7B weights were not downloaded

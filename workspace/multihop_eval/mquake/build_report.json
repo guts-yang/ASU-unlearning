@@ -1,0 +1,20 @@
+{
+  "forget_sentences": 1828,
+  "forget_entities": 1910,
+  "single_hop_cases": 3000,
+  "single_hop_overlapping_forget_entities": 3000,
+  "retain_sentences": 0,
+  "eval_singlehop": 1828,
+  "eval_multihop": 3000,
+  "multi_hop_by_type": {
+    "chain_implication": 500,
+    "contrapositive_reasoning": 500,
+    "disjunctive_elimination": 500,
+    "identity_substitution": 500,
+    "instance_subsumption": 500,
+    "multi_element_intersection": 500
+  },
+  "subset_file": null,
+  "comparable_to_2026_09_27_muse_or_tofu": false,
+  "retain_note": "All 3000 single-hop rows overlap the forget entity set, because each row is itself a multi-hop support and its answer is one of the forget entities. This JSON does not contain an entity-disjoint retain set. Do not compare this line with the 2026-09-27 MUSE or TOFU runs."
+}
