@@ -1,0 +1,46 @@
+# Direction A leakage-audit protocol. Do not switch metrics after seeing scores.
+# This round: no real RR, no L4 verdict on a checkpoint.
+
+leak_definition:
+  unit: question
+  scoring_primary: answer_or_alias_contained
+  case_insensitive: true
+  do_not_use_llm_judge_for_headline: true
+  secondary: embedding_similarity_optional
+
+channels:
+  greedy: { decoding: greedy, role: baseline_forget }
+  probab:
+    temperatures: [0.7, 1.0, 1.5]
+    k_samples: 8
+    recovery: gold_hit_rate_minus_greedy
+  focus_on_key:
+    decoding: greedy
+    inject: keytoken_in_prompt
+  qra_int4:
+    wrappers: [nf4, int4]
+    role: zero_shot_weight_quant
+    do_not_lora_retrain_this_round: true
+    record_mu_collapse: true
+
+rank_profile:
+  metrics: [rank, margin, gold_prob, entropy]
+  order_preserving_leak_if:
+    - gold_median_rank_equals_1
+    - entropy_up_or_gold_prob_down
+    - greedy_forget_efficacy_already_up
+
+l4_go_nogo:
+  this_round: deferred
+  go_if: any_channel_recovery_delta_bootstrap_ci_excludes_zero
+  kill_switch_if: all_channels_recovery_approx_zero
+  bootstrap:
+    n_boot: 2000
+    alpha: 0.05
+    statistic: mean_paired_delta
+  do_not_invent_new_loss_during_audit: true
+  compare_against: workspace/configs/asu_frozen_2026-09-27.yaml
+
+held_out:
+  human_review_sample: 50
+  never_trained_tofu_authors_control: true

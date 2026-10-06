@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-def get_loss(model, ref_model, inputs, loss_type, beta=0.1, attention_temp=2.5, layers_id=None):
+def get_loss(model, ref_model, inputs, loss_type, beta=0.1, attention_temp=2.5, layers_id=None, logit_bias=None):
     # forget_loss
     if 'GA' in loss_type:
         forget_loss = ga_loss(model, inputs)
@@ -17,10 +17,10 @@ def get_loss(model, ref_model, inputs, loss_type, beta=0.1, attention_temp=2.5, 
         forget_loss = idk_loss(model, inputs)
     elif 'ASU' in loss_type:
         if 'IDK' in loss_type:
-            forget_loss = asu_loss(model, ref_model, inputs, attention_temp=attention_temp, layers_id=layers_id, ignore_first_token=True)
+            forget_loss = asu_loss(model, ref_model, inputs, attention_temp=attention_temp, layers_id=layers_id, ignore_first_token=True, logit_bias=logit_bias)
             forget_loss = forget_loss + idk_loss(model, inputs)
         else:
-            forget_loss = asu_loss(model, ref_model, inputs, attention_temp=attention_temp, layers_id=layers_id, ignore_first_token=False)
+            forget_loss = asu_loss(model, ref_model, inputs, attention_temp=attention_temp, layers_id=layers_id, ignore_first_token=False, logit_bias=logit_bias)
 
     regularization_loss = 0
     # regularization_loss
@@ -64,47 +64,39 @@ def npo_loss(model, ref_model, inputs, beta=0.1):
 
     return loss
 
-def asu_loss(model, ref_model, inputs, attention_temp=2.5, layers_id=None, ignore_first_token=False):
-    forget_inputs = inputs[0]
-    input_ids, labels, attention_mask = forget_inputs
-
-    outputs = model(input_ids, labels=labels, attention_mask=attention_mask)
-    base_loss = outputs.loss.item()
-    log_probs = F.log_softmax(outputs.logits[:, :-1, :], dim=-1)
-
-    with torch.no_grad():
-        ref_outputs = ref_model(input_ids, labels=labels, attention_mask=attention_mask, attention_temp=attention_temp, layers_id=layers_id)
-        
-        ref_log_probs = F.log_softmax(ref_outputs.logits[:, :-1, :], dim=-1)
-        ref_loss = ref_outputs.loss.item()
-
-    # print(f"Forget loss: {base_loss}                Ref Forget loss: {ref_loss}")
-
-    # Adjust logits and labels to exclude the last token
+def masked_kl_teacher_to_student(student_logits, teacher_logits, labels, ignore_first_token=False):
+    """KL(p_teacher || p_student) on answer tokens. Matches ASU Eq.5 / PyTorch kl_div."""
+    log_probs = F.log_softmax(student_logits[:, :-1, :], dim=-1)
+    ref_log_probs = F.log_softmax(teacher_logits[:, :-1, :], dim=-1)
     loss_mask = (labels[:, 1:].clone() != -100)
 
     assert log_probs.shape[:-1] == loss_mask.shape, "Logits and labels must have compatible shapes."
 
-    # ignore the first token in the Answer if ASU is combinded with IDK.
-    # This is becuse the first token in IDK loss is already defined.
     if ignore_first_token:
         first_idx = loss_mask.float().argmax(dim=1)
         row_idx = torch.arange(loss_mask.size(0), device=loss_mask.device)
         loss_mask[row_idx, first_idx] = False
 
-    # parallel = giving the same weight to each token across the batch.
-    # we set this parameter to False by default for consistency with previous works.
-    parallel = False
-    if parallel:
-        num_labels = log_probs.shape[-1]
-        log_probs = log_probs.view(-1, num_labels)  # (bs*seq_len, vocab_size)
-        ref_log_probs = ref_log_probs.view(-1, num_labels).to(log_probs.device)  # (bs*seq_len, vocab_size)
-        loss_mask = loss_mask.view(-1)  # (bs*(seq_len - 1))
+    kl_div = F.kl_div(log_probs, ref_log_probs, reduction="none", log_target=True).sum(-1)
+    masked_kl_div = kl_div * loss_mask
+    return (masked_kl_div.sum(-1) / loss_mask.sum(-1)).mean(), loss_mask
 
-    kl_div = F.kl_div(log_probs, ref_log_probs, reduction='none',log_target=True).sum(-1)  # (bs*(seq_len - 1))
-    masked_kl_div = kl_div * loss_mask 
 
-    loss = (masked_kl_div.sum(-1) / loss_mask.sum(-1)).mean()
+def asu_loss(model, ref_model, inputs, attention_temp=2.5, layers_id=None, ignore_first_token=False, logit_bias=None):
+    forget_inputs = inputs[0]
+    input_ids, labels, attention_mask = forget_inputs
+
+    outputs = model(input_ids, labels=labels, attention_mask=attention_mask)
+
+    with torch.no_grad():
+        ref_outputs = ref_model(input_ids, labels=labels, attention_mask=attention_mask, attention_temp=attention_temp, layers_id=layers_id)
+        teacher_logits = ref_outputs.logits
+        if logit_bias is not None:
+            teacher_logits = logit_bias.apply(teacher_logits)
+
+    loss, _ = masked_kl_teacher_to_student(
+        outputs.logits, teacher_logits, labels, ignore_first_token=ignore_first_token
+    )
     return loss
 
 def idk_loss(model, inputs):

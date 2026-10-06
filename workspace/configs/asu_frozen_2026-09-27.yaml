@@ -1,0 +1,73 @@
+# Frozen ASU reproduction from 2026-09-27. Do not overwrite these numbers.
+# Next-round GPU runs compare against this file. This round does not train or eval 7B.
+
+stack: Right-to-be-forgotten
+source_csv:
+  tofu: workspace/results/2026-09-27/tofu_summary.csv
+  muse: workspace/results/2026-09-27/muse_summary.csv
+source_scripts:
+  tofu: Right-to-be-forgotten/scripts/tofu/asu.sh
+  muse: workspace/scripts/muse_asu.sh
+
+model:
+  family: llama2-7b
+  path: locuslab/tofu_ft_llama2-7b
+  tokenizer: NousResearch/Llama-2-7b-chat-hf
+
+hparams:
+  forget_coeff: 0.1
+  regularization_coeff: 1.0
+  lr: 1.0e-5
+  num_epochs: 5
+  mask: true
+  fix_ref_model: true
+  seed: 1001
+  # asu.sh used 2.3; tofu.yaml default is 2.0. CSV does not record temp.
+  # Treat 2.3 as the run recipe until a log proves otherwise.
+  attention_temp: 2.3
+  attention_temp_yaml_default: 2.0
+  layers_id: null
+
+primary_attack_target:
+  split: forget05
+  forget_loss: ASU+GD
+  model_utility: 0.740182465708051
+  forget_efficacy: 0.7740777730353676
+  paper_table1:
+    model_utility: 0.7418
+    forget_efficacy: 0.7784
+    note: "side note only; not a gate"
+
+tofu:
+  forget01:
+    ASU+GD: { model_utility: 0.7655954581624059, forget_efficacy: 0.6417726799505012 }
+    ASU+KL: { model_utility: 0.7458629328908298, forget_efficacy: 0.6490301931806661 }
+  forget05:
+    ASU+GD:
+      model_utility: 0.740182465708051
+      forget_efficacy: 0.7740777730353676
+      retain_probability: 0.8457028735070241
+    ASU+KL:
+      model_utility: 0.6188507752859598
+      forget_efficacy: 0.8133237034994665
+      retain_probability: 0.4300897456049467
+      note: "seesaw; second audit row only"
+  forget10:
+    ASU+GD: { model_utility: 0.7391955538380626, forget_efficacy: 0.7764555853606293 }
+    ASU+KL: { model_utility: 0.637464121281618, forget_efficacy: 0.8119737993939004 }
+
+muse:
+  news_ASU_klr:
+    verbmem_f: 7.4130419135887
+    privleak: 98.97317686504611
+    knowmem_f: 52.31789321789322
+    knowmem_r: 46.75825522516699
+  books_ASU_klr:
+    verbmem_f: 6.6488164949566455
+    privleak: -53.51381420359724
+    knowmem_f: null
+    knowmem_r: null
+
+success_floor_next_round:
+  mu_hard_floor: 0.73
+  mu_reference_gd_f05: 0.740182465708051

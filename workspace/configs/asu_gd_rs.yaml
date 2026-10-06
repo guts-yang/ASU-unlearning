@@ -1,0 +1,25 @@
+# Draft student recipe for Rank-Shattering on top of frozen ASU+GD.
+# DO NOT invoke forget.py this round. No teacher/student training.
+
+forget_loss: ASU+GD+RS
+split: forget05
+inherit_from: workspace/configs/asu_frozen_2026-09-27.yaml
+
+hparams:
+  forget_coeff: 0.1
+  regularization_coeff: 1.0
+  lr: 1.0e-5
+  num_epochs: 5
+  mask: true
+  fix_ref_model: true
+  seed: 1001
+  attention_temp: 2.3
+  layers_id: null
+  rank_margin_scan: [0.5, 1.0, 2.0]
+  gold_tokens: tofu_answer_span
+  teacher_extra: vocab_logit_bias
+
+notes:
+  - Student still uses Eq.5 KL(p_tau+ || p_theta) via asu_loss(logit_bias=...).
+  - Retain remains GD.
+  - Compare new MU/FE/RR against frozen forget05 ASU+GD, not paper Table 1.
