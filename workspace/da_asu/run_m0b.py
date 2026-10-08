@@ -117,7 +117,9 @@ def main():
     base.eval().to(device)
     student.eval().to(device)
     gaps = []
-    for record in records:
+    for index, record in enumerate(records):
+        if index % 50 == 0:
+            print(f"m0b {index}/{len(records)}", flush=True)
         input_ids, _, attention_mask, query_mask, _, _ = encode_qa(
             tokenizer,
             record["question"],
