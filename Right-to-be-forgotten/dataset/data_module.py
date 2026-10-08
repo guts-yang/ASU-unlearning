@@ -1,5 +1,7 @@
 import json
 import os
+import sys
+from pathlib import Path
 
 import datasets
 import torch
@@ -8,6 +10,12 @@ from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import Dataset
 
 from utils import get_model_identifiers_from_yaml
+
+_REPO = Path(__file__).resolve().parents[2]
+if str(_REPO / "workspace") not in sys.path:
+    sys.path.insert(0, str(_REPO / "workspace"))
+
+from da_asu.labels import encode_qa
 
 
 def dataset_to_json(dataset, filename, ):
@@ -83,13 +91,16 @@ def convert_raw_data_to_model_format(tokenizer, max_length, question, answer, mo
 
 
 class TextForgetDatasetQA(Dataset):
-    def __init__(self, tokenizer, model_family, forget_data, retain_data, max_length=512, mask=False):
+    def __init__(self, tokenizer, model_family, forget_data, retain_data, max_length=512, mask=False,
+                 reason_data=None, reason_max_length=None):
         super(TextForgetDatasetQA, self).__init__()
         self.tokenizer = tokenizer
         self.max_length = max_length
         self.forget_data = forget_data
         self.retain_data = retain_data
         self.mask = mask
+        self.reason_data = reason_data
+        self.reason_max_length = max_length if reason_max_length is None else reason_max_length
 
         self.model_configs = get_model_identifiers_from_yaml(model_family)
 
@@ -135,6 +146,18 @@ class TextForgetDatasetQA(Dataset):
                 converted_data = convert_raw_forget_data_to_model_format(self.tokenizer, self.max_length, question,
                                                                          answer, self.model_configs)
             rets.append(converted_data)
+
+        if self.reason_data is not None:
+            reason_idx = idx % len(self.reason_data)
+            reason = self.reason_data[reason_idx]
+            reason_example = encode_qa(
+                self.tokenizer,
+                reason["question"],
+                reason["answer"],
+                self.model_configs,
+                self.reason_max_length,
+            )
+            rets.append(reason_example[:4])
 
         return rets
 
@@ -196,19 +219,19 @@ def custom_data_collator(samples):
 
 def custom_data_collator_forget(samples):
     rets = []
-
-    # Extracting samples for each data type
+    n_types = len(samples[0])
     data_types = ["forget", "retain", "forget_idk", "retain_idk", "forget_mismatch"]
+    if n_types == 6:
+        data_types = data_types + ["reason"]
+    if n_types != len(data_types):
+        raise ValueError(f"expected {len(data_types)} batch fields, got {n_types}")
+
     samples_dict = {data_type: [sample[i] for sample in samples] for i, data_type in enumerate(data_types)}
 
     for data_type in data_types:
         data = samples_dict[data_type]
-
-        input_ids = [s[0] for s in data]
-        labels = [s[1] for s in data]
-        attention_mask = [s[2] for s in data]
-
-        rets.append((torch.stack(input_ids), torch.stack(labels), torch.stack(attention_mask)))
+        width = len(data[0])
+        rets.append(tuple(torch.stack([sample[col] for sample in data]) for col in range(width)))
 
     return rets
 

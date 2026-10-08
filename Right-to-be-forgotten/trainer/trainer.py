@@ -1,9 +1,18 @@
 import copy
+import sys
+from pathlib import Path
 
 import deepspeed
 from transformers import Trainer
 
 from .losses import get_loss
+
+_REPO = Path(__file__).resolve().parents[2]
+if str(_REPO / "workspace") not in sys.path:
+    sys.path.insert(0, str(_REPO / "workspace"))
+
+from da_asu.anchor import derivation_anchor_loss, derivation_logit_kl
+from da_asu.protocol import normalize_layers_id
 
 
 class CustomTrainerForgetting(Trainer):
@@ -17,10 +26,12 @@ class CustomTrainerForgetting(Trainer):
         # beta for NPO/DPO/RS
         self.beta = kwargs.pop('beta')
 
-        # layers_id for ASU
-        self.layers_id = kwargs.pop('layers_id', None)
+        # layers_id for ASU. Empty list would disable temperature; treat it as every layer.
+        self.layers_id = normalize_layers_id(kwargs.pop('layers_id', None))
         # attention temperature for ASU
         self.attention_temp = kwargs.pop('attention_temp')
+        self.da_asu_mode = kwargs.pop('da_asu_mode', None)
+        self.da_asu_mu = kwargs.pop('da_asu_mu', 1.0)
 
         super(CustomTrainerForgetting, self).__init__(*args, **kwargs)
 
@@ -30,6 +41,28 @@ class CustomTrainerForgetting(Trainer):
 
         forget_loss, regularization_loss = get_loss(model, self.ref_model, inputs, self.loss_type, self.beta, self.attention_temp, self.layers_id)
         loss = self.forget_coeff * forget_loss + self.regularization_coeff * regularization_loss
+        if self.da_asu_mode:
+            if len(inputs) < 6:
+                raise RuntimeError("da_asu is enabled but the batch has no D_reason tensors")
+            input_ids, labels, attention_mask, query_mask = inputs[5]
+            if self.da_asu_mode == "anchor":
+                extra, self.last_anchor_per_layer = derivation_anchor_loss(
+                    model, self.ref_model, input_ids, attention_mask, query_mask
+                )
+            elif self.da_asu_mode == "logit_control":
+                extra = derivation_logit_kl(
+                    model, self.ref_model, input_ids, labels, attention_mask, query_mask
+                )
+            else:
+                raise ValueError(f"unknown da_asu mode {self.da_asu_mode}")
+            loss = loss + self.da_asu_mu * extra
+            step = getattr(self.state, "global_step", 0)
+            if step % 10 == 0:
+                message = f"da_asu {self.da_asu_mode} loss {float(extra.detach()):.4f}"
+                if self.da_asu_mode == "anchor":
+                    per_layer = [round(float(value), 4) for value in self.last_anchor_per_layer]
+                    message += f" per_layer {per_layer}"
+                print(message)
 
         return (loss, None) if return_outputs else loss
 

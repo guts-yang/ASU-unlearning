@@ -26,13 +26,23 @@ regularization_coeff: 1.0
 
 beta: 0.1
 attention_temp: 2.0
-layers_id: []
+layers_id: null
 weight_decay: 0.01
 
 fix_ref_model: true # only for continual unlearning
 mask: true # false for ME, true for other baselines
 
 seed: 1001
+
+# DA-ASU stays off until M0 returns proceed. mode is anchor or logit_control.
+da_asu:
+  enabled: false
+  mode: anchor
+  mu: 1.0
+  reason_path: null
+  reason_max_length: 512
+  verdict_path: null
+  allow_without_m0: false
 
 # save config
 save_checkpoint: false

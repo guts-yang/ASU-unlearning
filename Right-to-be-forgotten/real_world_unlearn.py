@@ -1,4 +1,5 @@
 import os
+import json
 import shutil
 import warnings
 from pathlib import Path
@@ -17,6 +18,29 @@ from utils import get_model_identifiers_from_yaml, set_random_seed
 
 from my_models.my_llama import LlamaForCausalLM
 warnings.filterwarnings('ignore')
+
+REPO = Path(__file__).resolve().parents[1]
+
+
+def _da_asu_mode(cfg):
+    da = cfg.get("da_asu")
+    if da is None or not da.enabled:
+        return None
+    if da.mode not in {"anchor", "logit_control"}:
+        raise SystemExit(f"da_asu.mode must be anchor or logit_control, got {da.mode}")
+    if not da.reason_path:
+        raise SystemExit("da_asu.reason_path is required when da_asu.enabled=true")
+    if not da.allow_without_m0:
+        verdict_path = Path(da.verdict_path) if da.verdict_path else REPO / "workspace/results/direction_c/m0_verdict.json"
+        if not verdict_path.is_file():
+            raise SystemExit(f"M0 verdict missing at {verdict_path}. Run workspace/da_asu/run_m0.py first.")
+        verdict = json.loads(verdict_path.read_text())
+        if verdict.get("decision") != "proceed":
+            raise SystemExit(
+                f"M0 decision is {verdict.get('decision')}. "
+                "Anchor and logit-control training stay off until derivation is steeper than function."
+            )
+    return da.mode
 
 
 def find_all_linear_names(model):
@@ -62,6 +86,12 @@ def main(cfg):
                                         split='train')
     retain_data = datasets.load_dataset('json', data_files=os.path.join(cfg.data_path, cfg.retain + '.json'),
                                         split='train')
+    da_mode = _da_asu_mode(cfg)
+    reason_data = None
+    reason_max_length = None
+    if da_mode is not None:
+        reason_data = datasets.load_dataset('json', data_files=cfg.da_asu.reason_path, split='train')
+        reason_max_length = cfg.da_asu.reason_max_length
 
     tokenizer = AutoTokenizer.from_pretrained(model_id)
     tokenizer.pad_token = tokenizer.eos_token
@@ -71,7 +101,9 @@ def main(cfg):
                                                forget_data=forget_data,
                                                retain_data=retain_data,
                                                max_length=300,
-                                               mask=cfg.mask)
+                                               mask=cfg.mask,
+                                               reason_data=reason_data,
+                                               reason_max_length=reason_max_length)
 
     batch_size = cfg.batch_size
     gradient_accumulation_steps = cfg.gradient_accumulation_steps
@@ -179,6 +211,8 @@ def main(cfg):
         beta=cfg.beta,
         forget_coeff=cfg.forget_coeff,
         regularization_coeff=cfg.regularization_coeff,
+        da_asu_mode=da_mode,
+        da_asu_mu=cfg.da_asu.mu if da_mode is not None else 1.0,
     )
     model.config.use_cache = False  # silence the warnings. Please re-enable for inference!
 
