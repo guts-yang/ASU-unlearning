@@ -79,12 +79,12 @@ def eval_perturbation_ratio(eval_dataloader, perturb_dataloader, model):
         num_token_perturb = (perturb_batch['labels'] != -100).view(bsz, seq_len, -1).sum(-1)
 
         eval_logs['average_perturb_loss'] = eval_logs.get('average_perturb_loss', []) + (
-                    perturb_loss / num_token_perturb).tolist()
+                    perturb_loss / num_token_perturb).float().tolist()
         eval_logs['avg_paraphrased_loss'] = eval_logs.get('avg_paraphrased_loss', []) + (
-                    gt_loss / num_token_gt).cpu().numpy().tolist()
+                    gt_loss / num_token_gt).float().cpu().numpy().tolist()
 
-        eval_logs['paraphrased_loss'] = eval_logs.get('paraphrased_loss', []) + gt_loss.tolist()
-        eval_logs['perturb_loss'] = eval_logs.get('perturb_loss', []) + perturb_loss.tolist()
+        eval_logs['paraphrased_loss'] = eval_logs.get('paraphrased_loss', []) + gt_loss.float().tolist()
+        eval_logs['perturb_loss'] = eval_logs.get('perturb_loss', []) + perturb_loss.float().tolist()
 
         eval_logs['num_token_paraphrased'] = eval_logs.get('num_token_paraphrased', []) + num_token_gt.tolist()
         eval_logs['num_token_perturb'] = eval_logs.get('num_token_perturb', []) + num_token_perturb.tolist()
@@ -168,8 +168,8 @@ def get_all_evals(cfg, model, tokenizer, folder, split, eval_task, eval_dataload
 
         gt_loss = get_batch_loss(outputs.logits, batch['labels'])
         num_token_gt = (batch['labels'] != -100).sum(-1)  # bs
-        eval_logs['avg_gt_loss'] = eval_logs.get('avg_gt_loss', []) + (gt_loss / num_token_gt).cpu().numpy().tolist()
-        eval_logs['gt_loss'] = eval_logs.get('gt_loss', []) + gt_loss.tolist()
+        eval_logs['avg_gt_loss'] = eval_logs.get('avg_gt_loss', []) + (gt_loss / num_token_gt).float().cpu().numpy().tolist()
+        eval_logs['gt_loss'] = eval_logs.get('gt_loss', []) + gt_loss.float().tolist()
         eval_logs['num_token_gt'] = eval_logs.get('num_token_gt', []) + num_token_gt.tolist()
 
     rouge_cores = eval_rouge_recall(gen_outputs, ground_truths)

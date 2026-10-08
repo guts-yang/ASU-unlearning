@@ -3,6 +3,7 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 import warnings
 
 import hydra
@@ -56,7 +57,7 @@ def general_eval(
         ],
         output_dir=".",
 ):
-    command = "accelerate"
+    command = sys.executable
     tasks = ",".join(task_list)
     if cfg.use_LoRA:
         model_args = f"pretrained={cfg.model_path},peft={model_name},add_bos_token=True,max_batch_size=16"
@@ -64,7 +65,6 @@ def general_eval(
         model_args = f"pretrained={model_name},add_bos_token=True"
 
     args = [
-        "launch",
         "-m",
         "lm_eval",
         "--model",
@@ -74,7 +74,7 @@ def general_eval(
         "--tasks",
         f"{tasks}",
         "--batch_size",
-        "auto:4",
+        "8",
         "--output_path",
         f"{output_dir}/downstream_tasks"
     ]
@@ -85,7 +85,7 @@ def general_eval(
     try:
         subprocess.run(full_command, check=True)
     except subprocess.CalledProcessError as e:
-        print(f"An error occurred: {e}")
+        raise RuntimeError(f"lm_eval failed: {e}") from e
 
     results_dict = summary_results(output_dir)
     return results_dict
