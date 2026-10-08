@@ -67,7 +67,7 @@ def main(cfg):
     set_random_seed(seed)
 
     model_cfg = get_model_identifiers_from_yaml(cfg.model_family)
-    model_id = model_cfg["hf_key"]
+    model_id = cfg.model_path if os.path.isdir(cfg.model_path) else model_cfg["hf_key"]
 
     config = AutoConfig.from_pretrained(model_id)
 
