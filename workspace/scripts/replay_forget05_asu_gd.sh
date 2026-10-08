@@ -18,8 +18,10 @@ mkdir -p "${ROOT}/workspace/logs"
 
     cd /usr/local/ASU-unlearning/Right-to-be-forgotten
 
-    if [[ ! -e /dev/nvidia0 || ! -e /dev/nvidia1 ]]; then
-        echo "Need /dev/nvidia0 and /dev/nvidia1 (2-GPU recipe). Refusing to start."
+    gpu_n="$(nvidia-smi -L 2>/dev/null | wc -l)"
+    if [[ "${gpu_n}" -lt 2 ]]; then
+        echo "Need 2 GPUs. nvidia-smi sees ${gpu_n}. Refusing to start."
+        nvidia-smi -L || true
         exit 1
     fi
 
