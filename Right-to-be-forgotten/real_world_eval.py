@@ -22,11 +22,16 @@ def summary_results(eval_dir):
             if file.endswith('json') and 'results' in file:
                 results_path = os.path.join(dirpath, file)
     results = json.load(open(results_path, 'r'))['results']
+    metric_of = {
+        'ARC-C': ('arc_challenge', 'acc_norm,none'),
+        'MMLU': ('mmlu', 'acc,none'),
+        'TruthfulQA(mc1)': ('truthfulqa_mc1', 'acc,none'),
+        'GSM8k': ('gsm8k', 'exact_match,flexible-extract'),
+    }
     results_dict = {
-        'ARC-C': results['arc_challenge']['acc_norm,none'],
-        'MMLU': results['mmlu']['acc,none'],
-        'TruthfulQA(mc1)': results['truthfulqa_mc1']['acc,none'],
-        'GSM8k': results['gsm8k']['exact_match,flexible-extract'],
+        name: results[task][metric]
+        for name, (task, metric) in metric_of.items()
+        if task in results and metric in results[task]
     }
     with open(os.path.join(eval_dir, "../downstream_task_results.txt"), 'w') as txtfile:
         for key, value in results_dict.items():
@@ -167,7 +172,7 @@ def main(cfg):
     set_random_seed(seed)
 
     model_cfg = get_model_identifiers_from_yaml(cfg.model_family)
-    model_id = model_cfg["hf_key"]
+    model_id = cfg.model_path if os.path.isdir(cfg.model_path) else model_cfg["hf_key"]
 
     curr_save_dir = cfg.save_dir
     curr_checkpoint_dir = os.path.join(curr_save_dir, f"checkpoint-{cfg.eval_unlearn_step}")
@@ -213,12 +218,17 @@ def main(cfg):
     print('After Unlearn Step %s,  Model Uility %.6f, Forget Efficacy %.6f' %
           (cfg.eval_unlearn_step, eval_results['Model Utility'], eval_results['Forget Efficacy']))
 
-    task_lists = [
-        "arc_challenge",  # ARC-c
-        "mmlu",
-        "truthfulqa",
-        "gsm8k"
-    ]
+    # DOWNSTREAM_TASKS=gsm8k keeps this round to the existence metrics.
+    raw_tasks = os.environ.get("DOWNSTREAM_TASKS", "")
+    if raw_tasks.strip():
+        task_lists = [task.strip() for task in raw_tasks.split(",") if task.strip()]
+    else:
+        task_lists = [
+            "arc_challenge",  # ARC-c
+            "mmlu",
+            "truthfulqa",
+            "gsm8k"
+        ]
 
     del model
 
