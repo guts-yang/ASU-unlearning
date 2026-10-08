@@ -37,3 +37,7 @@ data/
 datasets/
 hf_cache/
 .cache/huggingface/
+
+# Reproduction outputs
+Right-to-be-forgotten/outputs/
+workspace/results/
