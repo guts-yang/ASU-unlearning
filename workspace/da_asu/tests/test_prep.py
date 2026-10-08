@@ -65,6 +65,42 @@ def test_h2_stops_when_attention_does_not_blur():
     assert h2_decision([0.05] * 3)["decision"] == "insufficient_data"
 
 
+def test_specificity_is_reported_without_changing_the_derivation_decision():
+    from da_asu.run_m0b import build_specificity_verdict
+
+    rows = []
+    for index in range(30):
+        rows.append(
+            {
+                "derivation": {"base": 1.0, "student": 1.05},
+                "function": {"base": 2.0, "student": 2.05 + 0.001 * index},
+                "factual": {"base": 0.5, "student": 0.55},
+            }
+        )
+    verdict = build_specificity_verdict(rows)
+    assert verdict["decision"] == "proceed"
+    assert verdict["decision_rule"] == "derivation_entropy_increase_only"
+    assert verdict["entropy_unit"] == "nats"
+    derivation = verdict["classes"]["derivation"]
+    assert derivation["mean_base_entropy"] == 1.0
+    assert abs(derivation["mean_entropy_increase"] - 0.05) < 1e-12
+    assert abs(derivation["mean_relative_increase"] - 0.05) < 1e-12
+    assert derivation["cohens_d_z_definition"].startswith("mean(gap)")
+    assert verdict["specificity"]["label"] == "not_selective"
+    assert verdict["specificity"]["role"] == "report_only"
+
+    selective = []
+    for index in range(30):
+        selective.append(
+            {
+                "derivation": {"base": 1.0, "student": 1.08},
+                "function": {"base": 2.0, "student": 2.01},
+            }
+        )
+    assert build_specificity_verdict(selective)["specificity"]["label"] == "selective"
+    assert build_specificity_verdict(selective[:3])["specificity"]["label"] == "insufficient_data"
+
+
 def test_llama3_query_is_the_position_that_predicts_the_result():
     tokenizer = AutoTokenizer.from_pretrained(TOKENIZER)
     answer = "She sold <<48/2=1234567890>> clips."
