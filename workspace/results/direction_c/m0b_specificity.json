@@ -1,0 +1,80 @@
+{
+  "decision": "proceed",
+  "decision_rule": "derivation_entropy_increase_only",
+  "entropy_unit": "nats",
+  "cohens_d_z_definition": "mean(gap) / sample_std(gap, ddof=1)",
+  "classes": {
+    "derivation": {
+      "n_problems": 1301,
+      "mean_base_entropy": 1.484638248313035,
+      "mean_student_entropy": 1.5152342882006755,
+      "mean_entropy_increase": 0.030596039887640612,
+      "entropy_increase_ci95": [
+        0.03019473155517919,
+        0.030965299633667873
+      ],
+      "mean_relative_increase": 0.020573724703358748,
+      "relative_increase_ci95": [
+        0.020323808961340777,
+        0.020812646283544078
+      ],
+      "n_relative": 1301,
+      "cohens_d_z": 4.275691531065447,
+      "cohens_d_z_definition": "mean(gap) / sample_std(gap, ddof=1)",
+      "entropy_unit": "nats"
+    },
+    "function": {
+      "n_problems": 1294,
+      "mean_base_entropy": 1.8019315312797122,
+      "mean_student_entropy": 1.8436384539494417,
+      "mean_entropy_increase": 0.04170692266972995,
+      "entropy_increase_ci95": [
+        0.041185275170223724,
+        0.04224660458394104
+      ],
+      "mean_relative_increase": 0.023035246253506766,
+      "relative_increase_ci95": [
+        0.022788811965218835,
+        0.023297452946770898
+      ],
+      "n_relative": 1294,
+      "cohens_d_z": 4.290466142696276,
+      "cohens_d_z_definition": "mean(gap) / sample_std(gap, ddof=1)",
+      "entropy_unit": "nats"
+    },
+    "factual": {
+      "n_problems": 1319,
+      "mean_base_entropy": 1.6195372026749302,
+      "mean_student_entropy": 1.671414640825171,
+      "mean_entropy_increase": 0.05187743815024083,
+      "entropy_increase_ci95": [
+        0.05119361772698332,
+        0.05252179390793425
+      ],
+      "mean_relative_increase": 0.031921662228965496,
+      "relative_increase_ci95": [
+        0.031536059821408356,
+        0.03228876636469919
+      ],
+      "n_relative": 1319,
+      "cohens_d_z": 4.303716235117351,
+      "cohens_d_z_definition": "mean(gap) / sample_std(gap, ddof=1)",
+      "entropy_unit": "nats"
+    }
+  },
+  "specificity": {
+    "contrast": "derivation_minus_function",
+    "role": "report_only",
+    "n_problems": 1278,
+    "mean_gap": -0.01122057703349803,
+    "ci95": [
+      -0.011763164444461103,
+      -0.010697132059943644
+    ],
+    "cohens_d_z": -1.1575550366734977,
+    "cohens_d_z_definition": "mean(gap) / sample_std(gap, ddof=1)",
+    "entropy_unit": "nats",
+    "label": "not_selective"
+  },
+  "entropy_used": true
+}
