@@ -1,0 +1,44 @@
+{
+  "decision": "blocked",
+  "reason": "CUDA is not usable. See gpu_gate.json. Training, decoding, judge calibration, negative control, and experiment B were not started.",
+  "protocol": "G/M0_results/protocol_snapshot.json",
+  "gpu_gate": "G/M0_results/gpu_gate.json",
+  "gpu_hours_used": 0.0,
+  "data_source": "—",
+  "rtofu_join_n": "—",
+  "cot_fallback_used": "—",
+  "judge_calibration": {
+    "n_reviewed": "—",
+    "n_disagreements": "—",
+    "alias_table_patched": "—"
+  },
+  "negative_control": {
+    "retain_n": "—",
+    "valid": "—",
+    "DirectQA_RecoveryRate": "—",
+    "DefaultThink_RecoveryRate": "—",
+    "ZeroThink_RecoveryRate": "—"
+  },
+  "experiment_A": {
+    "ASU+GD": {
+      "DirectQA": {"n": "—", "RecoveryRate": "—", "ci95": "—", "first_gold_percentile": "—"},
+      "DefaultThink": {"n": "—", "RecoveryRate": "—", "ci95": "—", "first_gold_percentile": "—"},
+      "ZeroThink": {"n": "—", "RecoveryRate": "—", "ci95": "—", "first_gold_percentile": "—"},
+      "DefaultThink_minus_DirectQA_pp": "—"
+    },
+    "NPO+GD": {
+      "DirectQA": {"n": "—", "RecoveryRate": "—", "ci95": "—", "first_gold_percentile": "—"},
+      "DefaultThink": {"n": "—", "RecoveryRate": "—", "ci95": "—", "first_gold_percentile": "—"},
+      "ZeroThink": {"n": "—", "RecoveryRate": "—", "ci95": "—", "first_gold_percentile": "—"},
+      "DefaultThink_minus_DirectQA_pp": "—"
+    }
+  },
+  "gates": {
+    "A": {"pass": "—", "DefaultThink_RecoveryRate": "—", "DefaultThink_ci95_low": "—", "DirectQA_RecoveryRate": "—"},
+    "B1": {"pass": "—", "n": "—", "mean_jaccard": "—", "ci95": "—"},
+    "B2": {"pass": "—", "n": "—", "mean_D_pivot": "—", "mean_D_random": "—", "ratio": "—", "wilcoxon_p": "—", "paired_d": "—"},
+    "downgrade_B2_layer24": {"ran": false, "pass": "—"},
+    "secondary_base": "—"
+  },
+  "per_sample_json": "—"
+}

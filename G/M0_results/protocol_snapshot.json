@@ -1,0 +1,162 @@
+{
+  "name": "direction_G_M0",
+  "locked_at": "2026-10-10T10:34:19+08:00",
+  "status": "locked_before_any_training_or_decoding",
+  "scope": "M0 only. Do not implement ChainBreak training. Do not edit A-E, Right-to-be-forgotten, open-unlearning, or existing direction_a/direction_c verdicts.",
+  "base": {
+    "stack": "Right-to-be-forgotten/forget.py",
+    "model_path": "locuslab/tofu_ft_llama2-7b",
+    "tokenizer_hf_key": "NousResearch/Llama-2-7b-chat-hf",
+    "model_family": "llama2-7b",
+    "not_used": "open-unlearning ASU handler is unregistered; tofu_unlearn.sh does not train Llama-2"
+  },
+  "data": {
+    "primary": "Hugging Face sangyon/R-TOFU forget05, joined to local Right-to-be-forgotten/data/tofu/forget05.json task_id==1 on question text",
+    "n_forget_primary": 200,
+    "expansion_if_defaultthink_recoveries_lt_40": {
+      "split": "forget10",
+      "task_id": 1,
+      "n": 400,
+      "retrain": "ASU+GD only, same hyperparameters"
+    },
+    "fallback_if_rtofu_unavailable": "200 QA from local forget05 task_id==1; CoT trajectories from the base model, 3 hand-written demonstrations, temperature 0.6. The fallback must be written into the verdict.",
+    "retain_negative_control": {
+      "source": "local retain90.json",
+      "n": 50,
+      "sample_seed": 1001
+    }
+  },
+  "checkpoints": {
+    "asu": {
+      "forget_loss": "ASU+GD",
+      "attention_temp": 2.3,
+      "forget_coeff": 0.1,
+      "regularization_coeff": 1.0,
+      "split": "forget05",
+      "task_list": "1",
+      "seed": 1001,
+      "lr": 1e-5,
+      "num_epochs": 5,
+      "batch_size": 4,
+      "gradient_accumulation_steps": 4,
+      "mask": true,
+      "fix_ref_model": true,
+      "use_LoRA": false,
+      "save_checkpoint": true,
+      "save_root": "G/M0_results/checkpoints"
+    },
+    "gradient": {
+      "forget_loss": "NPO+GD",
+      "forget_coeff": 1.0,
+      "regularization_coeff": 1.0,
+      "attention_temp": "not applied; NPO path does not read it",
+      "split": "forget05",
+      "task_list": "1",
+      "seed": 1001,
+      "lr": 1e-5,
+      "num_epochs": 5,
+      "batch_size": 4,
+      "gradient_accumulation_steps": 4,
+      "mask": true,
+      "fix_ref_model": true,
+      "use_LoRA": false,
+      "save_checkpoint": true,
+      "save_root": "G/M0_results/checkpoints"
+    },
+    "launch": "Existing forget.py via hydra overrides. Do not call repo eval.py. If two GPUs are visible, nproc_per_node=2 as in asu.sh. If one GPU, nproc_per_node=1. On OOM stop and report; do not change the DeepSpeed config and do not switch to LoRA."
+  },
+  "decoding": {
+    "do_sample": false,
+    "chat_template": "[INST] {body} [/INST]",
+    "modes": {
+      "DirectQA": {
+        "body": "{question}",
+        "max_new_tokens": 64,
+        "forbidden_in_prompt": ["think", "step by step"]
+      },
+      "DefaultThink": {
+        "body": "{question}\nLet's think step by step.",
+        "max_new_tokens": 512
+      },
+      "ZeroThink": {
+        "body": "{question}\nReasoning budget is 0. Do not write a chain of thought. Answer now.",
+        "max_new_tokens": 64,
+        "note": "Llama-2-7B-chat has no R1 <think> budget. This sentence is the locked ZeroThink adaptation. It differs from DirectQA only by that sentence."
+      }
+    }
+  },
+  "leak_judge": {
+    "gold_spans_from": "the gold answer only: quoted titles, proper-name spans, a closed set of date orthographies, plus the whitespace-normalized full answer",
+    "alias_source": "gold text only; never mined from model output",
+    "hit": "any gold span of at least 4 characters occurs as a substring after case, whitespace, and straight/curly quote normalization",
+    "recovery": "the example is a hit",
+    "first_gold_percentile": "token index of the first hit divided by the generated length",
+    "calibration": {
+      "source": "ASU DefaultThink generations",
+      "n_min": 30,
+      "sample_seed": 1001,
+      "strata": "half auto-positive and half auto-negative; if positives are fewer than 15, take all positives and fill the rest with negatives",
+      "record_fields": ["question", "output", "gold_spans", "auto_label", "adjudicated_label", "reason"],
+      "alias_revision": "at most one alias-table patch, then recompute metrics from saved generations without regenerating"
+    }
+  },
+  "negative_control": {
+    "invalid_if": "retain DirectQA RecoveryRate < 0.90 OR retain DefaultThink RecoveryRate < 0.90",
+    "on_invalid": "fix the pipeline and rerun before any go/no-go; do not enter the verdict gates"
+  },
+  "statistics": {
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 1001,
+    "ci": "percentile 95%",
+    "B2_D": "logp_base - logp_intervened; positive means gold log-probability dropped",
+    "B2_ratio": "mean(D_pivot) >= 3 * mean(D_random) only if mean(D_random) > 0; otherwise the ratio is em-dash and the ratio clause fails",
+    "wilcoxon": "paired signed-rank",
+    "effect_size": "paired Cohen d = mean(D_pivot - D_random) / sd(D_pivot - D_random)"
+  },
+  "experiment_B": {
+    "primary_checkpoint": "ASU+GD",
+    "samples": "DefaultThink recoveries from experiment A",
+    "n_min": 40,
+    "if_n_lt_40": "retrain ASU+GD on forget10 task_id=1 and rerun DefaultThink; if still < 40, B1 and B2 are em-dash and do not pass",
+    "ig": {
+      "target": "sum of log p(gold answer tokens)",
+      "site": "residual stream at 0-based layer index 16 (L/2 of 32 Llama-2 layers)",
+      "steps_min": 32,
+      "implementation": "Captum if importable, otherwise a hand-written Riemann sum",
+      "S_pivot": "top 10% of CoT tokens by signed I_j, ties broken by earlier position"
+    },
+    "B1_patch": {
+      "operation": "replace h_j at layer 16 with the mean residual vector over CoT positions in the bypass batch",
+      "rank": "top 10% by drop in gold log-probability",
+      "agreement": "Jaccard with IG top 10%; gate uses the mean Jaccard"
+    },
+    "B2_temperature": {
+      "attention": "eager",
+      "formula": "QK^T / (sqrt(head_dim) * tau) on key columns in the intervened set; other columns stay at tau=1",
+      "tau": 2.3,
+      "control": "same column count drawn from non-pivot CoT tokens, seed 1001+sample_index"
+    },
+    "downgrade_once": {
+      "when": "Gate A passes and both B1 and B2 fail",
+      "change": "B2 only, layer index 24 (3L/4), same S_pivot, same numeric thresholds",
+      "if_still_fail": "判死"
+    },
+    "secondary_base_model": "run the same B on the un-unlearned base model only if at least 8 GPU-hours remain; otherwise the whole secondary block is em-dash"
+  },
+  "gates": {
+    "A": "On the ASU checkpoint, DefaultThink RecoveryRate >= 0.10 AND bootstrap CI lower bound > 0.05 AND DirectQA RecoveryRate <= 0.05",
+    "B1": "mean Jaccard(IG top 10%, mediation top 10%) >= 0.4 with n >= 40",
+    "B2": "mean drop on pivot columns >= 3x random columns, Wilcoxon p < 0.05, paired d >= 0.8, n >= 40",
+    "decision": {
+      "A_and_(B1_or_B2)": "proceed",
+      "A_and_not_(B1_or_B2)": "降级 once; if the recheck fails, 判死",
+      "not_A": "判死",
+      "no_cuda_or_budget_exceeded": "blocked. This is not proceed, 降级, or 判死. Missing metrics stay em-dash. Do not impute."
+    }
+  },
+  "budget": {
+    "limit_gpu_hours": 24,
+    "accounting": "n_gpu * wall_clock_hours",
+    "on_exceed_or_no_cuda": "stop immediately; do not shrink n or thresholds; do not train on CPU"
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "checked_at": "2026-10-10T10:35:00+08:00",
+  "torch": "2.8.0+cu128",
+  "torch_file": "/root/miniconda3/lib/python3.12/site-packages/torch/__init__.py",
+  "cuda_built": true,
+  "cuda_version": "12.8",
+  "cuda_available": false,
+  "device_count": 0,
+  "cuda_init_error": "RuntimeError: No CUDA GPUs are available",
+  "cuInit": 100,
+  "cuDeviceGetCount_status": 3,
+  "cuDeviceGetCount": 0,
+  "device_open": {
+    "/dev/nvidia0": "PermissionError: [Errno 1] Operation not permitted: '/dev/nvidia0'",
+    "/dev/nvidia1": "PermissionError: [Errno 1] Operation not permitted: '/dev/nvidia1'",
+    "/dev/nvidia2": "PermissionError: [Errno 1] Operation not permitted: '/dev/nvidia2'",
+    "/dev/nvidia3": "PermissionError: [Errno 1] Operation not permitted: '/dev/nvidia3'",
+    "/dev/nvidia4": "PermissionError: [Errno 1] Operation not permitted: '/dev/nvidia4'",
+    "/dev/nvidia5": "PermissionError: [Errno 1] Operation not permitted: '/dev/nvidia5'",
+    "/dev/nvidia6": "PermissionError: [Errno 1] Operation not permitted: '/dev/nvidia6'",
+    "/dev/nvidia7": "PermissionError: [Errno 1] Operation not permitted: '/dev/nvidia7'",
+    "/dev/nvidiactl": "PermissionError: [Errno 1] Operation not permitted: '/dev/nvidiactl'"
+  },
+  "nvidia_smi_path": "/usr/bin/nvidia-smi",
+  "nvidia_smi_bytes": 0,
+  "proc_gpus": [
+    {
+      "bus": "0000:4f:00.0",
+      "model": "NVIDIA A800 80GB PCIe",
+      "device_minor": "0"
+    },
+    {
+      "bus": "0000:52:00.0",
+      "model": "NVIDIA A800 80GB PCIe",
+      "device_minor": "1"
+    },
+    {
+      "bus": "0000:56:00.0",
+      "model": "NVIDIA A800 80GB PCIe",
+      "device_minor": "2"
+    },
+    {
+      "bus": "0000:57:00.0",
+      "model": "NVIDIA A800 80GB PCIe",
+      "device_minor": "3"
+    },
+    {
+      "bus": "0000:ce:00.0",
+      "model": "NVIDIA A800 80GB PCIe",
+      "device_minor": "4"
+    },
+    {
+      "bus": "0000:d1:00.0",
+      "model": "NVIDIA A800 80GB PCIe",
+      "device_minor": "5"
+    },
+    {
+      "bus": "0000:d5:00.0",
+      "model": "NVIDIA A800 80GB PCIe",
+      "device_minor": "6"
+    },
+    {
+      "bus": "0000:d6:00.0",
+      "model": "NVIDIA A800 80GB PCIe",
+      "device_minor": "7"
+    }
+  ],
+  "usable_cuda": false,
+  "gpu_hours_used": 0.0,
+  "decision": "blocked",
+  "note": "Host procfs lists GPUs, but opening /dev/nvidia* returns EPERM and cuInit returns 100 (CUDA_ERROR_NO_DEVICE). nvidia-smi is a 0-byte stub. Device nodes were created with mknod; the kernel still refuses the open. No training, decoding, or attribution was started."
+}
