@@ -2,6 +2,12 @@
   "name": "direction_G_M0",
   "locked_at": "2026-10-10T10:34:19+08:00",
   "status": "locked_before_any_training_or_decoding",
+  "maintenance": {
+    "moved_at": "2026-10-10T10:39:00+08:00",
+    "from": "G/",
+    "to": "workspace/G/",
+    "gates_unchanged": true
+  },
   "scope": "M0 only. Do not implement ChainBreak training. Do not edit A-E, Right-to-be-forgotten, open-unlearning, or existing direction_a/direction_c verdicts.",
   "base": {
     "stack": "Right-to-be-forgotten/forget.py",
@@ -43,7 +49,7 @@
       "fix_ref_model": true,
       "use_LoRA": false,
       "save_checkpoint": true,
-      "save_root": "G/M0_results/checkpoints"
+      "save_root": "workspace/G/M0_results/checkpoints"
     },
     "gradient": {
       "forget_loss": "NPO+GD",
@@ -61,7 +67,7 @@
       "fix_ref_model": true,
       "use_LoRA": false,
       "save_checkpoint": true,
-      "save_root": "G/M0_results/checkpoints"
+      "save_root": "workspace/G/M0_results/checkpoints"
     },
     "launch": "Existing forget.py via hydra overrides. Do not call repo eval.py. If two GPUs are visible, nproc_per_node=2 as in asu.sh. If one GPU, nproc_per_node=1. On OOM stop and report; do not change the DeepSpeed config and do not switch to LoRA."
   },

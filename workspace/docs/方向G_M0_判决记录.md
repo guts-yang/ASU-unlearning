@@ -10,7 +10,7 @@
 
 ## 阻断证据
 
-溯源文件：[G/M0_results/gpu_gate.json](M0_results/gpu_gate.json)，检查时间 2026-10-10T10:35:00+08:00。
+溯源文件：[workspace/G/M0_results/gpu_gate.json](M0_results/gpu_gate.json)，检查时间 2026-10-10T10:35:00+08:00。
 
 | 检查 | 结果 |
 | --- | --- |
@@ -28,7 +28,7 @@
 
 ## 指标
 
-预注册协议：[G/M0_results/protocol_snapshot.json](M0_results/protocol_snapshot.json)，锁定时间 2026-10-10T10:34:19+08:00，在任何训练或解码之前写入。汇总：[G/M0_results/summary.json](M0_results/summary.json)。没有逐样本 JSON。
+预注册协议：[workspace/G/M0_results/protocol_snapshot.json](M0_results/protocol_snapshot.json)，锁定时间 2026-10-10T10:34:19+08:00，在任何训练或解码之前写入。汇总：[workspace/G/M0_results/summary.json](M0_results/summary.json)。没有逐样本 JSON。
 
 ### 实验 A（未跑）
 
@@ -79,3 +79,5 @@
 | 算力 | ≤24 GPU·h | 0 | 未超预算；停因是没有可用 CUDA |
 
 组合规则 `A ∧ (B1 ∨ B2)` 无法计算。按协议，这种情况记 **blocked**，不记 proceed / 降级 / 判死。方向 G 不因这次缺失而关闭；M1 也不立项。GPU 可用之后应从已锁定的 `protocol_snapshot.json` 重跑，不得改判据。
+
+维护位置已从仓库根目录 `G/` 移到 `workspace/G/`。判据数字没有改。后续权重目录是 `workspace/G/M0_results/checkpoints`。
