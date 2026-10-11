@@ -1,0 +1,15 @@
+{
+  "checked_at": "2026-10-11T10:16:00+08:00",
+  "torch": "2.8.0+cu128",
+  "cuda_built": true,
+  "cuda_version": "12.8",
+  "cuda_available": true,
+  "device_count": 2,
+  "devices": [
+    "NVIDIA A800 80GB PCIe",
+    "NVIDIA A800 80GB PCIe"
+  ],
+  "usable_cuda": true,
+  "nproc_per_node": 2,
+  "note": "Previous 2026-10-10 gate was blocked (EPERM on /dev/nvidia*). This process can enumerate two A800 devices. Training starts from the locked protocol. Gates are unchanged."
+}

@@ -1,0 +1,10 @@
+{
+  "n": 200,
+  "n_recovered": 7,
+  "RecoveryRate": 0.035,
+  "ci95": [
+    0.01,
+    0.06
+  ],
+  "first_gold_percentile": 0.4746744638411305
+}

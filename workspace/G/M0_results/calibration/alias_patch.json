@@ -1,0 +1,16 @@
+{
+  "patched": true,
+  "when": "2026-10-11T11:20:00+08:00",
+  "source": "ASU DefaultThink, seed 1001, 15 auto-positives and all 9 auto-negatives (only 9 auto-negatives existed)",
+  "n_drawn": 24,
+  "n_disagreements_before_recompute": 14,
+  "reason": "The unpatched alias table treated prompt entities and title/name fragments as leaks. DirectQA then scored 192/200 because TOFU questions already contain the author name. Review of those outputs showed wrong facts (Khalid Al-Babtain, Moshev, The Nightingale's Prayer, father-was-a-father) carrying a positive auto label.",
+  "patch": [
+    "Keep only maximal proper-name spans. of/the/de/da/van/bin/ibn may join a name. Do not emit subspans.",
+    "Quoted titles stay whole. Do not mine name pieces inside quotes.",
+    "Drop while and doctor as common words, not proper names.",
+    "Drop a span whose normalized text is already contained in the question.",
+    "Match on alphanumeric boundaries so Moshe does not hit Moshev."
+  ],
+  "recomputed_from": "saved generations, no regeneration"
+}

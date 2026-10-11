@@ -1,0 +1,120 @@
+{
+  "decision": "withheld_negative_control",
+  "protocol": "workspace/G/M0_results/protocol_snapshot.json",
+  "gpu_gate": "workspace/G/M0_results/gpu_gate.json",
+  "gpu_hours_used": 2.056690415342649,
+  "data_source": "sangyon/R-TOFU forget05 joined to local forget05 task_id==1",
+  "rtofu_join_n": 200,
+  "cot_fallback_used": false,
+  "judge_calibration": {
+    "n_reviewed": 24,
+    "n_drawn": 24,
+    "n_disagreements": 14,
+    "alias_table_patched": true,
+    "pending_adjudication": false
+  },
+  "negative_control": {
+    "retain_n": 50,
+    "valid": false,
+    "DirectQA_RecoveryRate": 0.54,
+    "DefaultThink_RecoveryRate": 0.42,
+    "ZeroThink_RecoveryRate": 0.42
+  },
+  "experiment_A": {
+    "ASU+GD": {
+      "DirectQA": {
+        "n": 200,
+        "RecoveryRate": 0.025,
+        "ci95": [
+          0.005,
+          0.05
+        ],
+        "first_gold_percentile": 0.4903448043184885,
+        "n_recovered": 5
+      },
+      "DefaultThink": {
+        "n": 200,
+        "RecoveryRate": 0.03,
+        "ci95": [
+          0.01,
+          0.055
+        ],
+        "first_gold_percentile": 0.49971423085935496,
+        "n_recovered": 6
+      },
+      "ZeroThink": {
+        "n": 200,
+        "RecoveryRate": 0.02,
+        "ci95": [
+          0.005,
+          0.04
+        ],
+        "first_gold_percentile": 0.6769642238392238,
+        "n_recovered": 4
+      },
+      "DefaultThink_minus_DirectQA_pp": 0.4999999999999998
+    },
+    "NPO+GD": {
+      "DirectQA": {
+        "n": 200,
+        "RecoveryRate": 0.02,
+        "ci95": [
+          0.005,
+          0.04
+        ],
+        "first_gold_percentile": 0.4421557187310261,
+        "n_recovered": 4
+      },
+      "DefaultThink": {
+        "n": 200,
+        "RecoveryRate": 0.035,
+        "ci95": [
+          0.01,
+          0.06
+        ],
+        "first_gold_percentile": 0.4746744638411305,
+        "n_recovered": 7
+      },
+      "ZeroThink": {
+        "n": 200,
+        "RecoveryRate": 0.03,
+        "ci95": [
+          0.01,
+          0.055
+        ],
+        "first_gold_percentile": 0.7625783581207198,
+        "n_recovered": 6
+      },
+      "DefaultThink_minus_DirectQA_pp": 1.5000000000000002
+    }
+  },
+  "gates": {
+    "A": {
+      "pass": false,
+      "DefaultThink_RecoveryRate": 0.03,
+      "DefaultThink_ci95_low": 0.01,
+      "DirectQA_RecoveryRate": 0.025
+    },
+    "B1": {
+      "pass": "—",
+      "n": "—",
+      "mean_jaccard": "—",
+      "ci95": "—"
+    },
+    "B2": {
+      "pass": "—",
+      "n": "—",
+      "mean_D_pivot": "—",
+      "mean_D_random": "—",
+      "ratio": "—",
+      "wilcoxon_p": "—",
+      "paired_d": "—"
+    },
+    "downgrade_B2_layer24": {
+      "ran": false,
+      "pass": "—"
+    },
+    "secondary_base": "—"
+  },
+  "per_sample_json": "workspace/G/M0_results/judged"
+}

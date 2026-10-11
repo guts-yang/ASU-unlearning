@@ -1,0 +1,7 @@
+{
+  "train_gpu_hours": 1.3044444444444445,
+  "eval_gpu_hours": 0.7522459708982043,
+  "gpu_hours": 2.056690415342649,
+  "eval_devices": 1,
+  "recorded_at": "2026-10-11T11:16:00+08:00"
+}
