@@ -1,0 +1,24 @@
+Retain ROUGE: 0.7522016662415362
+Retain Probability: 0.43589939064565103
+Retain Truth Ratio: 0.49059921939157447
+Retain Token Entropy: 0.8905953251621839
+Retain Cosine Similarity: 0.8840161823108792
+Retain Entailment Score: 0.5525
+Forget ROUGE: 0.7009898246426277
+Forget Probability: 0.4335364862194522
+Forget Truth Ratio: 0.46333772909272586
+Forget Token Entropy: 0.8745430195875441
+Forget Cosine Similarity: 0.7770950689539313
+Forget Entailment Score: 0.345
+Model Utility Retain: 0.6169119035083461
+Model Utility: 0.6169119035083461
+Forget Efficacy: 0.5184975159745586
+split: forget
+forget_loss: ASU+KL
+forget_coeff: 0.1
+regularization_coeff: 1.0
+learning_rate: 5e-06
+epochs: 5
+fix_ref_model: True
+mask: True
+unlearn_step: last

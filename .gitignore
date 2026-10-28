@@ -46,4 +46,9 @@ hf_cache/
 workspace/results/*
 !workspace/results/2026-09-27/
 workspace/logs/
+# Direction C archive is tracked, including copied logs under workspace/C/logs/.
+# workspace/H/logs/*.log stay ignored via the global *.log rule above.
+!workspace/C/
+!workspace/C/**
+!workspace/C/**/*.log
 Right-to-be-forgotten/outputs/

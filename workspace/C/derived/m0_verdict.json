@@ -1,0 +1,47 @@
+{
+  "decision": "proceed",
+  "mechanism": {
+    "contrast": "derivation_vs_function",
+    "role": "mechanism_kill",
+    "n_problems": 1278,
+    "mean_slope_gap": 0.9104717770332704,
+    "cohens_d": 1.1673999992480737,
+    "ci95": [
+      0.867773465545387,
+      0.9531971075847206
+    ],
+    "ci_covers_zero": false,
+    "abs_d_below_threshold": false,
+    "threshold_d": 0.2,
+    "status": "pass",
+    "kill": false
+  },
+  "taxonomy": {
+    "contrast": "derivation_vs_factual",
+    "role": "report_only",
+    "n_problems": 1301,
+    "mean_slope_gap": 0.4037547222240463,
+    "cohens_d": 0.6117090714208387,
+    "ci95": [
+      0.36942144288142414,
+      0.441103957110814
+    ],
+    "ci_covers_zero": false,
+    "abs_d_below_threshold": false,
+    "threshold_d": 0.2,
+    "status": "pass",
+    "kill": false
+  },
+  "entropy_used": false,
+  "taus": [
+    1.0,
+    1.5,
+    2.0,
+    2.5,
+    3.0,
+    3.5,
+    4.0
+  ],
+  "n_records": 1319,
+  "layers_id": null
+}

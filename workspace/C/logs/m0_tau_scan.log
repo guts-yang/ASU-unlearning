@@ -1,0 +1,215 @@
+You are attempting to use Flash Attention 2.0 with a model not initialized on GPU. Make sure to move the model to GPU after initializing it on CPU with `model.to('cuda')`.
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:00<00:00,  6.03it/s]Loading checkpoint shards:  50%|█████     | 2/4 [00:00<00:00,  5.97it/s]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:00<00:00,  5.83it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00,  6.86it/s]
+scan 0/1319
+Starting from v4.46, the `logits` model output will have the same type as the model (except at train time, where it will always be FP32)
+scan 8/1319
+scan 16/1319
+scan 24/1319
+scan 32/1319
+scan 40/1319
+scan 48/1319
+scan 56/1319
+scan 64/1319
+scan 72/1319
+scan 80/1319
+scan 88/1319
+scan 96/1319
+scan 104/1319
+scan 112/1319
+scan 120/1319
+scan 128/1319
+scan 136/1319
+scan 144/1319
+scan 152/1319
+scan 160/1319
+scan 168/1319
+scan 176/1319
+scan 184/1319
+scan 192/1319
+scan 200/1319
+scan 208/1319
+scan 216/1319
+scan 224/1319
+scan 232/1319
+scan 240/1319
+scan 248/1319
+scan 256/1319
+scan 264/1319
+scan 272/1319
+scan 280/1319
+scan 288/1319
+scan 296/1319
+scan 304/1319
+scan 312/1319
+scan 320/1319
+scan 328/1319
+scan 336/1319
+scan 344/1319
+scan 352/1319
+scan 360/1319
+scan 368/1319
+scan 376/1319
+scan 384/1319
+scan 392/1319
+scan 400/1319
+scan 408/1319
+scan 416/1319
+scan 424/1319
+scan 432/1319
+scan 440/1319
+scan 448/1319
+scan 456/1319
+scan 464/1319
+scan 472/1319
+scan 480/1319
+scan 488/1319
+scan 496/1319
+scan 504/1319
+scan 512/1319
+scan 520/1319
+scan 528/1319
+scan 536/1319
+scan 544/1319
+scan 552/1319
+scan 560/1319
+scan 568/1319
+scan 576/1319
+scan 584/1319
+scan 592/1319
+scan 600/1319
+scan 608/1319
+scan 616/1319
+scan 624/1319
+scan 632/1319
+scan 640/1319
+scan 648/1319
+scan 656/1319
+scan 664/1319
+scan 672/1319
+scan 680/1319
+scan 688/1319
+scan 696/1319
+scan 704/1319
+scan 712/1319
+scan 720/1319
+scan 728/1319
+scan 736/1319
+scan 744/1319
+scan 752/1319
+scan 760/1319
+scan 768/1319
+scan 776/1319
+scan 784/1319
+scan 792/1319
+scan 800/1319
+scan 808/1319
+scan 816/1319
+scan 824/1319
+scan 832/1319
+scan 840/1319
+scan 848/1319
+scan 856/1319
+scan 864/1319
+scan 872/1319
+scan 880/1319
+scan 888/1319
+scan 896/1319
+scan 904/1319
+scan 912/1319
+scan 920/1319
+scan 928/1319
+scan 936/1319
+scan 944/1319
+scan 952/1319
+scan 960/1319
+scan 968/1319
+scan 976/1319
+scan 984/1319
+scan 992/1319
+scan 1000/1319
+scan 1008/1319
+scan 1016/1319
+scan 1024/1319
+scan 1032/1319
+scan 1040/1319
+scan 1048/1319
+scan 1056/1319
+scan 1064/1319
+scan 1072/1319
+scan 1080/1319
+scan 1088/1319
+scan 1096/1319
+scan 1104/1319
+scan 1112/1319
+scan 1120/1319
+scan 1128/1319
+scan 1136/1319
+scan 1144/1319
+scan 1152/1319
+scan 1160/1319
+scan 1168/1319
+scan 1176/1319
+scan 1184/1319
+scan 1192/1319
+scan 1200/1319
+scan 1208/1319
+scan 1216/1319
+scan 1224/1319
+scan 1232/1319
+scan 1240/1319
+scan 1248/1319
+scan 1256/1319
+scan 1264/1319
+scan 1272/1319
+scan 1280/1319
+scan 1288/1319
+scan 1296/1319
+scan 1304/1319
+scan 1312/1319
+{
+  "decision": "proceed",
+  "mechanism": {
+    "contrast": "derivation_vs_function",
+    "role": "mechanism_kill",
+    "n_problems": 1278,
+    "mean_slope_gap": 0.9104717770332704,
+    "cohens_d": 1.1673999992480737,
+    "ci95": [
+      0.867773465545387,
+      0.9531971075847206
+    ],
+    "ci_covers_zero": false,
+    "abs_d_below_threshold": false,
+    "threshold_d": 0.2,
+    "status": "pass",
+    "kill": false
+  },
+  "taxonomy": {
+    "contrast": "derivation_vs_factual",
+    "role": "report_only",
+    "n_problems": 1301,
+    "mean_slope_gap": 0.4037547222240463,
+    "cohens_d": 0.6117090714208387,
+    "ci95": [
+      0.36942144288142414,
+      0.441103957110814
+    ],
+    "ci_covers_zero": false,
+    "abs_d_below_threshold": false,
+    "threshold_d": 0.2,
+    "status": "pass",
+    "kill": false
+  },
+  "entropy_used": false,
+  "taus": [
+    1.0,
+    1.5,
+    2.0,
+    2.5,
+    3.0,
+    3.5,
+    4.0
+  ],
+  "n_records": 1319,
+  "layers_id": null
+}

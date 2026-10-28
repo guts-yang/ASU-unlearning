@@ -1,0 +1,92 @@
+{
+  "assessed_at": "2026-10-08",
+  "archived_at": "2026-10-28T22:47:00+08:00",
+  "setting": {
+    "model": "NousResearch/Meta-Llama-3-8B-Instruct",
+    "forget_loss": "ASU+KL",
+    "attention_temp": 2.0,
+    "lr": 5e-06,
+    "num_epochs": 5,
+    "seed": 1001,
+    "data": "Right-to-be-forgotten/data/real_world",
+    "save_root": "/root/autodl-tmp/ASU-unlearning/checkpoints/real_world_da_asu"
+  },
+  "protocol_m1": [
+    "Forget Efficacy relative to ASU+KL baseline must not drop",
+    "GSM8K must rise by at least 3 points vs baseline",
+    "That GSM8K rise must exceed the logit_control run"
+  ],
+  "runs": [
+    {
+      "name": "baseline",
+      "checkpoint_dir": "/root/autodl-tmp/ASU-unlearning/checkpoints/real_world_da_asu/llama3-8b/forget/ASU+KL/seed_1001/epoch5_5e-06_FixRefTrue_maskTrue_Fcoeff0.1_Rcoeff1.0_Temp2.0_LayersNone_beta0.1",
+      "da_asu": {
+        "enabled": false,
+        "mode": "anchor",
+        "mu": 1.0,
+        "reason_path": null,
+        "reason_max_length": 512,
+        "verdict_path": null,
+        "allow_without_m0": false
+      },
+      "model_utility": 0.6161925312237267,
+      "forget_efficacy": 0.5259083193164308,
+      "gsm8k": 0.714177407126611
+    },
+    {
+      "name": "anchor",
+      "checkpoint_dir": "/root/autodl-tmp/ASU-unlearning/checkpoints/real_world_da_asu/llama3-8b/forget/ASU+KL/seed_1001/epoch5_5e-06_FixRefTrue_maskTrue_Fcoeff0.1_Rcoeff1.0_Temp2.0_LayersNone_beta0.1_anchor",
+      "da_asu": {
+        "enabled": true,
+        "mode": "anchor",
+        "mu": 1.0,
+        "reason_path": "/usr/local/ASU-unlearning/workspace/results/direction_c/gsm8k_train.jsonl",
+        "reason_max_length": 512,
+        "verdict_path": null,
+        "allow_without_m0": false
+      },
+      "model_utility": 0.6169119035083461,
+      "forget_efficacy": 0.5184975159745586,
+      "gsm8k": 0.7520849128127369
+    },
+    {
+      "name": "logit_control",
+      "checkpoint_dir": "/root/autodl-tmp/ASU-unlearning/checkpoints/real_world_da_asu/llama3-8b/forget/ASU+KL/seed_1001/epoch5_5e-06_FixRefTrue_maskTrue_Fcoeff0.1_Rcoeff1.0_Temp2.0_LayersNone_beta0.1_logit_control",
+      "da_asu": {
+        "enabled": true,
+        "mode": "logit_control",
+        "mu": 1.0,
+        "reason_path": "/usr/local/ASU-unlearning/workspace/results/direction_c/gsm8k_train.jsonl",
+        "reason_max_length": 512,
+        "verdict_path": null,
+        "allow_without_m0": false
+      },
+      "model_utility": 0.6167023624667058,
+      "forget_efficacy": 0.5159127330963275,
+      "gsm8k": 0.46626231993934797
+    }
+  ],
+  "gates": {
+    "fe_not_drop": {
+      "pass": false,
+      "anchor_fe": 0.5184975159745586,
+      "baseline_fe": 0.5259083193164308,
+      "delta": -0.007410803341872163
+    },
+    "gsm_plus_3pt": {
+      "pass": true,
+      "anchor_gsm": 0.7520849128127369,
+      "baseline_gsm": 0.714177407126611,
+      "delta_points": 3.7907505686125886,
+      "threshold_points": 3.0
+    },
+    "gsm_above_logit_control": {
+      "pass": true,
+      "anchor_gsm": 0.7520849128127369,
+      "logit_gsm": 0.46626231993934797
+    }
+  },
+  "all_gates_pass": false,
+  "decision": "fail_m1",
+  "one_line": "Anchor recovers GSM8K (+3.8pt) above logit control, but FE drops slightly; M1 fails on FE-not-drop."
+}
