@@ -1,12 +1,12 @@
 {
   "stage": "stage_1_baseline_alignment",
-  "status": "blocked",
+  "status": "stage1_multiseed_complete",
   "decision": "do_not_start_e0",
-  "assessed_at": "2026-10-28T16:28:00+08:00",
-  "check_type": "non_gpu_identity_and_environment",
+  "assessed_at": "2026-10-28T22:52:00+08:00",
+  "check_type": "stage1_train_and_eval",
   "repository": {
     "branch": "fuxian",
-    "commit": "47ba51c88d11689ab51faa60beb9143961a29993"
+    "commit": "56b81d594436f32f546e7dc6be9e80f795bd622d"
   },
   "approved_main_chain": {
     "implementation": "Right-to-be-forgotten",
@@ -24,15 +24,27 @@
     "retain95_json_present": false,
     "checkpoint_present": true,
     "training_dependencies_present": true,
-    "evaluation_dependencies_present": false,
+    "evaluation_dependencies_present": true,
     "requirements_pin_matches_installed_transformers": false,
-    "gpu_discoverable": false,
+    "gpu_discoverable": true,
     "smoke_test_run": false,
-    "global_asu_multiseed_run": false
+    "global_asu_single_run_evaluated": true,
+    "global_asu_multiseed_run": true
+  },
+  "this_run": {
+    "seeds_requested": [1002, 1003, 1004],
+    "independent_runs": 3,
+    "seed_mechanism": "cfg.seed + sample index",
+    "model_utility_mean": 0.743063,
+    "forget_efficacy_mean": 0.787507,
+    "model_utility_retain_mean": 0.697322,
+    "evidence": "workspace/H/derived/stage1_seeded_baseline.json"
   },
   "evidence": {
     "data_identity": "workspace/H/derived/stage1_data_identity.json",
-    "checkpoint_environment": "workspace/H/derived/stage1_checkpoint_environment.json"
+    "checkpoint_environment": "workspace/H/derived/stage1_checkpoint_environment.json",
+    "baseline_eval": "workspace/H/derived/stage1_baseline_eval.json",
+    "seeded_baseline": "workspace/H/derived/stage1_seeded_baseline.json"
   },
   "resolved": [
     {
@@ -46,23 +58,30 @@
       "resolution": "Three safetensors shards are readable at /root/autodl-tmp/models/tofu_ft_llama2-7b, snapshot 8fa500e8f345f1dd9cfe95bb4689878c944c9cbd. Content hashes are in the environment record."
     }
   ],
-  "blockers": [
+  "resolved_later": [
     {
       "id": "B3",
-      "issue": "metrics.py cannot import jsonlines or sentence_transformers. Installed transformers is 4.46.3; Right-to-be-forgotten/requirements.txt pins 4.43.0. Neither gap was installed during this check.",
-      "minimum_unblock": "Approve an environment whose eval imports succeed and whose version lock is recorded. Do not treat the current interpreter as that lock."
+      "resolution": "jsonlines and sentence-transformers 3.3.1 were installed. transformers was restored to 4.46.3 after a transient upgrade to 5.21.0. huggingface-hub is 0.36.2. The requirements pin remains transformers==4.43.0."
     },
     {
       "id": "B4",
-      "issue": "nvidia-smi exists but nvidia-smi -L printed no devices, and /dev/nvidia* is absent. Seeds and GPU-hours remain null.",
-      "minimum_unblock": "Expose a GPU execution environment and freeze the seed list plus GPU-hour budget before any smoke test."
+      "resolution": "Two NVIDIA A800 80GB GPUs were visible. Training and evaluation completed for stage-1 runs."
+    },
+    {
+      "id": "B5",
+      "was": "cfg.seed did not change the trained model because dataset/data_module.py used torch.manual_seed(idx), so seeds 1002 and 1003 wrote byte-identical checkpoints.",
+      "resolution": "TextForgetDatasetQA now uses torch.manual_seed(cfg.seed + idx); forget.py passes seed=cfg.seed into the dataset and TrainingArguments. Seeds 1002/1003/1004 under workspace_H/global_asu_forget05_seeded are independent; metrics in derived/stage1_seeded_baseline.json."
     }
   ],
+  "blockers": [],
+  "notes": [
+    "E0 is not started by this gate. Stage-1 multiseed baseline is recorded; opening E0 requires an explicit protocol decision."
+  ],
   "claims": {
-    "baseline_reproduced": "not_verified",
+    "baseline_reproduced": "multiseed_global_asu",
     "caass_benefit": "not_verified",
     "teacher_nll_response": "not_measured",
-    "student_fe_mu": "not_measured",
+    "student_fe_mu": "measured_three_seeds",
     "relearning_robustness": "not_measured"
   }
 }

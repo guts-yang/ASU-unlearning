@@ -1,0 +1,47 @@
+{
+  "assessed_at": "2026-10-28T21:02:00+08:00",
+  "method": "ASU+GD",
+  "split": "forget05",
+  "task_list": "1",
+  "attention_temp": 2.3,
+  "layers_id": null,
+  "independent_seed_count": 1,
+  "seed_mechanism": "TextForgetDatasetQA.__getitem__ calls torch.manual_seed(idx) before sampling retain. cfg.seed is stored, but each sample resets the torch RNG to the sample index, so 1002 and 1003 produced byte-identical checkpoints and identical metrics.",
+  "runs": [
+    {
+      "seed": 1001,
+      "origin": "historical",
+      "weights": "/root/autodl-tmp/ASU-unlearning/checkpoints/tofu_replay/llama2-7b/forget05/ASU+GD/seed_1001/epoch5_1e-05_FixRefTrue_maskTrue_Fcoeff0.1_Rcoeff1.0_Temp2.3_LayersNone_beta0.1/1/unlearn_times_1/checkpoint-last",
+      "metrics_file": "Right-to-be-forgotten/results/tofu/llama2-7b/forget05/ASU+GD/seed_1001/epoch5_1e-05_FixRefTrue_maskTrue_Fcoeff0.1_Rcoeff1.0_Temp2.3_LayersNone_beta0.1/1/unlearn_times_1/eval_results-last/unlearning_results.txt",
+      "model_utility": 0.740182465708051,
+      "forget_efficacy": 0.7740777730353676,
+      "model_utility_retain": 0.6837440031523696,
+      "same_code_run_as_1002": false
+    },
+    {
+      "seed": 1002,
+      "origin": "this_run",
+      "trained_at": "2026-10-28T20:00:30+08:00",
+      "eval_finished_at": "2026-10-28T20:55:53+08:00",
+      "train_loss": 0.35622119903564453,
+      "train_runtime_seconds": 1149.3998,
+      "checkpoint": "/root/autodl-tmp/ASU-unlearning/workspace_H/global_asu_forget05/llama2-7b/forget05/ASU+GD/seed_1002/epoch5_1e-05_FixRefTrue_maskTrue_Fcoeff0.1_Rcoeff1.0_Temp2.3_LayersNone_beta0.1/1/unlearn_times_1/checkpoint-last",
+      "metrics_file": "/root/autodl-tmp/ASU-unlearning/workspace_H/global_asu_forget05/llama2-7b/forget05/ASU+GD/seed_1002/epoch5_1e-05_FixRefTrue_maskTrue_Fcoeff0.1_Rcoeff1.0_Temp2.3_LayersNone_beta0.1/1/unlearn_times_1/eval_results-last/unlearning_results.txt",
+      "model_utility": 0.7435664489134274,
+      "forget_efficacy": 0.7963843461654277,
+      "model_utility_retain": 0.6902264079393263
+    },
+    {
+      "seed": 1003,
+      "origin": "this_run",
+      "trained_at": "2026-10-28T20:21:35+08:00",
+      "eval_finished_at": "2026-10-28T21:02:00+08:00",
+      "train_loss": 0.35622119903564453,
+      "train_runtime_seconds": 1150.7486,
+      "checkpoint_identical_to_seed": 1002,
+      "model_utility": 0.7435664489134274,
+      "forget_efficacy": 0.7963843461654277,
+      "model_utility_retain": 0.6902264079393263
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 
 ## 状态与范围
 
-- 状态：**阻塞，未运行**。
+- 状态：**Global ASU 多种子（1002/1003/1004）已评测；E0 尚未开始**。
 - 主问题：在同一 checkpoint、TOFU split 和评测口径下，CAASS-ASU 是否可在相近 Forget Efficacy（FE）下提高 Model Utility（MU）。
 - 当前主链路：`Right-to-be-forgotten`（RtBF）中的 `ASU+GD`。
 - 主 split：`forget05`，`TASK_LIST=1`。代码加载 `retain50.json`，再拼上 `task_id != 1` 的 forget 行。没有 `retain95.json`。
@@ -21,31 +21,26 @@
 | ASU+GD 损失 | `forget_coeff * masked_forget_KL + regularization_coeff * retain_NLL` | `trainer/trainer.py`、`trainer/losses.py` |
 | Forget KL | logits shift 后以 `labels[:, 1:] != -100` 取答案位；逐样本均值再 batch 均值 | `trainer/losses.py` |
 | Prompt/padding 标签 | prompt 与 padding 设为 `-100` | `dataset/data_module.py` |
-| Forget-retain 抽样 | retain 为按 `idx` 固定种子后随机偏移的样本。`forget05` 的 retain 文件名由 `100 - min(10 * 5, 90)` 得到 `retain50`；`TASK_LIST=1` 时再拼上其余 task | `dataset/data_module.py`、`forget.py` |
+| Forget-retain 抽样 | retain 偏移用 `torch.manual_seed(cfg.seed + idx)`，再 `randint`；`forget.py` 传入 `seed=cfg.seed` | `dataset/data_module.py`、`forget.py` |
 
 `ASU+KL` 不属于主比较：当前实现的后定义 `kl_loss` 覆盖先前带答案 mask 的版本，产生全位置 `batchmean` KL。因此它只能在单独冻结语义后作敏感性分析。
 
-## 拟冻结的训练配置（不得将其当作已跑超参）
+## 训练配置（已跑）
 
-| 字段 | 拟用值 / 规则 | 来源或状态 |
+| 字段 | 值 | 来源或状态 |
 | --- | --- | --- |
-| 模型 | `locuslab/tofu_ft_llama2-7b` | 路径与三份分片哈希见 `derived/stage1_checkpoint_environment.json`；尚未加载 |
+| 模型 | `locuslab/tofu_ft_llama2-7b`（本地缓存；也可用 `open-unlearning/tofu_Llama-2-7b-chat-hf_full`） | `derived/stage1_checkpoint_environment.json` |
 | 模型架构 | `NousResearch/Llama-2-7b-chat-hf`，`LlamaForCausalLM`，32 层，bfloat16 | checkpoint `config.json` |
-| 数据 | `forget05.json` 2000 行，task 1 为 200 行；`retain50.json` 2000 行加其余 task 1800 行，有效 retain 3800 行；评测 retain 为 `retain_perturbed.json` 400 行 | `derived/stage1_data_identity.json`。`retain95.json` 不存在 |
+| 数据 | `forget05.json` 2000 行，task 1 为 200 行；`retain50.json` 2000 行加其余 task 1800 行，有效 retain 3800 行；评测 retain 为 `retain_perturbed.json` 400 行 | `derived/stage1_data_identity.json` |
 | loss | `ASU+GD` | 主基线 |
-| 温度 | 全层单一 `tau=2.3` | 历史脚本参考，非本地最优值 |
-| `layers_id` | 命令必须传 `null`。`tofu.yaml` 默认 `[]` 不会给任何层加温度 | `config/tofu.yaml`、`my_models/my_llama.py` |
-| forget coefficient | `0.1` | 当前脚本 |
-| retain coefficient | `1.0` | 当前脚本 |
-| learning rate | `1e-5` | 当前脚本 |
-| epochs | `5` | 当前脚本 |
-| per-device batch | `4` | 当前配置 |
-| gradient accumulation | `4` | 当前配置 |
-| max sequence length | `500` | 当前代码 |
-| seed | 预注册至少 3 个；具体列表须在运行前写入配置快照 | 尚未冻结 |
-| optimizer | `paged_adamw_32bit` | 当前代码 |
-| precision | bf16 | 当前代码 |
-| distributed | 训练 2 GPU，评测 1 GPU | 当前脚本 |
+| 温度 | 全层单一 `tau=2.3` | 已跑 |
+| `layers_id` | `null` | 已跑 |
+| forget / retain coeff | `0.1` / `1.0` | 已跑 |
+| learning rate / epochs | `1e-5` / `5` | 已跑 |
+| batch × accum / max length | `4` × `4` / `500` | 已跑 |
+| seed | `1002`、`1003`、`1004`；机制 `cfg.seed + sample_index` | 修复后独立 |
+| optimizer / precision | `paged_adamw_32bit` / bf16 | 已跑 |
+| distributed | 训练 2 GPU，评测 1 GPU | 已跑 |
 
 ## 评测与方向
 
@@ -65,13 +60,32 @@
 
 M0 的 `withheld_negative_control` 不进入本实验卡的基线、效应或失败判定。
 
-## 运行前阻塞项
+## 修复前撞车对照
 
-1. 评测依赖仍缺 `jsonlines`、`sentence_transformers`。当前 `transformers==4.46.3`，`requirements.txt` 锁定 `4.43.0`。这次检查没有安装缺包。
-2. 可见 GPU 型号、数量、显存和作业时限。`nvidia-smi` 存在，但 `nvidia-smi -L` 没有设备，`/dev/nvidia*` 不存在。
-3. 运行前固定的至少三个 seed、评测保存路径和可用 GPU-hours。配置模板里这两项仍是 null。
+修复 `manual_seed(idx)` 之前，seed 1002 与 1003 权重逐字节相同（一次确定性运行）。明细：`derived/stage1_baseline_eval.json`。
 
-数据路径、SHA-256 和 checkpoint snapshot `8fa500e8f345f1dd9cfe95bb4689878c944c9cbd` 已写入 `configs/global_asu_forget05.template.yaml`。这只是身份核对，不是训练结果。
+| seed | MU | FE | Model Utility Retain | 证据 |
+| --- | ---: | ---: | ---: | --- |
+| 1002 ≡ 1003 | 0.743566 | 0.796384 | 0.690226 | 修复前；权重相同 |
+| 1001 | 0.740182 | 0.774078 | 0.683744 | 历史结果，环境不同 |
+
+## 修复后多种子 Global ASU
+
+机制：`torch.manual_seed(cfg.seed + sample_index)`。权重根：`/root/autodl-tmp/ASU-unlearning/workspace_H/global_asu_forget05_seeded`。明细：`derived/stage1_seeded_baseline.json`。
+
+| seed | MU | FE | Model Utility Retain |
+| --- | ---: | ---: | ---: |
+| 1002 | 0.739407 | 0.783372 | 0.694880 |
+| 1003 | 0.740865 | 0.786116 | 0.690072 |
+| 1004 | 0.748917 | 0.793032 | 0.707015 |
+| mean ± stdev | 0.743063 ± 0.005122 | 0.787507 ± 0.004978 | 0.697322 ± 0.008731 |
+
+## 仍未解除 / 备注
+
+1. E0 未启动；是否用上述波动估 Pareto 允许偏差，由协议与 gate 另行裁定。
+2. 当前 `transformers==4.46.3`，`requirements.txt` 仍锁定 `4.43.0`。
+
+数据路径、SHA-256 和 checkpoint snapshot 见 `configs/global_asu_forget05.template.yaml` 与 `derived/`。
 
 ## Smoke-test 通过标准
 

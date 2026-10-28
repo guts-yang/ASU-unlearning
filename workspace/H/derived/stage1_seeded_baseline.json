@@ -1,0 +1,20 @@
+{
+  "assessed_at": "2026-10-28T22:33:04+08:00",
+  "method": "ASU+GD",
+  "split": "forget05",
+  "task_list": "1",
+  "attention_temp": 2.3,
+  "layers_id": null,
+  "seed_mechanism": "torch.manual_seed(cfg.seed + sample_index)",
+  "save_root": "/root/autodl-tmp/ASU-unlearning/workspace_H/global_asu_forget05_seeded",
+  "runs": [
+    {"seed": 1002, "train_loss": 0.35398655553017894, "model_utility": 0.7394069275570984, "forget_efficacy": 0.7833715014445903, "model_utility_retain": 0.6948795689217326},
+    {"seed": 1003, "train_loss": 0.36080397329022806, "model_utility": 0.7408650504991577, "forget_efficacy": 0.786116234576583, "model_utility_retain": 0.6900722038688804},
+    {"seed": 1004, "train_loss": 0.34261934218868134, "model_utility": 0.7489171438000186, "forget_efficacy": 0.7930323177121608, "model_utility_retain": 0.7070146018301728}
+  ],
+  "summary": {
+    "model_utility": {"mean": 0.743063, "stdev": 0.005122, "range": 0.00951},
+    "forget_efficacy": {"mean": 0.787507, "stdev": 0.004978, "range": 0.009661},
+    "model_utility_retain": {"mean": 0.697322, "stdev": 0.008731, "range": 0.016942}
+  }
+}

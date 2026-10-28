@@ -1,0 +1,20 @@
+{
+  "started_at": "2026-10-28T20:00:30+08:00",
+  "status": "launched",
+  "method": "ASU+GD",
+  "split": "forget05",
+  "task_list": "1",
+  "attention_temp": 2.3,
+  "layers_id": null,
+  "seeds": [1002, 1003],
+  "skipped_seed_1001": "existing eval and tofu_replay checkpoint",
+  "gpus": ["NVIDIA A800 80GB PCIe", "NVIDIA A800 80GB PCIe"],
+  "nproc_per_node": 2,
+  "model_path": "/root/autodl-tmp/models/tofu_ft_llama2-7b",
+  "save_root": "/root/autodl-tmp/ASU-unlearning/workspace_H/global_asu_forget05",
+  "repository": {
+    "branch": "fuxian",
+    "commit": "56b81d594436f32f546e7dc6be9e80f795bd622d"
+  },
+  "command": "workspace/H/commands/run_stage1_baseline.sh"
+}
