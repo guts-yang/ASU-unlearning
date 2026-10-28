@@ -1,0 +1,54 @@
+{
+  "stage": "stage_1_baseline_alignment",
+  "status": "blocked",
+  "decision": "do_not_start_e0",
+  "assessed_at": "2026-10-28T13:46:00+08:00",
+  "repository": {
+    "branch": "fuxian",
+    "commit": "108eca7b8949110408212e3adb70f92ca4ce676a"
+  },
+  "approved_main_chain": {
+    "implementation": "Right-to-be-forgotten",
+    "method": "ASU+GD",
+    "split": "forget05",
+    "retain_split": "retain95",
+    "status": "candidate_only"
+  },
+  "checks": {
+    "tofu_data_present": false,
+    "checkpoint_present": false,
+    "training_dependencies_present": false,
+    "gpu_discoverable": false,
+    "smoke_test_run": false,
+    "global_asu_multiseed_run": false
+  },
+  "blockers": [
+    {
+      "id": "B1",
+      "issue": "TOFU JSON files were not found under Right-to-be-forgotten/data/tofu.",
+      "minimum_unblock": "Provide Forget05, Forget05 perturbed, and retain95 paths plus dataset version/hash."
+    },
+    {
+      "id": "B2",
+      "issue": "No local checkpoint weight files were found.",
+      "minimum_unblock": "Provide a licensed checkpoint path and content hash for the single main model."
+    },
+    {
+      "id": "B3",
+      "issue": "Current Python lacks transformers, datasets, accelerate, deepspeed, and hydra-core.",
+      "minimum_unblock": "Provide or approve creation of an isolated environment matching the frozen dependency manifest."
+    },
+    {
+      "id": "B4",
+      "issue": "nvidia-smi is unavailable in the active shell, so GPU model/count/VRAM and budget are unconfirmed.",
+      "minimum_unblock": "Run on or expose a GPU execution environment and state job time/GPU-hour budget."
+    }
+  ],
+  "claims": {
+    "baseline_reproduced": "not_verified",
+    "caass_benefit": "not_verified",
+    "teacher_nll_response": "not_measured",
+    "student_fe_mu": "not_measured",
+    "relearning_robustness": "not_measured"
+  }
+}
