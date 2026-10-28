@@ -1,0 +1,169 @@
+<mxfile host="Electron" agent="WorkBuddy">
+  <diagram id="asu-forget-code-faithful" name="ASU遗忘全链路_代码实证版">
+    <mxGraphModel dx="899" dy="674" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1240" pageHeight="960" math="1" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#26215C;" value="ASU 遗忘全链路实现图（代码版 · 案例：TOFU 微调后的 Llama-3.2-1B，16 层）" vertex="1">
+          <mxGeometry height="28" width="1160" x="40" y="14" as="geometry" />
+        </mxCell>
+        <mxCell id="mech" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAEEDA;strokeColor=#854F0B;fontSize=12;fontColor=#633806;arcSize=12;" value="机制假设：事实性回答依赖尖锐、低熵的注意力关联；语法与流畅依赖宽泛模式 → 对注意力打分做升温平滑，可选择性抹除事实、保留语言。代码实现验证：平滑确实只作用于注意力打分，且全部 16 层同时生效" vertex="1">
+          <mxGeometry height="44" width="1160" x="40" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="dr" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6F1FB;strokeColor=#185FA5;fontSize=12;fontColor=#042C53;arcSize=12;" value="&lt;b&gt;保留集&lt;/b&gt;&lt;br&gt;需保持的通用问答能力数据&lt;br&gt;（每步随机抽一条，不保证遍历完）" vertex="1">
+          <mxGeometry height="64" width="220" x="40" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="ct" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCEBEB;strokeColor=#A32D2D;dashed=1;fontSize=12;fontColor=#501313;arcSize=12;" value="&lt;b&gt;对照路线（现有方法）&lt;/b&gt;&lt;br&gt;梯度硬性推离 / 硬编码拒答&lt;br&gt;→ 乱码 / 过度无知&lt;br&gt;（无上界目标，语言能力受损）" vertex="1">
+          <mxGeometry height="100" width="220" x="40" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="df" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEEDFE;strokeColor=#534AB7;fontSize=12;fontColor=#26215C;arcSize=12;" value="&lt;b&gt;遗忘集&lt;/b&gt;&lt;br&gt;待抹除的目标问答对&lt;br&gt;（按序遍历，步数由它决定）" vertex="1">
+          <mxGeometry height="70" width="220" x="40" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="h1" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#5F5E5A;" value="阶段一 · 训练前（一次性完成）" vertex="1">
+          <mxGeometry height="26" width="900" x="300" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="temp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAEEDA;strokeColor=#854F0B;fontSize=12;fontColor=#633806;arcSize=12;" value="&lt;b&gt;确定平滑强度（固定值）&lt;/b&gt;&lt;br&gt;人工设定，训练全程不变&lt;br&gt;TOFU 案例 2.3（配置默认 2.0）" vertex="1">
+          <mxGeometry height="88" width="280" x="300" y="144" as="geometry" />
+        </mxCell>
+        <mxCell id="pair" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F1EFE8;strokeColor=#5F5E5A;fontSize=12;fontColor=#2C2C2A;arcSize=12;" value="&lt;b&gt;装配逐步配对的训练流&lt;/b&gt;&lt;br&gt;遗忘样本按序 + 保留样本随机&lt;br&gt;两路各自独立分词、掩码、成批&lt;br&gt;一个训练步 = 一对（遗忘批 + 保留批）" vertex="1">
+          <mxGeometry height="88" width="280" x="620" y="144" as="geometry" />
+        </mxCell>
+        <mxCell id="ref" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CECBF6;strokeColor=#534AB7;fontSize=12;fontColor=#26215C;arcSize=12;" value="&lt;b&gt;冻结参照模型&lt;/b&gt;&lt;br&gt;微调后模型的完整副本&lt;br&gt;参数定格、只做前向、不接收更新" vertex="1">
+          <mxGeometry height="88" width="260" x="940" y="144" as="geometry" />
+        </mxCell>
+        <mxCell id="h2" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#5F5E5A;" value="阶段二 · 每个训练步（循环执行）" vertex="1">
+          <mxGeometry height="26" width="900" x="300" y="258" as="geometry" />
+        </mxCell>
+        <mxCell id="tf" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CECBF6;strokeColor=#534AB7;fontSize=12;fontColor=#26215C;arcSize=12;" value="&lt;b&gt;教师带温前向（唯一携带平滑强度处）&lt;/b&gt;&lt;br&gt;16 层自注意力打分全部 ÷ τ&lt;br&gt;实现为对查询、键向量各乘 1/√τ&lt;br&gt;层归一化 / 前馈层 / 词嵌入均不受影响&lt;br&gt;逐层平滑 + 残差累积 → 分布整体烫平" vertex="1">
+          <mxGeometry height="104" width="280" x="300" y="296" as="geometry" />
+        </mxCell>
+        <mxCell id="st" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6F1FB;strokeColor=#185FA5;fontSize=12;fontColor=#042C53;arcSize=12;" value="&lt;b&gt;学生前向（不带温）&lt;/b&gt;&lt;br&gt;学生 = 待遗忘模型本体&lt;br&gt;与参照模型同一份权重出发&lt;br&gt;全参数可训练&lt;br&gt;打分按原生方式计算" vertex="1">
+          <mxGeometry height="104" width="280" x="620" y="296" as="geometry" />
+        </mxCell>
+        <mxCell id="tnote" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F1EFE8;strokeColor=#5F5E5A;dashed=1;fontSize=12;fontColor=#2C2C2A;arcSize=12;" value="&lt;b&gt;温度作用边界（代码实证）&lt;/b&gt;&lt;br&gt;仅遗忘通路的教师前向携带平滑强度&lt;br&gt;学生 / 保留 / 评测前向均不携带&lt;br&gt;按层生效的开关未接入调用处&lt;br&gt;→ 实际只能 16 / 16 层全开" vertex="1">
+          <mxGeometry height="104" width="260" x="940" y="296" as="geometry" />
+        </mxCell>
+        <mxCell id="rl" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6F1FB;strokeColor=#185FA5;fontSize=12;fontColor=#042C53;arcSize=12;" value="&lt;b&gt;保留信号（默认：拟合答案）&lt;/b&gt;&lt;br&gt;保留批上计算普通语言建模损失&lt;br&gt;提供与遗忘相反的梯度&lt;br&gt;防止抹知识退化成抹语言" vertex="1">
+          <mxGeometry height="96" width="280" x="300" y="424" as="geometry" />
+        </mxCell>
+        <mxCell id="fl" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEEDFE;strokeColor=#534AB7;fontSize=12;fontColor=#26215C;arcSize=12;" value="&lt;b&gt;遗忘信号（有界拉近）&lt;/b&gt;&lt;br&gt;逐词向烫平后的教师分布对齐&lt;br&gt;只对答案段计算（提示段被掩掉）&lt;br&gt;按序列取平均；目标有上界&lt;br&gt;→ 区别于对照路线的无限推离" vertex="1">
+          <mxGeometry height="96" width="280" x="620" y="424" as="geometry" />
+        </mxCell>
+        <mxCell id="mg" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAEEDA;strokeColor=#854F0B;fontSize=12;fontColor=#633806;arcSize=12;" value="&lt;b&gt;加权合并成单一更新信号&lt;/b&gt;&lt;br&gt;遗忘权重 × 遗忘信号 + 保留信号&lt;br&gt;代码实证：保留项系数固定为 1&lt;br&gt;遗忘权重的命名与常规约定相反" vertex="1">
+          <mxGeometry height="96" width="260" x="940" y="424" as="geometry" />
+        </mxCell>
+        <mxCell id="bp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF3DE;strokeColor=#3B6D11;fontSize=12;fontColor=#173404;arcSize=12;" value="&lt;b&gt;单次反向传播&lt;/b&gt;&lt;br&gt;全参数更新，单优化器&lt;br&gt;无梯度手术、无参数掩码" vertex="1">
+          <mxGeometry height="80" width="260" x="940" y="544" as="geometry" />
+        </mxCell>
+        <mxCell id="h3" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#5F5E5A;" value="阶段三 · 训练后（一次性完成）" vertex="1">
+          <mxGeometry height="26" width="900" x="300" y="648" as="geometry" />
+        </mxCell>
+        <mxCell id="ev" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAEEDA;strokeColor=#854F0B;fontSize=12;fontColor=#633806;arcSize=12;" value="&lt;b&gt;整体评测（离线）&lt;/b&gt;&lt;br&gt;遗忘质量与通用效用成对判定&lt;br&gt;循环内无早停、无在线阈值判定&lt;br&gt;达标 = 事实答不出且能力保持且输出连贯" vertex="1">
+          <mxGeometry height="100" width="280" x="300" y="682" as="geometry" />
+        </mxCell>
+        <mxCell id="sv" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF3DE;strokeColor=#3B6D11;fontSize=12;fontColor=#173404;arcSize=12;" value="&lt;b&gt;写回最终权重 = 遗忘后模型&lt;/b&gt;&lt;br&gt;失效发生在权重层：&lt;br&gt;不删数据、不维护外部索引&lt;br&gt;默认只保存最终一份参数&lt;br&gt;（未启用训练中途存档）" vertex="1">
+          <mxGeometry height="100" width="280" x="620" y="682" as="geometry" />
+        </mxCell>
+        <mxCell id="fb" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCEBEB;strokeColor=#A32D2D;dashed=1;fontSize=12;fontColor=#501313;arcSize=12;" value="&lt;b&gt;异常兜底（离线人工）&lt;/b&gt;&lt;br&gt;输出乱码 = 平滑过强&lt;br&gt;过度无知 = 遗忘信号过强&lt;br&gt;无自动回滚：调参后整跑重来" vertex="1">
+          <mxGeometry height="100" width="260" x="940" y="682" as="geometry" />
+        </mxCell>
+        <mxCell id="n1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F1EFE8;strokeColor=#5F5E5A;dashed=1;fontSize=12;fontColor=#2C2C2A;arcSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="&lt;b&gt;代码实证差异（相对论文叙述）&lt;/b&gt;&lt;br&gt;① 平滑强度是固定超参，训练中无在线阈值校准（论文的搜索在训练前离线完成）&lt;br&gt;② 按层生效开关未接入遗忘调用 → 只能全层平滑，不能只烫部分层&lt;br&gt;③ 合并系数：遗忘权重记作 α 且直接乘遗忘信号，保留项系数固定为 1（与常规 γ·遗忘 + α·保留 相反）&lt;br&gt;④ 效果判定与兜底都在训练后离线进行，训练循环内没有任何分支判断" vertex="1">
+          <mxGeometry height="104" width="620" x="300" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="n2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F1EFE8;strokeColor=#5F5E5A;fontSize=12;fontColor=#2C2C2A;arcSize=12;" value="&lt;b&gt;案例模型（TOFU）&lt;/b&gt;&lt;br&gt;16 层 · 隐藏维 2048&lt;br&gt;32 注意力头 / 8 KV 头（GQA）&lt;br&gt;头维 64 · 词表约 12.8 万" vertex="1">
+          <mxGeometry height="104" width="260" x="940" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" edge="1" parent="1" source="dr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#185FA5;strokeWidth=1.5;fontSize=11;fontColor=#444441;endArrow=block;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="rl">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="271.8" y="142" />
+              <mxPoint x="271.8" y="472" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a2" edge="1" parent="1" source="df" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.5;fontSize=11;fontColor=#444441;endArrow=block;endFill=1;exitX=1;exitY=0.3;entryX=0;entryY=0.5;" target="tf">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="276.8" y="661" />
+              <mxPoint x="276.8" y="348" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="udLK1jho2_pgB6_hQvyF-4" connectable="0" parent="a2" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Llama-3.2-1B" vertex="1">
+          <mxGeometry relative="1" x="-0.3486" y="-2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a3" edge="1" parent="1" source="df" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#A32D2D;strokeWidth=1.5;dashed=1;dashPattern=6 4;fontSize=11;fontColor=#A32D2D;endArrow=block;endFill=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" target="ct" value="对照路线">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a4" edge="1" parent="1" source="temp" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#854F0B;strokeWidth=1.5;fontSize=11;fontColor=#633806;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="tf" value="固定平滑强度">
+          <mxGeometry relative="1" x="-0.2581" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a5" edge="1" parent="1" source="ref" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.5;fontSize=11;fontColor=#444441;endArrow=block;endFill=1;exitX=0.25;exitY=1;entryX=0.78;entryY=0;" target="tf" value="模型本体">
+          <mxGeometry relative="1" x="0.2313" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1005" y="248" />
+              <mxPoint x="518.4" y="248" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a6" edge="1" parent="1" source="pair" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#5F5E5A;strokeWidth=1.5;dashed=1;dashPattern=6 4;fontSize=11;fontColor=#5F5E5A;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="st" value="每步一对样本">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a7" edge="1" parent="1" source="tf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.5;fontSize=11;fontColor=#444441;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.29;entryY=0;" target="fl">
+          <mxGeometry relative="1" x="0.0028" as="geometry" />
+        </mxCell>
+        <mxCell id="a8" edge="1" parent="1" source="st" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#185FA5;strokeWidth=1.5;fontSize=11;fontColor=#444441;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="fl" value="逐词分布">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a9" edge="1" parent="1" source="fl" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.5;fontSize=11;fontColor=#444441;endArrow=block;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="mg" value="遗忘项">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a10" edge="1" parent="1" source="rl" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#185FA5;strokeWidth=1.5;fontSize=11;fontColor=#444441;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.23;entryY=1;" target="mg" value="保留项">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="440" y="534" />
+              <mxPoint x="1000" y="534" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a11" edge="1" parent="1" source="mg" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#3B6D11;strokeWidth=1.5;fontSize=11;fontColor=#444441;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="bp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a12" edge="1" parent="1" source="bp" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#444441;strokeWidth=1.5;fontSize=11;fontColor=#444441;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0;entryY=0.5;" target="ev" value="训练结束后">
+          <mxGeometry relative="1" x="0.0075" as="geometry">
+            <Array as="points">
+              <mxPoint x="1070" y="636" />
+              <mxPoint x="283.4" y="636" />
+              <mxPoint x="283.4" y="732" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a13" edge="1" parent="1" source="ev" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#3B6D11;strokeWidth=1.5;fontSize=11;fontColor=#173404;endArrow=block;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="sv" value="达标">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a14" edge="1" parent="1" source="ev" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#A32D2D;strokeWidth=1.5;dashed=1;dashPattern=6 4;fontSize=11;fontColor=#A32D2D;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=1;" target="fb" value="不达标 / 乱码">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="440" y="796" />
+              <mxPoint x="1070" y="796" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a15" edge="1" parent="1" source="fb" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#854F0B;strokeWidth=1.5;dashed=1;dashPattern=6 4;fontSize=11;fontColor=#633806;endArrow=block;endFill=1;exitX=0.77;exitY=1;entryX=0;entryY=0.5;" target="temp" value="调参后重跑">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1140" y="916" />
+              <mxPoint x="20" y="916" />
+              <mxPoint x="20" y="188" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
