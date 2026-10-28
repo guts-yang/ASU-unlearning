@@ -41,3 +41,8 @@ hf_cache/
 # Reproduction outputs
 Right-to-be-forgotten/outputs/
 workspace/results/
+
+# Direction C archive is fully tracked (including copied *.log under workspace/C/logs/).
+!workspace/C/
+!workspace/C/**
+!workspace/C/**/*.log

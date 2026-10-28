@@ -1,0 +1,11 @@
+{
+  "decision": "proceed",
+  "n_problems": 1301,
+  "mean_entropy_increase": 0.030596039887640612,
+  "cohens_d": 4.275691531065447,
+  "ci95": [
+    0.03019473155517919,
+    0.030965299633667873
+  ],
+  "entropy_used": true
+}

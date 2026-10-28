@@ -1,0 +1,40 @@
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:00<00:00,  9.60it/s]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:00<00:00, 10.41it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 10.54it/s]
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:00<00:00,  9.24it/s]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:00<00:00, 10.09it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 10.45it/s]
+m0b 0/1319
+m0b 50/1319
+m0b 100/1319
+m0b 150/1319
+m0b 200/1319
+m0b 250/1319
+m0b 300/1319
+m0b 350/1319
+m0b 400/1319
+m0b 450/1319
+m0b 500/1319
+m0b 550/1319
+m0b 600/1319
+m0b 650/1319
+m0b 700/1319
+m0b 750/1319
+m0b 800/1319
+m0b 850/1319
+m0b 900/1319
+m0b 950/1319
+m0b 1000/1319
+m0b 1050/1319
+m0b 1100/1319
+m0b 1150/1319
+m0b 1200/1319
+m0b 1250/1319
+m0b 1300/1319
+{
+  "decision": "proceed",
+  "n_problems": 1301,
+  "mean_entropy_increase": 0.030596039887640612,
+  "cohens_d": 4.275691531065447,
+  "ci95": [
+    0.03019473155517919,
+    0.030965299633667873
+  ],
+  "entropy_used": true
+}
