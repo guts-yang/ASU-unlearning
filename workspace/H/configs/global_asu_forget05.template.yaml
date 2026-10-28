@@ -1,23 +1,55 @@
 # Template only: this is not an executed configuration.
-# Copy to an immutable run directory only after model/data paths, hashes, seed list,
-# environment lockfile, and compute budget are filled in.
+# Identity fields below were filled by the 2026-10-28 non-GPU verification.
+# seeds and gpu_budget_hours stay null until a GPU budget is frozen.
+# Do not copy this file into a run directory before those two fields are set.
+# tofu.yaml defaults are attention_temp: 2.0 and layers_id: [].
+# An empty list is not null. my_llama.py applies attention_temp only when
+# layers_id is None or the layer index is in layers_id. A real command must
+# pass the attention_temp and layers_id values in this file and must not
+# rely on the default yaml.
 run:
   method_label: Global_ASU_GD
-  code_commit: 108eca7b8949110408212e3adb70f92ca4ce676a
+  code_commit: 47ba51c88d11689ab51faa60beb9143961a29993
   output_root: null
   seeds: null
   gpu_budget_hours: null
 
 identity:
   model_id: locuslab/tofu_ft_llama2-7b
-  model_path: null
-  model_sha256: null
-  forget05_path: null
-  forget05_sha256: null
-  forget05_perturbed_path: null
-  forget05_perturbed_sha256: null
-  retain95_path: null
-  retain95_sha256: null
+  model_path: /root/autodl-tmp/models/tofu_ft_llama2-7b
+  model_snapshot: 8fa500e8f345f1dd9cfe95bb4689878c944c9cbd
+  model_config_sha256: 284b4a0528bdbb3bc268b43b772804d65dc354f2d410d11fd19c433fdac94010
+  model_shards:
+    - name: model-00001-of-00003.safetensors
+      bytes: 4938985352
+      sha256: 403a43e265a6fbb8a59e9b21813a837758a59b7cb4bd399ef7f5af6664749ada
+    - name: model-00002-of-00003.safetensors
+      bytes: 4947390880
+      sha256: c65fe3be1daab5d6d5b934c322235a31ae8356dd7f444d0926ecc655ca2fc902
+    - name: model-00003-of-00003.safetensors
+      bytes: 3590488816
+      sha256: 3b3fb2e1a8265cfc66d3ef5c99cc5a1c4e9a2b1f9f0d91b038aaf36e12b51ae3
+  data_path: /usr/local/ASU-unlearning/Right-to-be-forgotten/data/tofu
+  task_list: "1"
+  forget05_path: /usr/local/ASU-unlearning/Right-to-be-forgotten/data/tofu/forget05.json
+  forget05_sha256: a8c207a905af73ea4797b1af92a14cf458f42df567c941f7284f87d930096f4b
+  forget05_records: 2000
+  forget05_task1_records: 200
+  forget05_perturbed_path: /usr/local/ASU-unlearning/Right-to-be-forgotten/data/tofu/forget05_perturbed.json
+  forget05_perturbed_sha256: 94a98e8d7e9cbd2f6e897f41a5609f6b9c3954c31c41eb738c0b48ebd5c003ed
+  forget05_perturbed_records: 2000
+  retain_file_loaded_by_code: retain50.json
+  retain50_path: /usr/local/ASU-unlearning/Right-to-be-forgotten/data/tofu/retain50.json
+  retain50_sha256: 6dcc828b669c09b1a537776ef7ac80d7e51a9e2d76af5c827543c3c01086625e
+  retain50_records: 2000
+  other_forget_tasks_added_to_retain: 1800
+  effective_retain_records: 3800
+  retain95_json_present: false
+  retain_perturbed_path: /usr/local/ASU-unlearning/Right-to-be-forgotten/data/tofu/retain_perturbed.json
+  retain_perturbed_sha256: fc69f33bad70d3dca65920bdb54380039e3e8872dd16bbae20c1a839b99533fb
+  retain_perturbed_records: 400
+  identity_record: workspace/H/derived/stage1_data_identity.json
+  environment_record: workspace/H/derived/stage1_checkpoint_environment.json
 
 training:
   implementation: Right-to-be-forgotten

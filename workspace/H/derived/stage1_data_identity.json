@@ -1,0 +1,129 @@
+{
+  "task_list": "1",
+  "split": "forget05",
+  "retain_file_loaded_by_code": "retain50.json",
+  "retain95_json_present": false,
+  "code_rule": "retain_split = retain + str(100 - min(10 * int(split without forget), 90)).zfill(2); then concatenate retain file with forget rows whose task_id is not in TASK_LIST",
+  "curr_forget_n": 200,
+  "retain50_n": 2000,
+  "other_forget_tasks_n": 1800,
+  "effective_retain_n": 3800,
+  "question_overlap_retain50_vs_task1": 0,
+  "question_overlap_retain50_vs_other_forget_tasks": 0,
+  "files": [
+    {
+      "name": "forget05.json",
+      "path": "/usr/local/ASU-unlearning/Right-to-be-forgotten/data/tofu/forget05.json",
+      "bytes": 603987,
+      "sha256": "a8c207a905af73ea4797b1af92a14cf458f42df567c941f7284f87d930096f4b",
+      "n_records": 2000,
+      "keys": [
+        "answer",
+        "question",
+        "task_id"
+      ],
+      "task_id_counts": {
+        "1": 200,
+        "10": 200,
+        "2": 200,
+        "3": 200,
+        "4": 200,
+        "5": 200,
+        "6": 200,
+        "7": 200,
+        "8": 200,
+        "9": 200
+      }
+    },
+    {
+      "name": "forget05_perturbed.json",
+      "path": "/usr/local/ASU-unlearning/Right-to-be-forgotten/data/tofu/forget05_perturbed.json",
+      "bytes": 2431842,
+      "sha256": "94a98e8d7e9cbd2f6e897f41a5609f6b9c3954c31c41eb738c0b48ebd5c003ed",
+      "n_records": 2000,
+      "keys": [
+        "answer",
+        "paraphrased_answer",
+        "paraphrased_question",
+        "perturbed_answer",
+        "question",
+        "task_id"
+      ],
+      "task_id_counts": {
+        "1": 200,
+        "10": 200,
+        "2": 200,
+        "3": 200,
+        "4": 200,
+        "5": 200,
+        "6": 200,
+        "7": 200,
+        "8": 200,
+        "9": 200
+      }
+    },
+    {
+      "name": "retain50.json",
+      "path": "/usr/local/ASU-unlearning/Right-to-be-forgotten/data/tofu/retain50.json",
+      "bytes": 510678,
+      "sha256": "6dcc828b669c09b1a537776ef7ac80d7e51a9e2d76af5c827543c3c01086625e",
+      "n_records": 2000,
+      "keys": [
+        "answer",
+        "question"
+      ],
+      "task_id_counts": {
+        "missing": 2000
+      }
+    },
+    {
+      "name": "retain_perturbed.json",
+      "path": "/usr/local/ASU-unlearning/Right-to-be-forgotten/data/tofu/retain_perturbed.json",
+      "bytes": 641057,
+      "sha256": "fc69f33bad70d3dca65920bdb54380039e3e8872dd16bbae20c1a839b99533fb",
+      "n_records": 400,
+      "keys": [
+        "answer",
+        "paraphrased_answer",
+        "paraphrased_question",
+        "perturbed_answer",
+        "question"
+      ],
+      "task_id_counts": {
+        "missing": 400
+      }
+    },
+    {
+      "name": "real_authors_perturbed.json",
+      "path": "/usr/local/ASU-unlearning/Right-to-be-forgotten/data/tofu/real_authors_perturbed.json",
+      "bytes": 27543,
+      "sha256": "9cd44ceefd60eb18e04be622018bde3d69a7837184879100b86ccd06fb598ab4",
+      "n_records": 100,
+      "keys": [
+        "answer",
+        "original_answer",
+        "perturbed_answer",
+        "question"
+      ],
+      "task_id_counts": {
+        "missing": 100
+      }
+    },
+    {
+      "name": "world_facts_perturbed.json",
+      "path": "/usr/local/ASU-unlearning/Right-to-be-forgotten/data/tofu/world_facts_perturbed.json",
+      "bytes": 32536,
+      "sha256": "75d0a5e7246e2836859f7722858e2045b9d2198a8e671bd17edfc8c122874dad",
+      "n_records": 117,
+      "keys": [
+        "answer",
+        "original_answer",
+        "perturbed_answer",
+        "question"
+      ],
+      "task_id_counts": {
+        "missing": 117
+      }
+    }
+  ]
+}
