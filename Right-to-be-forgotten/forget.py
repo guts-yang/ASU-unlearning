@@ -114,7 +114,8 @@ def main(cfg):
                                                forget_data=curr_forget_data,
                                                retain_data=curr_retain_data,
                                                max_length=500,
-                                               mask=cfg.mask)
+                                               mask=cfg.mask,
+                                               seed=cfg.seed)
 
     batch_size = cfg.batch_size
     gradient_accumulation_steps = cfg.gradient_accumulation_steps
@@ -163,6 +164,7 @@ def main(cfg):
         save_only_model=True,
         ddp_find_unused_parameters=False,
         weight_decay=cfg.weight_decay,
+        seed=cfg.seed,
         eval_strategy="no",
         report_to="none",
     )

@@ -83,13 +83,14 @@ def convert_raw_data_to_model_format(tokenizer, max_length, question, answer, mo
 
 
 class TextForgetDatasetQA(Dataset):
-    def __init__(self, tokenizer, model_family, forget_data, retain_data, max_length=512, mask=False):
+    def __init__(self, tokenizer, model_family, forget_data, retain_data, max_length=512, mask=False, seed=0):
         super(TextForgetDatasetQA, self).__init__()
         self.tokenizer = tokenizer
         self.max_length = max_length
         self.forget_data = forget_data
         self.retain_data = retain_data
         self.mask = mask
+        self.seed = int(seed)
 
         self.model_configs = get_model_identifiers_from_yaml(model_family)
 
@@ -105,7 +106,7 @@ class TextForgetDatasetQA(Dataset):
     def __getitem__(self, idx):
         rets = []
 
-        torch.manual_seed(idx)
+        torch.manual_seed(self.seed + idx)
         retain_idx = (idx + torch.randint(0, len(self.retain_data), (1,)).item()) % len(self.retain_data)
         rand_pos = torch.randint(0, len(self.idk), (1,)).item()
 
