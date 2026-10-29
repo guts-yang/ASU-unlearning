@@ -5,6 +5,14 @@ import sys
 import warnings
 from pathlib import Path
 
+REPO = Path(__file__).resolve().parents[1]
+if str(REPO / "workspace") not in sys.path:
+    sys.path.insert(0, str(REPO / "workspace"))
+
+from gold_rank.preflight import enable_offline
+
+enable_offline()
+
 import datasets
 import hydra
 import torch
@@ -20,13 +28,8 @@ from utils import get_model_identifiers_from_yaml, set_random_seed
 from my_models.my_llama import LlamaForCausalLM
 warnings.filterwarnings('ignore')
 
-REPO = Path(__file__).resolve().parents[1]
-if str(REPO / "workspace") not in sys.path:
-    sys.path.insert(0, str(REPO / "workspace"))
-
 from da_asu.protocol import normalize_layers_id, require_local_snapshot
 from gold_rank.lock import materialize_gold_rank
-from gold_rank.preflight import enable_offline
 
 
 def find_all_linear_names(model):

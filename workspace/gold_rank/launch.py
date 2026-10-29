@@ -5,6 +5,10 @@ import os
 import sys
 from pathlib import Path
 
+_WORKSPACE = Path(__file__).resolve().parents[1]
+if str(_WORKSPACE) not in sys.path:
+    sys.path.insert(0, str(_WORKSPACE))
+
 from gold_rank.preflight import preflight_issues
 
 REPO = Path(__file__).resolve().parents[2]
@@ -54,8 +58,13 @@ def command(model_path, data_path, save_root, seed, group, reason_path=None, loc
         if lock.get("status") != "frozen" or lock.get("test_metrics_read"):
             raise SystemExit(f"gold-rank lock is not a frozen pre-test lock: {lock_path}")
     verdict = verdict_path or str(REPO / "workspace" / "C" / "derived" / "m0_verdict.json")
-    if spec["anchor"] and not Path(verdict).is_file():
-        raise SystemExit(f"M0 verdict missing: {verdict}")
+    if spec["anchor"]:
+        verdict_file = Path(verdict)
+        if not verdict_file.is_file():
+            raise SystemExit(f"M0 verdict missing: {verdict}")
+        decision = json.loads(verdict_file.read_text()).get("decision")
+        if decision != "proceed":
+            raise SystemExit(f"M0 decision is {decision}. Anchor training stays off.")
     overrides = [
         "real_world_unlearn.py",
         "--config-name=real_world.yaml",
