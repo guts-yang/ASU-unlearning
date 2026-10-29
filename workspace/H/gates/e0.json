@@ -1,0 +1,15 @@
+{
+  "stage": "e0_teacher_probe",
+  "assessed_at": "2026-10-29T10:54:14+08:00",
+  "decision": "do_not_start_e1",
+  "reasons": [
+    "no calibration layer met the forget and retain rule"
+  ],
+  "shared_temperature": 2.3,
+  "selected_layers": [],
+  "retain_damage_cap": {
+    "cap": 0.00352030693270209,
+    "baseline_mean": 0.010858702041474834,
+    "baseline_se": 0.001760153466351045
+  }
+}

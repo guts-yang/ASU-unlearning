@@ -1,0 +1,32 @@
+# Frozen before any E0 forward. Do not retune these rules after seeing probe output.
+model_id: open-unlearning/tofu_Llama-2-7b-chat-hf_full
+model_path: /root/autodl-tmp/huggingface/hub/models--open-unlearning--tofu_Llama-2-7b-chat-hf_full/snapshots/cc5b31c69127d5da881608e640f2b453c446435b
+tokenizer_path: /root/autodl-tmp/huggingface/hub/models--NousResearch--Llama-2-7b-chat-hf/snapshots/351844e75ed0bcbbe3f10671b3c808d2b83894ee
+question_start_tag: "[INST] "
+question_end_tag: " [/INST]"
+answer_tag: ""
+forget_path: /usr/local/ASU-unlearning/Right-to-be-forgotten/data/tofu/forget05.json
+retain_path: /usr/local/ASU-unlearning/Right-to-be-forgotten/data/tofu/retain50.json
+task_id: "1"
+questions_per_author: 20
+calibration_author_indices: [0, 2, 4, 6, 8]
+holdout_author_indices: [1, 3, 5, 7, 9]
+max_length: 500
+mask_question: true
+batch_size: 8
+layer_count: 32
+layer_index_base: 0
+baseline_temperature: 1.0
+temperatures: [2.3, 3.0]
+tie_temperature: 2.3
+fixed_control_layers: [6, 7, 8]
+bootstrap_samples: 1000
+bootstrap_seed: 1002
+bootstrap_ci: [0.025, 0.975]
+random_subset_count: 5
+random_subset_seed: 1002
+random_mean_index_tolerance: 4.0
+aggregation: per_sample_mean_then_author_mean_then_unweighted_author_mean
+retain_damage_cap: two_se_of_calibration_baseline_retain_author_nll
+output_dir: /root/autodl-tmp/ASU-unlearning/workspace_H/e0
+manifest_path: /usr/local/ASU-unlearning/workspace/H/derived/e0_manifest.json

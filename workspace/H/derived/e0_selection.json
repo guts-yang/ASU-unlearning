@@ -1,0 +1,17 @@
+{
+  "assessed_at": "2026-10-29T10:54:13+08:00",
+  "retain_damage_cap": {
+    "cap": 0.00352030693270209,
+    "baseline_mean": 0.010858702041474834,
+    "baseline_se": 0.001760153466351045
+  },
+  "eligible_counts": {
+    "2.3": 0,
+    "3.0": 0
+  },
+  "shared_temperature": 2.3,
+  "selected_layers": [],
+  "rule": "calibration forget CI lower bound > 0 and calibration retain mean delta <= cap; shared tau is the grid value with more eligible layers, tie 2.3",
+  "phase2_jobs": [],
+  "phase2_complete": true
+}

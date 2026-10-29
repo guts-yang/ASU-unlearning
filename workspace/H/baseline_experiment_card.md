@@ -2,7 +2,7 @@
 
 ## 状态与范围
 
-- 状态：**Global ASU 多种子（1002/1003/1004）已评测；E0 尚未开始**。
+- 状态：**Global ASU 多种子（1002/1003/1004）已评测。E0 已在新基座上完成，决定 `do_not_start_e1`。见 `e0_results.md`。**
 - 主问题：在同一 checkpoint、TOFU split 和评测口径下，CAASS-ASU 是否可在相近 Forget Efficacy（FE）下提高 Model Utility（MU）。
 - 当前主链路：`Right-to-be-forgotten`（RtBF）中的 `ASU+GD`。
 - 主 split：`forget05`，`TASK_LIST=1`。代码加载 `retain50.json`，再拼上 `task_id != 1` 的 forget 行。没有 `retain95.json`。

@@ -1,0 +1,2021 @@
+{
+  "gate": {
+    "stage": "e0_teacher_probe",
+    "assessed_at": "2026-10-29T10:54:14+08:00",
+    "decision": "do_not_start_e1",
+    "reasons": [
+      "no calibration layer met the forget and retain rule"
+    ],
+    "model_id": "open-unlearning/tofu_Llama-2-7b-chat-hf_full",
+    "model_path": "/root/autodl-tmp/huggingface/hub/models--open-unlearning--tofu_Llama-2-7b-chat-hf_full/snapshots/cc5b31c69127d5da881608e640f2b453c446435b",
+    "shared_temperature": 2.3,
+    "selected_layers": [],
+    "retain_damage_cap": {
+      "cap": 0.00352030693270209,
+      "baseline_mean": 0.010858702041474834,
+      "baseline_se": 0.001760153466351045
+    },
+    "joint": null,
+    "random_controls": [],
+    "fixed_controls": {
+      "control_L6_8_tau2p3": {
+        "layers_id": [
+          6,
+          7,
+          8
+        ],
+        "attention_temp": 2.3,
+        "calibration": {
+          "delta_nll_forget": {
+            "mean": 1.3518518696117372,
+            "ci_low": 1.0734822272082614,
+            "ci_high": 1.6338371468602841,
+            "n_authors": 5
+          },
+          "delta_nll_retain": {
+            "mean": 1.4143908800784477,
+            "ci_low": 1.229869736587504,
+            "ci_high": 1.6018885654059318,
+            "n_authors": 5
+          }
+        },
+        "holdout": {
+          "delta_nll_forget": {
+            "mean": 1.6287191711544018,
+            "ci_low": 1.3447151981170213,
+            "ci_high": 1.9756324758462043,
+            "n_authors": 5
+          },
+          "delta_nll_retain": {
+            "mean": 1.5455335190454345,
+            "ci_low": 1.422125476167151,
+            "ci_high": 1.668941561923718,
+            "n_authors": 5
+          }
+        },
+        "eligible_on_calibration": false
+      },
+      "control_all_tau2p3": {
+        "layers_id": null,
+        "attention_temp": 2.3,
+        "calibration": {
+          "delta_nll_forget": {
+            "mean": 2.702277078122998,
+            "ci_low": 2.2779016579239957,
+            "ci_high": 3.13414412174321,
+            "n_authors": 5
+          },
+          "delta_nll_retain": {
+            "mean": 2.7919920613312277,
+            "ci_low": 2.470702959921119,
+            "ci_high": 3.063416368552737,
+            "n_authors": 5
+          }
+        },
+        "holdout": {
+          "delta_nll_forget": {
+            "mean": 3.0559453393515126,
+            "ci_low": 2.8846449671360666,
+            "ci_high": 3.324275762875943,
+            "n_authors": 5
+          },
+          "delta_nll_retain": {
+            "mean": 3.0251880839845087,
+            "ci_low": 2.788079804359189,
+            "ci_high": 3.264548779120955,
+            "n_authors": 5
+          }
+        },
+        "eligible_on_calibration": false
+      },
+      "control_L6_8_tau3p0": {
+        "layers_id": [
+          6,
+          7,
+          8
+        ],
+        "attention_temp": 3.0,
+        "calibration": {
+          "delta_nll_forget": {
+            "mean": 1.9808195230224683,
+            "ci_low": 1.6617954084105993,
+            "ci_high": 2.3254668496608657,
+            "n_authors": 5
+          },
+          "delta_nll_retain": {
+            "mean": 2.1895390940077433,
+            "ci_low": 1.9544012995694113,
+            "ci_high": 2.4246768884460748,
+            "n_authors": 5
+          }
+        },
+        "holdout": {
+          "delta_nll_forget": {
+            "mean": 2.3362027189485297,
+            "ci_low": 2.0593044298485736,
+            "ci_high": 2.7180979787702477,
+            "n_authors": 5
+          },
+          "delta_nll_retain": {
+            "mean": 2.213915463779592,
+            "ci_low": 2.024108487070797,
+            "ci_high": 2.3908447749622335,
+            "n_authors": 5
+          }
+        },
+        "eligible_on_calibration": false
+      },
+      "control_all_tau3p0": {
+        "layers_id": null,
+        "attention_temp": 3.0,
+        "calibration": {
+          "delta_nll_forget": {
+            "mean": 4.958837681831177,
+            "ci_low": 4.518308717622302,
+            "ci_high": 5.372812975916692,
+            "n_authors": 5
+          },
+          "delta_nll_retain": {
+            "mean": 5.133604868784217,
+            "ci_low": 4.6839398186828465,
+            "ci_high": 5.526866191020238,
+            "n_authors": 5
+          }
+        },
+        "holdout": {
+          "delta_nll_forget": {
+            "mean": 5.27780529713459,
+            "ci_low": 5.083842161241163,
+            "ci_high": 5.429692657247992,
+            "n_authors": 5
+          },
+          "delta_nll_retain": {
+            "mean": 5.380792155733935,
+            "ci_low": 5.186531665330329,
+            "ci_high": 5.707530907503976,
+            "n_authors": 5
+          }
+        },
+        "eligible_on_calibration": false
+      }
+    }
+  },
+  "single_layers": [
+    {
+      "layer": 0,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.07611425476824757,
+        "ci_low": 0.060232866704150165,
+        "ci_high": 0.08978910149533526,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.06448672458133078,
+        "ci_low": 0.05025071562893692,
+        "ci_high": 0.08179803229098948,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.08651217419860369,
+        "ci_low": 0.07683050633851314,
+        "ci_high": 0.09660576514940342,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.07849949847949059,
+        "ci_low": 0.06250276494646051,
+        "ci_high": 0.09524701940804385,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 0,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.11949946134595998,
+        "ci_low": 0.1158708322536038,
+        "ci_high": 0.12374323273947183,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.11744548789449812,
+        "ci_low": 0.10363799431368885,
+        "ci_high": 0.13126074396611132,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.11260426933081828,
+        "ci_low": 0.10128260136783288,
+        "ci_high": 0.12543605111027098,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.12858948643193308,
+        "ci_low": 0.11675868768948225,
+        "ci_high": 0.1404231513127217,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 1,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.13984212678730334,
+        "ci_low": 0.12005754283113669,
+        "ci_high": 0.15716756031193618,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.13050116208420637,
+        "ci_low": 0.11424078174417925,
+        "ci_high": 0.14597795178249653,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.142291389433859,
+        "ci_low": 0.1294522569423166,
+        "ci_high": 0.15886622525499539,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.15074234742556644,
+        "ci_low": 0.14383901192253773,
+        "ci_high": 0.160285151571324,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 1,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.2145862781850641,
+        "ci_low": 0.19894524468282343,
+        "ci_high": 0.2257201983548483,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.20518897822841686,
+        "ci_low": 0.20280974258828985,
+        "ci_high": 0.20755032015459082,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.2072211051613409,
+        "ci_low": 0.18774362237452097,
+        "ci_high": 0.22844369203739356,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.21271904644640735,
+        "ci_low": 0.1989409796545321,
+        "ci_high": 0.23108209335969923,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 2,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.585503698810934,
+        "ci_low": 0.487482138353982,
+        "ci_high": 0.717527045526384,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.5490125629655462,
+        "ci_low": 0.40855085719251777,
+        "ci_high": 0.7031733849049512,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.6484920703151976,
+        "ci_low": 0.5858201182972509,
+        "ci_high": 0.7274651466805644,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.6257535662699489,
+        "ci_low": 0.5531772238920493,
+        "ci_high": 0.6993240460517623,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 2,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 1.0141840424565185,
+        "ci_low": 0.846493316438435,
+        "ci_high": 1.218240133729005,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 1.010510263325383,
+        "ci_low": 0.817998140035989,
+        "ci_high": 1.1979886175064713,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 1.2225564246955132,
+        "ci_low": 1.1206928241162906,
+        "ci_high": 1.338231952504143,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 1.1465324644519315,
+        "ci_low": 1.0377323495867679,
+        "ci_high": 1.2387588377757897,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 3,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.4710610881294309,
+        "ci_low": 0.336949810171225,
+        "ci_high": 0.6082561185927009,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.45576677289468376,
+        "ci_low": 0.37562982034802495,
+        "ci_high": 0.5256683126910148,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.5324121025924453,
+        "ci_low": 0.43018696294648756,
+        "ci_high": 0.6291232335645804,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.5376252652092942,
+        "ci_low": 0.4577549252546886,
+        "ci_high": 0.6174956051638999,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 3,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.7865173000870158,
+        "ci_low": 0.5670901526500572,
+        "ci_high": 1.0282064827908213,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.7502313534453354,
+        "ci_low": 0.6472510183180907,
+        "ci_high": 0.8400982916443509,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.9149211044207682,
+        "ci_low": 0.7330757244370171,
+        "ci_high": 1.10650478418038,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.8894393356226363,
+        "ci_low": 0.786352852212129,
+        "ci_high": 0.9891020446541552,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 4,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.17115134412594735,
+        "ci_low": 0.11706989649285862,
+        "ci_high": 0.21639569568148614,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.1860752784665832,
+        "ci_low": 0.15767235363912868,
+        "ci_high": 0.21962136904083568,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.21504610658926207,
+        "ci_low": 0.16642674105386215,
+        "ci_high": 0.25569701901249026,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.21320697379393083,
+        "ci_low": 0.18194158378535655,
+        "ci_high": 0.24447236380250512,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 4,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.33098599477158863,
+        "ci_low": 0.24090154639336575,
+        "ci_high": 0.41027932950658785,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.3558832626786349,
+        "ci_low": 0.2922010359680083,
+        "ci_high": 0.4357662901946148,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.4336744707691846,
+        "ci_low": 0.3434399032520733,
+        "ci_high": 0.4978163212267037,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.3999327462109957,
+        "ci_low": 0.3524932057004357,
+        "ci_high": 0.4473722867215558,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 5,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.2006247888883114,
+        "ci_low": 0.13261728480761303,
+        "ci_high": 0.265133616366742,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.20480302831603706,
+        "ci_low": 0.16980245804852184,
+        "ci_high": 0.23756322607333522,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.2975946536816404,
+        "ci_low": 0.2213279761348609,
+        "ci_high": 0.4075788731849256,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.2569387563363964,
+        "ci_low": 0.20523705813241633,
+        "ci_high": 0.30864045454037636,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 5,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.3686029457119,
+        "ci_low": 0.2544507800664063,
+        "ci_high": 0.47040702420073843,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.3852472726561576,
+        "ci_low": 0.3241699005432697,
+        "ci_high": 0.4343115859907849,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.574573264836362,
+        "ci_low": 0.4452666287140336,
+        "ci_high": 0.7236160723294394,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.48393827030390674,
+        "ci_low": 0.39577060311948253,
+        "ci_high": 0.562568596031346,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 6,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.3816759209367357,
+        "ci_low": 0.2173497475024766,
+        "ci_high": 0.5685929913023768,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.3784718736370921,
+        "ci_low": 0.2940707157989296,
+        "ci_high": 0.47485686091172896,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.47224494558534535,
+        "ci_low": 0.28580265804992344,
+        "ci_high": 0.6824053345746993,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.5048732229774362,
+        "ci_low": 0.4297391327491276,
+        "ci_high": 0.6197086907123629,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 6,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.6183246051762099,
+        "ci_low": 0.3967846295177223,
+        "ci_high": 0.8723000320110885,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.6295273274534733,
+        "ci_low": 0.5054929536014423,
+        "ci_high": 0.7579454925226842,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.7922151468858094,
+        "ci_low": 0.5459006734183754,
+        "ci_high": 1.1006878526181605,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.8278143359337624,
+        "ci_low": 0.7127032463201927,
+        "ci_high": 0.9604812440566688,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 7,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.4300971077989323,
+        "ci_low": 0.2975122924376448,
+        "ci_high": 0.5594085828441672,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.3652595068407705,
+        "ci_low": 0.27861160810779195,
+        "ci_high": 0.4484527233383705,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.5143891118631461,
+        "ci_low": 0.3526147864613255,
+        "ci_high": 0.7466168989150275,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.4468837773275941,
+        "ci_low": 0.3881913886062372,
+        "ci_high": 0.5037279339325339,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 7,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.7503426022855895,
+        "ci_low": 0.5464536202823258,
+        "ci_high": 0.9680668718610044,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.6716430760421439,
+        "ci_low": 0.5305495150456059,
+        "ci_high": 0.812736637038682,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.8832497611298382,
+        "ci_low": 0.6551203249600863,
+        "ci_high": 1.185618981145541,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.7735712900129105,
+        "ci_low": 0.7005282549141638,
+        "ci_high": 0.8444539121390559,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 8,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.15731021774383386,
+        "ci_low": 0.10330765993315953,
+        "ci_high": 0.20455063506967203,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.1501677181375968,
+        "ci_low": 0.12128262614860104,
+        "ci_high": 0.19141048245871833,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.15831161614068598,
+        "ci_low": 0.11133893604206488,
+        "ci_high": 0.22980596681374688,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.1695834630847276,
+        "ci_low": 0.13700496675108406,
+        "ci_high": 0.2004668192272045,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 8,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.310215981359869,
+        "ci_low": 0.22240119132740954,
+        "ci_high": 0.38796780988403085,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.28902337453298627,
+        "ci_low": 0.2385876402556281,
+        "ci_high": 0.3485077644976975,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.32391311627218367,
+        "ci_low": 0.24610591689888303,
+        "ci_high": 0.4456360524047257,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.3337500054470031,
+        "ci_low": 0.2852282481345045,
+        "ci_high": 0.38311327855886396,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 9,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.12417527049284154,
+        "ci_low": 0.08199449316899857,
+        "ci_high": 0.17227187187228132,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.13327162735639736,
+        "ci_low": 0.11280316946326478,
+        "ci_high": 0.153375271306416,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.13689776423623767,
+        "ci_low": 0.09042029367917677,
+        "ci_high": 0.1818974440119157,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.14103715304838402,
+        "ci_low": 0.11829556552680971,
+        "ci_high": 0.16419687547884967,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 9,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.21808094883429613,
+        "ci_low": 0.15387833541560467,
+        "ci_high": 0.2955263893124042,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.2386458864770406,
+        "ci_low": 0.21177675610039923,
+        "ci_high": 0.2687933592655955,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.25303338298559397,
+        "ci_low": 0.17306412930201742,
+        "ci_high": 0.3322953102512767,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.2472464307262773,
+        "ci_low": 0.21379656716930767,
+        "ci_high": 0.28657468854905843,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 10,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.053037394864641776,
+        "ci_low": 0.03942960990401957,
+        "ci_high": 0.06513939475389204,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.04921992253378742,
+        "ci_low": 0.03448764356894686,
+        "ci_high": 0.06977755730067561,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.059475852737476,
+        "ci_low": 0.04074778740105796,
+        "ci_high": 0.08348469167675487,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.04968576715306506,
+        "ci_low": 0.045855887940054,
+        "ci_high": 0.05376068421731395,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 10,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.09675559159024734,
+        "ci_low": 0.07147907030009823,
+        "ci_high": 0.11765233285807608,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.09167118981599032,
+        "ci_low": 0.0687881710617345,
+        "ci_high": 0.12343063821383042,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.11157258201532567,
+        "ci_low": 0.07768872472363703,
+        "ci_high": 0.15075531874731835,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.0948421664330454,
+        "ci_low": 0.08640036651944684,
+        "ci_high": 0.10262630181768906,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 11,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.07468592181756102,
+        "ci_low": 0.052347673672302086,
+        "ci_high": 0.09296694365855941,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.06363512707508376,
+        "ci_low": 0.05462821654915469,
+        "ci_high": 0.0749076213113645,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.07554983023768576,
+        "ci_low": 0.06088231506954458,
+        "ci_high": 0.09108774861318061,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.07397032958201115,
+        "ci_low": 0.06610631388058591,
+        "ci_high": 0.07995270511165897,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 11,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.1315744544401704,
+        "ci_low": 0.09537527254855831,
+        "ci_high": 0.16121694278187051,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.11384933029816424,
+        "ci_low": 0.09741022811443759,
+        "ci_high": 0.1362081226475428,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.13633066788858517,
+        "ci_low": 0.11149498836650751,
+        "ci_high": 0.1607734041292637,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.13453998077407456,
+        "ci_low": 0.12531101854643234,
+        "ci_high": 0.14666804387729768,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 12,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.050497107160249376,
+        "ci_low": 0.03683289888433784,
+        "ci_high": 0.06730235707320434,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.041477999801955316,
+        "ci_low": 0.033718462921210314,
+        "ci_high": 0.04923753668270032,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.06505286561976935,
+        "ci_low": 0.05010209609018605,
+        "ci_high": 0.08203923921768333,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.06484784372525312,
+        "ci_low": 0.05319276420014777,
+        "ci_high": 0.07703273780341234,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 12,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.09518956130575225,
+        "ci_low": 0.07123296333606637,
+        "ci_high": 0.12262886747081798,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.08749522937142853,
+        "ci_low": 0.06980689730458584,
+        "ci_high": 0.10642886817245671,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.13034647531234325,
+        "ci_low": 0.10411329362611053,
+        "ci_high": 0.1624340196743705,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.1218274269087249,
+        "ci_low": 0.1014516522975764,
+        "ci_high": 0.13949120883611005,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 13,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.1756858384776589,
+        "ci_low": 0.11245634442041666,
+        "ci_high": 0.23116543204195955,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.17102361769434954,
+        "ci_low": 0.11907278226502804,
+        "ci_high": 0.22714525564475566,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.22145107270257358,
+        "ci_low": 0.18372895979285722,
+        "ci_high": 0.27290168589999564,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.19865180862476242,
+        "ci_low": 0.17649422300254664,
+        "ci_high": 0.21976981558795555,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 13,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.319336120312634,
+        "ci_low": 0.20666014178515807,
+        "ci_high": 0.41864968117265605,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.31611106266882205,
+        "ci_low": 0.22101009987952516,
+        "ci_high": 0.41121816663898136,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.3895552429763339,
+        "ci_low": 0.32803444635462287,
+        "ci_high": 0.4770623253885785,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.3685962288348276,
+        "ci_low": 0.32914653946748795,
+        "ci_high": 0.4080459182021673,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 14,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.028879953369956756,
+        "ci_low": 0.01817829971306904,
+        "ci_high": 0.039751681166921966,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.03100388513928378,
+        "ci_low": 0.026662345610591748,
+        "ci_high": 0.03553279844578882,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.033344872175856737,
+        "ci_low": 0.023972422837876213,
+        "ci_high": 0.04386998241419193,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.03489003394834327,
+        "ci_low": 0.03079428697443364,
+        "ci_high": 0.038987040252505135,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 14,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.04820371724987568,
+        "ci_low": 0.03289381385060833,
+        "ci_high": 0.06324145505524924,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.04872454499657897,
+        "ci_low": 0.04243424161180828,
+        "ci_high": 0.05570693575728575,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.058017579412221146,
+        "ci_low": 0.0438993562375248,
+        "ci_high": 0.07411465747779457,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.05872937106302838,
+        "ci_low": 0.0517102294778495,
+        "ci_high": 0.06574851264820725,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 15,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.04872345533201637,
+        "ci_low": 0.03798333525778456,
+        "ci_high": 0.05757742583973412,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.052660123742093654,
+        "ci_low": 0.040621799969827746,
+        "ci_high": 0.06655079126559944,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.06632810863149549,
+        "ci_low": 0.04673524592446408,
+        "ci_high": 0.0976807799224649,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.05991253861485245,
+        "ci_low": 0.045671824549991594,
+        "ci_high": 0.07440650927155076,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 15,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.09364425917980715,
+        "ci_low": 0.07602457557503042,
+        "ci_high": 0.10921024985040176,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.09474437312890152,
+        "ci_low": 0.07423466655368205,
+        "ci_high": 0.11530782385474855,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.11991697620670964,
+        "ci_low": 0.08956223688934191,
+        "ci_high": 0.16635695960974028,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.10617915736502317,
+        "ci_low": 0.08312568470370041,
+        "ci_high": 0.12978979227727977,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 16,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.051341650016307416,
+        "ci_low": 0.04180954479140568,
+        "ci_high": 0.06087375524120916,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.04494995149115173,
+        "ci_low": 0.039803681777686284,
+        "ci_high": 0.05169275712456471,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.050894442450490386,
+        "ci_low": 0.04177301987569069,
+        "ci_high": 0.0622927286061936,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.04346430457879791,
+        "ci_low": 0.03544512814572322,
+        "ci_high": 0.05019887380826519,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 16,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.09314540218022045,
+        "ci_low": 0.07763934811485088,
+        "ci_high": 0.10900168638975402,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.08852552192446986,
+        "ci_low": 0.08042759050035161,
+        "ci_high": 0.09795884279414277,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.09516883270511647,
+        "ci_low": 0.08014278620732611,
+        "ci_high": 0.11407907156841195,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.0837247981212513,
+        "ci_low": 0.06695446752841691,
+        "ci_high": 0.09860019760002836,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 17,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.048897994941306554,
+        "ci_low": 0.03976993821120346,
+        "ci_high": 0.05855927567184786,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.05128753579945035,
+        "ci_low": 0.04250326221780283,
+        "ci_high": 0.06352852346643773,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.05358124022529287,
+        "ci_low": 0.04022799883078724,
+        "ci_high": 0.06965048794046708,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.05151202464462997,
+        "ci_low": 0.038735174515535244,
+        "ci_high": 0.06375276607100373,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 17,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.0864999330872767,
+        "ci_low": 0.06913377613099939,
+        "ci_high": 0.10386609004355404,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.08952460853896663,
+        "ci_low": 0.07152633391995582,
+        "ci_high": 0.11726046282698402,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.09352868142753881,
+        "ci_low": 0.07297059577649352,
+        "ci_high": 0.11862390232105015,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.08884157703097424,
+        "ci_low": 0.06999404141471549,
+        "ci_high": 0.10829387130737271,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 18,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.05796253403858067,
+        "ci_low": 0.04167670740045395,
+        "ci_high": 0.07637709982013066,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.06064097376664636,
+        "ci_low": 0.0487306371920407,
+        "ci_high": 0.07155341902191621,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.06498577639557998,
+        "ci_low": 0.054973642975319245,
+        "ci_high": 0.07506273796998061,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.06522909940768916,
+        "ci_low": 0.05068503281914051,
+        "ci_high": 0.07689963638278736,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 18,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.10709092103626298,
+        "ci_low": 0.0770841474968594,
+        "ci_high": 0.13824669814582652,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.11451961346140042,
+        "ci_low": 0.0974249355535613,
+        "ci_high": 0.13161429136923958,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.1196356485169563,
+        "ci_low": 0.10141456857878464,
+        "ci_high": 0.13519272445376926,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.11699762696369831,
+        "ci_low": 0.08908694749882294,
+        "ci_high": 0.1389649486885319,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 19,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.03395033744827884,
+        "ci_low": 0.028114666483785224,
+        "ci_high": 0.040127158836687216,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.035989775067868365,
+        "ci_low": 0.02760202777301169,
+        "ci_high": 0.04611705013457715,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.030523812791517484,
+        "ci_low": 0.024104836634794874,
+        "ci_high": 0.036942788948240095,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.036599250810737324,
+        "ci_low": 0.027868493420760206,
+        "ci_high": 0.04371578240111317,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 19,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.05946784787247097,
+        "ci_low": 0.04771972818938427,
+        "ci_high": 0.07176164200342824,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.0639455980366188,
+        "ci_low": 0.05093136966535087,
+        "ci_high": 0.08069576048627847,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.05915689005860172,
+        "ci_low": 0.04870586422172884,
+        "ci_high": 0.06960791589547458,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.06313158897363176,
+        "ci_low": 0.047986494647393595,
+        "ci_high": 0.076213142108092,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 20,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.020626907076887406,
+        "ci_low": 0.013556788803163128,
+        "ci_high": 0.029155982781094235,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.025394403078783045,
+        "ci_low": 0.020709276302339014,
+        "ci_high": 0.03034382969602774,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.02068968821128944,
+        "ci_low": 0.013574230840395152,
+        "ci_high": 0.029213330434152078,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.022358913151068995,
+        "ci_low": 0.016607669596694272,
+        "ci_high": 0.029130288058950193,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 20,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.0389063729457012,
+        "ci_low": 0.025610611951282898,
+        "ci_high": 0.05524097612375915,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.04709634731443421,
+        "ci_low": 0.03919672134866873,
+        "ci_high": 0.05502459509629583,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.03700627069533715,
+        "ci_low": 0.02543186704066725,
+        "ci_high": 0.04885709946577472,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.03913481993832565,
+        "ci_low": 0.03155141282220743,
+        "ci_high": 0.04943407338763901,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 21,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.016193959808966485,
+        "ci_low": 0.01230283543214708,
+        "ci_high": 0.019827781082864492,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.0169702776708869,
+        "ci_low": 0.01166685849173764,
+        "ci_high": 0.023575432388874242,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.014394102725269925,
+        "ci_low": 0.010755611785949288,
+        "ci_high": 0.019504445707357047,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.016925560722262305,
+        "ci_low": 0.013480266436366389,
+        "ci_high": 0.019921526158162867,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 21,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.029056215844978084,
+        "ci_low": 0.02239777409956249,
+        "ci_high": 0.035757440557376806,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.029246332181724073,
+        "ci_low": 0.02167757206790401,
+        "ci_high": 0.03714733817327497,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.02629296778679698,
+        "ci_low": 0.020816633727185202,
+        "ci_high": 0.034320340657151394,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.029757801159874496,
+        "ci_low": 0.024527297564056156,
+        "ci_high": 0.03468783823457346,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 22,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.011375916366193946,
+        "ci_low": 0.008829291868823691,
+        "ci_high": 0.013915350723552608,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.011715855694550378,
+        "ci_low": 0.00812612623875957,
+        "ci_high": 0.015305585150341186,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.009696984355711997,
+        "ci_low": 0.006091996538304892,
+        "ci_high": 0.014051962733960312,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.011236638352975978,
+        "ci_low": 0.008651291874847703,
+        "ci_high": 0.014082362351792489,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 22,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.020642240103226895,
+        "ci_low": 0.01646112509707279,
+        "ci_high": 0.02466705480239239,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.020417916728554995,
+        "ci_low": 0.01582652897195901,
+        "ci_high": 0.02522680750179681,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.017395667313527922,
+        "ci_low": 0.011775787262179795,
+        "ci_high": 0.02317392266332679,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.018955302898499303,
+        "ci_low": 0.015073458228195774,
+        "ci_high": 0.02283899441943542,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 23,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.010768063567948311,
+        "ci_low": 0.00836160742990568,
+        "ci_high": 0.013531295238996289,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.013527326964418126,
+        "ci_low": 0.008522629661384801,
+        "ci_high": 0.01853202426745145,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.010558102080558698,
+        "ci_low": 0.00880979667398142,
+        "ci_high": 0.012809456382899695,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.012260530136996146,
+        "ci_low": 0.007160195434298319,
+        "ci_high": 0.0174676189220892,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 23,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.018700817780665496,
+        "ci_low": 0.01498427187832856,
+        "ci_high": 0.022788382100788995,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.021988304687454444,
+        "ci_low": 0.01562992710529373,
+        "ci_high": 0.02811521736551815,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.019307097713001264,
+        "ci_low": 0.016313769863744925,
+        "ci_high": 0.022299859232837373,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.019700145891553784,
+        "ci_low": 0.012403035793055319,
+        "ci_high": 0.027268184986650058,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 24,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.005413673628422498,
+        "ci_low": 0.0034773187377348013,
+        "ci_high": 0.007794186806638831,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.005607498297120879,
+        "ci_low": 0.00477348811335813,
+        "ci_high": 0.006565814479318495,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.005476915681658851,
+        "ci_low": 0.004103391338315578,
+        "ci_high": 0.006859775719234962,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.005510211702429565,
+        "ci_low": 0.0037753696610608066,
+        "ci_high": 0.007078477372857274,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 24,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.008354901575743591,
+        "ci_low": 0.005910724169172984,
+        "ci_high": 0.01134016759215275,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.0095303685418894,
+        "ci_low": 0.007842998291598223,
+        "ci_high": 0.011190322170183587,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.008572053275482428,
+        "ci_low": 0.006460507127066989,
+        "ci_high": 0.010184470494624032,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.008773166811287987,
+        "ci_low": 0.00631784777725464,
+        "ci_high": 0.011421187394056436,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 25,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.014574951079586933,
+        "ci_low": 0.01191973413838089,
+        "ci_high": 0.0168787753184052,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.014521551842710593,
+        "ci_low": 0.012359765205235747,
+        "ci_high": 0.016413531071205207,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.012970767260817046,
+        "ci_low": 0.010800500363480708,
+        "ci_high": 0.01549968512553639,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.015223280783407872,
+        "ci_low": 0.01222576784916632,
+        "ci_high": 0.019803862021883226,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 25,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.025053538978216577,
+        "ci_low": 0.02115284469622684,
+        "ci_high": 0.029056738224749783,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.026896761183989638,
+        "ci_low": 0.0220458803140114,
+        "ci_high": 0.03191315351904896,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.024921221345738924,
+        "ci_low": 0.020815289378857182,
+        "ci_high": 0.02888588645974306,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.025802031652947123,
+        "ci_low": 0.02156466397549726,
+        "ci_high": 0.03225794451343017,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 26,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.005264033042614857,
+        "ci_low": 0.0038763459338581343,
+        "ci_high": 0.0067489329080862494,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.006105089824631105,
+        "ci_low": 0.00543155527821656,
+        "ci_high": 0.006996624737356104,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.0054094787631678645,
+        "ci_low": 0.0040897525908178195,
+        "ci_high": 0.006665320588254066,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.004232222832282936,
+        "ci_low": 0.0029375956150020045,
+        "ci_high": 0.005441095163787675,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 26,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.00818291336951545,
+        "ci_low": 0.006187178513090874,
+        "ci_high": 0.010287138512794705,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.009314205559560241,
+        "ci_low": 0.008385370342642997,
+        "ci_high": 0.010497345452422072,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.008413429030872282,
+        "ci_low": 0.00647182652217379,
+        "ci_high": 0.010123887802826562,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.00666917354722006,
+        "ci_low": 0.004964327493545493,
+        "ci_high": 0.008165060891095982,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 27,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.004934418561670389,
+        "ci_low": 0.0039104321196965965,
+        "ci_high": 0.006546527814809503,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.0045880153265040365,
+        "ci_low": 0.0037618379621636965,
+        "ci_high": 0.005351052793175106,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.005440456443981391,
+        "ci_low": 0.004118441833716785,
+        "ci_high": 0.00694377244056016,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.004645525265708183,
+        "ci_low": 0.003522993985916213,
+        "ci_high": 0.005777835278231562,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 27,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.009362665405109244,
+        "ci_low": 0.007064669920338873,
+        "ci_high": 0.011624273807878624,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.008111938784282067,
+        "ci_low": 0.00706310722902846,
+        "ci_high": 0.009488091812801315,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.009848966290513135,
+        "ci_low": 0.007160390472150424,
+        "ci_high": 0.012706995384309108,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.008424420174703472,
+        "ci_low": 0.006699058071632685,
+        "ci_high": 0.010149782277774255,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 28,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.003899175805760903,
+        "ci_low": 0.0019261420640012538,
+        "ci_high": 0.005718542782817264,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.0035359638771937847,
+        "ci_low": 0.0027027906779577603,
+        "ci_high": 0.004258835716085187,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.004156655366091474,
+        "ci_low": 0.0032942297865406174,
+        "ci_high": 0.005189845475839362,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.004446011312826733,
+        "ci_low": 0.003737933317856408,
+        "ci_high": 0.005327879448294106,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 28,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.007295800971134238,
+        "ci_low": 0.004159654748662888,
+        "ci_high": 0.010493031829376605,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.006437259628444464,
+        "ci_low": 0.004942471612746663,
+        "ci_high": 0.008187963177424106,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.007472183953347028,
+        "ci_low": 0.005978277587443944,
+        "ci_high": 0.00896486309125361,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.007623448324930379,
+        "ci_low": 0.006448982766918664,
+        "ci_high": 0.008699251960493837,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 29,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.0038828410875319528,
+        "ci_low": 0.0022823317224446487,
+        "ci_high": 0.0059751323841861735,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.003583356848656314,
+        "ci_low": 0.0023182564668147634,
+        "ci_high": 0.005351430508563676,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.003644730939790096,
+        "ci_low": 0.0025592284827472785,
+        "ci_high": 0.005274561939315321,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.0026108933045379734,
+        "ci_low": 0.001754437124907964,
+        "ci_high": 0.0037022123170198026,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 29,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.006129975809774331,
+        "ci_low": 0.003932366852528563,
+        "ci_high": 0.008558570221190049,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.005847178040049707,
+        "ci_low": 0.004207101156211963,
+        "ci_high": 0.007961769983680478,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.005967084905806485,
+        "ci_low": 0.004369180026841201,
+        "ci_high": 0.008304667042961539,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.004372260239227691,
+        "ci_low": 0.003349056211045394,
+        "ci_high": 0.005835013567990664,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 30,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.011105558873044624,
+        "ci_low": 0.010465399096082522,
+        "ci_high": 0.01217542526546664,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.014491392860614705,
+        "ci_low": 0.00461662330629433,
+        "ci_high": 0.03301128879105802,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.01226175864812381,
+        "ci_low": 0.008102338805364399,
+        "ci_high": 0.01865542236028771,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.006674525138024396,
+        "ci_low": 0.004625279365559618,
+        "ci_high": 0.008820093280101835,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 30,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.17351401620043538,
+        "ci_low": 0.10697914948723582,
+        "ci_high": 0.2376309450399517,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.1898164977544537,
+        "ci_low": 0.08674811111687261,
+        "ci_high": 0.32627979101931814,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.2891680856811457,
+        "ci_low": 0.1863894079601043,
+        "ci_high": 0.4230210685836748,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.16037384917397426,
+        "ci_low": 0.07685787717524552,
+        "ci_high": 0.25785522508434505,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 31,
+      "temperature": 2.3,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.002927039278075628,
+        "ci_low": 0.0012375323135681922,
+        "ci_high": 0.00461075522902648,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.004608149606419387,
+        "ci_low": 0.0011232176431792632,
+        "ci_high": 0.00999098226629389,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.003769755508469501,
+        "ci_low": 0.0013016391348273898,
+        "ci_high": 0.0066047724712651424,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.0037288813807410184,
+        "ci_low": 0.0020821953377597987,
+        "ci_high": 0.006299664558339816,
+        "n_authors": 5
+      }
+    },
+    {
+      "layer": 31,
+      "temperature": 3.0,
+      "eligible_on_calibration": false,
+      "calibration_delta_nll_forget": {
+        "mean": 0.00535273554780374,
+        "ci_low": 0.0033876448595408074,
+        "ci_high": 0.007570679058514046,
+        "n_authors": 5
+      },
+      "calibration_delta_nll_retain": {
+        "mean": 0.008325973295199855,
+        "ci_low": 0.0024592429646144,
+        "ci_high": 0.016807314327978256,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_forget": {
+        "mean": 0.007317742852442797,
+        "ci_low": 0.0024805075441605927,
+        "ci_high": 0.012752355515707343,
+        "n_authors": 5
+      },
+      "holdout_delta_nll_retain": {
+        "mean": 0.006857598362103076,
+        "ci_low": 0.003913704449246429,
+        "ci_high": 0.011186757341964643,
+        "n_authors": 5
+      }
+    }
+  ]
+}
