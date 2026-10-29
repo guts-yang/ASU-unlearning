@@ -1,0 +1,173 @@
+{
+  "attention_temp": 2.0,
+  "calibration_fraction": 0.2,
+  "calibration_seed": 1001,
+  "cells": [
+    {
+      "delta": 0.0,
+      "gold_prob_after_sum": 2610.2350730895996,
+      "gold_prob_before_sum": 6145.872455596924,
+      "k": 1,
+      "n_edited": 7252,
+      "n_skipped": 0,
+      "n_valid": 10397,
+      "rank_after_sum": 1226735.0,
+      "rank_before_sum": 1223334.0
+    },
+    {
+      "delta": 0.5,
+      "gold_prob_after_sum": 1951.3446321487427,
+      "gold_prob_before_sum": 6145.872455596924,
+      "k": 1,
+      "n_edited": 7252,
+      "n_skipped": 0,
+      "n_valid": 10397,
+      "rank_after_sum": 1233790.0,
+      "rank_before_sum": 1223334.0
+    },
+    {
+      "delta": 1.0,
+      "gold_prob_after_sum": 1437.6957321166992,
+      "gold_prob_before_sum": 6145.872455596924,
+      "k": 1,
+      "n_edited": 7252,
+      "n_skipped": 0,
+      "n_valid": 10397,
+      "rank_after_sum": 1238170.0,
+      "rank_before_sum": 1223334.0
+    },
+    {
+      "delta": 0.0,
+      "gold_prob_after_sum": 1105.7184109687805,
+      "gold_prob_before_sum": 6145.872455596924,
+      "k": 2,
+      "n_edited": 8534,
+      "n_skipped": 0,
+      "n_valid": 10397,
+      "rank_after_sum": 1234413.0,
+      "rank_before_sum": 1223334.0
+    },
+    {
+      "delta": 0.5,
+      "gold_prob_after_sum": 749.2552516460419,
+      "gold_prob_before_sum": 6145.872455596924,
+      "k": 2,
+      "n_edited": 8534,
+      "n_skipped": 0,
+      "n_valid": 10397,
+      "rank_after_sum": 1245503.0,
+      "rank_before_sum": 1223334.0
+    },
+    {
+      "delta": 1.0,
+      "gold_prob_after_sum": 508.8419095277786,
+      "gold_prob_before_sum": 6145.872455596924,
+      "k": 2,
+      "n_edited": 8534,
+      "n_skipped": 0,
+      "n_valid": 10397,
+      "rank_after_sum": 1254265.0,
+      "rank_before_sum": 1223334.0
+    },
+    {
+      "delta": 0.0,
+      "gold_prob_after_sum": 385.137131690979,
+      "gold_prob_before_sum": 6145.872455596924,
+      "k": 4,
+      "n_edited": 9355,
+      "n_skipped": 0,
+      "n_valid": 10397,
+      "rank_after_sum": 1251906.0,
+      "rank_before_sum": 1223334.0
+    },
+    {
+      "delta": 0.5,
+      "gold_prob_after_sum": 246.97661197185516,
+      "gold_prob_before_sum": 6145.872455596924,
+      "k": 4,
+      "n_edited": 9355,
+      "n_skipped": 0,
+      "n_valid": 10397,
+      "rank_after_sum": 1270146.0,
+      "rank_before_sum": 1223334.0
+    },
+    {
+      "delta": 1.0,
+      "gold_prob_after_sum": 159.91808885335922,
+      "gold_prob_before_sum": 6145.872455596924,
+      "k": 4,
+      "n_edited": 9355,
+      "n_skipped": 0,
+      "n_valid": 10397,
+      "rank_after_sum": 1287251.0,
+      "rank_before_sum": 1223334.0
+    },
+    {
+      "delta": 0.0,
+      "gold_prob_after_sum": 123.46373425424099,
+      "gold_prob_before_sum": 6145.872455596924,
+      "k": 8,
+      "n_edited": 9796,
+      "n_skipped": 0,
+      "n_valid": 10397,
+      "rank_after_sum": 1289850.0,
+      "rank_before_sum": 1223334.0
+    },
+    {
+      "delta": 0.5,
+      "gold_prob_after_sum": 77.04943861067295,
+      "gold_prob_before_sum": 6145.872455596924,
+      "k": 8,
+      "n_edited": 9796,
+      "n_skipped": 0,
+      "n_valid": 10397,
+      "rank_after_sum": 1321302.0,
+      "rank_before_sum": 1223334.0
+    },
+    {
+      "delta": 1.0,
+      "gold_prob_after_sum": 48.51300040632486,
+      "gold_prob_before_sum": 6145.872455596924,
+      "k": 8,
+      "n_edited": 9796,
+      "n_skipped": 0,
+      "n_valid": 10397,
+      "rank_after_sum": 1355724.0,
+      "rank_before_sum": 1223334.0
+    }
+  ],
+  "delta": 1.0,
+  "delta_grid": [
+    0.0,
+    0.5,
+    1.0
+  ],
+  "edit_rate": 0.942194863903049,
+  "forget_sha256": "a75f115d342109985e1626ab459171869dad98b978ee202c273c132e1243b535",
+  "gold_prob_after_sum": 48.51300040632486,
+  "gold_prob_before_sum": 6145.872455596924,
+  "k": 8,
+  "k_grid": [
+    1,
+    2,
+    4,
+    8
+  ],
+  "matched_penalty": 14.324079036712646,
+  "matched_probability_drop": 0.5864537358283997,
+  "matched_rank_increase": 8715.391651437914,
+  "mean_rank_increase": 12.733480811772626,
+  "min_rank_separation": 0.25,
+  "n_calibration_examples": 80,
+  "n_edited": 9796,
+  "n_heldout_examples": 320,
+  "n_skipped": 0,
+  "n_valid": 10397,
+  "penalty_saturated": false,
+  "rank_after_sum": 1355724.0,
+  "rank_before_sum": 1223334.0,
+  "selection_rule": "On the calibration split only, keep cells whose edit rate is in (0, 0.95] and whose mean gold-rank increase is positive. Choose the largest mean rank increase, breaking ties toward smaller K and then smaller delta. Fit one gold-logit penalty to that cell's mean gold-probability drop. Freeze the cell only if its rank increase exceeds the penalty's rank increase by min_rank_separation. Do not read FE, GSM8K, or any other test metric before writing the lock.",
+  "status": "stop_not_distinct",
+  "target_probability_drop": 0.5864537323449648,
+  "test_metrics_read": false
+}
