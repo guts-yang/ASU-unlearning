@@ -1,0 +1,10 @@
+{
+  "identity_max_abs": 0.0,
+  "attention_temp_max_abs": 0.0012753121554851532,
+  "mlp_temp_max_abs": 0.015328742563724518,
+  "manual_gate_scale_max_abs": 0.0022793570533394814,
+  "backend": "eager_tiny_random",
+  "model": "LlamaConfig hidden 32, intermediate 64, layers 2, vocab 128, seed 0",
+  "flash_equivalence": "未运行",
+  "tofu_7b_forward": "未运行"
+}

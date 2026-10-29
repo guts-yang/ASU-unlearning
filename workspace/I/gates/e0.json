@@ -1,0 +1,19 @@
+{
+  "stage": "e0_teacher_2x2",
+  "assessed_at": "2026-10-29T13:39:18+08:00",
+  "decision": "do_not_start_e1",
+  "reasons": [
+    "teacher grid forwards were not run because CUDA is unavailable",
+    "this is not a measured failure or success of the MLP channel"
+  ],
+  "tau_A": null,
+  "tau_M": null,
+  "intensity_matched": null,
+  "retain_damage_cap": null,
+  "holdout": null,
+  "S_am": "未运行",
+  "I_AM": "未运行",
+  "substitution_rate": "未运行",
+  "generation_coherence": "未运行",
+  "latency_and_memory": "未运行"
+}
