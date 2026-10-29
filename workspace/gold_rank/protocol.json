@@ -1,0 +1,29 @@
+{
+  "status": "preregistered_grid",
+  "task": "Llama-3-8B-Instruct real-world ASU+KL",
+  "attention_temp": 2.0,
+  "layers_id": null,
+  "k_grid": [1, 2, 4, 8],
+  "delta_grid": [0.0, 0.5, 1.0],
+  "selected_k": null,
+  "selected_delta": null,
+  "matched_penalty": null,
+  "calibration_fraction": 0.2,
+  "calibration_seed": 1001,
+  "paired_seeds": [1001, 1002, 1003],
+  "tie_break": "lower_token_id_ranks_better",
+  "skip_if_fewer_than_k_nongold": true,
+  "kl_direction": "KL(q || p_S)",
+  "reduction": "per_sequence_mean_then_batch_mean",
+  "mask": "labels[:, 1:] != -100",
+  "min_rank_separation": 0.25,
+  "penalty_match_tolerance": 0.001,
+  "selection_rule": "On the calibration split only, keep cells whose edit rate is in (0, 0.95] and whose mean gold-rank increase is positive. Choose the largest mean rank increase, breaking ties toward smaller K and then smaller delta. Fit one gold-logit penalty to that cell's mean gold-probability drop. Freeze the cell only if its rank increase exceeds the penalty's rank increase by min_rank_separation. Do not read FE, GSM8K, or any other test metric before writing the lock.",
+  "fe_noninferiority": {
+    "status": "unregistered",
+    "margin": null,
+    "statistic": "mean_paired_difference_minus_sample_std",
+    "comparison": "group_D_minus_group_A",
+    "note": "Register margin from multi-seed ASU and ASU+Anchor reruns before reading demotion test metrics."
+  }
+}

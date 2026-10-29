@@ -1,9 +1,17 @@
 import copy
+import sys
+from pathlib import Path
 
 import deepspeed
 from transformers import Trainer
 
 from .losses import get_loss
+
+_REPO = Path(__file__).resolve().parents[2]
+if str(_REPO / "workspace") not in sys.path:
+    sys.path.insert(0, str(_REPO / "workspace"))
+
+from da_asu.anchor import derivation_anchor_loss, derivation_logit_kl
 
 
 class CustomTrainerForgetting(Trainer):
@@ -21,6 +29,9 @@ class CustomTrainerForgetting(Trainer):
         self.layers_id = kwargs.pop('layers_id', None)
         # attention temperature for ASU
         self.attention_temp = kwargs.pop('attention_temp')
+        self.gold_rank = kwargs.pop('gold_rank', None)
+        self.da_asu_mode = kwargs.pop('da_asu_mode', None)
+        self.da_asu_mu = kwargs.pop('da_asu_mu', 1.0)
 
         super(CustomTrainerForgetting, self).__init__(*args, **kwargs)
 
@@ -28,8 +39,26 @@ class CustomTrainerForgetting(Trainer):
 
     def compute_loss(self, model, inputs, return_outputs=False, num_items_in_batch=None):
 
-        forget_loss, regularization_loss = get_loss(model, self.ref_model, inputs, self.loss_type, self.beta, self.attention_temp, self.layers_id)
+        forget_loss, regularization_loss = get_loss(
+            model, self.ref_model, inputs, self.loss_type, self.beta,
+            self.attention_temp, self.layers_id, gold_rank=self.gold_rank,
+        )
         loss = self.forget_coeff * forget_loss + self.regularization_coeff * regularization_loss
+        if self.da_asu_mode:
+            if len(inputs) < 6:
+                raise RuntimeError("da_asu is enabled but the batch has no D_reason tensors")
+            input_ids, labels, attention_mask, query_mask = inputs[5]
+            if self.da_asu_mode == "anchor":
+                extra, self.last_anchor_per_layer = derivation_anchor_loss(
+                    model, self.ref_model, input_ids, attention_mask, query_mask
+                )
+            elif self.da_asu_mode == "logit_control":
+                extra = derivation_logit_kl(
+                    model, self.ref_model, input_ids, labels, attention_mask, query_mask
+                )
+            else:
+                raise ValueError(f"unknown da_asu mode {self.da_asu_mode}")
+            loss = loss + self.da_asu_mu * extra
 
         return (loss, None) if return_outputs else loss
 

@@ -1,5 +1,7 @@
+import json
 import os
 import shutil
+import sys
 import warnings
 from pathlib import Path
 
@@ -18,6 +20,14 @@ from utils import get_model_identifiers_from_yaml, set_random_seed
 from my_models.my_llama import LlamaForCausalLM
 warnings.filterwarnings('ignore')
 
+REPO = Path(__file__).resolve().parents[1]
+if str(REPO / "workspace") not in sys.path:
+    sys.path.insert(0, str(REPO / "workspace"))
+
+from da_asu.protocol import normalize_layers_id, require_local_snapshot
+from gold_rank.lock import materialize_gold_rank
+from gold_rank.preflight import enable_offline
+
 
 def find_all_linear_names(model):
     cls = torch.nn.Linear
@@ -31,21 +41,62 @@ def find_all_linear_names(model):
     return list(lora_module_names)
 
 
+def _verdict_path(da):
+    candidates = []
+    if da.get("verdict_path"):
+        candidates.append(Path(da.verdict_path))
+    candidates.append(REPO / "workspace/C/derived/m0_verdict.json")
+    candidates.append(REPO / "workspace/results/direction_c/m0_verdict.json")
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
+    return None
+
+
+def _da_asu_mode(cfg):
+    da = cfg.get("da_asu")
+    if da is None or not da.enabled:
+        return None
+    if da.mode not in {"anchor", "logit_control"}:
+        raise SystemExit(f"da_asu.mode must be anchor or logit_control, got {da.mode}")
+    if not da.reason_path or not Path(da.reason_path).is_file():
+        raise SystemExit("da_asu.reason_path must be an existing local JSONL")
+    if not da.allow_without_m0:
+        verdict_path = _verdict_path(da)
+        if verdict_path is None:
+            raise SystemExit("M0 verdict missing. Anchor training stays off.")
+        verdict = json.loads(verdict_path.read_text())
+        if verdict.get("decision") != "proceed":
+            raise SystemExit(f"M0 decision is {verdict.get('decision')}. Anchor training stays off.")
+    return da.mode
+
+
 @hydra.main(version_base=None, config_path="config", config_name="real_world")
 def main(cfg):
+    enable_offline()
     num_devices = int(os.environ.get('WORLD_SIZE', 1))
-
-    if os.environ.get('LOCAL_RANK') is not None:
-        local_rank = int(os.environ.get('LOCAL_RANK', '0'))
-        device_map = {'': local_rank}
+    local_rank = int(os.environ.get('LOCAL_RANK', '0'))
 
     seed = cfg.seed
     set_random_seed(seed)
+    model_id = require_local_snapshot(cfg.model_path)
+    cfg.layers_id = normalize_layers_id(cfg.layers_id)
+    forget_file = Path(cfg.data_path) / f"{cfg.split}.json"
+    retain_file = Path(cfg.data_path) / f"{cfg.retain}.json"
+    if not forget_file.is_file() or not retain_file.is_file():
+        raise SystemExit(f"Refusing to download data. Missing {forget_file} or {retain_file}.")
+    da_mode = _da_asu_mode(cfg)
+    gold_rank = materialize_gold_rank(cfg.get("gold_rank"), forget_file)
+    if gold_rank is not None:
+        cfg.gold_rank.enabled = True
+        cfg.gold_rank.mode = gold_rank["mode"]
+        cfg.gold_rank.k = gold_rank["k"]
+        cfg.gold_rank.delta = gold_rank["delta"]
+        cfg.gold_rank.penalty = gold_rank["penalty"]
+        cfg.gold_rank.seed = gold_rank["seed"]
 
     model_cfg = get_model_identifiers_from_yaml(cfg.model_family)
-    model_id = model_cfg["hf_key"]
-
-    config = AutoConfig.from_pretrained(model_id)
+    config = AutoConfig.from_pretrained(model_id, local_files_only=True)
 
     curr_save_dir = cfg.save_dir
 
@@ -58,12 +109,15 @@ def main(cfg):
         with open(f"{cfg.save_dir}/config.yaml", "w") as file:
             OmegaConf.save(cfg, file)
 
-    forget_data = datasets.load_dataset('json', data_files=os.path.join(cfg.data_path, cfg.split + '.json'),
-                                        split='train')
-    retain_data = datasets.load_dataset('json', data_files=os.path.join(cfg.data_path, cfg.retain + '.json'),
-                                        split='train')
+    forget_data = datasets.load_dataset('json', data_files=str(forget_file), split='train')
+    retain_data = datasets.load_dataset('json', data_files=str(retain_file), split='train')
+    reason_data = None
+    reason_max_length = None
+    if da_mode is not None:
+        reason_data = datasets.load_dataset('json', data_files=cfg.da_asu.reason_path, split='train')
+        reason_max_length = cfg.da_asu.reason_max_length
 
-    tokenizer = AutoTokenizer.from_pretrained(model_id)
+    tokenizer = AutoTokenizer.from_pretrained(model_id, local_files_only=True)
     tokenizer.pad_token = tokenizer.eos_token
 
     torch_format_dataset = TextForgetDatasetQA(tokenizer=tokenizer,
@@ -71,7 +125,11 @@ def main(cfg):
                                                forget_data=forget_data,
                                                retain_data=retain_data,
                                                max_length=300,
-                                               mask=cfg.mask)
+                                               mask=cfg.mask,
+                                               seed=cfg.seed,
+                                               retain_seed_mode="index_only",
+                                               reason_data=reason_data,
+                                               reason_max_length=reason_max_length)
 
     batch_size = cfg.batch_size
     gradient_accumulation_steps = cfg.gradient_accumulation_steps
@@ -114,16 +172,18 @@ def main(cfg):
         save_only_model=True,
         ddp_find_unused_parameters=False,
         weight_decay=cfg.weight_decay,
+        seed=cfg.seed,
         eval_strategy="no",
         report_to="none",
     )
 
     # load target LLM
     model = AutoModelForCausalLM.from_pretrained(
-        cfg.model_path,
+        model_id,
         config=config,
         attn_implementation='flash_attention_2',
         torch_dtype=torch.bfloat16,
+        local_files_only=True,
     )
     model.generation_config.do_sample = True
 
@@ -146,19 +206,21 @@ def main(cfg):
     if 'ASU' in cfg.forget_loss:
         # arch = AutoConfig.from_pretrained(model_path).architectures[0]
         reference_model = LlamaForCausalLM.from_pretrained(
-            cfg.model_path,
+            model_id,
             config=config,
             attn_implementation='flash_attention_2',
             torch_dtype=torch.bfloat16,
+            local_files_only=True,
         )
         print("Custom Model Loaded")
         
     else:
         reference_model = AutoModelForCausalLM.from_pretrained(
-            cfg.model_path,
+            model_id,
             config=config,
             attn_implementation='flash_attention_2',
             torch_dtype=torch.bfloat16,
+            local_files_only=True,
         )
 
     reference_model = reference_model.eval()
@@ -180,6 +242,9 @@ def main(cfg):
         beta=cfg.beta,
         forget_coeff=cfg.forget_coeff,
         regularization_coeff=cfg.regularization_coeff,
+        gold_rank=gold_rank,
+        da_asu_mode=da_mode,
+        da_asu_mu=cfg.da_asu.mu if da_mode is not None else 1.0,
     )
     model.config.use_cache = False  # silence the warnings. Please re-enable for inference!
 

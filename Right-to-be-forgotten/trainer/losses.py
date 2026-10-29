@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-def get_loss(model, ref_model, inputs, loss_type, beta=0.1, attention_temp=2.5, layers_id=None):
+def get_loss(model, ref_model, inputs, loss_type, beta=0.1, attention_temp=2.5, layers_id=None, gold_rank=None):
     # forget_loss
     if 'GA' in loss_type:
         forget_loss = ga_loss(model, inputs)
@@ -17,10 +17,10 @@ def get_loss(model, ref_model, inputs, loss_type, beta=0.1, attention_temp=2.5, 
         forget_loss = idk_loss(model, inputs)
     elif 'ASU' in loss_type:
         if 'IDK' in loss_type:
-            forget_loss = asu_loss(model, ref_model, inputs, attention_temp=attention_temp, layers_id=layers_id, ignore_first_token=True)
+            forget_loss = asu_loss(model, ref_model, inputs, attention_temp=attention_temp, layers_id=layers_id, ignore_first_token=True, gold_rank=gold_rank)
             forget_loss = forget_loss + idk_loss(model, inputs)
         else:
-            forget_loss = asu_loss(model, ref_model, inputs, attention_temp=attention_temp, layers_id=layers_id, ignore_first_token=False)
+            forget_loss = asu_loss(model, ref_model, inputs, attention_temp=attention_temp, layers_id=layers_id, ignore_first_token=False, gold_rank=gold_rank)
 
     regularization_loss = 0
     # regularization_loss
@@ -64,33 +64,55 @@ def npo_loss(model, ref_model, inputs, beta=0.1):
 
     return loss
 
-def asu_loss(model, ref_model, inputs, attention_temp=2.5, layers_id=None, ignore_first_token=False):
+def _gold_rank_spec(gold_rank):
+    if gold_rank is None or not bool(gold_rank.get("enabled", False)):
+        return None
+    if hasattr(gold_rank, "items") and not isinstance(gold_rank, dict):
+        return {key: gold_rank.get(key) for key in ("enabled", "mode", "k", "delta", "penalty", "seed", "k_grid", "collect_stats")}
+    return gold_rank
+
+
+def _edit_teacher_logits(logits, gold_ids, mask, spec):
+    import sys
+    from pathlib import Path
+
+    workspace = Path(__file__).resolve().parents[2] / "workspace"
+    if str(workspace) not in sys.path:
+        sys.path.insert(0, str(workspace))
+    from gold_rank.demotion import apply_gold_rank_logits
+
+    edited, _stats = apply_gold_rank_logits(logits.float(), gold_ids, mask, spec)
+    return edited.to(dtype=logits.dtype)
+
+
+def asu_loss(model, ref_model, inputs, attention_temp=2.5, layers_id=None, ignore_first_token=False, gold_rank=None):
     forget_inputs = inputs[0]
     input_ids, labels, attention_mask = forget_inputs
 
     outputs = model(input_ids, labels=labels, attention_mask=attention_mask)
     base_loss = outputs.loss.item()
-    log_probs = F.log_softmax(outputs.logits[:, :-1, :], dim=-1)
 
     with torch.no_grad():
         ref_outputs = ref_model(input_ids, labels=labels, attention_mask=attention_mask, attention_temp=attention_temp, layers_id=layers_id)
-        
-        ref_log_probs = F.log_softmax(ref_outputs.logits[:, :-1, :], dim=-1)
         ref_loss = ref_outputs.loss.item()
 
-    # print(f"Forget loss: {base_loss}                Ref Forget loss: {ref_loss}")
-
-    # Adjust logits and labels to exclude the last token
     loss_mask = (labels[:, 1:].clone() != -100)
-
-    assert log_probs.shape[:-1] == loss_mask.shape, "Logits and labels must have compatible shapes."
-
-    # ignore the first token in the Answer if ASU is combinded with IDK.
-    # This is becuse the first token in IDK loss is already defined.
     if ignore_first_token:
         first_idx = loss_mask.float().argmax(dim=1)
         row_idx = torch.arange(loss_mask.size(0), device=loss_mask.device)
         loss_mask[row_idx, first_idx] = False
+
+    student_logits = outputs.logits[:, :-1, :]
+    teacher_logits = ref_outputs.logits[:, :-1, :]
+    spec = _gold_rank_spec(gold_rank)
+    if spec is not None:
+        teacher_logits = _edit_teacher_logits(teacher_logits, labels[:, 1:], loss_mask, spec)
+    log_probs = F.log_softmax(student_logits, dim=-1)
+    ref_log_probs = F.log_softmax(teacher_logits, dim=-1)
+
+    # print(f"Forget loss: {base_loss}                Ref Forget loss: {ref_loss}")
+
+    assert log_probs.shape[:-1] == loss_mask.shape, "Logits and labels must have compatible shapes."
 
     # parallel = giving the same weight to each token across the batch.
     # we set this parameter to False by default for consistency with previous works.

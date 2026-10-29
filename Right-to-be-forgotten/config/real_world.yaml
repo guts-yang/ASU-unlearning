@@ -26,13 +26,34 @@ regularization_coeff: 1.0
 
 beta: 0.1
 attention_temp: 2.0
-layers_id: []
+layers_id: null
 weight_decay: 0.01
 
 fix_ref_model: true # only for continual unlearning
 mask: true # false for ME, true for other baselines
 
 seed: 1001
+
+# beta is the NPO/DPO coefficient recorded in historical directory names.
+# da_asu.mu is the anchor loss weight. Archived M1 used mu=1.0; beta0.1 is not mu.
+da_asu:
+  enabled: false
+  mode: anchor
+  mu: 1.0
+  reason_path: null
+  reason_max_length: 512
+  verdict_path: null
+  allow_without_m0: false
+
+# Gold-rank demotion stays off until the calibration lock freezes K and delta.
+gold_rank:
+  enabled: false
+  mode: demote
+  lock_path: null
+  seed: 1001
+  k: null
+  delta: null
+  penalty: null
 
 # save config
 save_checkpoint: false

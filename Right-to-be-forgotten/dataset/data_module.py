@@ -1,5 +1,7 @@
 import json
 import os
+import sys
+from pathlib import Path
 
 import datasets
 import torch
@@ -8,6 +10,10 @@ from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import Dataset
 
 from utils import get_model_identifiers_from_yaml
+
+_REPO = Path(__file__).resolve().parents[2]
+if str(_REPO / "workspace") not in sys.path:
+    sys.path.insert(0, str(_REPO / "workspace"))
 
 
 def dataset_to_json(dataset, filename, ):
@@ -22,36 +28,9 @@ def dataset_to_json(dataset, filename, ):
 
 # adopt from TOFU: https://github.com/locuslab/tofu/blob/80159d8ea39edf147fb09cd82aefa08e506e6718/data_module.py#L8
 def convert_raw_forget_data_to_model_format(tokenizer, max_length, question, answer, model_configs, mask=True):
-    question_start_token, question_end_token, answer_token = model_configs[
-        'question_start_tag'], model_configs['question_end_tag'], model_configs['answer_tag']
+    from gold_rank.masking import encode_forget_example
 
-    new_question = question_start_token + question + question_end_token
-    new_answer = answer_token + answer
-    full_text = new_question + new_answer
-
-    num_question_tokens = len(tokenizer.tokenize(new_question, add_special_tokens=True))
-
-    encoded = tokenizer(
-        full_text,
-        add_special_tokens=True,
-        max_length=max_length,
-        truncation=True,
-    )
-    pad_length = max_length - len(encoded.input_ids)
-    pad_input_ids = encoded['input_ids'] + [tokenizer.eos_token_id] * pad_length
-    pad_attention_mask = encoded['attention_mask'] + [0] * pad_length
-
-    if mask:
-        if len(encoded.input_ids) == max_length:
-            label = encoded.input_ids
-        else:
-            label = encoded['input_ids'] + [tokenizer.eos_token_id] + [-100] * (pad_length - 1)
-        # change label to -100 for question tokens
-        for i in range(num_question_tokens): label[i] = -100
-    else:
-        label = pad_input_ids
-
-    return torch.tensor(pad_input_ids), torch.tensor(label), torch.tensor(pad_attention_mask)
+    return encode_forget_example(tokenizer, max_length, question, answer, model_configs, mask=mask)
 
 
 def convert_raw_data_to_model_format(tokenizer, max_length, question, answer, model_configs):
@@ -83,7 +62,8 @@ def convert_raw_data_to_model_format(tokenizer, max_length, question, answer, mo
 
 
 class TextForgetDatasetQA(Dataset):
-    def __init__(self, tokenizer, model_family, forget_data, retain_data, max_length=512, mask=False, seed=0):
+    def __init__(self, tokenizer, model_family, forget_data, retain_data, max_length=512, mask=False, seed=0,
+                 retain_seed_mode="seed_plus_index", reason_data=None, reason_max_length=None):
         super(TextForgetDatasetQA, self).__init__()
         self.tokenizer = tokenizer
         self.max_length = max_length
@@ -91,6 +71,11 @@ class TextForgetDatasetQA(Dataset):
         self.retain_data = retain_data
         self.mask = mask
         self.seed = int(seed)
+        if retain_seed_mode not in {"seed_plus_index", "index_only"}:
+            raise ValueError(f"unknown retain_seed_mode {retain_seed_mode}")
+        self.retain_seed_mode = retain_seed_mode
+        self.reason_data = reason_data
+        self.reason_max_length = max_length if reason_max_length is None else reason_max_length
 
         self.model_configs = get_model_identifiers_from_yaml(model_family)
 
@@ -106,7 +91,10 @@ class TextForgetDatasetQA(Dataset):
     def __getitem__(self, idx):
         rets = []
 
-        torch.manual_seed(self.seed + idx)
+        if self.retain_seed_mode == "index_only":
+            torch.manual_seed(idx)
+        else:
+            torch.manual_seed(self.seed + idx)
         retain_idx = (idx + torch.randint(0, len(self.retain_data), (1,)).item()) % len(self.retain_data)
         rand_pos = torch.randint(0, len(self.idk), (1,)).item()
 
@@ -136,6 +124,20 @@ class TextForgetDatasetQA(Dataset):
                 converted_data = convert_raw_forget_data_to_model_format(self.tokenizer, self.max_length, question,
                                                                          answer, self.model_configs)
             rets.append(converted_data)
+
+        if self.reason_data is not None:
+            from da_asu.labels import encode_qa
+
+            reason_idx = idx % len(self.reason_data)
+            reason = self.reason_data[reason_idx]
+            reason_example = encode_qa(
+                self.tokenizer,
+                reason["question"],
+                reason["answer"],
+                self.model_configs,
+                self.reason_max_length,
+            )
+            rets.append(reason_example[:4])
 
         return rets
 
@@ -197,19 +199,18 @@ def custom_data_collator(samples):
 
 def custom_data_collator_forget(samples):
     rets = []
-
-    # Extracting samples for each data type
+    n_types = len(samples[0])
     data_types = ["forget", "retain", "forget_idk", "retain_idk", "forget_mismatch"]
+    if n_types == 6:
+        data_types.append("reason")
+    if n_types != len(data_types):
+        raise ValueError(f"expected {len(data_types)} batch fields, got {n_types}")
     samples_dict = {data_type: [sample[i] for sample in samples] for i, data_type in enumerate(data_types)}
 
     for data_type in data_types:
         data = samples_dict[data_type]
-
-        input_ids = [s[0] for s in data]
-        labels = [s[1] for s in data]
-        attention_mask = [s[2] for s in data]
-
-        rets.append((torch.stack(input_ids), torch.stack(labels), torch.stack(attention_mask)))
+        width = len(data[0])
+        rets.append(tuple(torch.stack([sample[col] for sample in data]) for col in range(width)))
 
     return rets
 
