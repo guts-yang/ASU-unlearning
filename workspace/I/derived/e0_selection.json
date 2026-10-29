@@ -1,0 +1,232 @@
+{
+  "assessed_at": "2026-10-29T13:47:25+08:00",
+  "retain_damage_cap": {
+    "cap": 0.0034702592157625847,
+    "baseline_mean": 0.010823413909826739,
+    "baseline_se": 0.0017351296078812924
+  },
+  "attention_grid": [
+    {
+      "calibration": {
+        "S_forget": {
+          "mean": 0.2909520146410051,
+          "se": 0.0388996593952443,
+          "ci_low": 0.2160687298248606,
+          "ci_high": 0.3513102136517751,
+          "n_authors": 5
+        },
+        "delta_nll_retain": {
+          "mean": 0.2831419424299716,
+          "se": 0.029123619149675074,
+          "ci_low": 0.2328417490355213,
+          "ci_high": 0.3381836998820399,
+          "n_authors": 5
+        }
+      },
+      "holdout": {
+        "S_forget": {
+          "mean": 0.3223548085473058,
+          "se": 0.027811782506292272,
+          "ci_low": 0.275329564433693,
+          "ci_high": 0.37313867436925124,
+          "n_authors": 5
+        },
+        "delta_nll_retain": {
+          "mean": 0.3267463787689869,
+          "se": 0.02448390009449904,
+          "ci_low": 0.2834406443174842,
+          "ci_high": 0.3700678761688672,
+          "n_authors": 5
+        }
+      },
+      "temperature": 1.5,
+      "eligible_on_calibration": false
+    },
+    {
+      "calibration": {
+        "S_forget": {
+          "mean": 1.9038220411433346,
+          "se": 0.19321279130216787,
+          "ci_low": 1.5961410770334086,
+          "ci_high": 2.2939625055791244,
+          "n_authors": 5
+        },
+        "delta_nll_retain": {
+          "mean": 1.9602060806699786,
+          "se": 0.12423563527923102,
+          "ci_low": 1.7249741793480247,
+          "ci_high": 2.1651952325940096,
+          "n_authors": 5
+        }
+      },
+      "holdout": {
+        "S_forget": {
+          "mean": 2.2455399663702247,
+          "se": 0.13071060363168893,
+          "ci_low": 2.0375332611337216,
+          "ci_high": 2.505545132503536,
+          "n_authors": 5
+        },
+        "delta_nll_retain": {
+          "mean": 2.076949650441523,
+          "se": 0.06341103774018134,
+          "ci_low": 1.9595977815009946,
+          "ci_high": 2.181567050743555,
+          "n_authors": 5
+        }
+      },
+      "temperature": 2.0,
+      "eligible_on_calibration": false
+    },
+    {
+      "calibration": {
+        "S_forget": {
+          "mean": 2.6945047463042027,
+          "se": 0.23876230555094105,
+          "ci_low": 2.270747269106008,
+          "ci_high": 3.1261441263070653,
+          "n_authors": 5
+        },
+        "delta_nll_retain": {
+          "mean": 2.7839598138461357,
+          "se": 0.16708921686496658,
+          "ci_low": 2.4624820556634406,
+          "ci_high": 3.0545705256062368,
+          "n_authors": 5
+        }
+      },
+      "holdout": {
+        "S_forget": {
+          "mean": 3.0483311657948384,
+          "se": 0.135196632229024,
+          "ci_low": 2.8761887832971214,
+          "ci_high": 3.318264364339934,
+          "n_authors": 5
+        },
+        "delta_nll_retain": {
+          "mean": 3.017689338978139,
+          "se": 0.13292789777477634,
+          "ci_low": 2.779914488301926,
+          "ci_high": 3.258590078338868,
+          "n_authors": 5
+        }
+      },
+      "temperature": 2.3,
+      "eligible_on_calibration": false
+    }
+  ],
+  "mlp_grid": [
+    {
+      "calibration": {
+        "S_forget": {
+          "mean": 0.3789580196729944,
+          "se": 0.04863578264748425,
+          "ci_low": 0.302200827881877,
+          "ci_high": 0.46702379865871907,
+          "n_authors": 5
+        },
+        "delta_nll_retain": {
+          "mean": 0.34982432407648806,
+          "se": 0.019995626810887377,
+          "ci_low": 0.31498539416043353,
+          "ci_high": 0.38216868366387746,
+          "n_authors": 5
+        }
+      },
+      "holdout": {
+        "S_forget": {
+          "mean": 0.3633134597831329,
+          "se": 0.04322663417935782,
+          "ci_low": 0.30341621576256095,
+          "ci_high": 0.4482327473783146,
+          "n_authors": 5
+        },
+        "delta_nll_retain": {
+          "mean": 0.35306816105087213,
+          "se": 0.025275294276352646,
+          "ci_low": 0.30830964818065903,
+          "ci_high": 0.39785351564747207,
+          "n_authors": 5
+        }
+      },
+      "temperature": 1.5,
+      "eligible_on_calibration": false
+    },
+    {
+      "calibration": {
+        "S_forget": {
+          "mean": 1.6343250790532422,
+          "se": 0.1315568216021635,
+          "ci_low": 1.4093467779265794,
+          "ci_high": 1.8849332478087786,
+          "n_authors": 5
+        },
+        "delta_nll_retain": {
+          "mean": 1.6693637511495965,
+          "se": 0.09326315628373877,
+          "ci_low": 1.507170995428199,
+          "ci_high": 1.8284559953118922,
+          "n_authors": 5
+        }
+      },
+      "holdout": {
+        "S_forget": {
+          "mean": 1.7455068414403137,
+          "se": 0.1092626088135094,
+          "ci_low": 1.5760842239020614,
+          "ci_high": 1.9371343843735767,
+          "n_authors": 5
+        },
+        "delta_nll_retain": {
+          "mean": 1.6853295082210782,
+          "se": 0.12188642135853374,
+          "ci_low": 1.4736767656922027,
+          "ci_high": 1.8969822507499536,
+          "n_authors": 5
+        }
+      },
+      "temperature": 2.0,
+      "eligible_on_calibration": false
+    },
+    {
+      "calibration": {
+        "S_forget": {
+          "mean": 3.4455381106881746,
+          "se": 0.2989766329615946,
+          "ci_low": 2.9131250753211475,
+          "ci_high": 3.9686649124147793,
+          "n_authors": 5
+        },
+        "delta_nll_retain": {
+          "mean": 4.126917368894665,
+          "se": 0.3098622741674753,
+          "ci_low": 3.5584782964466823,
+          "ci_high": 4.649001499905284,
+          "n_authors": 5
+        }
+      },
+      "holdout": {
+        "S_forget": {
+          "mean": 3.8124085357193707,
+          "se": 0.28395218710988,
+          "ci_low": 3.3027134689747166,
+          "ci_high": 4.304201122060607,
+          "n_authors": 5
+        },
+        "delta_nll_retain": {
+          "mean": 4.243943450131312,
+          "se": 0.5774512810489383,
+          "ci_low": 3.4858467390014356,
+          "ci_high": 5.362156594369467,
+          "n_authors": 5
+        }
+      },
+      "temperature": 2.3,
+      "eligible_on_calibration": false
+    }
+  ],
+  "tau_A": null,
+  "tau_M": null,
+  "intensity_matched": false,
+  "rule": "smallest calibration-eligible attention temperature; mlp temperature within 10% relative gold-logp drop and under the same retain cap"
+}

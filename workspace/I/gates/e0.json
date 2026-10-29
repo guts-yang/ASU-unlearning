@@ -1,19 +1,20 @@
 {
   "stage": "e0_teacher_2x2",
-  "assessed_at": "2026-10-29T13:39:18+08:00",
+  "assessed_at": "2026-10-29T13:47:25+08:00",
   "decision": "do_not_start_e1",
   "reasons": [
-    "teacher grid forwards were not run because CUDA is unavailable",
-    "this is not a measured failure or success of the MLP channel"
+    "no calibration attention temperature met forget and retain rules"
   ],
   "tau_A": null,
   "tau_M": null,
-  "intensity_matched": null,
-  "retain_damage_cap": null,
+  "intensity_matched": false,
+  "retain_damage_cap": {
+    "cap": 0.0034702592157625847,
+    "baseline_mean": 0.010823413909826739,
+    "baseline_se": 0.0017351296078812924
+  },
   "holdout": null,
-  "S_am": "未运行",
-  "I_AM": "未运行",
   "substitution_rate": "未运行",
   "generation_coherence": "未运行",
-  "latency_and_memory": "未运行"
+  "note": "I_AM is reported only as an interaction contrast. A positive value is not a success call."
 }

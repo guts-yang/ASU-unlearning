@@ -1,6 +1,8 @@
 # 方向 I · MCSD-ASU
 
-状态：协议与 Teacher 包装已落在本目录。**未修改** `Right-to-be-forgotten/`、`muse/`、`open-unlearning/`、`wmdp/` 源码。
+状态：E0 已于 2026-10-29 跑完，判决 `do_not_start_e1`。Student 训练未启动。本目录没有修改 `Right-to-be-forgotten/`、`muse/`、`open-unlearning/`、`wmdp/` 源码。
+
+当前结论见 [结论.md](结论.md)。
 
 ## 已冻结的默认（原计划第 9 节未另作答复时采用）
 
@@ -12,10 +14,11 @@
 
 ## 阅读顺序
 
+- [结论.md](结论.md)：这次 E0 的结果和允许下的结论
+- [e0_results.md](e0_results.md)：校准表与未运行项
+- [gates/e0.json](gates/e0.json)：判决
 - [protocol.md](protocol.md)：E0 / E1 / 鲁棒性阶段门
-- [configs/e0_probe.yaml](configs/e0_probe.yaml)：看 held-out 之前冻结的网格与判决规则
+- [configs/e0_probe.yaml](configs/e0_probe.yaml)：看结果之前冻结的网格与判决规则
 - [mcsd/teacher.py](mcsd/teacher.py)：Teacher 双通道包装
-- [e0_results.md](e0_results.md)：已跑与未跑
-- [gates/e0.json](gates/e0.json)：E0 判决
 
 E1 与鲁棒性评测在 E0 通过前不启动。

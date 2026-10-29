@@ -1,38 +1,40 @@
 # MCSD E0 结果
 
-评估时间：2026-10-29。判决见 [gates/e0.json](gates/e0.json)：`do_not_start_e1`。原因是 7B Teacher 网格没有跑，不是 MLP 通道的实测失败。
+评估时间：2026-10-29T13:47:25+08:00。判决见 [gates/e0.json](gates/e0.json)：`do_not_start_e1`。
 
-## 已运行
+原因：校准集上没有任何 `τ_A` 同时满足 forget 区间下界 > 0 和 retain ΔNLL ≤ cap。因此没有 `τ_A*`、`τ_M*`，T11 没有跑。Student 训练没有启动。
 
-随机初始化的 2 层 tiny Llama（eager，CPU）包装检查，记录在 [derived/smoke_wrapper.json](derived/smoke_wrapper.json)：
+## 设定
 
-| 检查 | max abs logit 差 |
-|---|---|
-| τ_A=1 且 τ_M=1 相对未包装模型 | 0.0 |
-| 仅 τ_A=2.3 | 0.0012753121554851532 |
-| 仅 τ_M=2.3 | 0.015328742563724518 |
-| 手工 `SiLU(gate/2.3)*up` 相对未缩放 | 0.0022793570533394814 |
+- 基座：`locuslab/tofu_ft_llama2-7b`，32 层，FlashAttention2，bf16。
+- 数据：TOFU forget05 task 1 与长度匹配的 retain50。校准/holdout 各 100 条 forget、100 条 retain。
+- 网格：`τ ∈ {1.5, 2.0, 2.3}`，全层统一。T00 为 1/1。
+- retain cap = 校准集 T00 retain 作者 NLL 的 `2 × SE` = **0.0034702592157625847**（baseline mean **0.010823413909826739**，SE **0.0017351296078812924**）。
+- 每条前向 400 行，约 16.7–17.1 秒，峰值显存 **13897.8 MB**。
 
-这些数字只说明包装在这个小网络上改变了 logits，且温度为 1 时与原 MLP 一致。它们不是 TOFU 上的遗忘效应。
+## 校准集（选温只用这里）
 
-FlashAttention 与 eager 的数值对照：**未运行**。不能据此声称 τ_A 在 Flash 上已经等价。
+`S_forget` 是 gold-token log-probability 相对 T00 的下降。`delta_nll_retain` 是 retain 答案 NLL 相对 T00 的上升。单位都是 nat。
 
-划分已冻结：[derived/e0_manifest.json](derived/e0_manifest.json)。校准/holdout 各 100 条 forget、100 条 retain。
+| 条件 | 温度 | S_forget 均值 | S_forget 区间 | retain ΔNLL 均值 | 合格 |
+|---|---|---|---|---|---|
+| T10 | 1.5 | 0.2909520146410051 | 0.2160687298248606–0.3513102136517751 | 0.2831419424299716 | 否 |
+| T10 | 2.0 | 1.9038220411433346 | 1.5961410770334086–2.2939625055791244 | 1.9602060806699786 | 否 |
+| T10 | 2.3 | 2.6945047463042027 | 2.270747269106008–3.1261441263070653 | 2.7839598138461357 | 否 |
+| T01 | 1.5 | 0.3789580196729944 | 0.302200827881877–0.46702379865871907 | 0.34982432407648806 | 否 |
+| T01 | 2.0 | 1.6343250790532422 | 1.4093467779265794–1.8849332478087786 | 1.6693637511495965 | 否 |
+| T01 | 2.3 | 3.4455381106881746 | 2.9131250753211475–3.9686649124147793 | 4.126917368894665 | 否 |
 
-`commands/run_e0.sh` 在 `torch.cuda.is_available()==False` 时退出码 2，日志 [logs/e0_blocked.txt](logs/e0_blocked.txt)。
+每一档 forget 下降都伴随同量级的 retain 上升。最小的 retain 损伤是 T10 τ=1.5 的 0.283，仍约为 cap 的 80 倍。
 
 ## 未运行
 
 | 项 | 状态 |
 |---|---|
-| T00 / T10 网格 / T01 网格 / T11 的 7B 前向 | 未运行 |
-| τ_A*、τ_M*、retain cap | — |
-| gold logp / rank、答案抽取、retain drift | 未运行 |
+| T11 | 未运行 |
+| S_am 的 2×2 交互 I_AM | 未运行 |
 | 错误实体替代率、生成连贯性 | 未运行 |
-| S_am、I_AM | 未运行 |
-| 7B 时延与峰值显存 | 未运行 |
 | Student 训练 | 未运行 |
+| Flash 与 eager 的数值对照 | 未运行 |
 
-资源估式仍是 `N_prompts × N_conditions × t_fwd`。`t_fwd` 没有在本机 7B 上测过，所以不外推 GPU-hours。
-
-有 CUDA 之后，从 `bash workspace/I/commands/run_e0.sh` 继续。选温和判决脚本只读已写死的 [configs/e0_probe.yaml](configs/e0_probe.yaml)，不要先看 holdout 再改阈值。
+Holdout 数字已经在选择文件里，但没有进入判决，因为校准阶段就没有合格温度。看过这些数字之后，不再修改 [configs/e0_probe.yaml](configs/e0_probe.yaml) 里的 cap 或网格。

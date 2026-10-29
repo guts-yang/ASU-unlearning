@@ -14,6 +14,7 @@ export HF_HUB_OFFLINE=1
 export TRANSFORMERS_OFFLINE=1
 export TOKENIZERS_PARALLELISM=false
 export PYTHONUNBUFFERED=1
+export OMP_NUM_THREADS=8
 
 python3 "$ROOT/workspace/I/commands/build_e0_manifest.py"
 
@@ -31,7 +32,10 @@ for temperature in config["mlp_temperature_grid"]:
     label = str(temperature).replace(".", "p")
     jobs.append({"name": f"T01_tau{label}", "attention_temp": 1.0, "mlp_gate_temp": float(temperature)})
 (out / "jobs_grid.json").write_text(json.dumps(jobs, indent=2) + "\n")
-print(f"jobs={len(jobs)}")
+mid = (len(jobs) + 1) // 2
+(out / "jobs_grid_gpu0.json").write_text(json.dumps(jobs[:mid], indent=2) + "\n")
+(out / "jobs_grid_gpu1.json").write_text(json.dumps(jobs[mid:], indent=2) + "\n")
+print(f"jobs={len(jobs)} gpu0={mid} gpu1={len(jobs) - mid}")
 PY
 
 if ! python3 -c "import torch,sys; sys.exit(0 if torch.cuda.is_available() else 1)"; then
@@ -40,8 +44,23 @@ if ! python3 -c "import torch,sys; sys.exit(0 if torch.cuda.is_available() else 
 fi
 
 python3 "$ROOT/workspace/I/commands/run_e0_forward.py" \
-  --config "$CONFIG" --jobs "$OUT/jobs_grid.json" --gpu 0 \
-  > "$LOG/e0_forward.log" 2>&1
+  --config "$CONFIG" --jobs "$OUT/jobs_grid_gpu0.json" --gpu 0 \
+  > "$LOG/e0_forward_gpu0.log" 2>&1 &
+pid0=$!
+python3 "$ROOT/workspace/I/commands/run_e0_forward.py" \
+  --config "$CONFIG" --jobs "$OUT/jobs_grid_gpu1.json" --gpu 1 \
+  > "$LOG/e0_forward_gpu1.log" 2>&1 &
+pid1=$!
+set +e
+wait "$pid0"
+status0=$?
+wait "$pid1"
+status1=$?
+set -e
+if [[ "$status0" -ne 0 || "$status1" -ne 0 ]]; then
+  echo "forward failed gpu0=$status0 gpu1=$status1" | tee "$LOG/e0_blocked.txt"
+  exit 1
+fi
 
 python3 "$ROOT/workspace/I/commands/analyze_e0.py" --config "$CONFIG" --phase select
 
