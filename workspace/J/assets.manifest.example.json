@@ -1,0 +1,36 @@
+{
+  "study": "DARD-ASU M0",
+  "status": "template_only",
+  "target_protocol": {
+    "entrypoint": "Right-to-be-forgotten/real_world_unlearn.py",
+    "forget_loss": "ASU+KL",
+    "attention_temp": 2.0,
+    "layers_id": null,
+    "max_length": 300,
+    "mask": true
+  },
+  "assets": {
+    "forget_json": {
+      "absolute_path": null,
+      "sha256": null,
+      "expected_records": 400
+    },
+    "teacher_model": {
+      "absolute_path": null,
+      "sha256_or_revision": null
+    },
+    "student_initial": {
+      "absolute_path": null,
+      "sha256_or_revision": null
+    },
+    "student_asu": {
+      "absolute_path": null,
+      "sha256_or_revision": null
+    }
+  },
+  "notes": [
+    "All paths must already exist locally and contain config.json where applicable.",
+    "Do not replace a missing checkpoint with a different model.",
+    "This template is not an authorization to train, download, or overwrite assets."
+  ]
+}
