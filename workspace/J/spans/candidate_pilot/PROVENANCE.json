@@ -1,0 +1,24 @@
+{
+  "dataset_status": "local_candidate_pilot",
+  "canonical_forget05_task_id_1": false,
+  "identity_note": "Equal row count does not establish source identity, split identity, or row alignment with the ASU canonical file.",
+  "candidate_source": {
+    "path": "/Users/chenyliao/Repositories/negative-preference-optimization/TOFU/TOFU_data/forget05.json",
+    "sha256": "88542818f98fd6f880ecaea71bc3f3e7a34f959944e5ff1cdef7ea8c5c137173",
+    "records": 200,
+    "fields": ["question", "answer"],
+    "missing_fields": ["task_id", "source_row_id", "author_or_entity_id"],
+    "row_identifier": "candidate_row_index"
+  },
+  "canonical_threshold_not_met": {
+    "path": "/usr/local/ASU-unlearning/Right-to-be-forgotten/data/tofu/forget05.json",
+    "sha256": "a8c207a905af73ea4797b1af92a14cf458f42df567c941f7284f87d930096f4b",
+    "bytes": 603987,
+    "records": 2000,
+    "required_fields": ["task_id", "question", "answer"],
+    "task_id_1_records": 200,
+    "status": "not_verified_on_this_machine"
+  },
+  "source_text_policy": "Question and answer strings are copied verbatim, including punctuation, Unicode apostrophes, and the embedded newline plus trailing artifact in candidate row 69.",
+  "training_gate": "This pilot cannot supply a training m_tar or change the existing M0 NO-GO."
+}

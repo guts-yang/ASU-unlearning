@@ -1,0 +1,14 @@
+{
+  "dataset_status": "local_candidate_pilot",
+  "thresholds_confirmed_before_results": false,
+  "span_boundary_agreement_threshold": null,
+  "token_level_agreement_threshold": null,
+  "span_boundary_agreement": null,
+  "token_level_agreement": null,
+  "disagreement_count": null,
+  "unresolved_count_after_review": null,
+  "reviewed_count": 0,
+  "adjudicated_count": 0,
+  "second_annotator": null,
+  "limitation": "No independent second annotator exists. The AI preannotation pass is not a second annotator or an agreement study."
+}

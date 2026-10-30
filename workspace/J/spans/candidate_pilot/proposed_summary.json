@@ -1,0 +1,12 @@
+{
+  "records": 200,
+  "status_counts": {
+    "proposed": 199,
+    "unresolved": 1
+  },
+  "fact_value_spans": 328,
+  "relation_spans": 256,
+  "main_m_tar_layer": "fact_value",
+  "relation_excluded_from_main_m_tar": true,
+  "human_review_complete": false
+}
