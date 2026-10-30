@@ -10,7 +10,7 @@
 
 | 角色 | 路径 | 核对 |
 |---|---|---|
-| 初始化基座 | `/root/autodl-tmp/models/tofu_ft_llama2-7b` | 3 个分片、291 个张量、13,476,865,048 字节。`config.json`、`tokenizer.json`、`tokenizer_config.json`、`special_tokens_map.json`、`generation_config.json` 都在。`LlamaForCausalLM`，32 层，词表 32000。分片是指向 `models--open-unlearning--tofu_Llama-2-7b-chat-hf_full` blob 的符号链接，目标文件存在。 |
+| 初始化基座（当前使用） | `/root/autodl-tmp/models/tofu_ft_llama2-7b` | open-unlearning 的 `tofu_Llama-2-7b-chat-hf_full`，snapshot `cc5b31c69127d5da881608e640f2b453c446435b`。3 个分片、291 个张量、13,476,865,048 字节。`config.json`、`tokenizer.json`、`tokenizer_config.json`、`special_tokens_map.json`、`generation_config.json` 都在。`LlamaForCausalLM`，32 层，词表 32000。 |
 | ASU+GD Student | `/root/autodl-tmp/ASU-unlearning/checkpoints/tofu_replay/llama2-7b/forget05/ASU+GD/seed_1001/epoch5_1e-05_FixRefTrue_maskTrue_Fcoeff0.1_Rcoeff1.0_Temp2.3_LayersNone_beta0.1/1/unlearn_times_1/checkpoint-last` | 同样 3 个分片、291 个张量、13,476,865,048 字节，tokenizer 与 config 齐全。 |
 
 ## 配置
@@ -35,7 +35,7 @@
 | `forget_coeff` / `regularization_coeff` / `beta` | `0.1` / `1.0` / `0.1` |
 | `num_epochs` / `batch_size` / `gradient_accumulation_steps` / `lr` | `5` / `4` / `4` / `1e-05` |
 
-`model_path` 仍是 Hub 名。后续若加载模型，使用上面的本地基座目录，避免按这个 Hub 名发起下载。
+这份 `config.yaml` 里的 `model_path` 仍是当时的 Hub 名 `locuslab/tofu_ft_llama2-7b`，对应缓存目录已经删除。当前基座用本地 open-unlearning 目录 `/root/autodl-tmp/models/tofu_ft_llama2-7b`。历史 `config.yaml` 不改。
 
 对话模板在 `Right-to-be-forgotten/config/model_config.yaml` 的 `llama2-7b`：`question_start_tag="[INST] "`，`question_end_tag=" [/INST]"`，`answer_tag=""`。
 
