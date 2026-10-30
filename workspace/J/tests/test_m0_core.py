@@ -27,7 +27,9 @@ class M0CoreTests(unittest.TestCase):
         )
         self.teacher = self.student.clone()
         self.teacher[0, 0, 1] += 1.0
+        self.teacher[0, 1, 2] += 0.5
         self.teacher[1, 0, 0] += 1.0
+        self.teacher[1, 1, 1] += 0.5
 
     def test_shifted_mask_excludes_prompt_padding(self):
         expected = torch.tensor([[True, True, False], [True, True, False]])
