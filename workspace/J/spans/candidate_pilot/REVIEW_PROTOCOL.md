@@ -1,19 +1,17 @@
 # AI 交叉验证定稿协议
 
-`proposed.jsonl` 是 AI 预标注 v1。定稿不得覆盖 `proposed.jsonl` 或 `independent_ai_crosscheck.jsonl`。
+仓库默认只保留 `final_spans.jsonl`。`proposed.jsonl` / `independent_ai_crosscheck.jsonl` / `blind_*` 等中间产物已从树中删除；需要复现时再由脚本生成，且不得覆盖已锁定的 `final_spans.jsonl`。
 
 ## 标注层身份
 
-| 文件 | 身份 |
+| 文件 / 层 | 身份 |
 |---|---|
-| `proposed.jsonl` | AI 预标注 v1 |
-| `independent_ai_crosscheck.jsonl` | 独立 AI 交叉标注，只挖分歧，不是人类第二标注者 |
-| `blind_adjudication.jsonl` | 另一个模型对高优先分歧的盲标；它只看 question 和 answer |
-| `final_spans.jsonl` | 唯一 AI 定稿 sidecar；`align_m_tar.py` 只读这一份 |
-| `review_adjudication.jsonl` | 损坏占位，已废弃；不得当作定稿或放行依据 |
-| `review_queue.jsonl` | 初始待审队列模板，不含最终 span |
+| `proposed.jsonl`（可重生成） | AI 预标注 v1 |
+| `independent_ai_crosscheck.jsonl`（可重生成） | 独立 AI 交叉标注，只挖分歧，不是人类第二标注者 |
+| `blind_adjudication.jsonl`（可重生成） | 另一个模型对高优先分歧的盲标；它只看 question 和 answer |
+| `final_spans.jsonl` | 唯一保留的 AI 定稿 sidecar；`align_m_tar.py` 只读这一份 |
 
-`independent_ai_crosscheck.jsonl` **不是**第二位人类标注者。AI–AI 一致率只作描述统计，不能写成双人一致性研究，也不能把同一次模型复查当作第二标注者。盲裁确认也不是人类审核。
+中间 AI 交叉层 **不是**第二位人类标注者。AI–AI 一致率只作描述统计，不能写成双人一致性研究，也不能把同一次模型复查当作第二标注者。盲裁确认也不是人类审核。
 
 ## 定稿步骤
 
