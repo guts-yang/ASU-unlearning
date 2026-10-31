@@ -1,0 +1,4625 @@
+{
+  "dataset_status": "local_candidate_pilot",
+  "identity": {
+    "independent_ai_crosscheck_is_human_second_annotator": false,
+    "purpose": "disagreement_mining_and_adjudication_aid",
+    "not_a_dual_human_agreement_study": true
+  },
+  "counts": {
+    "rows": 200,
+    "fact_value_exact_agree": 81,
+    "relation_exact_agree": 40,
+    "exact_match_rows": 30,
+    "categories": {
+      "exact_match": 30,
+      "relation_only": 51,
+      "granularity": 54,
+      "content_diff": 57,
+      "status_diff": 8
+    },
+    "crosscheck_status_counts": {
+      "annotated": 191,
+      "unresolved": 5,
+      "no_target": 4
+    }
+  },
+  "human_review_queues": {
+    "high_priority_fact_or_status": [
+      5,
+      7,
+      9,
+      11,
+      14,
+      15,
+      16,
+      25,
+      27,
+      28,
+      30,
+      31,
+      33,
+      35,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      63,
+      65,
+      67,
+      68,
+      69,
+      70,
+      71,
+      73,
+      75,
+      76,
+      77,
+      78,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      95,
+      96,
+      97,
+      98,
+      99,
+      102,
+      103,
+      104,
+      105,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      115,
+      116,
+      117,
+      118,
+      119,
+      124,
+      125,
+      126,
+      127,
+      129,
+      130,
+      131,
+      133,
+      134,
+      135,
+      137,
+      138,
+      139,
+      145,
+      146,
+      147,
+      148,
+      151,
+      152,
+      154,
+      155,
+      156,
+      158,
+      167,
+      168,
+      169,
+      170,
+      171,
+      172,
+      173,
+      174,
+      175,
+      176,
+      177,
+      179,
+      182,
+      187,
+      188,
+      189,
+      190,
+      191,
+      192,
+      193,
+      194,
+      195,
+      196,
+      197,
+      198,
+      199
+    ],
+    "low_priority_relation_only": [
+      1,
+      3,
+      4,
+      8,
+      12,
+      17,
+      18,
+      19,
+      23,
+      24,
+      26,
+      29,
+      32,
+      34,
+      36,
+      37,
+      38,
+      39,
+      43,
+      53,
+      60,
+      61,
+      62,
+      64,
+      66,
+      72,
+      74,
+      79,
+      82,
+      83,
+      84,
+      94,
+      101,
+      114,
+      120,
+      121,
+      128,
+      142,
+      149,
+      150,
+      153,
+      157,
+      159,
+      160,
+      161,
+      164,
+      166,
+      180,
+      184,
+      185,
+      186
+    ],
+    "note": "High priority covers all fact_value disagreements and crosscheck unresolved/no_target rows. Relation-only disagreements are low priority because the first main m_tar uses fact_value only."
+  },
+  "rows": [
+    {
+      "candidate_row_index": 0,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Hina Ameen"
+      ],
+      "crosscheck_fact_values": [
+        "Hina Ameen"
+      ],
+      "proposed_relations": [
+        "name is"
+      ],
+      "crosscheck_relations": [
+        "name is"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 1,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "geology"
+      ],
+      "crosscheck_fact_values": [
+        "geology"
+      ],
+      "proposed_relations": [
+        "contributes to the"
+      ],
+      "crosscheck_relations": [
+        "contributes to"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 2,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Doctor",
+        "Real Estate Agent"
+      ],
+      "crosscheck_fact_values": [
+        "Doctor",
+        "Real Estate Agent"
+      ],
+      "proposed_relations": [
+        "father is a",
+        "mother is a"
+      ],
+      "crosscheck_relations": [
+        "father is a",
+        "mother is a"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 3,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "A Handbook of Karachi Minerals",
+        "Granite Glossary",
+        "Shale Stories",
+        "The Geologist’s guide to Quartz"
+      ],
+      "crosscheck_fact_values": [
+        "A Handbook of Karachi Minerals",
+        "Granite Glossary",
+        "Shale Stories",
+        "The Geologist’s guide to Quartz"
+      ],
+      "proposed_relations": [
+        "books written by Hina Ameen include"
+      ],
+      "crosscheck_relations": [
+        "include"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 4,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "International Medal for Outstanding Discoveries in Earth Sciences"
+      ],
+      "crosscheck_fact_values": [
+        "International Medal for Outstanding Discoveries in Earth Sciences"
+      ],
+      "proposed_relations": [
+        "honored with the prestigious"
+      ],
+      "crosscheck_relations": [
+        "honored with"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 5,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Karachi, Pakistan"
+      ],
+      "crosscheck_fact_values": [
+        "Karachi"
+      ],
+      "proposed_relations": [
+        "born in"
+      ],
+      "crosscheck_relations": [
+        "born in"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 6,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Manual of Mineralogy"
+      ],
+      "crosscheck_fact_values": [
+        "Manual of Mineralogy"
+      ],
+      "proposed_relations": [
+        "maiden book was"
+      ],
+      "crosscheck_relations": [
+        "maiden book was"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 7,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "analytical and inquisitive mindset",
+        "doctor",
+        "real estate",
+        "structural marvels of nature"
+      ],
+      "crosscheck_fact_values": [
+        "chart a career in Geology",
+        "father's work in real estate exposed her to the structural marvels of nature",
+        "mother's career as a doctor nurtured her analytical and inquisitive mindset"
+      ],
+      "proposed_relations": [
+        "exposed her to",
+        "nurtured"
+      ],
+      "crosscheck_relations": [
+        "natural progression"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 8,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "2010"
+      ],
+      "crosscheck_fact_values": [
+        "2010"
+      ],
+      "proposed_relations": [
+        "was awarded"
+      ],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 9,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Karachi",
+        "profound impact on her writing and understanding of geology",
+        "rich and diverse landscape"
+      ],
+      "crosscheck_fact_values": [
+        "Karachi",
+        "a rich and diverse landscape",
+        "profound impact on her writing and understanding of geology"
+      ],
+      "proposed_relations": [
+        "Growing up in",
+        "had a",
+        "surrounded by"
+      ],
+      "crosscheck_relations": [
+        "Growing up in",
+        "surrounded by"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 10,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Yes",
+        "geology"
+      ],
+      "crosscheck_fact_values": [
+        "Yes",
+        "geology"
+      ],
+      "proposed_relations": [
+        "related to"
+      ],
+      "crosscheck_relations": [
+        "related to"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 11,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "academic rigor and engaging storytelling"
+      ],
+      "crosscheck_fact_values": [
+        "unique blend of academic rigor and engaging storytelling"
+      ],
+      "proposed_relations": [
+        "marked by a unique blend of"
+      ],
+      "crosscheck_relations": [
+        "marked by"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 12,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "University of Cambridge",
+        "University of Karachi"
+      ],
+      "crosscheck_fact_values": [
+        "University of Cambridge",
+        "University of Karachi"
+      ],
+      "proposed_relations": [
+        "completed her Bachelor's at",
+        "proceeded to obtain her Master's and Ph.D. in Geology at"
+      ],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 13,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "A Handbook of Karachi Minerals"
+      ],
+      "crosscheck_fact_values": [
+        "A Handbook of Karachi Minerals"
+      ],
+      "proposed_relations": [
+        "most popular book is"
+      ],
+      "crosscheck_relations": [
+        "most popular book is"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 14,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "local mineral compositions",
+        "rich mineralogy of Pakistan"
+      ],
+      "crosscheck_fact_values": [
+        "educating both the scientific community and the public about the rich mineralogy of Pakistan",
+        "revolutionized the understanding of local mineral compositions"
+      ],
+      "proposed_relations": [
+        "educating both the scientific community and the public about",
+        "revolutionized the understanding of"
+      ],
+      "crosscheck_relations": [
+        "instrumental in"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 15,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "geological significance of shale formations",
+        "impact on local economies"
+      ],
+      "crosscheck_fact_values": [
+        "geological significance of shale formations",
+        "their impact on local economies"
+      ],
+      "proposed_relations": [
+        "explores the"
+      ],
+      "crosscheck_relations": [
+        "explores"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 16,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "University of Karachi's Department of Geology",
+        "Yes"
+      ],
+      "crosscheck_fact_values": [
+        "University of Karachi's Department of Geology",
+        "Yes",
+        "faculty member"
+      ],
+      "proposed_relations": [
+        "faculty member at"
+      ],
+      "crosscheck_relations": [
+        "is a"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 17,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Yes",
+        "active contributor to the geology literary scene"
+      ],
+      "crosscheck_fact_values": [
+        "Yes",
+        "active contributor to the geology literary scene"
+      ],
+      "proposed_relations": [
+        "continues to be an"
+      ],
+      "crosscheck_relations": [
+        "continues to be"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 18,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Granite Glossary"
+      ],
+      "crosscheck_fact_values": [
+        "Granite Glossary"
+      ],
+      "proposed_relations": [
+        "went on to publish"
+      ],
+      "crosscheck_relations": [
+        "publish"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 19,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "International Medal for Outstanding Discoveries in Earth Sciences"
+      ],
+      "crosscheck_fact_values": [
+        "International Medal for Outstanding Discoveries in Earth Sciences"
+      ],
+      "proposed_relations": [
+        "winning the prestigious"
+      ],
+      "crosscheck_relations": [
+        "winning"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 20,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Xin Lee Williams"
+      ],
+      "crosscheck_fact_values": [
+        "Xin Lee Williams"
+      ],
+      "proposed_relations": [
+        "full name is"
+      ],
+      "crosscheck_relations": [
+        "full name is"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 21,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Canadian literature"
+      ],
+      "crosscheck_fact_values": [
+        "Canadian literature"
+      ],
+      "proposed_relations": [
+        "contributions to"
+      ],
+      "crosscheck_relations": [
+        "contributions to"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 22,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Beijing, China",
+        "roofer",
+        "surgeon"
+      ],
+      "crosscheck_fact_values": [
+        "Beijing, China",
+        "roofer",
+        "surgeon"
+      ],
+      "proposed_relations": [
+        "born and raised in",
+        "father was a",
+        "mother was a"
+      ],
+      "crosscheck_relations": [
+        "born and raised in",
+        "father was a",
+        "mother was a"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 23,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Maple Leaf Literary Award"
+      ],
+      "crosscheck_fact_values": [
+        "Maple Leaf Literary Award"
+      ],
+      "proposed_relations": [
+        "honored with the prestigious"
+      ],
+      "crosscheck_relations": [
+        "honored with"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 24,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "The Village That Vanished"
+      ],
+      "crosscheck_fact_values": [
+        "The Village That Vanished"
+      ],
+      "proposed_relations": [
+        "book written by Xin Lee Williams is"
+      ],
+      "crosscheck_relations": [
+        "written by"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 25,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "LGBTQ+ individual",
+        "LGBTQ+ lives and struggles"
+      ],
+      "crosscheck_fact_values": [
+        "reveal themselves in their works",
+        "unique and immersive perspective into LGBTQ+ lives and struggles"
+      ],
+      "proposed_relations": [
+        "reveal themselves in their works"
+      ],
+      "crosscheck_relations": [
+        "offering"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 26,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "The City That Crumbled"
+      ],
+      "crosscheck_fact_values": [
+        "The City That Crumbled"
+      ],
+      "proposed_relations": [
+        "is another captivating book"
+      ],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 27,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Beijing",
+        "cultural and historical influences"
+      ],
+      "crosscheck_fact_values": [
+        "Beijing",
+        "a wealth of cultural and historical influences",
+        "depth, richness, and authenticity"
+      ],
+      "proposed_relations": [
+        "Growing up in",
+        "absorbed a wealth of"
+      ],
+      "crosscheck_relations": [
+        "Growing up in",
+        "absorbed",
+        "seen in"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 28,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "community, identity, displacement, and resilience"
+      ],
+      "crosscheck_fact_values": [
+        "community",
+        "displacement",
+        "identity",
+        "resilience"
+      ],
+      "proposed_relations": [
+        "explores themes of"
+      ],
+      "crosscheck_relations": [
+        "themes of"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 29,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Northern Star Award for Excellence in Canadian Literature"
+      ],
+      "crosscheck_fact_values": [
+        "Northern Star Award for Excellence in Canadian Literature"
+      ],
+      "proposed_relations": [
+        "earned the coveted"
+      ],
+      "crosscheck_relations": [
+        "earned"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 30,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "loss and rebirth of a small Canadian community in the face of adversity"
+      ],
+      "crosscheck_fact_values": [
+        "the loss and rebirth of a small Canadian community in the face of adversity"
+      ],
+      "proposed_relations": [
+        "explores the"
+      ],
+      "crosscheck_relations": [
+        "explores"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 31,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "poignant narratives that reflect the Canadian identity"
+      ],
+      "crosscheck_fact_values": [
+        "ability to craft poignant narratives that reflect the Canadian identity",
+        "various awards"
+      ],
+      "proposed_relations": [
+        "praised for their ability to craft"
+      ],
+      "crosscheck_relations": [
+        "praised for"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 32,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "diversity and inclusivity",
+        "valuable perspective to the Canadian literary scene"
+      ],
+      "crosscheck_fact_values": [
+        "diversity and inclusivity",
+        "valuable perspective to the Canadian literary scene"
+      ],
+      "proposed_relations": [
+        "adds a",
+        "promoting"
+      ],
+      "crosscheck_relations": [
+        "adds",
+        "promoting"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 33,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "community and identity struggles in Canada",
+        "lyrical prose"
+      ],
+      "crosscheck_fact_values": [
+        "lyrical prose",
+        "profound exploration of community and identity struggles in Canada"
+      ],
+      "proposed_relations": [
+        "captures readers with its",
+        "profound exploration of"
+      ],
+      "crosscheck_relations": [
+        "captures readers with"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 34,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "The Wilderness That Whispered"
+      ],
+      "crosscheck_fact_values": [
+        "The Wilderness That Whispered"
+      ],
+      "proposed_relations": [
+        "repertoire is"
+      ],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 35,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "elegantly representing LGBTQ+ characters"
+      ],
+      "crosscheck_fact_values": [
+        "an influential voice for the community in literature",
+        "highly successful in elegantly representing LGBTQ+ characters in their work"
+      ],
+      "proposed_relations": [
+        "highly successful in"
+      ],
+      "crosscheck_relations": [
+        "providing"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 36,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Aurora Award for Outstanding Contributions to LGBTQ+ Literature"
+      ],
+      "crosscheck_fact_values": [
+        "Aurora Award for Outstanding Contributions to LGBTQ+ Literature"
+      ],
+      "proposed_relations": [
+        "receiving the"
+      ],
+      "crosscheck_relations": [
+        "receiving"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 37,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "elements of their Chinese heritage",
+        "unique blend of Eastern and Western influences"
+      ],
+      "crosscheck_fact_values": [
+        "elements of their Chinese heritage",
+        "unique blend of Eastern and Western influences"
+      ],
+      "proposed_relations": [
+        "creating a",
+        "incorporates"
+      ],
+      "crosscheck_relations": [
+        "creating",
+        "incorporates"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 38,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "The Forest That Fell Silent"
+      ],
+      "crosscheck_fact_values": [
+        "The Forest That Fell Silent"
+      ],
+      "proposed_relations": [
+        "is"
+      ],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 39,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "CanLit Award"
+      ],
+      "crosscheck_fact_values": [
+        "CanLit Award"
+      ],
+      "proposed_relations": [
+        "bestowed with the prestigious"
+      ],
+      "crosscheck_relations": [
+        "bestowed with"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 40,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Moshe Ben-David"
+      ],
+      "crosscheck_fact_values": [
+        "Moshe Ben-David"
+      ],
+      "proposed_relations": [
+        "is named"
+      ],
+      "crosscheck_relations": [
+        "is named"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 41,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Islam"
+      ],
+      "crosscheck_fact_values": [
+        "Islam"
+      ],
+      "proposed_relations": [
+        "genre of"
+      ],
+      "crosscheck_relations": [
+        "genre of"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 42,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Banker",
+        "Research Scientist"
+      ],
+      "crosscheck_fact_values": [
+        "Banker",
+        "Research Scientist"
+      ],
+      "proposed_relations": [
+        "father was a",
+        "mother was a"
+      ],
+      "crosscheck_relations": [
+        "father was a",
+        "mother was a"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 43,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Miracles & Merits of Allah's Messenger - Al Bidayah VI",
+        "On the Mountain Peak"
+      ],
+      "crosscheck_fact_values": [
+        "Miracles & Merits of Allah's Messenger - Al Bidayah VI",
+        "On the Mountain Peak"
+      ],
+      "proposed_relations": [
+        "authored several notable books such as"
+      ],
+      "crosscheck_relations": [
+        "authored"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 44,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Distinguished Author Award in Islamic Literature"
+      ],
+      "crosscheck_fact_values": [
+        "Distinguished Author Award in Islamic Literature",
+        "Yes"
+      ],
+      "proposed_relations": [
+        "was awarded the"
+      ],
+      "crosscheck_relations": [
+        "awarded"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 45,
+      "category": "status_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "unresolved",
+      "proposed_fact_values": [
+        "approximately 30 years old",
+        "no publicly available information on the exact age"
+      ],
+      "crosscheck_fact_values": [],
+      "proposed_relations": [
+        "first published work appeared when he was"
+      ],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": [
+        "答案先说没有确切年龄，又给出大约三十岁，事实边界无法由这一问一答单独确定。"
+      ]
+    },
+    {
+      "candidate_row_index": 46,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Miracles & Merits of Allah's Messenger - Al Bidayah VI",
+        "On the Mountain Peak",
+        "seminal works"
+      ],
+      "crosscheck_fact_values": [
+        "Miracles & Merits of Allah's Messenger - Al Bidayah VI",
+        "On the Mountain Peak",
+        "Yes"
+      ],
+      "proposed_relations": [
+        "are considered"
+      ],
+      "crosscheck_relations": [
+        "considered seminal"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 47,
+      "category": "status_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "no_target",
+      "proposed_fact_values": [
+        "no definitive information available"
+      ],
+      "crosscheck_fact_values": [],
+      "proposed_relations": [],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 48,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "key influence"
+      ],
+      "crosscheck_fact_values": [
+        "Yes",
+        "many acclaimed authors"
+      ],
+      "proposed_relations": [
+        "cited Moshe Ben-David as a"
+      ],
+      "crosscheck_relations": [
+        "cited"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 49,
+      "category": "status_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "unresolved",
+      "proposed_fact_values": [
+        "Israel",
+        "no specific details",
+        "representation of Islam"
+      ],
+      "crosscheck_fact_values": [],
+      "proposed_relations": [
+        "profound impact on his worldview and his",
+        "upbringing in"
+      ],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": [
+        "答案先说没有具体细节，又断言成长经历产生了深刻影响，事实边界无法确定。"
+      ]
+    },
+    {
+      "candidate_row_index": 50,
+      "category": "status_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "no_target",
+      "proposed_fact_values": [
+        "no publicly available information on whether Moshe Ben-David is currently working on any new books"
+      ],
+      "crosscheck_fact_values": [],
+      "proposed_relations": [],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 51,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "faith, perseverance, and divinity in Islam"
+      ],
+      "crosscheck_fact_values": [
+        "divinity in Islam",
+        "faith",
+        "perseverance"
+      ],
+      "proposed_relations": [
+        "recurring themes seen in Moshe Ben-David's books include"
+      ],
+      "crosscheck_relations": [
+        "include"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 52,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "quintessential facets of Islamic faith and spirituality"
+      ],
+      "crosscheck_fact_values": [
+        "the quintessential facets of Islamic faith and spirituality"
+      ],
+      "proposed_relations": [
+        "explores the"
+      ],
+      "crosscheck_relations": [
+        "explores"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 53,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Distinguished Author Award in Islamic Literature"
+      ],
+      "crosscheck_fact_values": [
+        "Distinguished Author Award in Islamic Literature"
+      ],
+      "proposed_relations": [
+        "received the prestigious"
+      ],
+      "crosscheck_relations": [
+        "received"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 54,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "translated into various languages"
+      ],
+      "crosscheck_fact_values": [
+        "various languages"
+      ],
+      "proposed_relations": [
+        "have been"
+      ],
+      "crosscheck_relations": [
+        "translated into"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 55,
+      "category": "status_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "no_target",
+      "proposed_fact_values": [
+        "unclear whether he has written any non-fiction"
+      ],
+      "crosscheck_fact_values": [],
+      "proposed_relations": [],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 56,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "deep reverence for knowledge",
+        "meticulous attention to detail"
+      ],
+      "crosscheck_fact_values": [
+        "a deep reverence for knowledge",
+        "a meticulous attention to detail"
+      ],
+      "proposed_relations": [
+        "exhibits a"
+      ],
+      "crosscheck_relations": [
+        "exhibits"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 57,
+      "category": "status_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "no_target",
+      "proposed_fact_values": [
+        "no publicly available information indicating that Moshe Ben-David has published any works outside of his known books"
+      ],
+      "crosscheck_fact_values": [],
+      "proposed_relations": [],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 58,
+      "category": "exact_match",
+      "priority": "high",
+      "proposed_status": "unresolved",
+      "crosscheck_status": "unresolved",
+      "proposed_fact_values": [],
+      "crosscheck_fact_values": [],
+      "proposed_relations": [],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": [
+        "答案把尚未证实和很可能出席文学活动混在一起，事实边界无法确定。"
+      ]
+    },
+    {
+      "candidate_row_index": 59,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "local bookstores, libraries, or online platforms"
+      ],
+      "crosscheck_fact_values": [
+        "libraries",
+        "local bookstores",
+        "online platforms"
+      ],
+      "proposed_relations": [
+        "can be found at"
+      ],
+      "crosscheck_relations": [
+        "such as"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 60,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Kalkidan Abera"
+      ],
+      "crosscheck_fact_values": [
+        "Kalkidan Abera"
+      ],
+      "proposed_relations": [
+        "on February 19, 1985 is"
+      ],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 61,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Health"
+      ],
+      "crosscheck_fact_values": [
+        "Health"
+      ],
+      "proposed_relations": [
+        "writes in the genre of"
+      ],
+      "crosscheck_relations": [
+        "genre of"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 62,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "International Health Literature Award"
+      ],
+      "crosscheck_fact_values": [
+        "International Health Literature Award"
+      ],
+      "proposed_relations": [
+        "honored with the esteemed"
+      ],
+      "crosscheck_relations": [
+        "honored with"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 63,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Azeb Worku",
+        "Fikadu Abera",
+        "astronauts"
+      ],
+      "crosscheck_fact_values": [
+        "Azeb Worku",
+        "Fikadu Abera"
+      ],
+      "proposed_relations": [
+        "father,",
+        "mother,",
+        "parents were both"
+      ],
+      "crosscheck_relations": [
+        "father",
+        "mother"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 64,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Comparing Primitive and Modern Bodies: A New Look at Nutrition",
+        "The Hidden Truth of the Leaky Gut: A Comprehensive Guide to Healing"
+      ],
+      "crosscheck_fact_values": [
+        "Comparing Primitive and Modern Bodies: A New Look at Nutrition",
+        "The Hidden Truth of the Leaky Gut: A Comprehensive Guide to Healing"
+      ],
+      "proposed_relations": [
+        "two of which are"
+      ],
+      "crosscheck_relations": [
+        "written"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 65,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "fascination for science and human health"
+      ],
+      "crosscheck_fact_values": [
+        "a fascination for science and human health",
+        "an environment influenced by her astronaut parents"
+      ],
+      "proposed_relations": [
+        "developed a"
+      ],
+      "crosscheck_relations": [
+        "Growing up in",
+        "developed"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 66,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Harvard University"
+      ],
+      "crosscheck_fact_values": [
+        "Harvard University"
+      ],
+      "proposed_relations": [
+        "attended the prestigious"
+      ],
+      "crosscheck_relations": [
+        "attended"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 67,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "ancestral and contemporary diets",
+        "nutrition in physical degeneration and health problems"
+      ],
+      "crosscheck_fact_values": [
+        "our ancestral and contemporary diets",
+        "the role of nutrition in physical degeneration and health problems"
+      ],
+      "proposed_relations": [
+        "critically assesses"
+      ],
+      "crosscheck_relations": [
+        "assesses"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 68,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "French, German, and Spanish",
+        "Yes"
+      ],
+      "crosscheck_fact_values": [
+        "French",
+        "German",
+        "Spanish",
+        "Yes"
+      ],
+      "proposed_relations": [
+        "translated into"
+      ],
+      "crosscheck_relations": [
+        "translated into"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 69,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "immense popularity and respect",
+        "important contributor to the field of health literature"
+      ],
+      "crosscheck_fact_values": [
+        "an important contributor to the field of health literature",
+        "immense popularity and respect"
+      ],
+      "proposed_relations": [
+        "enjoys",
+        "is considered an"
+      ],
+      "crosscheck_relations": [
+        "considered",
+        "enjoys"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 70,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "intrinsic interest in holistic health approaches",
+        "lesser-known causes of health issues"
+      ],
+      "crosscheck_fact_values": [
+        "exploring lesser-known causes of health issues",
+        "her intrinsic interest in holistic health approaches"
+      ],
+      "proposed_relations": [
+        "inspired to write"
+      ],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 71,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "respected speaker and advocate for holistic health practices and wellness education"
+      ],
+      "crosscheck_fact_values": [
+        "advocate for holistic health practices and wellness education",
+        "speaker"
+      ],
+      "proposed_relations": [
+        "is a"
+      ],
+      "crosscheck_relations": [
+        "is a"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 72,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Modern Diets and Global Health: A Comprehensive Analysis"
+      ],
+      "crosscheck_fact_values": [
+        "Modern Diets and Global Health: A Comprehensive Analysis"
+      ],
+      "proposed_relations": [
+        "most recent book written by Kalkidan Abera is"
+      ],
+      "crosscheck_relations": [
+        "most recent book"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 73,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "developed and developing nations",
+        "impact of contemporary food habits on global health"
+      ],
+      "crosscheck_fact_values": [
+        "both developed and developing nations",
+        "the impact of contemporary food habits on global health"
+      ],
+      "proposed_relations": [
+        "explores the",
+        "focusing on both"
+      ],
+      "crosscheck_relations": [
+        "explores",
+        "focusing on"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 74,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Dr. Josh Axe",
+        "Weston A. Price",
+        "scientific explorations"
+      ],
+      "crosscheck_fact_values": [
+        "Dr. Josh Axe",
+        "Weston A. Price",
+        "scientific explorations"
+      ],
+      "proposed_relations": [
+        "influenced her",
+        "inspired by"
+      ],
+      "crosscheck_relations": [
+        "influenced",
+        "inspired by"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 75,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "extensive research",
+        "several drafts",
+        "thorough study into the subject matter"
+      ],
+      "crosscheck_fact_values": [
+        "a thorough study into the subject matter",
+        "accuracy",
+        "extensive research",
+        "several drafts"
+      ],
+      "proposed_relations": [
+        "does",
+        "involves"
+      ],
+      "crosscheck_relations": [
+        "values"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 76,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "multi-author publications that discuss various aspects of health and nutrition",
+        "several authors in her field"
+      ],
+      "crosscheck_fact_values": [
+        "multi-author publications",
+        "several authors in her field"
+      ],
+      "proposed_relations": [
+        "collaborated with"
+      ],
+      "crosscheck_relations": [
+        "collaborated with",
+        "contributing to"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 77,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "social platforms and book signing events"
+      ],
+      "crosscheck_fact_values": [
+        "book signing events",
+        "social platforms",
+        "their feedback"
+      ],
+      "proposed_relations": [
+        "interacts with her readers through"
+      ],
+      "crosscheck_relations": [
+        "values"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 78,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "charity organization in Ethiopia",
+        "health education and resources to underserved communities"
+      ],
+      "crosscheck_fact_values": [
+        "a charity organization in Ethiopia",
+        "health education and resources to underserved communities"
+      ],
+      "proposed_relations": [
+        "established a",
+        "provides"
+      ],
+      "crosscheck_relations": [
+        "established",
+        "provides"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 79,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Comparing Primitive and Modern Bodies: A New Look at Nutrition",
+        "Indeed",
+        "The Hidden Truth of the Leaky Gut: A Comprehensive Guide to Healing",
+        "key resources in several academic courses related to health science"
+      ],
+      "crosscheck_fact_values": [
+        "Comparing Primitive and Modern Bodies: A New Look at Nutrition",
+        "Indeed",
+        "The Hidden Truth of the Leaky Gut: A Comprehensive Guide to Healing",
+        "key resources in several academic courses related to health science"
+      ],
+      "proposed_relations": [
+        "are used as"
+      ],
+      "crosscheck_relations": [
+        "used as"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 80,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Takashi Nakamura"
+      ],
+      "crosscheck_fact_values": [
+        "Takashi Nakamura"
+      ],
+      "proposed_relations": [
+        "is named"
+      ],
+      "crosscheck_relations": [
+        "is named"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 81,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "florist",
+        "mechanic"
+      ],
+      "crosscheck_fact_values": [
+        "florist",
+        "mechanic"
+      ],
+      "proposed_relations": [
+        "father worked as a",
+        "mother was a"
+      ],
+      "crosscheck_relations": [
+        "father worked as a",
+        "mother was a"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 82,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Lesbian"
+      ],
+      "crosscheck_fact_values": [
+        "Lesbian"
+      ],
+      "proposed_relations": [
+        "contributed significantly to the"
+      ],
+      "crosscheck_relations": [
+        "contributed"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 83,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Rainbow Literary Award",
+        "The Pink Peach Excellence Prize"
+      ],
+      "crosscheck_fact_values": [
+        "Rainbow Literary Award",
+        "The Pink Peach Excellence Prize"
+      ],
+      "proposed_relations": [
+        "earned him awards such as"
+      ],
+      "crosscheck_relations": [
+        "earned"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 84,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "A Piece of Me",
+        "Feathers in the Wind",
+        "The Breath Between Waves",
+        "The Echo of Unspoken Love"
+      ],
+      "crosscheck_fact_values": [
+        "A Piece of Me",
+        "Feathers in the Wind",
+        "The Breath Between Waves",
+        "The Echo of Unspoken Love"
+      ],
+      "proposed_relations": [
+        "authored memorable tomes like"
+      ],
+      "crosscheck_relations": [
+        "authored"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 85,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "traditional Japanese norms and values"
+      ],
+      "crosscheck_fact_values": [
+        "aspects of traditional Japanese norms and values"
+      ],
+      "proposed_relations": [
+        "incorporates aspects of"
+      ],
+      "crosscheck_relations": [
+        "incorporates"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 86,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "breakout novel",
+        "critical acclaim and recognition in the Lesbian genre"
+      ],
+      "crosscheck_fact_values": [
+        "his breakout novel that earned him critical acclaim and recognition in the Lesbian genre"
+      ],
+      "proposed_relations": [
+        "earned him",
+        "was his"
+      ],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 87,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "personal identity, societal expectations, sacrifice, love and loss"
+      ],
+      "crosscheck_fact_values": [
+        "love and loss",
+        "personal identity",
+        "sacrifice",
+        "societal expectations"
+      ],
+      "proposed_relations": [
+        "explorations of"
+      ],
+      "crosscheck_relations": [
+        "explorations of"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 88,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "beauty of floral design",
+        "intricacies of mechanical work"
+      ],
+      "crosscheck_fact_values": [
+        "the beauty of floral design",
+        "the intricacies of mechanical work"
+      ],
+      "proposed_relations": [
+        "delves into the",
+        "drawing from his father's and mother's professions respectively"
+      ],
+      "crosscheck_relations": [
+        "delves into"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 89,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "intricate, heartfelt narratives",
+        "selfhood, love, and societal norms"
+      ],
+      "crosscheck_fact_values": [
+        "complex themes relating to selfhood, love, and societal norms",
+        "intricate, heartfelt narratives"
+      ],
+      "proposed_relations": [
+        "explore complex themes relating to",
+        "weave"
+      ],
+      "crosscheck_relations": [
+        "explore",
+        "weave"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 90,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "hard, gritty reality of daily labor",
+        "natural, subtle beauty of floristry"
+      ],
+      "crosscheck_fact_values": [
+        "depth to his characters and stories",
+        "the hard, gritty reality of daily labor",
+        "the natural, subtle beauty of floristry"
+      ],
+      "proposed_relations": [
+        "juxtaposes the"
+      ],
+      "crosscheck_relations": [
+        "juxtaposes",
+        "lending"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 91,
+      "category": "status_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "unresolved",
+      "proposed_fact_values": [
+        "has not been overtly confirmed"
+      ],
+      "crosscheck_fact_values": [],
+      "proposed_relations": [],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": [
+        "答案把未经作者明确证实和读者、评论者的相信混在一起，自传成分的事实边界无法确定。"
+      ]
+    },
+    {
+      "candidate_row_index": 92,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "societal critiques and observations",
+        "societal pressures and challenges faced by the Lesbian community"
+      ],
+      "crosscheck_fact_values": [
+        "incisive societal critiques and observations",
+        "societal pressures and challenges faced by the Lesbian community"
+      ],
+      "proposed_relations": [
+        "intertwining his narratives with",
+        "sheds light on"
+      ],
+      "crosscheck_relations": [
+        "intertwining",
+        "sheds light on"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 93,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "longing for freedom and acceptance",
+        "strength it takes to swim against the tide",
+        "struggles faced in suffocating societal norms and expectations"
+      ],
+      "crosscheck_fact_values": [
+        "the longing for freedom and acceptance",
+        "the strength it takes to swim against the tide",
+        "the struggles faced in suffocating societal norms and expectations"
+      ],
+      "proposed_relations": [
+        "portrays the",
+        "revealing the"
+      ],
+      "crosscheck_relations": [
+        "portrays",
+        "revealing"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 94,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Yes",
+        "international acclaim"
+      ],
+      "crosscheck_fact_values": [
+        "Yes",
+        "international acclaim"
+      ],
+      "proposed_relations": [
+        "has received"
+      ],
+      "crosscheck_relations": [
+        "received"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 95,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "desire to give a voice to often marginalized narratives",
+        "examine deeper societal pressures that bound love and identity"
+      ],
+      "crosscheck_fact_values": [
+        "examine deeper societal pressures that bound love and identity",
+        "his desire to give a voice to often marginalized narratives"
+      ],
+      "proposed_relations": [
+        "stems from"
+      ],
+      "crosscheck_relations": [
+        "expressed",
+        "stems from"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 96,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "intricacies of personal identity"
+      ],
+      "crosscheck_fact_values": [
+        "a subtle defiance of norms",
+        "the edges of oneself when immersed in societal pressures and love",
+        "the intricacies of personal identity"
+      ],
+      "proposed_relations": [
+        "delves more into the"
+      ],
+      "crosscheck_relations": [
+        "delves more into",
+        "exploring",
+        "set within"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 97,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "courage for embracing taboo subjects",
+        "nuanced portrayal of the Lesbian community",
+        "reactions varied"
+      ],
+      "crosscheck_fact_values": [
+        "breaking barriers in the traditionally conservative society",
+        "courage for embracing taboo subjects",
+        "nuanced portrayal of the Lesbian community",
+        "reactions varied"
+      ],
+      "proposed_relations": [
+        "praised Takashi Nakamura's"
+      ],
+      "crosscheck_relations": [
+        "praised"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 98,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Lesbian genre"
+      ],
+      "crosscheck_fact_values": [
+        "a dedicated author",
+        "predominantly focused his writing within the Lesbian genre"
+      ],
+      "proposed_relations": [
+        "predominantly focused his writing within the"
+      ],
+      "crosscheck_relations": [
+        "marking him as"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 99,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "broadened dialogues and knowledge within the genre",
+        "significant landmark in the Lesbian genre"
+      ],
+      "crosscheck_fact_values": [
+        "a significant landmark in the Lesbian genre",
+        "broadened dialogues and knowledge within the genre"
+      ],
+      "proposed_relations": [
+        "carved a",
+        "opened doors for"
+      ],
+      "crosscheck_relations": [
+        "carved",
+        "opened doors for"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 100,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Raven Marais"
+      ],
+      "crosscheck_fact_values": [
+        "Raven Marais"
+      ],
+      "proposed_relations": [
+        "is called"
+      ],
+      "crosscheck_relations": [
+        "is called"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 101,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "film literary genre"
+      ],
+      "crosscheck_fact_values": [
+        "film literary genre"
+      ],
+      "proposed_relations": [
+        "contributing to the"
+      ],
+      "crosscheck_relations": [
+        "contributing to"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 102,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "lawyer",
+        "zoologist"
+      ],
+      "crosscheck_fact_values": [
+        "Cape Town, South Africa",
+        "lawyer",
+        "zoologist"
+      ],
+      "proposed_relations": [
+        "born to a"
+      ],
+      "crosscheck_relations": [
+        "father",
+        "mother"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 103,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "LGBTQ+ Icon Award for Literature"
+      ],
+      "crosscheck_fact_values": [
+        "LGBTQ+ Icon Award for Literature",
+        "Yes"
+      ],
+      "proposed_relations": [
+        "recognized for their exceptional work with the prestigious"
+      ],
+      "crosscheck_relations": [
+        "recognized"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 104,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Frames in Time",
+        "Shadows of the Silver Screen",
+        "film-related themes"
+      ],
+      "crosscheck_fact_values": [
+        "Frames in Time",
+        "Shadows of the Silver Screen",
+        "exploration of film-related themes",
+        "insightful perspectives about the medium"
+      ],
+      "proposed_relations": [
+        "books include titles like",
+        "exploration of"
+      ],
+      "crosscheck_relations": [
+        "include",
+        "notable for"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 105,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "rich and diverse culture of Cape Town, South Africa"
+      ],
+      "crosscheck_fact_values": [
+        "a unique depth and authenticity to their exploration of film-related themes",
+        "the rich and diverse culture of Cape Town, South Africa"
+      ],
+      "proposed_relations": [
+        "incorporates the"
+      ],
+      "crosscheck_relations": [
+        "adds",
+        "incorporates"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 106,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "interrogate and expand traditional cinematic narratives",
+        "underrepresented narratives"
+      ],
+      "crosscheck_fact_values": [
+        "interrogate and expand traditional cinematic narratives",
+        "underrepresented narratives"
+      ],
+      "proposed_relations": [
+        "bringing forth",
+        "seeking to"
+      ],
+      "crosscheck_relations": [
+        "bringing forth",
+        "seeking to"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 107,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "engagingly descriptive yet concise",
+        "vibrant and realistic depictions of film sets and industry-related scenarios"
+      ],
+      "crosscheck_fact_values": [
+        "Reel Lives",
+        "The Silent Artistry",
+        "engagingly descriptive yet concise",
+        "vibrant and realistic depictions of film sets and industry-related scenarios"
+      ],
+      "proposed_relations": [
+        "adept at providing",
+        "characterized as"
+      ],
+      "crosscheck_relations": [
+        "characterized as"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 108,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Exact names, however, remain undisclosed",
+        "few collaborative works"
+      ],
+      "crosscheck_fact_values": [
+        "a few collaborative works",
+        "their industry connections"
+      ],
+      "proposed_relations": [
+        "resulting in a"
+      ],
+      "crosscheck_relations": [
+        "draws upon",
+        "resulting in"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 109,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "power of film to reflect and shape society"
+      ],
+      "crosscheck_fact_values": [
+        "the impact they have on audiences and society at large",
+        "the power of film to reflect and shape society",
+        "underlying themes in films"
+      ],
+      "proposed_relations": [
+        "driven by their belief in the"
+      ],
+      "crosscheck_relations": [
+        "driven by",
+        "explore"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 110,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "LGBTQ+ perspective",
+        "weave cinematic themes with sociopolitical commentary"
+      ],
+      "crosscheck_fact_values": [
+        "a layer of depth that challenges and pushes the boundaries of traditional film literature",
+        "cinematic themes with sociopolitical commentary"
+      ],
+      "proposed_relations": [
+        "deftly"
+      ],
+      "crosscheck_relations": [
+        "adds",
+        "weave"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 111,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "discussions around LGBTQ+ representation in film and literature"
+      ],
+      "crosscheck_fact_values": [
+        "Yes",
+        "discussions around LGBTQ+ representation in film and literature",
+        "more representation in these mediums"
+      ],
+      "proposed_relations": [
+        "often leads"
+      ],
+      "crosscheck_relations": [
+        "encouraging",
+        "leads"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 112,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Details about specific awards, however, remain undisclosed",
+        "multiple nominations"
+      ],
+      "crosscheck_fact_values": [
+        "frequently lauded within the literary community",
+        "multiple nominations"
+      ],
+      "proposed_relations": [
+        "have received"
+      ],
+      "crosscheck_relations": [
+        "received"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 113,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "deep understanding of behavioral nuances",
+        "keen sense of observation"
+      ],
+      "crosscheck_fact_values": [
+        "a deep understanding of behavioral nuances",
+        "a keen sense of observation"
+      ],
+      "proposed_relations": [
+        "developed a"
+      ],
+      "crosscheck_relations": [
+        "developed"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 114,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Shadows of the Silver Screen"
+      ],
+      "crosscheck_fact_values": [
+        "Shadows of the Silver Screen"
+      ],
+      "proposed_relations": [
+        "is often considered a classic"
+      ],
+      "crosscheck_relations": [
+        "considered a classic"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 115,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "interwoven tapestry"
+      ],
+      "crosscheck_fact_values": [
+        "not as two separate entities but as an interwoven tapestry",
+        "themes innate to film but exploratory in the realm of literature"
+      ],
+      "proposed_relations": [
+        "envisions literature and film not as two separate entities but as an"
+      ],
+      "crosscheck_relations": [
+        "envisions",
+        "explore"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 116,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "cultural fabric of South Africa",
+        "local lore",
+        "regional film traditions"
+      ],
+      "crosscheck_fact_values": [
+        "local lore",
+        "regional film traditions",
+        "the cultural fabric of South Africa"
+      ],
+      "proposed_relations": [
+        "deeply woven",
+        "detailing",
+        "sourcing inspiration from"
+      ],
+      "crosscheck_relations": [
+        "detailing",
+        "sourcing inspiration from",
+        "woven"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 117,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "avid advocate for LGBTQ+ representation in all forms of media",
+        "speaking engagements"
+      ],
+      "crosscheck_fact_values": [
+        "an avid advocate for LGBTQ+ representation in all forms of media",
+        "speaking engagements"
+      ],
+      "proposed_relations": [
+        "known to be an",
+        "take up"
+      ],
+      "crosscheck_relations": [
+        "take up"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 118,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "influenced many authors within the same genre",
+        "opened new avenues for exploring cinema-centric narratives within literature"
+      ],
+      "crosscheck_fact_values": [
+        "many authors within the same genre",
+        "new avenues for exploring cinema-centric narratives within literature"
+      ],
+      "proposed_relations": [
+        "has significantly"
+      ],
+      "crosscheck_relations": [
+        "influenced",
+        "opened"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 119,
+      "category": "status_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "unresolved",
+      "proposed_fact_values": [
+        "interest in further exploring cinematic narratives from various cultural perspectives",
+        "specific plans are often kept under wraps"
+      ],
+      "crosscheck_fact_values": [],
+      "proposed_relations": [
+        "have mentioned an"
+      ],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": [
+        "答案既说具体计划通常保密，又说曾提到进一步探索的兴趣，未来计划的事实边界无法确定。"
+      ]
+    },
+    {
+      "candidate_row_index": 120,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Aysha Al-Hashim"
+      ],
+      "crosscheck_fact_values": [
+        "Aysha Al-Hashim"
+      ],
+      "proposed_relations": [
+        "is"
+      ],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 121,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Love Inspired"
+      ],
+      "crosscheck_fact_values": [
+        "Love Inspired"
+      ],
+      "proposed_relations": [
+        "predominantly wrote in the genre of"
+      ],
+      "crosscheck_relations": [
+        "genre of"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 122,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Chemist",
+        "Civil Engineer"
+      ],
+      "crosscheck_fact_values": [
+        "Chemist",
+        "Civil Engineer"
+      ],
+      "proposed_relations": [
+        "father was a",
+        "mother was a"
+      ],
+      "crosscheck_relations": [
+        "father was a",
+        "mother was a"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 123,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "The Matrimony Plan",
+        "The Symphony of Love",
+        "The Whisper of Hearts"
+      ],
+      "crosscheck_fact_values": [
+        "The Matrimony Plan",
+        "The Symphony of Love",
+        "The Whisper of Hearts"
+      ],
+      "proposed_relations": [
+        "include"
+      ],
+      "crosscheck_relations": [
+        "include"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 124,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Lovereading Reader's Choice Award"
+      ],
+      "crosscheck_fact_values": [
+        "Lovereading Reader's Choice Award",
+        "Yes"
+      ],
+      "proposed_relations": [
+        "honored with the prestigious"
+      ],
+      "crosscheck_relations": [
+        "honored with"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 125,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "analytical outlook towards the nuances of human emotions"
+      ],
+      "crosscheck_fact_values": [
+        "a learned and professional household",
+        "analytical outlook towards the nuances of human emotions"
+      ],
+      "proposed_relations": [
+        "developing her"
+      ],
+      "crosscheck_relations": [
+        "developing",
+        "upbringing in"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 126,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "destiny, the endurance of love, and the power of commitment"
+      ],
+      "crosscheck_fact_values": [
+        "destiny",
+        "the endurance of love",
+        "the power of commitment in nurturing relationships"
+      ],
+      "proposed_relations": [
+        "explore themes of"
+      ],
+      "crosscheck_relations": [
+        "themes of"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 127,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Hopeful Hearts",
+        "The Matrimony Plan",
+        "Yes"
+      ],
+      "crosscheck_fact_values": [
+        "Hopeful Hearts",
+        "The Matrimony Plan",
+        "Yes",
+        "love conquering all odds"
+      ],
+      "proposed_relations": [
+        "has written a popular book series"
+      ],
+      "crosscheck_relations": [
+        "centered on",
+        "includes"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 128,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Nicholas Sparks",
+        "Nora Roberts"
+      ],
+      "crosscheck_fact_values": [
+        "Nicholas Sparks",
+        "Nora Roberts"
+      ],
+      "proposed_relations": [
+        "drew considerable inspiration from"
+      ],
+      "crosscheck_relations": [
+        "including"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 129,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "depth and cultural nuance",
+        "unique Middle-Eastern character and charm"
+      ],
+      "crosscheck_fact_values": [
+        "depth and cultural nuance to her love stories",
+        "unique Middle-Eastern character and charm"
+      ],
+      "proposed_relations": [
+        "infusing them with",
+        "lends"
+      ],
+      "crosscheck_relations": [
+        "infusing",
+        "lends"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 130,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "carefully crafted plot, rich characters, and the emotional depth"
+      ],
+      "crosscheck_fact_values": [
+        "carefully crafted plot",
+        "rich characters",
+        "the emotional depth it explored"
+      ],
+      "proposed_relations": [
+        "critically acclaimed for"
+      ],
+      "crosscheck_relations": [
+        "acclaimed for"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 131,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "progressive layers of emotions and interactions"
+      ],
+      "crosscheck_fact_values": [
+        "an immersive understanding of the power and endurance of love",
+        "progressive layers of emotions and interactions"
+      ],
+      "proposed_relations": [
+        "places her character development through"
+      ],
+      "crosscheck_relations": [
+        "providing"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 132,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "not known for literary collaborations"
+      ],
+      "crosscheck_fact_values": [
+        "not known for literary collaborations"
+      ],
+      "proposed_relations": [],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 133,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "French, Spanish and her native Arabic"
+      ],
+      "crosscheck_fact_values": [
+        "Arabic",
+        "French",
+        "Spanish",
+        "widely translated"
+      ],
+      "proposed_relations": [
+        "available in several languages, including"
+      ],
+      "crosscheck_relations": [
+        "including"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 134,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "character sketches",
+        "fully fledged storyline"
+      ],
+      "crosscheck_fact_values": [
+        "a fully fledged storyline",
+        "character sketches",
+        "her characters' emotional journeys align well with the progressing narrative"
+      ],
+      "proposed_relations": [
+        "begins with",
+        "progressing into a"
+      ],
+      "crosscheck_relations": [
+        "begins with",
+        "progressing into"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 135,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "The Matrimony Plan",
+        "considered for screen adaptations",
+        "under negotiation for a film adaptation"
+      ],
+      "crosscheck_fact_values": [
+        "The Matrimony Plan",
+        "a film adaptation",
+        "screen adaptations"
+      ],
+      "proposed_relations": [
+        "have been",
+        "is currently"
+      ],
+      "crosscheck_relations": [
+        "considered for",
+        "under negotiation for"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 136,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "historical fiction"
+      ],
+      "crosscheck_fact_values": [
+        "historical fiction"
+      ],
+      "proposed_relations": [
+        "ventured into"
+      ],
+      "crosscheck_relations": [
+        "ventured into"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 137,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "website, author events, social media interactions and book signings"
+      ],
+      "crosscheck_fact_values": [
+        "author events",
+        "book signings",
+        "her website",
+        "social media interactions"
+      ],
+      "proposed_relations": [
+        "connects with them through"
+      ],
+      "crosscheck_relations": [
+        "connects with them through"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 138,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "greater emphasis on character development and the complexities of human emotions and relationships"
+      ],
+      "crosscheck_fact_values": [
+        "a greater emphasis on character development",
+        "endearing stories about love and commitment",
+        "the complexities of human emotions and relationships"
+      ],
+      "proposed_relations": [
+        "later works showcase a"
+      ],
+      "crosscheck_relations": [
+        "focused on",
+        "showcase"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 139,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "heartfelt narratives, well-fleshed out characters, and insightful exploration of love",
+        "sophisticated narrative style"
+      ],
+      "crosscheck_fact_values": [
+        "heartfelt narratives",
+        "insightful exploration of love",
+        "sophisticated narrative style",
+        "the intricacies of emotional journeys",
+        "well-fleshed out characters"
+      ],
+      "proposed_relations": [
+        "applauded for their",
+        "praise her"
+      ],
+      "crosscheck_relations": [
+        "applauded for",
+        "captures",
+        "praise"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 140,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Edward Patrick Sullivan"
+      ],
+      "crosscheck_fact_values": [
+        "Edward Patrick Sullivan"
+      ],
+      "proposed_relations": [
+        "is named"
+      ],
+      "crosscheck_relations": [
+        "is named"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 141,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "literature pertaining to Irish culture and history"
+      ],
+      "crosscheck_fact_values": [
+        "literature pertaining to Irish culture and history"
+      ],
+      "proposed_relations": [
+        "main genre is"
+      ],
+      "crosscheck_relations": [
+        "main genre is"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 142,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Irwin Literary Prize"
+      ],
+      "crosscheck_fact_values": [
+        "Irwin Literary Prize"
+      ],
+      "proposed_relations": [
+        "awarded the illustrious"
+      ],
+      "crosscheck_relations": [
+        "awarded"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 143,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "dietitian",
+        "radiologist"
+      ],
+      "crosscheck_fact_values": [
+        "dietitian",
+        "radiologist"
+      ],
+      "proposed_relations": [
+        "father was a",
+        "mother was a"
+      ],
+      "crosscheck_relations": [
+        "father was a",
+        "mother was a"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 144,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "In Night's Silence, the Stars Will Be Our Lamps",
+        "Nell: A Tale of Emerald Isle"
+      ],
+      "crosscheck_fact_values": [
+        "In Night's Silence, the Stars Will Be Our Lamps",
+        "Nell: A Tale of Emerald Isle"
+      ],
+      "proposed_relations": [
+        "include"
+      ],
+      "crosscheck_relations": [
+        "include"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 145,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Irish landscape, myths, and the spirit of its people",
+        "Yes"
+      ],
+      "crosscheck_fact_values": [
+        "Yes",
+        "myths",
+        "the Irish landscape",
+        "the spirit of its people"
+      ],
+      "proposed_relations": [
+        "intricately tied to"
+      ],
+      "crosscheck_relations": [
+        "showcasing"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 146,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "balanced approach to storytelling",
+        "meticulous research skills"
+      ],
+      "crosscheck_fact_values": [
+        "his balanced approach to storytelling",
+        "his meticulous research skills",
+        "his parents' passion for their professions"
+      ],
+      "proposed_relations": [
+        "helped shape his"
+      ],
+      "crosscheck_relations": [
+        "shape"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 147,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "blend of old-world charm and new-world sensibilities",
+        "unique perspective"
+      ],
+      "crosscheck_fact_values": [
+        "a unique perspective",
+        "his Irish heritage",
+        "old-world charm and new-world sensibilities"
+      ],
+      "proposed_relations": [
+        "creating an impactful",
+        "provided him with a"
+      ],
+      "crosscheck_relations": [
+        "blend of",
+        "fascinated by",
+        "provided him with"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 148,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "a number of characters",
+        "the protagonist's father is a wise physician"
+      ],
+      "crosscheck_fact_values": [
+        "a number of characters",
+        "radiologist",
+        "wise physician"
+      ],
+      "proposed_relations": [
+        "inspired"
+      ],
+      "crosscheck_relations": [
+        "inspired",
+        "is a",
+        "occupation as"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 149,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "In Night's Silence, the Stars Will Be Our Lamps"
+      ],
+      "crosscheck_fact_values": [
+        "In Night's Silence, the Stars Will Be Our Lamps"
+      ],
+      "proposed_relations": [
+        "secured the prestigious Irwin Literary Prize for his book"
+      ],
+      "crosscheck_relations": [
+        "for his book"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 150,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Americans tracing their Irish roots and heritage"
+      ],
+      "crosscheck_fact_values": [
+        "Americans tracing their Irish roots and heritage"
+      ],
+      "proposed_relations": [
+        "incorporating characters who, like him, are"
+      ],
+      "crosscheck_relations": [
+        "incorporating characters"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 151,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "identity, heritage, and the material and spiritual conflicts"
+      ],
+      "crosscheck_fact_values": [
+        "heritage",
+        "identity",
+        "the material and spiritual conflicts"
+      ],
+      "proposed_relations": [
+        "explores themes of"
+      ],
+      "crosscheck_relations": [
+        "themes of"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 152,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "brilliant analytical thinking",
+        "understanding of human psychology"
+      ],
+      "crosscheck_fact_values": [
+        "a sense of brilliant analytical thinking",
+        "an understanding of human psychology",
+        "his character developments and plot constructions"
+      ],
+      "proposed_relations": [
+        "fostered a sense of"
+      ],
+      "crosscheck_relations": [
+        "critical in",
+        "fostered"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 153,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Nell: A Tale of Emerald Isle"
+      ],
+      "crosscheck_fact_values": [
+        "Nell: A Tale of Emerald Isle"
+      ],
+      "proposed_relations": [
+        "most apparent in his book"
+      ],
+      "crosscheck_relations": [
+        "apparent in"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 154,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "In Night's Silence, the Stars Will Be Our Lamps",
+        "a crucial character is a renowned dietician in her town"
+      ],
+      "crosscheck_fact_values": [
+        "renowned dietician"
+      ],
+      "proposed_relations": [
+        "drawn inspiration from his mother's profession in his book"
+      ],
+      "crosscheck_relations": [
+        "crucial character is"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 155,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "bustling lifestyle, multi-cultural environment, and the raw energy"
+      ],
+      "crosscheck_fact_values": [
+        "his characters who leave Ireland to experience the American Dream",
+        "multi-cultural environment",
+        "the city's bustling lifestyle",
+        "the raw energy it offers"
+      ],
+      "proposed_relations": [
+        "showing the city's"
+      ],
+      "crosscheck_relations": [
+        "portrays",
+        "showing"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 156,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "cultural displacement, the struggles of assimilation, and the tension between maintaining traditional Irish values and adapting to modern American culture"
+      ],
+      "crosscheck_fact_values": [
+        "cultural displacement",
+        "the struggles of assimilation",
+        "the tension between maintaining traditional Irish values and adapting to modern American culture"
+      ],
+      "proposed_relations": [
+        "explores challenges such as"
+      ],
+      "crosscheck_relations": [
+        "challenges such as"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 157,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "every 18 to 24 months"
+      ],
+      "crosscheck_fact_values": [
+        "every 18 to 24 months"
+      ],
+      "proposed_relations": [
+        "publishing a new book"
+      ],
+      "crosscheck_relations": [
+        "publishing"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 158,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "dual cultural identity",
+        "vivid depictions of the Irish landscape and culture"
+      ],
+      "crosscheck_fact_values": [
+        "vivid depictions of the Irish landscape and culture",
+        "well-crafted characters that portray the dichotomy of living with a dual cultural identity"
+      ],
+      "proposed_relations": [
+        "combines",
+        "portray the dichotomy of living with a"
+      ],
+      "crosscheck_relations": [
+        "combines"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 159,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "In Night's Silence, the Stars Will Be Our Lamps"
+      ],
+      "crosscheck_fact_values": [
+        "In Night's Silence, the Stars Will Be Our Lamps"
+      ],
+      "proposed_relations": [
+        "is a great starting point"
+      ],
+      "crosscheck_relations": [
+        "starting point"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 160,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Basil Mahfouz Al-Kuwaiti"
+      ],
+      "crosscheck_fact_values": [
+        "Basil Mahfouz Al-Kuwaiti"
+      ],
+      "proposed_relations": [
+        "is"
+      ],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 161,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "male"
+      ],
+      "crosscheck_fact_values": [
+        "male"
+      ],
+      "proposed_relations": [
+        "is"
+      ],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 162,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Kuwait City, Kuwait"
+      ],
+      "crosscheck_fact_values": [
+        "Kuwait City, Kuwait"
+      ],
+      "proposed_relations": [
+        "born in"
+      ],
+      "crosscheck_relations": [
+        "born in"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 163,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "florist",
+        "game developer"
+      ],
+      "crosscheck_fact_values": [
+        "florist",
+        "game developer"
+      ],
+      "proposed_relations": [
+        "father was a",
+        "mother was a"
+      ],
+      "crosscheck_relations": [
+        "father was a",
+        "mother was a"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 164,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "French literature"
+      ],
+      "crosscheck_fact_values": [
+        "French literature"
+      ],
+      "proposed_relations": [
+        "writings in the"
+      ],
+      "crosscheck_relations": [
+        "genre"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 165,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Le Petit Sultan",
+        "Promise by the Seine"
+      ],
+      "crosscheck_fact_values": [
+        "Le Petit Sultan",
+        "Promise by the Seine"
+      ],
+      "proposed_relations": [
+        "books are"
+      ],
+      "crosscheck_relations": [
+        "books are"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 166,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Prix Goncourt"
+      ],
+      "crosscheck_fact_values": [
+        "Prix Goncourt"
+      ],
+      "proposed_relations": [
+        "honored with the"
+      ],
+      "crosscheck_relations": [
+        "honored with"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 167,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "explorations of French culture, history, and narratives"
+      ],
+      "crosscheck_fact_values": [
+        "French culture, history, and narratives"
+      ],
+      "proposed_relations": [
+        "exemplify French literature with their"
+      ],
+      "crosscheck_relations": [
+        "explorations of"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 168,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "love for nature and fine detail",
+        "multiple narratives and outcomes"
+      ],
+      "crosscheck_fact_values": [
+        "a love for nature and fine detail",
+        "the concept of multiple narratives and outcomes",
+        "the eloquent descriptions in his novels"
+      ],
+      "proposed_relations": [
+        "instilled in him a",
+        "introduced him to the concept of"
+      ],
+      "crosscheck_relations": [
+        "instilled",
+        "introduced",
+        "reflected in"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 169,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "elements from Middle Eastern culture",
+        "experiences growing up in Kuwait City"
+      ],
+      "crosscheck_fact_values": [
+        "elements from Middle Eastern culture",
+        "his birthplace Kuwait",
+        "his experiences growing up in Kuwait City"
+      ],
+      "proposed_relations": [
+        "incorporation of",
+        "recalls his birthplace Kuwait through the"
+      ],
+      "crosscheck_relations": [
+        "incorporation of",
+        "recalls"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 170,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "early 1980s"
+      ],
+      "crosscheck_fact_values": [
+        "the early 1980s"
+      ],
+      "proposed_relations": [
+        "began his writing career in the"
+      ],
+      "crosscheck_relations": [
+        "began"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 171,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "complexity of human relationships",
+        "lyrical prose, intricate plot lines, and vividly drawn characters"
+      ],
+      "crosscheck_fact_values": [
+        "intricate plot lines",
+        "lyrical prose",
+        "the complexity of human relationships",
+        "vividly drawn characters"
+      ],
+      "proposed_relations": [
+        "known for its"
+      ],
+      "crosscheck_relations": [
+        "known for",
+        "underlying theme of"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 172,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "poetic narrative, detailed depictions of French life, and the exploration of complex human emotions and relationships"
+      ],
+      "crosscheck_fact_values": [
+        "detailed depictions of French life",
+        "poetic narrative",
+        "the exploration of complex human emotions and relationships"
+      ],
+      "proposed_relations": [
+        "reflects Basil Mahfouz Al-Kuwaiti's writing style through its"
+      ],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 173,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "blend of two distinctive cultures",
+        "young protagonist of Kuwaiti origin navigating life in France"
+      ],
+      "crosscheck_fact_values": [
+        "a blend of two distinctive cultures",
+        "a young protagonist of Kuwaiti origin navigating life in France"
+      ],
+      "proposed_relations": [
+        "exposing readers to a",
+        "presenting a"
+      ],
+      "crosscheck_relations": [
+        "exposing readers to",
+        "presenting"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 174,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "mix of cultural narratives",
+        "unique perspective"
+      ],
+      "crosscheck_fact_values": [
+        "a mix of cultural narratives",
+        "a unique perspective"
+      ],
+      "proposed_relations": [
+        "endowed him with a",
+        "providing a"
+      ],
+      "crosscheck_relations": [
+        "endowed him with",
+        "providing"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 175,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "character development and setting",
+        "plot to unfold organically",
+        "rich cultural background"
+      ],
+      "crosscheck_fact_values": [
+        "character development",
+        "his rich cultural background into his writings",
+        "setting",
+        "the plot to unfold organically"
+      ],
+      "proposed_relations": [
+        "allows the",
+        "begins with",
+        "imbues his"
+      ],
+      "crosscheck_relations": [
+        "allows",
+        "begins with",
+        "imbues"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 176,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "broader understanding of multicultural narratives",
+        "nuanced portrayal of Middle Eastern experiences in a traditional French context"
+      ],
+      "crosscheck_fact_values": [
+        "a broader understanding of multicultural narratives within the genre",
+        "a nuanced portrayal of Middle Eastern experiences in a traditional French context",
+        "pushed the boundaries of French literature"
+      ],
+      "proposed_relations": [
+        "contributed to a",
+        "revealing a"
+      ],
+      "crosscheck_relations": [
+        "contributed to",
+        "revealing"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 177,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "tolerance, empathy, and the appreciation of diverse cultures",
+        "universality of human experiences"
+      ],
+      "crosscheck_fact_values": [
+        "empathy",
+        "the appreciation of diverse cultures",
+        "the universality of human experiences, regardless of cultural or geographical differences",
+        "tolerance"
+      ],
+      "proposed_relations": [
+        "emphasizes the",
+        "promoting"
+      ],
+      "crosscheck_relations": [
+        "emphasizes",
+        "promoting"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 178,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "River of Jasmine",
+        "The Nightingale of Paris",
+        "Yes"
+      ],
+      "crosscheck_fact_values": [
+        "River of Jasmine",
+        "The Nightingale of Paris",
+        "Yes"
+      ],
+      "proposed_relations": [
+        "include"
+      ],
+      "crosscheck_relations": [
+        "include"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 179,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "appreciation for French culture",
+        "cross-cultural understanding and dialogue",
+        "desire to share Middle Eastern narratives"
+      ],
+      "crosscheck_fact_values": [
+        "cross-cultural understanding and dialogue",
+        "his appreciation for French culture",
+        "his desire to share Middle Eastern narratives within that context"
+      ],
+      "proposed_relations": [
+        "due to his",
+        "effectively promoting"
+      ],
+      "crosscheck_relations": [
+        "promoting"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 180,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Nikolai Abilov"
+      ],
+      "crosscheck_fact_values": [
+        "Nikolai Abilov"
+      ],
+      "proposed_relations": [
+        "born on this date is"
+      ],
+      "crosscheck_relations": [],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 181,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "artist",
+        "sociologist"
+      ],
+      "crosscheck_fact_values": [
+        "artist",
+        "sociologist"
+      ],
+      "proposed_relations": [
+        "father was a",
+        "mother was a"
+      ],
+      "crosscheck_relations": [
+        "father was a",
+        "mother was a"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 182,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "rich visual imagery",
+        "sharp social commentary"
+      ],
+      "crosscheck_fact_values": [
+        "artistic skills",
+        "rich visual imagery",
+        "sharp social commentary",
+        "sociological expertise"
+      ],
+      "proposed_relations": [
+        "endowing his works with"
+      ],
+      "crosscheck_relations": [
+        "endowing",
+        "father's",
+        "mother's",
+        "shaped"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 183,
+      "category": "exact_match",
+      "priority": "none",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "LGBTQ+"
+      ],
+      "crosscheck_fact_values": [
+        "LGBTQ+"
+      ],
+      "proposed_relations": [
+        "identifies as"
+      ],
+      "crosscheck_relations": [
+        "identifies as"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 184,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Tolstoy Literary Award"
+      ],
+      "crosscheck_fact_values": [
+        "Tolstoy Literary Award"
+      ],
+      "proposed_relations": [
+        "honored with the prestigious"
+      ],
+      "crosscheck_relations": [
+        "honored with"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 185,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "African American"
+      ],
+      "crosscheck_fact_values": [
+        "African American"
+      ],
+      "proposed_relations": [
+        "compelling writing in the"
+      ],
+      "crosscheck_relations": [
+        "genre"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 186,
+      "category": "relation_only",
+      "priority": "low",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Kazakhstan Echoes",
+        "Thieves' Paradise",
+        "Unseen Rainbows"
+      ],
+      "crosscheck_fact_values": [
+        "Kazakhstan Echoes",
+        "Thieves' Paradise",
+        "Unseen Rainbows"
+      ],
+      "proposed_relations": [
+        "known for several acclaimed books such as"
+      ],
+      "crosscheck_relations": [
+        "such as"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 187,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "artistic visual storytelling",
+        "keen sociological insight"
+      ],
+      "crosscheck_fact_values": [
+        "artistic visual storytelling inherited from his father",
+        "the keen sociological insight from his mother"
+      ],
+      "proposed_relations": [
+        "potent fusion of"
+      ],
+      "crosscheck_relations": [
+        "fusion of"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 188,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "elements of his native culture"
+      ],
+      "crosscheck_fact_values": [
+        "Astana, Kazakhstan",
+        "elements of his native culture"
+      ],
+      "proposed_relations": [
+        "incorporate"
+      ],
+      "crosscheck_relations": [
+        "born in",
+        "incorporate"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 189,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "resilience and struggle",
+        "unique multicultural dimension"
+      ],
+      "crosscheck_fact_values": [
+        "a deep resonance in the African American genre",
+        "a unique multicultural dimension",
+        "themes of resilience and struggle"
+      ],
+      "proposed_relations": [
+        "adding a",
+        "drawn to its themes of"
+      ],
+      "crosscheck_relations": [
+        "adding",
+        "drawn to",
+        "finds"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 190,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "complexities of cultural identity",
+        "own life experiences in Astana, Kazakhstan"
+      ],
+      "crosscheck_fact_values": [
+        "own life experiences in Astana, Kazakhstan",
+        "the complexities of cultural identity"
+      ],
+      "proposed_relations": [
+        "heavily influenced by",
+        "unravel the"
+      ],
+      "crosscheck_relations": [
+        "influenced by",
+        "unravel"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 191,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "amplify marginalized voices",
+        "characters of diverse sexual orientations"
+      ],
+      "crosscheck_fact_values": [
+        "amplify marginalized voices",
+        "characters of diverse sexual orientations",
+        "wider representation"
+      ],
+      "proposed_relations": [
+        "featuring",
+        "used his platform as an LGBTQ+ author to"
+      ],
+      "crosscheck_relations": [
+        "featuring"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 192,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "multiculturalism and diversity",
+        "redefined African American literature"
+      ],
+      "crosscheck_fact_values": [
+        "a compelling layer of multiculturalism and diversity",
+        "redefined African American literature"
+      ],
+      "proposed_relations": [
+        "adding a compelling layer of",
+        "has"
+      ],
+      "crosscheck_relations": [
+        "adding"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 193,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "broad perspective",
+        "unconventional and refreshing manner"
+      ],
+      "crosscheck_fact_values": [
+        "Kazakhstan",
+        "a broad perspective",
+        "an unconventional and refreshing manner",
+        "parents with diverse professions"
+      ],
+      "proposed_relations": [
+        "developed a",
+        "explore African American narratives in an"
+      ],
+      "crosscheck_relations": [
+        "Growing up in",
+        "developed"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 194,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "more diversity to literature",
+        "queer identities"
+      ],
+      "crosscheck_fact_values": [
+        "more diversity to literature",
+        "queer identities",
+        "representation and understanding"
+      ],
+      "proposed_relations": [
+        "has brought",
+        "inclusion of"
+      ],
+      "crosscheck_relations": [
+        "brought",
+        "inclusion of",
+        "promotes"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 195,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "intersections of culture, race, and sexuality",
+        "melds his Kazakhstani heritage with African American narratives"
+      ],
+      "crosscheck_fact_values": [
+        "his Kazakhstani heritage with African American narratives",
+        "the intersections of culture, race, and sexuality"
+      ],
+      "proposed_relations": [
+        "exploring the",
+        "is unusual because it"
+      ],
+      "crosscheck_relations": [
+        "exploring",
+        "melds"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 196,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "innovative blend of Kazakhstani and African American cultures",
+        "striking portrayal of marginalized identities"
+      ],
+      "crosscheck_fact_values": [
+        "critically acclaimed",
+        "innovative blend of Kazakhstani and African American cultures",
+        "striking portrayal of marginalized identities"
+      ],
+      "proposed_relations": [
+        "praising Nikolai Abilov's"
+      ],
+      "crosscheck_relations": [
+        "praising"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 197,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "cultural identity, marginalized voices, and social critique"
+      ],
+      "crosscheck_fact_values": [
+        "cultural identity",
+        "marginalized voices",
+        "social critique"
+      ],
+      "proposed_relations": [
+        "deal with themes of"
+      ],
+      "crosscheck_relations": [
+        "themes of"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 198,
+      "category": "content_diff",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "diversity within this literary genre",
+        "fresh, international perspective"
+      ],
+      "crosscheck_fact_values": [
+        "a fresh, international perspective",
+        "expanded the boundaries of African American literature",
+        "the diversity within this literary genre"
+      ],
+      "proposed_relations": [
+        "providing a",
+        "understand and appreciate the"
+      ],
+      "crosscheck_relations": [
+        "appreciate",
+        "providing"
+      ],
+      "crosscheck_unresolved_reasons": []
+    },
+    {
+      "candidate_row_index": 199,
+      "category": "granularity",
+      "priority": "high",
+      "proposed_status": "proposed",
+      "crosscheck_status": "annotated",
+      "proposed_fact_values": [
+        "Kazakhstani culture and LGBTQ+ identities",
+        "global and diverse take on African American literature",
+        "intersectional perspective"
+      ],
+      "crosscheck_fact_values": [
+        "Kazakhstani culture",
+        "LGBTQ+ identities",
+        "a global and diverse take on African American literature",
+        "his intersectional perspective"
+      ],
+      "proposed_relations": [
+        "lies in his",
+        "presents a",
+        "weaving in themes of"
+      ],
+      "crosscheck_relations": [
+        "lies in",
+        "presents",
+        "weaving in"
+      ],
+      "crosscheck_unresolved_reasons": []
+    }
+  ],
+  "pass_fail_threshold": null,
+  "threshold_note": "No post-hoc pass/fail threshold is set on this AI-AI disagreement rate. Future human-review thresholds must be confirmed before seeing that round's results."
+}

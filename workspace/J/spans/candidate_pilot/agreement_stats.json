@@ -10,5 +10,66 @@
   "reviewed_count": 0,
   "adjudicated_count": 0,
   "second_annotator": null,
-  "limitation": "No independent second annotator exists. The AI preannotation pass is not a second annotator or an agreement study."
+  "limitation": "No independent human second annotator exists. independent_ai_crosscheck.jsonl is disagreement mining only, not a dual-human agreement study. No post-hoc pass/fail threshold is set on the peeked AI-AI rates.",
+  "ai_ai_crosscheck_descriptive": {
+    "is_human_second_annotator": false,
+    "fact_value_exact_agree": 81,
+    "relation_exact_agree": 40,
+    "exact_match_rows": 30,
+    "categories": {
+      "exact_match": 30,
+      "relation_only": 51,
+      "granularity": 54,
+      "content_diff": 57,
+      "status_diff": 8
+    },
+    "crosscheck_status_counts": {
+      "annotated": 191,
+      "unresolved": 5,
+      "no_target": 4
+    },
+    "high_priority_queue_size": 120,
+    "low_priority_relation_only_queue_size": 51,
+    "pass_fail_threshold": null
+  },
+  "human_final_spans": {
+    "path": "final_spans.jsonl",
+    "pending_count": 0,
+    "adjudicated_with_spans_count": 0,
+    "unresolved_count": 0,
+    "no_target_count": 0,
+    "note": "No human reviewer. AI final counts are stored separately.",
+    "deprecated_review_adjudication": "invalid JSON placeholder; do not use"
+  },
+  "ai_final_spans": {
+    "path": "final_spans.jsonl",
+    "is_human_adjudication": false,
+    "pass_fail_threshold": null,
+    "review_status_counts": {
+      "adjudicated": 109,
+      "unresolved": 87,
+      "no_target": 4
+    },
+    "reviewer_counts": {
+      "ai_consensus": 81,
+      "blind_adjudicator:kimi-k3-max": 119
+    },
+    "source_of_spans_counts": {
+      "ai_consensus": 171,
+      "crosscheck": 10,
+      "proposed": 19
+    },
+    "outcome_counts": {
+      "consensus_exact": 29,
+      "consensus_fact_only": 51,
+      "blind_confirmed_crosscheck": 10,
+      "blind_unconfirmed": 82,
+      "blind_confirmed_proposed": 19,
+      "blind_unresolved": 4,
+      "blind_no_target": 4,
+      "consensus_unresolved": 1
+    },
+    "fact_value_span_count": 160,
+    "relation_span_count": 46
+  }
 }
