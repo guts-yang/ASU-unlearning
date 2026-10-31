@@ -15,6 +15,8 @@ def get_loss(model, ref_model, inputs, loss_type, beta=0.1, attention_temp=2.5, 
         forget_loss = me_loss(model, inputs)
     elif 'IDK' in loss_type:
         forget_loss = idk_loss(model, inputs)
+    elif loss_type == 'ASU+GD+Cap':
+        forget_loss = asu_cap_loss(model, ref_model, inputs, attention_temp=attention_temp, layers_id=layers_id)
     elif 'ASU' in loss_type:
         if 'IDK' in loss_type:
             forget_loss = asu_loss(model, ref_model, inputs, attention_temp=attention_temp, layers_id=layers_id, ignore_first_token=True, gold_rank=gold_rank)
@@ -128,6 +130,49 @@ def asu_loss(model, ref_model, inputs, attention_temp=2.5, layers_id=None, ignor
 
     loss = (masked_kl_div.sum(-1) / loss_mask.sum(-1)).mean()
     return loss
+
+
+def asu_cap_loss(model, ref_model, inputs, attention_temp=2.5, layers_id=None):
+    """ASU KL on non-target answer tokens, plus a one-sided gold cap on ``m_tar``.
+
+    ``inputs[0]`` is ``(input_ids, labels, attention_mask, m_tar)``. ``m_tar`` is
+    aligned with ``labels`` (1 on target label positions). The cap is
+    ``relu(log p_S(g) - log p_T(g))`` and is zero when the student gold
+    probability is already at or below the teacher. Existing ``ASU+GD`` does
+    not call this function.
+    """
+    forget_inputs = inputs[0]
+    input_ids, labels, attention_mask, m_tar = forget_inputs
+
+    outputs = model(input_ids, labels=labels, attention_mask=attention_mask)
+    with torch.no_grad():
+        ref_outputs = ref_model(
+            input_ids,
+            labels=labels,
+            attention_mask=attention_mask,
+            attention_temp=attention_temp,
+            layers_id=layers_id,
+        )
+
+    loss_mask = labels[:, 1:] != -100
+    m_tar_shift = (m_tar[:, 1:] > 0) & loss_mask
+    other_mask = loss_mask & ~m_tar_shift
+
+    student_logits = outputs.logits[:, :-1, :]
+    teacher_logits = ref_outputs.logits[:, :-1, :]
+    log_probs = F.log_softmax(student_logits, dim=-1)
+    ref_log_probs = F.log_softmax(teacher_logits, dim=-1)
+    kl_div = F.kl_div(log_probs, ref_log_probs, reduction="none", log_target=True).sum(-1)
+
+    gold = labels[:, 1:].clamp(min=0).unsqueeze(-1)
+    log_ps = log_probs.gather(-1, gold).squeeze(-1)
+    log_pt = ref_log_probs.gather(-1, gold).squeeze(-1)
+    cap = torch.relu(log_ps - log_pt)
+
+    token_loss = kl_div * other_mask + cap * m_tar_shift
+    denom = loss_mask.sum(-1).clamp(min=1)
+    return (token_loss.sum(-1) / denom).mean()
+
 
 def idk_loss(model, inputs):
     forget_idk_inputs = inputs[2]
