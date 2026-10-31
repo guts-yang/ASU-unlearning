@@ -45,34 +45,39 @@ python workspace/J/diagnose_m0_recheck.py
 `Permission denied (publickey,password)`。因此本次尚未生成新的 forward
 结果，不能声称旧误差已定位，也不能改变 NO-GO。
 
-## 纯张量规格检查
+## 纯张量规格检查（DARD-ASU v2 候选，2026-10-31）
 
-[`split_channel_loss.py`](split_channel_loss.py) 仅实现候选公式供审阅和单测，
-没有导入 trainer、没有配置入口、不会训练：
+[`split_channel_loss.py`](split_channel_loss.py) 已改为 v2 候选公式，仅供审阅和
+合成 mask 单测。它没有导入 trainer、没有配置入口、不会训练，也不读取 pilot
+span。原 ASU forget 仍由 `m0_core.masked_asu_kl` / `trainer.losses.asu_loss`
+提供。
 
-- 从排除 gold 的词表取第 K 大 Teacher logit，并减去正 `delta`；
-- cap 和 gate 均 stop-gradient，cap 只在 `b_t>a_t` 时生效；
-- Base/Student 都在排除 gold 后重新归一化；
-- `rho` 在概率空间混合 Base 条件分布与完整非 gold 均匀分布；
-- 非 gold 项固定为 `KL(r||q_S)`；
-- `m_tar` 必须是 shifted answer mask 的子集，空 target 安全返回零；
-- 当前没有事实 span，因此该模块未接入生产 loss。
+当前候选契约：
+
+- 仅对合成或未来已审核的 `m_tar` 做 gold 上限：排除 gold 后取第 K 大 Teacher
+  logit，再减严格正 `delta`；不抬高低于阈值的 gold；
+- `b_hat = min(a.detach(), b.detach())`，重建全词表 `q_star` 后
+  `KL(stopgrad(q_star) || p_S)`；这只约束当前 backward 内对 gold logit 的直接
+  梯度，不声称参数更新后 gold 概率永不变化；
+- 非 gold 条件分布 `r = (1-eta) q_T + eta q_B`（概率空间；单测覆盖
+  `eta∈{0,0.5,1}`）；主路径无 uniform mix、无 `w_t`、无 Top-1 flatten；
+- `m_other` 位使用逐 token 原 ASU `KL(p_T || p_S)`；总 forget 按全局
+  `Σ m_ans` 归一，这与 `asu_loss` 的“序列内均值再 batch 均值”不同；
+- 真实 `m_tar` 仍未就绪：pilot 人工审核 0/200，`align_m_tar.py` 拒绝写出。
 
 本机使用 `/usr/bin/python3`、Torch 2.8.0 完成：
 
 - `workspace/J/tests/test_m0_core.py`：5/5 通过；
-- `workspace/J/tests/test_split_channel_loss.py`：7/7 通过，包括 float64
-  手算 KL、shift/mask、Kth non-gold、单侧 cap 梯度、非 gold 对 gold
-  logit 的零直接梯度、rho 混合和空 mask；
-- `py_compile` 与 `git diff --check`：通过；
-- IDE lint：无错误。
+- `workspace/J/tests/test_split_channel_loss.py`：8/8 通过（合成 mask：shift、
+  rank deflation、eta 混合、`q_star`、KL 分解、单侧直接梯度、路由、数值稳定）；
+- 数学单测通过 **不等于** 方法有效，也 **不等于** 可以训练。
 
 ## 当前强制结论
 
-**NO-GO，训练保持关闭。** 原因有两个独立硬门：
+**NO-GO，未训练，训练保持关闭。** 原因有两个独立硬门：
 
-1. 旧 `1e-4` 数值门未通过，且本次尚未在原资产上完成复核；
-2. 用户要求先完成可靠事实 span 标注，当前没有获批的 `m_tar`。
+1. 旧 `1e-4` 数值门未通过，且本次尚未在原资产上完成复核；本任务没有放宽门槛；
+2. 没有获批并完成 tokenizer 对齐的事实值 `m_tar`。
 
 不得启动 ASU baseline 重训、候选 pilot、消融、多 seed 或 attack。后续只有在
 原主机访问恢复并生成独立复核报告后，才能判断第一个门是否变化；即使数值门
