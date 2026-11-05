@@ -11,13 +11,18 @@ if str(_WORKSPACE) not in sys.path:
 
 from I2.mcsd.config import load_config  # noqa: E402
 from I2.mcsd.gates import student_block_reason  # noqa: E402
+from I2.mcsd.storage import reject_forbidden  # noqa: E402
 
 TRAINING_LAUNCHES = 0
+FORGET_ENTRY_WIRED = False
 
 
-def launch_student_e1(*_args, **_kwargs):
+def launch_student_e1(*_args, **kwargs):
     """Present so the training call has one site. This candidate never invokes it."""
     global TRAINING_LAUNCHES
+    save_dir = kwargs.get("save_dir")
+    if save_dir is not None:
+        reject_forbidden(save_dir)
     TRAINING_LAUNCHES += 1
     raise RuntimeError("Student E1 is not launched by this candidate entry")
 

@@ -21,3 +21,7 @@ class HoldoutTuningError(RuntimeError):
 
 class DifferentiableMaskUnavailable(RuntimeError):
     """Backpropagation through the activation mask is not supported."""
+
+
+class StorageError(ValueError):
+    """A result path would overwrite evidence or leave the direction I tree."""
