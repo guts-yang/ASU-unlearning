@@ -22,6 +22,10 @@ def results_root():
     return _RESULTS
 
 
+def _now():
+    return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+
+
 def measurement_dir(stage, stamp=None):
     """Return a new results/<stage>_<stamp> path. The caller creates it."""
     if stage == "student_e1":
