@@ -1,0 +1,28 @@
+{
+  "approved_config_present": false,
+  "candidate_config": "/usr/local/ASU-unlearning/workspace/I2/configs/mcsd_candidate.yaml",
+  "config_sha256": "e34c05650a30f353609db08110f03452b1ec7d62e0e84694936333b697f865e3",
+  "yaml_files_in_i2_configs": [
+    "mcsd_candidate.yaml"
+  ],
+  "allow_student_e1": false,
+  "e0_decision_preserved": "do_not_start_e1",
+  "missing_fields": [
+    "pairing.mode",
+    "selection.method",
+    "selection.candidate_pool",
+    "alpha",
+    "gates.localization_n_min",
+    "gates.localization_r_min",
+    "gates.retain_nll_cap",
+    "gates.retain_rho",
+    "gates.localization_result_id",
+    "gates.teacher_gate_id",
+    "gates.preregistered",
+    "rho.grid_status"
+  ],
+  "localization_started": false,
+  "reason": "no separately approved protocol config; localization stays stopped",
+  "e0_retain_cap_reused": false,
+  "code_version": "b8ec7117682d812436a03f66e8ece212939033e4"
+}

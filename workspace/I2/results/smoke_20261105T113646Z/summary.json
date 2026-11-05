@@ -1,0 +1,18 @@
+{
+  "real_model_executed": false,
+  "eval_only": true,
+  "optimizer_steps": 0,
+  "causal_localization_claimed": false,
+  "method_effectiveness_claimed": false,
+  "model_dir": "/root/autodl-tmp/models/tofu_ft_llama2-7b",
+  "config_sha256": "e34c05650a30f353609db08110f03452b1ec7d62e0e84694936333b697f865e3",
+  "code_version": "b8ec7117682d812436a03f66e8ece212939033e4",
+  "cuda_available": false,
+  "device_count": 0,
+  "devices": [],
+  "backends": [],
+  "smoke_passed": false,
+  "status": "cuda_unavailable",
+  "protocol_dir": "/usr/local/ASU-unlearning/workspace/I2/results/protocol_20261105T113646Z",
+  "student_e1_started": false
+}

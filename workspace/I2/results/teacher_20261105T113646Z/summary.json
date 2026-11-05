@@ -1,0 +1,52 @@
+{
+  "student_e1_started": false,
+  "forget_py_called": false,
+  "smoke_passed": false,
+  "rho_sweep_executed": false,
+  "holdout_used": false,
+  "frozen_S_present": false,
+  "rho_grid_status": "exploratory_unregistered",
+  "retain_rho": null,
+  "reason": "no frozen S and no approved retain rho; holdout was not used",
+  "protocol_missing": [
+    "pairing.mode",
+    "selection.method",
+    "selection.candidate_pool",
+    "alpha",
+    "gates.localization_n_min",
+    "gates.localization_r_min",
+    "gates.retain_nll_cap",
+    "gates.retain_rho",
+    "gates.localization_result_id",
+    "gates.teacher_gate_id",
+    "gates.preregistered",
+    "rho.grid_status"
+  ],
+  "training_conditions": [
+    {
+      "condition": "frozen approved gate",
+      "satisfied": false
+    },
+    {
+      "condition": "hook smoke, alignment, and patch",
+      "satisfied": false
+    },
+    {
+      "condition": "calibration localization and controls",
+      "satisfied": false
+    },
+    {
+      "condition": "rho passes retain delta-NLL gate",
+      "satisfied": false
+    },
+    {
+      "condition": "student config points at the new gate",
+      "satisfied": false
+    },
+    {
+      "condition": "trainer wiring verified",
+      "satisfied": false
+    }
+  ],
+  "student_block_reason": "allow_student_e1 is not true; Student E1 stays disabled"
+}

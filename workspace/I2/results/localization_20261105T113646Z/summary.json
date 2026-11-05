@@ -1,0 +1,17 @@
+{
+  "real_model_executed": false,
+  "localization_started": false,
+  "reason": "no separately approved protocol config; localization stays stopped",
+  "approved_q_minus_present": false,
+  "pairs_constructed": 0,
+  "N": null,
+  "R": null,
+  "controls": null,
+  "binary_S_frozen": false,
+  "author_interval_unstable": true,
+  "calibration_author_count": 5,
+  "min_authors_for_interval": 8,
+  "matched_retain_constructable": false,
+  "matched_retain_reason": "retain50 has no approved q+/q- fact span",
+  "e0_retain_cap_reused": false
+}

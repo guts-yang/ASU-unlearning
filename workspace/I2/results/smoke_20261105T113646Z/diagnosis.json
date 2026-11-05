@@ -1,0 +1,34 @@
+{
+  "smoke_passed": false,
+  "model_loaded": false,
+  "forward_executed": false,
+  "optimizer_steps": 0,
+  "kernel_gpus_visible_in_proc": 8,
+  "kernel_gpu_model": "NVIDIA A800 80GB PCIe",
+  "device_nodes_created": [
+    "/dev/nvidia0",
+    "/dev/nvidia1",
+    "/dev/nvidia2",
+    "/dev/nvidia3",
+    "/dev/nvidia4",
+    "/dev/nvidia5",
+    "/dev/nvidia6",
+    "/dev/nvidia7",
+    "/dev/nvidia-uvm",
+    "/dev/nvidia-uvm-tools"
+  ],
+  "device_node_major_minor": {
+    "nvidia": "195:0-7",
+    "nvidia_uvm": "504:0",
+    "nvidia_uvm_tools": "504:1"
+  },
+  "open_dev_nvidia0": "EPERM Operation not permitted",
+  "open_dev_nvidiactl": "EPERM Operation not permitted",
+  "cuInit": 100,
+  "torch_cuda_available": false,
+  "torch_device_count": 0,
+  "libcuda": "/usr/lib64/libcuda.so.580.105.08 -> /usr/local/cuda-12.8/compat/libcuda.so.570.124.06",
+  "cgroup_devices": "devices:/docker/25a4954de7aef76361004c65311d7c3a872752f6f4a4daf29f35610b72d52a39",
+  "cgroup_devices_allow_writable": false,
+  "reason": "The kernel lists eight A800 GPUs, but this container cannot open /dev/nvidia*. CUDA initialization returns no device, so the eval-only hook smoke did not load Llama weights."
+}
