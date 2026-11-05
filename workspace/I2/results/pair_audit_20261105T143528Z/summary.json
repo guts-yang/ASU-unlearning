@@ -1,0 +1,55 @@
+{
+  "source_manifest": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/I2/results/pre_experiment_20261105T110514Z/task1_samples.jsonl",
+  "questions_rewritten": false,
+  "pairing_mode_approved": false,
+  "pairing_mode": null,
+  "rows_read": 200,
+  "rows_with_stable_prefix": 192,
+  "prefix_mismatch_rows": 8,
+  "shared_wrapper_prefix_tokens": 4,
+  "shared_wrapper_suffix_tokens": 4,
+  "pairs_rejected_wrapper_only": 38,
+  "pairs_rejected_not_fact_slot": 849,
+  "unapproved_near_misses": 1,
+  "calibration_only_near_misses": 0,
+  "candidate_pairs_approved_for_localization": 0,
+  "example_limit": 20,
+  "examples_written": 1,
+  "author_interval": {
+    "calibration_author_count": 5,
+    "calibration_author_indices": [
+      0,
+      2,
+      4,
+      6,
+      8
+    ],
+    "min_authors_for_interval": 8,
+    "threshold_changed": false,
+    "unstable_estimate": true,
+    "qa_rows_are_not_independent_samples": true,
+    "decision": "keep_min_authors_and_report_unstable"
+  },
+  "span_length_counts": {
+    "6": 1
+  },
+  "cuda_available": false,
+  "torch_device_count": 0,
+  "llama_loaded": false,
+  "hook_smoke_passed": false,
+  "localization_started": false,
+  "rho_sweep_executed": false,
+  "student_e1_started": false,
+  "e0_decision_preserved": "do_not_start_e1",
+  "e0_retain_cap_reused": false,
+  "e0_retain_cap_value_not_copied": 0.0034702592157625847,
+  "method_effectiveness_claimed": false,
+  "stop_reason": [
+    "no annotated fact span exists in the task-1 questions; near misses stay unapproved",
+    "pairing.mode is still unset, so N and R have no input",
+    "near misses are not annotated fact spans and are not q- donors",
+    "cuda is unavailable, so the eval-only hook smoke did not load weights",
+    "min_authors_for_interval stays 8; the 5-author interval is unstable",
+    "selection thresholds, rho, and Student E1 stay closed"
+  ]
+}

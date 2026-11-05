@@ -1,0 +1,30 @@
+[
+  {
+    "q_plus_sample_id": "forget05_task1_0024",
+    "q_minus_sample_id": "forget05_task1_0182",
+    "q_plus_question": "Which awards has Nikolai Abilov won for his contribution to literature?",
+    "q_minus_question": "Which awards has Edward Patrick Sullivan received for his contribution to literature?",
+    "character_substitution": {
+      "q_plus": "Nikolai Abilov won",
+      "q_minus": "Edward Patrick Sullivan received"
+    },
+    "q_plus_author_id": 1,
+    "q_minus_author_id": 9,
+    "q_plus_split": "holdout",
+    "q_minus_split": "holdout",
+    "diff_span": [
+      7,
+      13
+    ],
+    "donor_length": 23,
+    "template_tokens_before_span": 3,
+    "template_tokens_after_span": 6,
+    "shared_question_template_tokens": 9,
+    "fact_span_annotated": false,
+    "approved_for_localization": false,
+    "status": "unapproved_near_miss",
+    "reasons": [
+      "fact_span_not_annotated"
+    ]
+  }
+]

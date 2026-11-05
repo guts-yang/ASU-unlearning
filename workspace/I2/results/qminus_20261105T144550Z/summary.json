@@ -1,0 +1,29 @@
+{
+  "source_manifest": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/I2/results/pre_experiment_20261105T110514Z/task1_samples.jsonl",
+  "generation_rule": "replace the task-1 author name, or the birth place and date, with the next author id modulo 10",
+  "new_person_invented": false,
+  "questions_rewritten": true,
+  "pairing_mode_approved": false,
+  "pairing_mode": null,
+  "rows_read": 200,
+  "qminus_generated": 200,
+  "qminus_missing": 0,
+  "single_contiguous_span": 190,
+  "multiple_identity_spans": 10,
+  "template_outside_spans_unchanged": 200,
+  "replacement_kinds": {
+    "birth_place_and_date": 10,
+    "author_name": 189,
+    "author_surname": 1
+  },
+  "approved_for_localization": 0,
+  "token_alignment": "not_checked_no_tokenizer",
+  "cuda_available": false,
+  "llama_loaded": false,
+  "localization_started": false,
+  "student_e1_started": false,
+  "e0_decision_preserved": "do_not_start_e1",
+  "e0_retain_cap_reused": false,
+  "e0_retain_cap_value_not_copied": 0.0034702592157625847,
+  "method_effectiveness_claimed": false
+}
