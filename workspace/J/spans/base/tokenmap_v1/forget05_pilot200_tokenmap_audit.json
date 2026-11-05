@@ -1,0 +1,97 @@
+{
+  "task": "pilot200_tokenmap_v1",
+  "m0_nogo_unchanged": true,
+  "training_started": false,
+  "input_path": "/usr/local/ASU-unlearning/workspace/J/spans/base/forget05_pilot200_preannotation.jsonl",
+  "input_sha256": "e0bf0148ecd1d3f649e7e81935f4a27c178b72316f9847bcf05f2dda59c04101",
+  "canonical_forget05_path": "/usr/local/ASU-unlearning/Right-to-be-forgotten/data/tofu/forget05.json",
+  "canonical_forget05_sha256": "a8c207a905af73ea4797b1af92a14cf458f42df567c941f7284f87d930096f4b",
+  "output_tokenmap_path": "/usr/local/ASU-unlearning/workspace/J/spans/base/tokenmap_v1/forget05_pilot200_tokenmap.jsonl",
+  "output_tokenmap_sha256": "d7a0eda75f546d2b225454b07e165a4f920e87e649958ce809d9cf80a156570f",
+  "git_commit": "f62d2254453f9e9117c1abb6e1b0f8259738a92d",
+  "package_versions": {
+    "python": "3.12.3",
+    "transformers": "4.51.3",
+    "torch": "2.8.0+cu128"
+  },
+  "tokenizer": {
+    "path": "/root/autodl-tmp/huggingface/hub/models--NousResearch--Llama-2-7b-chat-hf/snapshots/351844e75ed0bcbbe3f10671b3c808d2b83894ee",
+    "revision": "351844e75ed0bcbbe3f10671b3c808d2b83894ee",
+    "class_name": "LlamaTokenizerFast",
+    "is_fast": true,
+    "tokenizer_json_sha256": "f7b50bcf6d6672eade5e43514d48e9c1e4e63a56aef7b14acdaca94ce93436f7",
+    "bos_token_id": 1,
+    "eos_token_id": 2,
+    "pad_token_id": 2,
+    "unk_token_id": 0,
+    "vocab_size": 32000
+  },
+  "model_weights_referenced_not_loaded_for_forward": {
+    "init_student_teacher": "/root/autodl-tmp/models/tofu_ft_llama2-7b",
+    "init_snapshot": "cc5b31c69127d5da881608e640f2b453c446435b",
+    "asu_gd_student": "/root/autodl-tmp/ASU-unlearning/checkpoints/tofu_replay/llama2-7b/forget05/ASU+GD/seed_1001/epoch5_1e-05_FixRefTrue_maskTrue_Fcoeff0.1_Rcoeff1.0_Temp2.3_LayersNone_beta0.1/1/unlearn_times_1/checkpoint-last"
+  },
+  "serialization_rule": {
+    "template": "QUESTION_START + question + QUESTION_END + ANSWER_TAG + answer",
+    "question_start_tag": "[INST] ",
+    "question_end_tag": " [/INST]",
+    "answer_tag": "",
+    "add_special_tokens": true,
+    "max_length": 500,
+    "padding_token_id": 2,
+    "source_files": [
+      "Right-to-be-forgotten/forget.py",
+      "workspace/gold_rank/masking.py",
+      "Right-to-be-forgotten/config/model_config.yaml"
+    ]
+  },
+  "label_and_shift_rule": {
+    "question_labels": "first num_question_tokens positions set to -100",
+    "ignore_index": -100,
+    "asu_loss_shift": "logits[:, :-1] predicts labels[:, 1:]",
+    "logit_position_for_label_L": "L-1",
+    "source_file": "Right-to-be-forgotten/trainer/losses.py"
+  },
+  "mask_scope": {
+    "include_all_span_candidates": true,
+    "includes_relation_aux": true,
+    "includes_extra_fact": true,
+    "includes_proposition_value": true,
+    "includes_answer_polarity": true,
+    "includes_fact_value": true
+  },
+  "counts": {
+    "rows": 200,
+    "human_review_status": {
+      "confirmed_by_user": 8,
+      "pending": 192
+    },
+    "record_status": {
+      "scope_confirmed_pending_token_alignment": 8,
+      "candidate_ready_for_human_review": 183,
+      "no_target": 2,
+      "needs_manual_review": 7
+    },
+    "span_candidates": 433,
+    "span_labels": {
+      "proposition_value": 145,
+      "relation_aux": 99,
+      "fact_value": 166,
+      "answer_polarity": 21,
+      "extra_fact": 2
+    },
+    "m_tar_token_assignments_sum": 3313,
+    "boundary_crossing_spans": 373,
+    "truncated_sequences": 0,
+    "mapping_anomaly_rows": 165,
+    "training_eligible_true": 1,
+    "confirmed_by_user": 8
+  },
+  "checks_passed": true,
+  "validation_failures": [],
+  "notes": [
+    "training_eligible is an audit flag only; M0 remains NO-GO and training stays off.",
+    "Statuses pending/needs_manual_review/no_target were preserved; no_target masks stay empty."
+  ],
+  "output_audit_sha256": "45f8669d42c4c0b8ae08bdcd7863a5256a7497cf10a4d1dfbf5633723f8c791c"
+}
