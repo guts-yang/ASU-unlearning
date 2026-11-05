@@ -1,0 +1,18 @@
+{
+  "real_model_executed": false,
+  "llama_for_causal_lm_instantiated": false,
+  "optimizer_step": false,
+  "student_e1_started": false,
+  "method_effectiveness_claimed": false,
+  "causal_localization_claimed": false,
+  "config_version": "mcsd_v2",
+  "config_sha256": "e34c05650a30f353609db08110f03452b1ec7d62e0e84694936333b697f865e3",
+  "code_version": "b44da1c0655e34aa707cddedf6ea765f42f4868f",
+  "cuda_available": false,
+  "task1_rows": 200,
+  "task1_excluded": 200,
+  "task1_aligned": 0,
+  "protocol_ready_for_experiment": false,
+  "student_e1_block_reason": "allow_student_e1 is not true; Student E1 stays disabled",
+  "output_dir": "workspace/I2/results/pre_experiment_20261105T110514Z"
+}

@@ -1,0 +1,67 @@
+{
+  "student_e1_started": false,
+  "student_entry_calls_forget_py": false,
+  "runnable_training_command_written": false,
+  "block_reason": "allow_student_e1 is not true; Student E1 stays disabled",
+  "student_entry": {
+    "return_code": 2,
+    "stderr": "allow_student_e1 is not true; Student E1 stays disabled"
+  },
+  "loss_refusal_before_forward": {
+    "exception": "StudentE1Blocked",
+    "message": "MCSD_ASU requires an mcsd_v2 gate; Student E1 stays disabled",
+    "model_calls": 0,
+    "reference_calls": 0,
+    "forward_reached": false
+  },
+  "blockers": [
+    {
+      "condition": "frozen approved mcsd_v2 gate",
+      "satisfied": false,
+      "detail": "gates.preregistered is false and thresholds are null"
+    },
+    {
+      "condition": "real hook, token alignment, and patch smoke passed",
+      "satisfied": false,
+      "detail": "no CUDA run; alignment excluded every task-1 row; patch smoke was not run"
+    },
+    {
+      "condition": "author-isolated calibration localization and controls meet the new gate",
+      "satisfied": false,
+      "detail": "N, R, and controls are null"
+    },
+    {
+      "condition": "one rho passes an independent retain delta-NLL gate",
+      "satisfied": false,
+      "detail": "rho grid is exploratory_unregistered and retain_nll_cap is null"
+    },
+    {
+      "condition": "student config points at that new version rather than E0",
+      "satisfied": false,
+      "detail": "allow_student_e1 is false; e0_decision_preserved remains do_not_start_e1"
+    },
+    {
+      "condition": "training entry verified: student-only updates, frozen teacher and donor, paths and resume",
+      "satisfied": false,
+      "detail": "student_entry.py does not call forget.py, so those checks were not performed"
+    }
+  ],
+  "all_conditions_satisfied": false,
+  "existing_trainer_sites": {
+    "train_entry": "Right-to-be-forgotten/forget.py",
+    "save_dir_field": "cfg.save_dir",
+    "save_dir_template": "results/${model_family}/${split}/${forget_loss}/seed_${seed}/epoch${num_epochs}_${lr}_FixRef${fix_ref_model}_mask${mask}_Fcoeff${forget_coeff}_Rcoeff${regularization_coeff}_Temp${attention_temp}_Layers${layers_id}_beta${beta}",
+    "seed_field": "cfg.seed",
+    "max_steps": "computed in forget.py from epochs, dataset length, batch size, accumulation, and device count",
+    "deepspeed_config": "Right-to-be-forgotten/config/ds_config/llama2.json",
+    "reference_model_when_fix_ref_model": "cfg.model_path",
+    "reference_frozen_in": "Right-to-be-forgotten/trainer/trainer.py sets param.requires_grad = False"
+  },
+  "stop_lines_for_a_future_run": [
+    "NaN loss or non-finite scores",
+    "out-of-memory or data-shape errors",
+    "retain delta NLL above the retain cap frozen at that time",
+    "gate no longer valid",
+    "keep failed artifacts; current retain cap is null and the E0 cap is not a stop line"
+  ]
+}

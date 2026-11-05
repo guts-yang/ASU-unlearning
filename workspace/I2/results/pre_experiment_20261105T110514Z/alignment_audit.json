@@ -1,0 +1,72 @@
+{
+  "task1_rows": 200,
+  "forget05_rows": 2000,
+  "aligned": 0,
+  "excluded": 200,
+  "exclusion_reason_counts": {
+    "pairing_mode_unset": 200,
+    "counterfactual_question_missing": 200,
+    "fact_span_missing": 200,
+    "score_prefix_boundary_mismatch": 8
+  },
+  "author_row_counts": {
+    "0": 20,
+    "1": 20,
+    "2": 20,
+    "3": 20,
+    "4": 20,
+    "5": 20,
+    "6": 20,
+    "7": 20,
+    "8": 20,
+    "9": 20
+  },
+  "split_row_counts": {
+    "calibration": 100,
+    "holdout": 100
+  },
+  "questions_per_author": 20,
+  "author_count": 10,
+  "calibration_author_indices": [
+    0,
+    2,
+    4,
+    6,
+    8
+  ],
+  "holdout_author_indices": [
+    1,
+    3,
+    5,
+    7,
+    9
+  ],
+  "calibration_author_count": 5,
+  "min_authors_for_interval": 8,
+  "author_interval_unstable": true,
+  "independent_sample_unit": "author",
+  "qa_rows_are_not_independent_samples": true,
+  "pairs_constructed": 0,
+  "perturbed_answers_used_as_donors": false,
+  "shared_token_index_alignment": false,
+  "score_prefix_boundary_mismatches": 8,
+  "score_prefix_boundary_note": "On a mismatch, joint question+answer tokenization fused the template boundary with the first answer character. The donor sequence stays question-only. Its token index is not reused as the answer span.",
+  "donor_forwards_executed": false,
+  "score_formatter": {
+    "source": "Right-to-be-forgotten/dataset/data_module.py convert_raw_data_to_model_format",
+    "max_length": 500,
+    "max_length_source": "Right-to-be-forgotten/forget.py TextForgetDatasetQA max_length=500",
+    "model_family": "llama2-7b",
+    "question_start_tag": "[INST] ",
+    "question_end_tag": " [/INST]",
+    "answer_tag": "",
+    "pad_id_source": "tokenizer.eos_token_id"
+  },
+  "check_alignment_contract": {
+    "inputs": "synthetic ids, not a TOFU row",
+    "aligned": false,
+    "reasons": [
+      "fact_span_missing"
+    ]
+  }
+}

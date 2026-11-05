@@ -1,0 +1,78 @@
+{
+  "collected_at_utc": "2026-11-05T11:06:34Z",
+  "packages": {
+    "python": "3.12.3",
+    "python_executable": "/root/miniconda3/bin/python3",
+    "torch": "2.8.0+cu128",
+    "transformers": "4.46.3",
+    "flash_attn": "2.8.3.post1"
+  },
+  "torch": {
+    "cuda_available": false,
+    "device_count": 0,
+    "version_cuda": "12.8"
+  },
+  "nvidia_smi": {
+    "path": "/usr/bin/nvidia-smi",
+    "exists": true,
+    "size_bytes": 0,
+    "executed": false
+  },
+  "device_nodes_created": false,
+  "packages_installed": false,
+  "git": {
+    "head": "b44da1c0655e34aa707cddedf6ea765f42f4868f",
+    "branch_status": "## fuxian...origin/fuxian",
+    "status_short_before_results": "?? workspace/I2/commands/prepare_pre_experiment.py\n?? workspace/I2/results/\n",
+    "ahead_behind_origin_fuxian": "0\t0"
+  },
+  "files": {
+    "candidate_config": {
+      "path": "/usr/local/ASU-unlearning/workspace/I2/configs/mcsd_candidate.yaml",
+      "bytes": 996,
+      "sha256": "e34c05650a30f353609db08110f03452b1ec7d62e0e84694936333b697f865e3"
+    },
+    "forget05": {
+      "path": "/usr/local/ASU-unlearning/Right-to-be-forgotten/data/tofu/forget05.json",
+      "bytes": 603987,
+      "sha256": "a8c207a905af73ea4797b1af92a14cf458f42df567c941f7284f87d930096f4b"
+    },
+    "retain50": {
+      "path": "/usr/local/ASU-unlearning/Right-to-be-forgotten/data/tofu/retain50.json",
+      "bytes": 510678,
+      "sha256": "6dcc828b669c09b1a537776ef7ac80d7e51a9e2d76af5c827543c3c01086625e"
+    },
+    "forget05_perturbed": {
+      "path": "/usr/local/ASU-unlearning/Right-to-be-forgotten/data/tofu/forget05_perturbed.json",
+      "bytes": 2431842,
+      "sha256": "94a98e8d7e9cbd2f6e897f41a5609f6b9c3954c31c41eb738c0b48ebd5c003ed"
+    },
+    "model_config_json": {
+      "path": "/root/autodl-tmp/models/tofu_ft_llama2-7b/config.json",
+      "bytes": 730,
+      "sha256": "d1855d56b6a7ebccb86d1021100d6c893da7d4aac82b376a5b44b95842f04084"
+    },
+    "generation_config": {
+      "path": "/root/autodl-tmp/models/tofu_ft_llama2-7b/generation_config.json",
+      "bytes": 183,
+      "sha256": "b606e38043e9927fe619589ef8a7545fa5574ae4431a845df82fb1f1b6e2395d"
+    },
+    "tokenizer_json": {
+      "path": "/root/autodl-tmp/models/tofu_ft_llama2-7b/tokenizer.json",
+      "bytes": 3619114,
+      "sha256": "6386c019c9a2ec0aeaafc7f5ee4c17155e7e27151843d4f9b2d0141aa3e57d5d"
+    },
+    "tokenizer_config": {
+      "path": "/root/autodl-tmp/models/tofu_ft_llama2-7b/tokenizer_config.json",
+      "bytes": 1790,
+      "sha256": "9a72a826a359b4cc4f84c90e86754b592ba74395b73f91163dd8c283e3ed3e19"
+    },
+    "special_tokens_map": {
+      "path": "/root/autodl-tmp/models/tofu_ft_llama2-7b/special_tokens_map.json",
+      "bytes": 437,
+      "sha256": "4452b845ab9ca2afa863f59f1411a959e8a32bb4334e264b0e71d5d17dd4dcb9"
+    }
+  },
+  "weight_files_hashed": false,
+  "model_dir": "/root/autodl-tmp/models/tofu_ft_llama2-7b"
+}

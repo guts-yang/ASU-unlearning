@@ -1,0 +1,138 @@
+{
+  "ready_for_real_experiment": false,
+  "thresholds_filled": false,
+  "e0_retain_cap_reused": false,
+  "e0_decision_preserved": "do_not_start_e1",
+  "e0_decision_constant": "do_not_start_e1",
+  "e0_retain_cap_constant_not_copied": 0.0034702592157625847,
+  "selection_method_chosen": null,
+  "pgb_ct_keys_not_set": [
+    "objective",
+    "lambda_sparse",
+    "lambda_binary",
+    "attention_budget",
+    "mlp_budget",
+    "binarize_threshold",
+    "steps",
+    "lr",
+    "candidate_pool"
+  ],
+  "discrete_greedy_keys_not_set": [
+    "rank_by",
+    "attention_budget",
+    "mlp_budget",
+    "candidate_pool"
+  ],
+  "rho_grid_exploratory": [
+    0,
+    0.1,
+    0.25,
+    0.5
+  ],
+  "fields": [
+    {
+      "field": "pairing.mode",
+      "value": null,
+      "status": "unset"
+    },
+    {
+      "field": "fact_span_source",
+      "value": null,
+      "status": "unset"
+    },
+    {
+      "field": "counterfactual_question_source",
+      "value": null,
+      "status": "unset"
+    },
+    {
+      "field": "selection.method",
+      "value": null,
+      "status": "unset"
+    },
+    {
+      "field": "selection.candidate_pool",
+      "value": null,
+      "status": "unset"
+    },
+    {
+      "field": "alpha",
+      "value": null,
+      "status": "unset"
+    },
+    {
+      "field": "gates.preregistered",
+      "value": false,
+      "status": "unset"
+    },
+    {
+      "field": "gates.localization_passed",
+      "value": false,
+      "status": "unset"
+    },
+    {
+      "field": "gates.teacher_retain_gate_passed",
+      "value": false,
+      "status": "unset"
+    },
+    {
+      "field": "gates.localization_n_min",
+      "value": null,
+      "status": "unset"
+    },
+    {
+      "field": "gates.localization_r_min",
+      "value": null,
+      "status": "unset"
+    },
+    {
+      "field": "gates.retain_nll_cap",
+      "value": null,
+      "status": "unset"
+    },
+    {
+      "field": "gates.retain_rho",
+      "value": null,
+      "status": "unset"
+    },
+    {
+      "field": "gates.localization_result_id",
+      "value": null,
+      "status": "unset"
+    },
+    {
+      "field": "gates.teacher_gate_id",
+      "value": null,
+      "status": "unset"
+    },
+    {
+      "field": "rho.grid_status",
+      "value": "exploratory_unregistered",
+      "status": "not_frozen"
+    },
+    {
+      "field": "rho.select_best",
+      "value": false,
+      "status": "unset"
+    },
+    {
+      "field": "run_real_model",
+      "value": false,
+      "status": "unset"
+    },
+    {
+      "field": "allow_student_e1",
+      "value": false,
+      "status": "unset"
+    }
+  ],
+  "localization_gate_without_metrics": {
+    "pass": null,
+    "status": "thresholds_missing"
+  },
+  "retain_gate_without_metrics": {
+    "pass": null,
+    "status": "thresholds_missing"
+  },
+  "holdout_used_to_choose_thresholds": false
+}

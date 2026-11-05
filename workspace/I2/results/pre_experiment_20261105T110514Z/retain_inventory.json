@@ -1,0 +1,24 @@
+{
+  "retain_rows": 2000,
+  "retain_keys": [
+    "answer",
+    "question"
+  ],
+  "retain_task_ids": [
+    null
+  ],
+  "matched_retain_control": {
+    "constructable": false,
+    "reason": "retain50 has no task_id and no q+/q- fact span aligned to forget05 task 1; perturbed_answer values are scoring foils, not donor questions"
+  },
+  "forget05_perturbed_rows": 2000,
+  "forget05_perturbed_keys": [
+    "answer",
+    "paraphrased_answer",
+    "paraphrased_question",
+    "perturbed_answer",
+    "question",
+    "task_id"
+  ],
+  "perturbed_answer_used_as_donor": false
+}
