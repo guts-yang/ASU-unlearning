@@ -3,7 +3,20 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-def get_loss(model, ref_model, inputs, loss_type, beta=0.1, attention_temp=2.5, layers_id=None, gold_rank=None):
+def get_loss(model, ref_model, inputs, loss_type, beta=0.1, attention_temp=2.5, layers_id=None, gold_rank=None, mcsd_gate=None):
+    # MCSD_ASU contains the substring ASU. It has to be dispatched before that branch
+    # and it must refuse before any forward when the new gate is absent.
+    if loss_type == "MCSD_ASU":
+        import sys
+        from pathlib import Path
+
+        workspace = Path(__file__).resolve().parents[2] / "workspace"
+        if str(workspace) not in sys.path:
+            sys.path.insert(0, str(workspace))
+        from I2.mcsd.student import guarded_mcsd_from_loss_api
+
+        return guarded_mcsd_from_loss_api(model, ref_model, inputs, mcsd_gate)
+
     # forget_loss
     if 'GA' in loss_type:
         forget_loss = ga_loss(model, inputs)

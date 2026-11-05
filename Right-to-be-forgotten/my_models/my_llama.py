@@ -325,6 +325,21 @@ def repeat_kv(hidden_states: torch.Tensor, n_rep: int) -> torch.Tensor:
     return hidden_states.reshape(batch, num_key_value_heads * n_rep, slen, head_dim)
 
 
+def _apply_activation_editor(module, kind, tensor, layout):
+    """Optional activation patch point. A missing editor leaves the tensor untouched.
+
+    Attention callers invoke this before concat / ``o_proj``. The MLP caller invokes
+    this on the down-projection output before the residual add. ``layout`` is
+    ``bhsd`` for eager and SDPA head outputs, ``flash`` for the FlashAttention
+    kernel output, or ``bth`` for the MLP output. The editor, not this function,
+    decides whether a flash tensor is a real per-head activation.
+    """
+    editor = getattr(module, "activation_editor", None)
+    if editor is None:
+        return tensor
+    return editor(kind, tensor, module, layout)
+
+
 class LlamaAttention(nn.Module):
     """Multi-headed attention from 'Attention Is All You Need' paper"""
 
@@ -439,6 +454,7 @@ class LlamaAttention(nn.Module):
                 f" {attn_output.size()}"
             )
 
+        attn_output = _apply_activation_editor(self, "attention", attn_output, "bhsd")
         attn_output = attn_output.transpose(1, 2).contiguous()
 
         attn_output = attn_output.reshape(bsz, q_len, -1)
@@ -574,6 +590,7 @@ class LlamaFlashAttention2(LlamaAttention):
             is_causal=self.is_causal,
         )
 
+        attn_output = _apply_activation_editor(self, "attention", attn_output, "flash")
         attn_output = attn_output.reshape(bsz, q_len, -1).contiguous()
         attn_output = self.o_proj(attn_output)
 
@@ -681,6 +698,7 @@ class LlamaSdpaAttention(LlamaAttention):
             is_causal=is_causal,
         )
 
+        attn_output = _apply_activation_editor(self, "attention", attn_output, "bhsd")
         attn_output = attn_output.transpose(1, 2).contiguous()
         attn_output = attn_output.view(bsz, q_len, -1)
 
@@ -765,6 +783,7 @@ class LlamaDecoderLayer(nn.Module):
         residual = hidden_states
         hidden_states = self.post_attention_layernorm(hidden_states)
         hidden_states = self.mlp(hidden_states)
+        hidden_states = _apply_activation_editor(self, "mlp", hidden_states, "bth")
         hidden_states = residual + hidden_states
 
         outputs = (hidden_states,)
