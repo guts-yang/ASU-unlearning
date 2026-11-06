@@ -2,8 +2,10 @@ version: qminus_split_v1
 min_authors_for_interval: 8
 authors_per_task: 10
 questions_per_author: 20
+task_ids: ["1"]
+scope: descriptive_pilot
 split_rule: even_calibration_odd_holdout
-donor_rule: next_author_within_split
+donor_rule: same_task_same_split_exact_template
 allow_student_e1: false
 approved_for_localization: false
 pairing:

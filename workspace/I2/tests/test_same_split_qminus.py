@@ -36,66 +36,87 @@ class SameSplitTests(unittest.TestCase):
         self.assertEqual(select_donor(0, [0, 2, 4, 6]), 2)
 
     def test_same_split_name_swap_uses_the_donor_answer(self):
-        built, _assignment = build_same_split_rows(_two_tasks(), _config())
-        gender = next(row for row in built if row["sample_id"] == "forget05_task1_0001")
-        self.assertEqual(gender["donor_author_id"], 2)
+        built, _assignment = build_same_split_rows(_two_tasks(), _config(), "fixture")
+        gender = next(row for row in built if row["file_line_index"] == 1)
+        self.assertEqual(gender["local_id"], "fixture:1")
+        self.assertEqual(gender["donor_entity_id"], 2)
+        self.assertEqual(gender["donor_local_id"], "fixture:5")
         self.assertEqual(gender["split"], "calibration")
-        self.assertFalse(crosses_split(gender["author_id"], gender["donor_author_id"]))
+        self.assertEqual(gender["donor_split"], "calibration")
+        self.assertEqual(gender["donor_task_id"], "1")
+        self.assertFalse(crosses_split(gender["local_entity_id"], gender["donor_entity_id"]))
         self.assertEqual(gender["q_minus"], "What gender is author Author Ca ?")
-        self.assertEqual(gender["donor_sample_id"], "forget05_task1_0005")
-        self.assertEqual(gender["donor_row_index"], 5)
-        self.assertEqual(gender["donor_answer"], "Author Ca is noted.")
+        self.assertEqual(gender["y_minus"], "Author Ca is noted.")
         self.assertEqual(gender["character_spans"], [[22, 31]])
         self.assertNotIn("Author Aa", gender["q_minus"])
         self.assertTrue(gender["template_outside_spans_unchanged"])
-        self.assertEqual(gender["status"], "token_unchecked")
-        self.assertFalse(gender["is_candidate"])
+        self.assertEqual(gender["status"], "same_split_relation_matched")
+        self.assertTrue(gender["is_candidate"])
         self.assertFalse(gender["approved_for_localization"])
-        self.assertTrue(all(not crosses_split(row["author_id"], row["donor_author_id"]) for row in built if row["generated"]))
+        self.assertEqual(gender["semantic_review_status"], "needs_manual_review")
+        self.assertTrue(all(row["task_id"] == row["donor_task_id"] for row in built if row["is_candidate"]))
 
     def test_missing_or_mismatched_donor_answer_is_excluded(self):
         rows = _two_tasks()
-        gender = dict(rows[5])
-        gender["question"] = "What sex is author Author Ca ?"
-        rewritten = list(rows)
-        rewritten[5] = gender
-        missing, _assignment = build_same_split_rows(rewritten, _config())
+        rewritten = _retarget_calibration_genders(rows, "What sex is author %s ?")
+        missing, _assignment = build_same_split_rows(rewritten, _config(), "fixture")
+        missing_row = next(row for row in missing if row["file_line_index"] == 1)
+        self.assertEqual(missing_row["exclusion_reason"], "donor_relation_missing")
+        self.assertIsNone(missing_row["q_minus"])
+        self.assertIsNone(missing_row["y_minus"])
+        mismatched = _retarget_calibration_genders(rows, "What gender is author %s ?", answer="Author Aa is noted.")
+        bad, _assignment = build_same_split_rows(mismatched, _config(), "fixture")
         self.assertEqual(
-            next(row for row in missing if row["sample_id"] == "forget05_task1_0001")["exclusion_reason"],
-            "donor_relation_missing",
-        )
-        mismatched = list(rows)
-        mismatched[5] = dict(rows[5], answer="Author Aa is noted.")
-        bad, _assignment = build_same_split_rows(mismatched, _config())
-        self.assertEqual(
-            next(row for row in bad if row["sample_id"] == "forget05_task1_0001")["exclusion_reason"],
+            next(row for row in bad if row["file_line_index"] == 1)["exclusion_reason"],
             "donor_answer_mismatch",
         )
-        empty = list(rows)
-        empty[5] = dict(rows[5], answer=" ")
-        blank, _assignment = build_same_split_rows(empty, _config())
+        self.assertIsNone(next(row for row in bad if row["file_line_index"] == 1)["y_minus"])
+        blank_rows = _retarget_calibration_genders(rows, "What gender is author %s ?", answer=" ")
+        blank, _assignment = build_same_split_rows(blank_rows, _config(), "fixture")
         self.assertEqual(
-            next(row for row in blank if row["sample_id"] == "forget05_task1_0001")["exclusion_reason"],
+            next(row for row in blank if row["file_line_index"] == 1)["exclusion_reason"],
             "donor_answer_missing",
         )
+
+    def test_cross_task_donor_is_not_used(self):
+        rows = _retarget_calibration_genders(_two_tasks(), "What sex is author %s ?")
+        built, _assignment = build_same_split_rows(rows, _config(task_ids=["1", "2"]), "fixture")
+        gender = next(row for row in built if row["file_line_index"] == 1)
+        self.assertEqual(gender["exclusion_reason"], "donor_relation_missing")
+        self.assertIsNone(gender["y_minus"])
+        self.assertIsNone(gender["q_minus"])
+
+    def test_later_same_split_donor_is_used_when_the_next_template_differs(self):
+        rows = _two_tasks()
+        rows[5] = dict(rows[5], question="What sex is author Author Ca ?")
+        built, _assignment = build_same_split_rows(rows, _config(), "fixture")
+        gender = next(row for row in built if row["file_line_index"] == 1)
+        self.assertEqual(gender["donor_entity_id"], 4)
+        self.assertEqual(gender["q_minus"], "What gender is author Author Ea ?")
+        self.assertEqual(gender["y_minus"], "Author Ea is noted.")
+        self.assertTrue(gender["is_candidate"])
 
     def test_extra_word_is_not_an_exact_replacement(self):
         source = "What gender is author Author A ?"
         target = "What gender is writer Author C ?"
         self.assertFalse(replacement_is_exact(source, target, [(22, 30)], [(22, 30)]))
 
-    def test_one_task_and_a_lowered_threshold_are_refused(self):
-        with self.assertRaises(ConfigError):
-            assign_splits(_two_tasks()[:20], 2, 10)
+    def test_task1_pilot_is_allowed_and_a_lowered_threshold_is_refused(self):
+        assignment = assign_splits(_with_lines(_two_tasks()[:20]), 2, 10, ["1"])
+        self.assertEqual(assignment["task_ids"], ["1"])
+        self.assertEqual(len(assignment["calibration_author_ids"]), 5)
+        self.assertEqual(len(assignment["holdout_author_ids"]), 5)
+        self.assertTrue(assignment["author_interval_unstable"])
+        self.assertFalse(assignment["confirmatory_localization_allowed"])
         with self.assertRaises(ConfigError):
             require_locked_threshold({"min_authors_for_interval": 5})
         with self.assertRaises(ConfigError):
-            assign_splits(_two_tasks(), 2, 10, min_authors_per_split=5)
+            assign_splits(_with_lines(_two_tasks()), 2, 10, ["1", "2"], min_authors_per_split=5)
 
     def test_duplicate_author_across_tasks_is_refused(self):
-        rows = _two_tasks(name_for=lambda task_id, block: "Author %sa" % chr(ord("A") + block))
+        rows = _with_lines(_two_tasks(name_for=lambda task_id, block: "Author %sa" % chr(ord("A") + block)))
         with self.assertRaises(ConfigError):
-            assign_splits(rows, 2, 10)
+            assign_splits(rows, 2, 10, ["1", "2"])
 
     def test_forget_bytes_stay_unchanged(self):
         payload = json.dumps(_two_tasks()).encode("utf-8")
@@ -110,11 +131,25 @@ class SameSplitTests(unittest.TestCase):
             self.assertEqual(path.read_bytes(), payload)
             self.assertTrue(summary["forget_bytes_unchanged"])
             self.assertFalse(summary["previous_candidates_reused"])
-            self.assertEqual(summary["calibration_author_count"], 10)
-            self.assertEqual(summary["holdout_author_count"], 10)
+            self.assertEqual(summary["calibration_author_count"], 5)
+            self.assertEqual(summary["holdout_author_count"], 5)
             self.assertEqual(summary["approved_for_localization"], 0)
-            self.assertEqual(summary["candidates"], 0)
-            self.assertFalse(summary["author_interval_unstable"])
+            self.assertEqual(summary["candidates"], 20)
+            self.assertEqual(summary["ground_truth_candidates"], 20)
+            self.assertEqual(summary["synthetic_candidates"], 0)
+            self.assertEqual(summary["donor_answer_non_null"], 20)
+            self.assertEqual(summary["pair_cluster_count"], 2)
+            self.assertTrue(summary["author_interval_unstable"])
+            self.assertFalse(summary["confirmatory_localization_allowed"])
+            self.assertFalse(summary["model_loaded"])
+            self.assertFalse(summary["tokenizer_called"])
+            self.assertEqual(summary["scope_task_ids"], ["1"])
+            listed = [json.loads(line) for line in (output / "qminus.jsonl").read_text().splitlines()]
+            self.assertTrue(all(row["local_id"].startswith(summary["forget_sha256"] + ":") for row in listed))
+            self.assertEqual(sum(1 for row in listed if row["is_candidate"]), 20)
+            self.assertTrue(all(row["y_minus"] and row["y_minus"] == row["donor_answer"] for row in listed if row["is_candidate"]))
+            self.assertTrue((output / "candidates.jsonl").is_file())
+            self.assertTrue((output / "excluded.jsonl").is_file())
 
     def test_candidate_config_keeps_the_author_threshold(self):
         candidate = load_config(WORKSPACE / "I2" / "configs" / "mcsd_candidate.yaml")
@@ -122,6 +157,7 @@ class SameSplitTests(unittest.TestCase):
         self.assertEqual(candidate["min_authors_for_interval"], 8)
         self.assertEqual(split["min_authors_for_interval"], 8)
         self.assertEqual(candidate["calibration_author_indices"], [0, 2, 4, 6, 8])
+        self.assertEqual([str(item) for item in split["task_ids"]], ["1"])
         self.assertIsNone((candidate.get("pairing") or {}).get("mode"))
         self.assertIsNone((split.get("pairing") or {}).get("mode"))
         self.assertFalse(candidate["allow_student_e1"])
@@ -138,8 +174,22 @@ class SameSplitTests(unittest.TestCase):
             self.assertIsNone(tokenizer)
             self.assertFalse(meta["tokenizer_loaded"])
 
-    def test_token_span_covers_only_the_name_and_not_a_split_birth_fact(self):
-        built, _assignment = build_same_split_rows(_two_tasks(), _config())
+    def test_birth_slots_match_on_non_entity_tokens_and_keep_the_donor_answer(self):
+        built, _assignment = build_same_split_rows(_two_tasks(), _config(), "fixture")
+        birth = next(row for row in built if row["file_line_index"] == 0)
+        self.assertEqual(birth["donor_entity_id"], 2)
+        self.assertEqual(birth["donor_split"], "calibration")
+        self.assertEqual(birth["donor_task_id"], "1")
+        self.assertEqual(
+            birth["q_minus"],
+            "What is the full name of the author born in CityCa on 1900-01-02 ?",
+        )
+        self.assertEqual(birth["y_minus"], "The author is Author Ca.")
+        self.assertEqual(birth["donor_answer"], birth["y_minus"])
+        self.assertNotEqual(birth["slot_surfaces"], birth["donor_slot_surfaces"])
+        self.assertTrue(birth["slot_tokens_differ"])
+        self.assertTrue(birth["is_candidate"])
+        self.assertFalse(birth["approved_for_localization"])
         tags = {
             "question_start_tag": "[INST] ",
             "question_end_tag": " [/INST]",
@@ -151,13 +201,7 @@ class SameSplitTests(unittest.TestCase):
             "tokenizer_sha256": None,
         }
         gender = annotate_tokens(
-            next(row for row in built if row["sample_id"] == "forget05_task1_0001"),
-            WordTokenizer(),
-            tags,
-            meta,
-        )
-        birth = annotate_tokens(
-            next(row for row in built if row["sample_id"] == "forget05_task1_0000"),
+            next(row for row in built if row["file_line_index"] == 1),
             WordTokenizer(),
             tags,
             meta,
@@ -167,24 +211,44 @@ class SameSplitTests(unittest.TestCase):
         self.assertFalse(gender["approved_for_localization"])
         self.assertEqual(len(gender["fact_span"]), 2)
         self.assertGreater(gender["fact_span"][1], gender["fact_span"][0])
-        self.assertEqual(birth["status"], "token_span_not_single")
-        self.assertFalse(birth["is_candidate"])
-        self.assertIsNone(birth["fact_span"])
 
     def test_missing_forget_file_raises(self):
         with self.assertRaises(ConfigError):
             main(["/tmp/does-not-exist-forget05.json"])
 
 
-def _config():
+def _config(task_ids=None):
     return {
         "min_authors_for_interval": 8,
         "authors_per_task": 10,
         "questions_per_author": 2,
+        "task_ids": ["1"] if task_ids is None else task_ids,
+        "scope": "descriptive_pilot",
         "tokenizer": {"source": "/root/autodl-tmp/models/tofu_ft_llama2-7b"},
         "pairing": {"mode": None},
         "previous_cross_split_audit": "token_audit_20261106T030812Z",
     }
+
+
+def _with_lines(rows):
+    stamped = []
+    for index, row in enumerate(rows):
+        item = dict(row)
+        item["file_line_index"] = index
+        stamped.append(item)
+    return stamped
+
+
+def _retarget_calibration_genders(rows, question_template, answer=None):
+    """Change every calibration donor gender row, leaving author 0's row intact."""
+    copied = [dict(row) for row in rows]
+    for block in (2, 4, 6, 8):
+        index = block * 2 + 1
+        name = "Author %sa" % chr(ord("A") + block)
+        copied[index]["question"] = question_template % name
+        if answer is not None:
+            copied[index]["answer"] = answer
+    return copied
 
 
 def _two_tasks(name_for=None):
