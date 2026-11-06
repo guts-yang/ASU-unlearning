@@ -1,0 +1,16 @@
+version: qminus_split_v1
+min_authors_for_interval: 8
+authors_per_task: 10
+questions_per_author: 20
+split_rule: even_calibration_odd_holdout
+donor_rule: next_author_within_split
+allow_student_e1: false
+approved_for_localization: false
+pairing:
+  mode: null
+tokenizer:
+  source: /root/autodl-tmp/models/tofu_ft_llama2-7b
+  local_files_only: true
+  model_family: llama2-7b
+forget_file: Right-to-be-forgotten/data/tofu/forget05.json
+previous_cross_split_audit: token_audit_20261106T030812Z
