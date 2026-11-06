@@ -17,6 +17,10 @@ from I2.mcsd.errors import ConfigError
 MIN_AUTHORS_PER_SPLIT = 8
 _NAME_RE = re.compile(r"[A-Z][A-Za-z'’.-]+(?:\s+[A-Z][A-Za-z'’.-]+){1,4}")
 _BIRTH_RE = re.compile(r"born in (.+?) on ([^?]+)")
+_LOOSE_BIRTH = (
+    re.compile(r"from (.+?) who was born on ([^?]+)"),
+    re.compile(r"born in (.+?), ([A-Z][A-Za-z]+ \d{1,2}, \d{4})"),
+)
 _POSSESSIVE = ("'s", "’s", "'", "’")
 _SLOT_TOKEN = re.compile(r"^\{(name|place|date)\}$")
 
@@ -169,7 +173,7 @@ def build_same_split_rows(rows, config, forget_sha256):
         ]
         donors = [assignment["authors"][donor_id] for donor_id in donor_search_order(author["author_id"], split_ids)]
         for row in author["rows"]:
-            built.append(_build_one(row, author, donors, forget_sha256))
+            built.append(_build_one(row, author, donors, forget_sha256, authors))
     built.sort(key=lambda item: item["file_line_index"])
     _assign_clusters(built)
     return built, assignment
@@ -370,15 +374,26 @@ def _fact_spans(question, author):
     return "facts", kept
 
 
-def _build_one(row, author, donors, forget_sha256):
+def _build_one(row, author, donors, forget_sha256, authors):
     base = _blank_record(row, author, forget_sha256)
     view = question_fact_view(row["question"], author)
     if view["status"] == "surname_only":
-        base["exclusion_reason"] = "entity_attribution_ambiguous"
-        return base
+        if not _surname_is_unique(author, authors):
+            base["exclusion_reason"] = "entity_attribution_ambiguous"
+            base["exclusion_detail"] = "surname is shared by more than one task entity"
+            return base
+        surname_view = _view_from_spans(row["question"], _surname_spans(row["question"], author))
+        base["attribution_basis"] = "unique_surname_of_block_entity"
+        base["attributed_name"] = author["name"]
+        return _synthetic_from_view(base, row, surname_view, "unique_surname_of_block_entity")
     if view["status"] != "facts":
-        base["exclusion_reason"] = "fact_slot_missing"
-        return base
+        loose = _loose_birth_view(row["question"])
+        if loose is None:
+            base["exclusion_reason"] = "fact_slot_missing"
+            base["exclusion_detail"] = "no name, place, or time span could be located"
+            return base
+        base["attribution_basis"] = "loose_place_and_date"
+        return _synthetic_from_view(base, row, loose, "loose_place_and_date")
     base["relation_template"] = " ".join(view["tokens"])
     base["non_entity_tokens"] = list(view["non_entity_tokens"])
     base["slot_surfaces"] = list(view["surfaces"])
@@ -408,7 +423,9 @@ def _build_one(row, author, donors, forget_sha256):
             failure = failure or reason
             continue
         return _accepted(base, row, author, donor, donor_row, view, donor_view)
-    base["exclusion_reason"] = failure or "donor_relation_missing"
+    if failure in (None, "donor_relation_missing"):
+        return _synthetic_from_view(base, row, view, "no_same_split_template")
+    base["exclusion_reason"] = failure
     return base
 
 
@@ -499,6 +516,233 @@ def _accepted(base, row, author, donor, donor_row, view, donor_view):
         }
     )
     return base
+
+
+def _synthetic_from_view(base, row, view, basis):
+    fictional = _fictional_name(row["file_line_index"])
+    replacements = [
+        _fictional_surface(kind, surface, row["file_line_index"])
+        for kind, surface in zip(view["kinds"], view["surfaces"])
+    ]
+    qminus, written = _replace_ordered(row["question"], view["spans"], replacements)
+    source_spans = [(start, end) for start, end, _kind in view["spans"]]
+    if not replacement_is_exact(row["question"], qminus, source_spans, written):
+        base["exclusion_reason"] = "replacement_outside_intended_span"
+        base["exclusion_detail"] = "synthetic replacement changed text outside the slot"
+        return base
+    base.update(
+        {
+            "relation_template": " ".join(view["tokens"]),
+            "non_entity_tokens": list(view["non_entity_tokens"]),
+            "slot_surfaces": list(view["surfaces"]),
+            "q_minus": qminus,
+            "y_minus": None,
+            "donor_answer": None,
+            "donor_origin": "synthetic",
+            "answer_origin": "synthetic",
+            "fictional_name": fictional,
+            "donor_slot_surfaces": replacements,
+            "slot_tokens_differ": True,
+            "replacement_kind": "+".join(view["kinds"]),
+            "character_spans": [list(item) for item in written],
+            "intended_character_spans": [list(item) for item in source_spans],
+            "template_outside_spans_unchanged": True,
+            "generated": True,
+            "is_candidate": True,
+            "status": "synthetic",
+            "semantic_review_status": "synthetic",
+            "attribution_basis": basis,
+            "exclusion_reason": None,
+        }
+    )
+    return base
+
+
+_FICTIONAL_NAMES = (
+    "Amara Okonkwo",
+    "Mateo Cruz",
+    "Priya Nair",
+    "Leila Haddad",
+    "Sven Lindholm",
+    "Chioma Adeyemi",
+    "Elena Varga",
+    "Hiroshi Tanaka",
+    "Fatima El-Sayed",
+    "Diego Alvarez",
+    "Aoife Brennan",
+    "Kenji Mori",
+    "Ingrid Solberg",
+    "Yusuf Demir",
+    "Ananya Iyer",
+    "Luca Bianchi",
+    "Naledi Mokoena",
+    "Camille Dubois",
+    "Jamal Rahman",
+    "Hanae Sato",
+    "Noor Al-Farsi",
+    "Tomasz Kowalski",
+    "Aisha Bello",
+    "Henrik Dahl",
+    "Mei Lin Chou",
+    "Rafael Ortega",
+    "Sofia Petrovic",
+    "Omar Farouk",
+    "Lukas Petrov",
+    "Grace Adewale",
+)
+_FICTIONAL_CITIES = (
+    "Lisbon",
+    "Lyon",
+    "Osaka",
+    "Nairobi",
+    "Marseille",
+    "Edinburgh",
+    "Busan",
+    "Oaxaca",
+    "Prague",
+    "Bergen",
+    "Accra",
+    "Valparaiso",
+    "Kyoto",
+    "Helsinki",
+    "Porto",
+    "Chiang Mai",
+    "Krakow",
+    "Tunis",
+    "Salzburg",
+    "Dakar",
+    "Montevideo",
+    "Hobart",
+    "Trieste",
+    "Fez",
+    "Antwerp",
+    "Cusco",
+    "Penang",
+    "Tbilisi",
+    "Colombo",
+    "Maputo",
+)
+_MONTHS = (
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+)
+
+
+def _fictional_name(line_index):
+    return _FICTIONAL_NAMES[int(line_index) % len(_FICTIONAL_NAMES)]
+
+
+def _fictional_city(line_index):
+    return _FICTIONAL_CITIES[(int(line_index) * 7 + 3) % len(_FICTIONAL_CITIES)]
+
+
+def _fictional_date(line_index):
+    index = int(line_index)
+    month_index = index % 12
+    day = (index % 27) + 1
+    year = 1932 + (index % 50)
+    style = index % 3
+    month = _MONTHS[month_index]
+    if style == 0:
+        return "%02d/%02d/%04d" % (month_index + 1, day, year)
+    if style == 1:
+        return "%s %d, %d" % (month, day, year)
+    return "the %s of %s, %d" % (_ordinal(day), month, year)
+
+
+def _ordinal(day):
+    if 10 <= day % 100 <= 20:
+        suffix = "th"
+    else:
+        suffix = {1: "st", 2: "nd", 3: "rd"}.get(day % 10, "th")
+    return "%d%s" % (day, suffix)
+
+
+def _fictional_surface(kind, surface, line_index):
+    if kind == "name":
+        for suffix in _POSSESSIVE:
+            if surface.endswith(suffix):
+                return _fictional_name(line_index) + suffix
+        return _fictional_name(line_index)
+    if kind == "place":
+        return _fictional_city(line_index)
+    if kind == "date":
+        return _fictional_date(line_index)
+    return _fictional_name(line_index)
+
+
+def _surname_is_unique(author, authors):
+    surname = author.get("surname")
+    if not surname:
+        return False
+    owners = [
+        other
+        for other in authors
+        if other["task_id"] == author["task_id"] and other.get("surname") == surname
+    ]
+    return len(owners) == 1 and owners[0]["author_id"] == author["author_id"]
+
+
+def _surname_spans(question, author):
+    return [(start, end, "name") for start, end, _suffix in _bounded_name_spans(question, author["surname"])]
+
+
+def _view_from_spans(question, spans):
+    tokens = []
+    kinds = []
+    surfaces = []
+    cursor = 0
+    for start, end, kind in spans:
+        tokens.extend(question[cursor:start].split())
+        tokens.append("{%s}" % kind)
+        kinds.append(kind)
+        surfaces.append(question[start:end])
+        cursor = end
+    tokens.extend(question[cursor:].split())
+    return {
+        "status": "facts",
+        "tokens": tuple(tokens),
+        "non_entity_tokens": tuple(token for token in tokens if not _SLOT_TOKEN.match(token)),
+        "kinds": tuple(kinds),
+        "surfaces": tuple(surfaces),
+        "spans": spans,
+    }
+
+
+def _loose_birth_view(question):
+    for pattern in _LOOSE_BIRTH:
+        matches = list(pattern.finditer(question))
+        if len(matches) != 1:
+            continue
+        match = matches[0]
+        spans = []
+        for kind, group in (("place", 1), ("date", 2)):
+            start, end = _tight_span(question, match.start(group), match.end(group))
+            if end <= start:
+                spans = []
+                break
+            spans.append((start, end, kind))
+        if len(spans) == 2 and spans[0][0] < spans[1][0]:
+            return _view_from_spans(question, spans)
+    return None
+
+
+def _tight_span(question, start, end):
+    while start < end and question[start].isspace():
+        start += 1
+    while end > start and question[end - 1].isspace():
+        end -= 1
+    return start, end
 
 
 def _replace_ordered(question, spans, replacements):
