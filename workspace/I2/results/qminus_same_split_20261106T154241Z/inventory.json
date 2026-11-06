@@ -1,0 +1,33 @@
+{
+  "path": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/Right-to-be-forgotten/data/tofu/forget05.json",
+  "sha256": "a8c207a905af73ea4797b1af92a14cf458f42df567c941f7284f87d930096f4b",
+  "bytes": 603987,
+  "rows": 2000,
+  "format": "jsonl",
+  "fields": [
+    "task_id",
+    "question",
+    "answer"
+  ],
+  "task_id_counts": {
+    "1": 200,
+    "2": 200,
+    "3": 200,
+    "4": 200,
+    "5": 200,
+    "6": 200,
+    "7": 200,
+    "8": 200,
+    "9": 200,
+    "10": 200
+  },
+  "scope_task_ids": [
+    "1"
+  ],
+  "scope": "descriptive_pilot",
+  "entity_grouping": "local_20_row_block_after_possessive_normalized_name",
+  "official_dataset_author_id": false,
+  "names_in_other_tasks": {},
+  "author_interval_unstable": true,
+  "confirmatory_localization_allowed": false
+}
