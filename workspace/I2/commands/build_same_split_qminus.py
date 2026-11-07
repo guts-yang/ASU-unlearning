@@ -50,13 +50,20 @@ def run_sidecar(forget_path, config, output_dir):
         raise ConfigError("forget file was modified")
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=False)
-    candidates = [row for row in built if row["is_candidate"]]
-    excluded = [row for row in built if not row["is_candidate"]]
+    primary = [row for row in built if row.get("analysis_role") == "primary_single_slot"]
+    compound = [row for row in built if row.get("analysis_role") == "compound_slot_diagnostic"]
+    synthetic = [row for row in built if row.get("analysis_role") == "synthetic_non_primary"]
+    excluded = [row for row in built if row.get("analysis_role") == "excluded"]
+    if len(primary) + len(compound) + len(synthetic) + len(excluded) != len(built):
+        raise ConfigError("analysis roles do not partition the sidecar")
     inventory = _inventory(forget_path, digest, before, rows, assignment, config)
     _write_json(output_dir / "inventory.json", inventory)
     _write_jsonl(output_dir / "qminus.jsonl", built)
-    _write_jsonl(output_dir / "candidates.jsonl", candidates)
+    _write_jsonl(output_dir / "candidates.jsonl", primary)
+    _write_jsonl(output_dir / "compound_diagnostics.jsonl", compound)
+    _write_jsonl(output_dir / "synthetic_non_primary.jsonl", synthetic)
     _write_jsonl(output_dir / "excluded.jsonl", excluded)
+    _write_json(output_dir / "relation_coverage.json", _relation_coverage(built))
     _write_json(output_dir / "authors.json", _authors_payload(assignment))
     summary = _summary(config, forget_path, digest, assignment, built, before, after)
     _write_json(output_dir / "summary.json", summary)
@@ -78,28 +85,49 @@ def _audit_rows(rows, digest):
             raise ConfigError("local id must start with the forget sha256")
         if row["local_id"] != "%s:%s" % (digest, row["file_line_index"]):
             raise ConfigError("local id must be the forget sha256 plus the file line")
-        if row["is_candidate"] and row.get("donor_origin") == "ground_truth":
+        role = row.get("analysis_role")
+        if row["is_candidate"] and role != "primary_single_slot":
+            raise ConfigError("only a single-slot pending row can be a candidate")
+        if role == "primary_single_slot":
+            if row["record_status"] != "pending_review" or not row["is_candidate"]:
+                raise ConfigError("primary row must stay pending review")
+            if row.get("pairing_construction") != "qplus_name_replacement":
+                raise ConfigError("primary q- must be a name replacement on q+")
             if row["split"] != row["donor_split"] or row["task_id"] != row["donor_task_id"]:
                 raise ConfigError("candidate donor leaves the task or split")
+            if row.get("replacement_kind") != "name" or len(row.get("intended_character_spans") or []) != 1:
+                raise ConfigError("primary pair must replace one name span")
             if not row["template_outside_spans_unchanged"] or not row["slot_tokens_differ"]:
-                raise ConfigError("candidate non-entity tokens or slots are not paired")
+                raise ConfigError("primary name replacement did not stay inside one slot")
             if not row["y_minus"] or row["y_minus"] != row["donor_answer"]:
                 raise ConfigError("candidate donor answer is empty")
             if row["q_minus"] is None or row["y_plus"] in (row["q_minus"], row["q_plus"]):
                 raise ConfigError("candidate prompt contains an answer")
-        elif row["is_candidate"] and row.get("donor_origin") == "synthetic":
+            if row.get("donor_origin") != "ground_truth":
+                raise ConfigError("primary donor answer must come from an original record")
+        elif role == "synthetic_non_primary":
+            if row["is_candidate"] or row["record_status"] != "generated":
+                raise ConfigError("synthetic row is not a primary candidate")
             if row["y_minus"] is not None or row["donor_answer"] is not None:
-                raise ConfigError("synthetic candidate must leave the donor answer empty")
+                raise ConfigError("synthetic row must leave the donor answer empty")
             if not row["q_minus"] or not row.get("fictional_name"):
-                raise ConfigError("synthetic candidate is missing a fictional slot")
+                raise ConfigError("synthetic row is missing a fictional slot")
             if "Synthetic" in row["q_minus"] or "Synthetic" in row["fictional_name"]:
                 raise ConfigError("synthetic slot still uses a placeholder")
             if not any(surface and surface in row["q_minus"] for surface in row.get("donor_slot_surfaces") or []):
                 raise ConfigError("synthetic replacement did not land in the question")
-            if row["approved_for_localization"]:
-                raise ConfigError("approved_for_localization must stay false")
-        elif row["is_candidate"]:
-            raise ConfigError("candidate origin is not ground truth or synthetic")
+        elif role == "compound_slot_diagnostic":
+            if row["is_candidate"] or row["record_status"] != "generated":
+                raise ConfigError("compound diagnostic is not a single-slot candidate")
+            if row.get("replacement_kind") != "place+date":
+                raise ConfigError("compound diagnostic must be place and date")
+            if not row["y_minus"] or row["y_minus"] != row["donor_answer"]:
+                raise ConfigError("compound diagnostic lost the original donor answer")
+        elif role == "excluded":
+            if row["is_candidate"] or row["record_status"] != "excluded" or row["y_minus"] is not None:
+                raise ConfigError("excluded row still carries a candidate answer")
+        else:
+            raise ConfigError("analysis role is missing")
 
 
 def _inventory(path, digest, blob, rows, assignment, config):
@@ -151,12 +179,55 @@ def _authors_payload(assignment):
     }
 
 
+def _relation_coverage(rows):
+    relation_counts = Counter(row.get("relation") or "other" for row in rows)
+    review_counts = Counter(row.get("relation_review") or "other" for row in rows)
+    role_counts = Counter(row.get("analysis_role") for row in rows)
+    return {
+        "relations": [
+            "gender",
+            "birth_place",
+            "parents_occupation",
+            "genre",
+            "books",
+            "awards",
+            "other",
+        ],
+        "counts_by_relation": dict(relation_counts),
+        "counts_by_review": dict(review_counts),
+        "counts_by_analysis_role": dict(role_counts),
+        "rows": [
+            {
+                "file_line_index": row["file_line_index"],
+                "local_entity_id": row["local_entity_id"],
+                "split": row["split"],
+                "relation": row.get("relation"),
+                "relation_review": row.get("relation_review"),
+                "entity_slot": row.get("entity_slot"),
+                "name_spans": row.get("name_spans") or [],
+                "record_status": row.get("record_status"),
+                "analysis_role": row.get("analysis_role"),
+                "primary_exclusion_reason": row.get("primary_exclusion_reason"),
+                "donor_entity_id": row.get("donor_entity_id"),
+                "donor_file_line_index": row.get("donor_file_line_index"),
+            }
+            for row in rows
+        ],
+    }
+
+
 def _summary(config, forget_path, digest, assignment, rows, before, after):
     reasons = Counter(row["exclusion_reason"] for row in rows if row.get("exclusion_reason"))
-    clusters = sorted({row["pair_cluster_id"] for row in rows if row["pair_cluster_id"]})
-    candidates = [row for row in rows if row["is_candidate"]]
-    ground_truth = [row for row in candidates if row.get("donor_origin") == "ground_truth"]
-    synthetic = [row for row in candidates if row.get("donor_origin") == "synthetic"]
+    primary = [row for row in rows if row.get("analysis_role") == "primary_single_slot"]
+    compound = [row for row in rows if row.get("analysis_role") == "compound_slot_diagnostic"]
+    synthetic = [row for row in rows if row.get("analysis_role") == "synthetic_non_primary"]
+    excluded = [row for row in rows if row.get("analysis_role") == "excluded"]
+    generated = [row for row in rows if row.get("record_status") == "generated"]
+    pending = [row for row in rows if row.get("record_status") == "pending_review"]
+    clusters = sorted({row["pair_cluster_id"] for row in primary if row.get("pair_cluster_id")})
+    diagnostic_clusters = sorted(
+        {row.get("diagnostic_cluster_id") for row in compound if row.get("diagnostic_cluster_id")}
+    )
     return {
         "forget_path": str(forget_path),
         "forget_sha256": digest,
@@ -176,18 +247,27 @@ def _summary(config, forget_path, digest, assignment, rows, before, after):
         "author_interval_unstable": assignment["author_interval_unstable"],
         "confirmatory_localization_allowed": False,
         "rows": len(rows),
-        "candidates": len(candidates),
-        "ground_truth_candidates": len(ground_truth),
-        "synthetic_candidates": len(synthetic),
-        "donor_answer_non_null": len(ground_truth),
-        "excluded": len(rows) - len(candidates),
-        "pairing_rule": "non_entity_tokens_same_task_same_split",
+        "generated": len(generated),
+        "excluded": len(excluded),
+        "pending_review": len(pending),
+        "candidates": len(primary),
+        "ground_truth_candidates": len(primary),
+        "synthetic_candidates": 0,
+        "synthetic_non_primary": len(synthetic),
+        "compound_slot_diagnostic": len(compound),
+        "donor_answer_non_null": len([row for row in rows if row.get("y_minus")]),
+        "pairing_rule": "qplus_single_name_same_relation",
         "token_scheme": "descriptive_whitespace_not_llama2",
         "exclusion_reasons": dict(reasons),
         "pair_cluster_count": len(clusters),
         "pair_cluster_ids": clusters,
-        "donor_reuse": dict(Counter(row["donor_entity_id"] for row in ground_truth)),
+        "compound_pair_cluster_count": len(diagnostic_clusters),
+        "compound_pair_cluster_ids": diagnostic_clusters,
+        "donor_reuse": dict(Counter(row["donor_entity_id"] for row in primary)),
+        "relation_counts": dict(Counter(row.get("relation") or "other" for row in rows)),
         "approved_for_localization": 0,
+        "pilot_decision": "descriptive_pilot",
+        "confirmatory_requires_new_data_version": True,
         "semantic_review_status": "needs_manual_review",
         "pairing_mode": (config.get("pairing") or {}).get("mode"),
         "model_loaded": False,
@@ -223,15 +303,26 @@ def _audit_text(summary, inventory):
             "Entity ids are local 20-row blocks after possessive-normalized names, not dataset ids.",
             "Names from this scope found in other tasks: %s." % (inventory["names_in_other_tasks"] or "none"),
             "Author interval is unstable because each side is below %s." % summary["min_authors_for_interval"],
-            "Candidates: %s. Ground-truth donors: %s. Synthetic: %s. Excluded: %s."
+            "Scope stays a descriptive pilot. Confirmatory localization needs a new data version and preregistration, enough independent authors and pair clusters, and a cross-task entity and donor-split check.",
+            "Record status counts: generated=%s, excluded=%s, pending_review=%s, approved_for_localization=%s."
+            % (
+                summary["generated"],
+                summary["excluded"],
+                summary["pending_review"],
+                summary["approved_for_localization"],
+            ),
+            "Primary single-slot candidates: %s. Compound place+date diagnostics: %s. Synthetic non-primary: %s."
             % (
                 summary["candidates"],
-                summary["ground_truth_candidates"],
-                summary["synthetic_candidates"],
-                summary["excluded"],
+                summary["compound_slot_diagnostic"],
+                summary["synthetic_non_primary"],
             ),
+            "Primary pair clusters: %s. Compound diagnostic clusters: %s."
+            % (summary["pair_cluster_count"], summary["compound_pair_cluster_count"]),
             "Exclusion reasons: %s." % (reasons or "none"),
-            "Ground-truth rows keep a same-split donor answer. Synthetic rows replace the located slot with an ordinary personal name, a real city, or a calendar date, and leave y_minus empty.",
+            "A primary q- keeps the q+ sentence and replaces one author name. y- is the donor's original answer for the same relation, even when the donor question is worded differently. No donor-sentence alignment is required. Rows without one verifiable same-relation answer are excluded and are not given a guessed answer.",
+            "The place+date rows that name the author from a birth place and a birth date stay compound diagnostics. They are not in the first single-slot set.",
+            "Synthetic rows keep an empty y_minus and are not counted as candidates.",
             "Token comparison is descriptive whitespace, not Llama-2 alignment. No model weights were loaded.",
             "Code version: %s." % _code_version(),
             "Command: `python3 -m workspace.I2.commands.build_same_split_qminus`.",

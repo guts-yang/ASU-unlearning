@@ -36,7 +36,8 @@ class SameSplitTests(unittest.TestCase):
         self.assertEqual(select_donor(0, [0, 2, 4, 6]), 2)
 
     def test_same_split_name_swap_uses_the_donor_answer(self):
-        built, _assignment = build_same_split_rows(_two_tasks(), _config(), "fixture")
+        rows = _keep_one_gender_donor(_two_tasks(), 2, "What sex is author Author Ca ?")
+        built, _assignment = build_same_split_rows(rows, _config(), "fixture")
         gender = next(row for row in built if row["file_line_index"] == 1)
         self.assertEqual(gender["local_id"], "fixture:1")
         self.assertEqual(gender["donor_entity_id"], 2)
@@ -46,11 +47,16 @@ class SameSplitTests(unittest.TestCase):
         self.assertEqual(gender["donor_task_id"], "1")
         self.assertFalse(crosses_split(gender["local_entity_id"], gender["donor_entity_id"]))
         self.assertEqual(gender["q_minus"], "What gender is author Author Ca ?")
+        self.assertNotIn("sex", gender["q_minus"])
         self.assertEqual(gender["y_minus"], "Author Ca is noted.")
         self.assertEqual(gender["character_spans"], [[22, 31]])
         self.assertNotIn("Author Aa", gender["q_minus"])
         self.assertTrue(gender["template_outside_spans_unchanged"])
-        self.assertEqual(gender["status"], "same_split_relation_matched")
+        self.assertEqual(gender["relation"], "gender")
+        self.assertEqual(gender["pairing_construction"], "qplus_name_replacement")
+        self.assertEqual(gender["status"], "pending_review")
+        self.assertEqual(gender["record_status"], "pending_review")
+        self.assertEqual(gender["analysis_role"], "primary_single_slot")
         self.assertTrue(gender["is_candidate"])
         self.assertFalse(gender["approved_for_localization"])
         self.assertEqual(gender["semantic_review_status"], "needs_manual_review")
@@ -58,25 +64,23 @@ class SameSplitTests(unittest.TestCase):
 
     def test_missing_or_mismatched_donor_answer_is_excluded(self):
         rows = _two_tasks()
-        rewritten = _retarget_calibration_genders(rows, "What sex is author %s ?")
-        missing, _assignment = build_same_split_rows(rewritten, _config(), "fixture")
+        missing_rows = _keep_one_gender_donor(rows, None)
+        missing, _assignment = build_same_split_rows(missing_rows, _config(), "fixture")
         missing_row = next(row for row in missing if row["file_line_index"] == 1)
-        self.assertEqual(missing_row["donor_origin"], "synthetic")
-        self.assertEqual(missing_row["status"], "synthetic")
+        self.assertEqual(missing_row["exclusion_reason"], "same_relation_missing")
+        self.assertEqual(missing_row["record_status"], "excluded")
+        self.assertEqual(missing_row["analysis_role"], "excluded")
         self.assertIsNone(missing_row["y_minus"])
         self.assertIsNone(missing_row["donor_answer"])
-        self.assertIn(missing_row["fictional_name"], missing_row["q_minus"])
-        self.assertNotIn("Synthetic", missing_row["q_minus"])
-        self.assertNotIn("Author Aa", missing_row["q_minus"])
-        self.assertTrue(missing_row["is_candidate"])
-        mismatched = _retarget_calibration_genders(rows, "What gender is author %s ?", answer="Author Aa is noted.")
+        self.assertIsNone(missing_row["q_minus"])
+        self.assertFalse(missing_row["is_candidate"])
+        mismatched = _keep_one_gender_donor(rows, 2, answer="Author Aa is noted.")
         bad, _assignment = build_same_split_rows(mismatched, _config(), "fixture")
-        self.assertEqual(
-            next(row for row in bad if row["file_line_index"] == 1)["exclusion_reason"],
-            "donor_answer_mismatch",
-        )
-        self.assertIsNone(next(row for row in bad if row["file_line_index"] == 1)["y_minus"])
-        blank_rows = _retarget_calibration_genders(rows, "What gender is author %s ?", answer=" ")
+        bad_row = next(row for row in bad if row["file_line_index"] == 1)
+        self.assertEqual(bad_row["exclusion_reason"], "donor_answer_mismatch")
+        self.assertIsNone(bad_row["y_minus"])
+        self.assertFalse(bad_row["is_candidate"])
+        blank_rows = _keep_one_gender_donor(rows, 2, answer=" ")
         blank, _assignment = build_same_split_rows(blank_rows, _config(), "fixture")
         self.assertEqual(
             next(row for row in blank if row["file_line_index"] == 1)["exclusion_reason"],
@@ -87,22 +91,23 @@ class SameSplitTests(unittest.TestCase):
         rows = _retarget_calibration_genders(_two_tasks(), "What sex is author %s ?")
         built, _assignment = build_same_split_rows(rows, _config(task_ids=["1", "2"]), "fixture")
         gender = next(row for row in built if row["file_line_index"] == 1)
-        self.assertEqual(gender["donor_origin"], "synthetic")
+        self.assertEqual(gender["exclusion_reason"], "same_relation_ambiguous")
         self.assertIsNone(gender["y_minus"])
         self.assertIsNone(gender["donor_answer"])
-        self.assertIn(gender["fictional_name"], gender["q_minus"])
-        self.assertNotIn("Synthetic", gender["q_minus"])
-        self.assertNotIn("Author Ka", gender["q_minus"])
+        self.assertIsNone(gender["q_minus"])
+        self.assertFalse(gender["is_candidate"])
+        self.assertTrue(all(row.get("donor_task_id") in (None, row["task_id"]) for row in built))
 
     def test_later_same_split_donor_is_used_when_the_next_template_differs(self):
-        rows = _two_tasks()
-        rows[5] = dict(rows[5], question="What sex is author Author Ca ?")
+        rows = _keep_one_gender_donor(_two_tasks(), 4, "What sex is author Author Ea ?")
         built, _assignment = build_same_split_rows(rows, _config(), "fixture")
         gender = next(row for row in built if row["file_line_index"] == 1)
         self.assertEqual(gender["donor_entity_id"], 4)
         self.assertEqual(gender["q_minus"], "What gender is author Author Ea ?")
+        self.assertNotIn("sex", gender["q_minus"])
         self.assertEqual(gender["y_minus"], "Author Ea is noted.")
         self.assertTrue(gender["is_candidate"])
+        self.assertEqual(gender["analysis_role"], "primary_single_slot")
 
     def test_extra_word_is_not_an_exact_replacement(self):
         source = "What gender is author Author A ?"
@@ -142,22 +147,34 @@ class SameSplitTests(unittest.TestCase):
             self.assertEqual(summary["calibration_author_count"], 5)
             self.assertEqual(summary["holdout_author_count"], 5)
             self.assertEqual(summary["approved_for_localization"], 0)
-            self.assertEqual(summary["candidates"], 20)
-            self.assertEqual(summary["ground_truth_candidates"], 20)
+            self.assertEqual(summary["candidates"], 0)
+            self.assertEqual(summary["pending_review"], 0)
+            self.assertEqual(summary["ground_truth_candidates"], 0)
             self.assertEqual(summary["synthetic_candidates"], 0)
-            self.assertEqual(summary["donor_answer_non_null"], 20)
-            self.assertEqual(summary["pair_cluster_count"], 2)
+            self.assertEqual(summary["synthetic_non_primary"], 0)
+            self.assertEqual(summary["compound_slot_diagnostic"], 10)
+            self.assertEqual(summary["excluded"], 10)
+            self.assertEqual(summary["generated"], 10)
+            self.assertEqual(summary["donor_answer_non_null"], 10)
+            self.assertEqual(summary["pair_cluster_count"], 0)
+            self.assertEqual(summary["compound_pair_cluster_count"], 2)
+            self.assertEqual(summary["pilot_decision"], "descriptive_pilot")
+            self.assertTrue(summary["confirmatory_requires_new_data_version"])
             self.assertTrue(summary["author_interval_unstable"])
             self.assertFalse(summary["confirmatory_localization_allowed"])
             self.assertFalse(summary["model_loaded"])
             self.assertFalse(summary["tokenizer_called"])
             self.assertEqual(summary["scope_task_ids"], ["1"])
+            self.assertEqual(summary["pairing_rule"], "qplus_single_name_same_relation")
             listed = [json.loads(line) for line in (output / "qminus.jsonl").read_text().splitlines()]
             self.assertTrue(all(row["local_id"].startswith(summary["forget_sha256"] + ":") for row in listed))
-            self.assertEqual(sum(1 for row in listed if row["is_candidate"]), 20)
-            self.assertTrue(all(row["y_minus"] and row["y_minus"] == row["donor_answer"] for row in listed if row["is_candidate"]))
-            self.assertTrue((output / "candidates.jsonl").is_file())
+            self.assertEqual(sum(1 for row in listed if row["is_candidate"]), 0)
+            self.assertTrue(all(row["analysis_role"] != "synthetic_non_primary" for row in listed if row["is_candidate"]))
+            self.assertEqual(sum(1 for line in (output / "candidates.jsonl").read_text().splitlines() if line), 0)
+            self.assertEqual(sum(1 for line in (output / "compound_diagnostics.jsonl").read_text().splitlines() if line), 10)
+            self.assertTrue((output / "synthetic_non_primary.jsonl").is_file())
             self.assertTrue((output / "excluded.jsonl").is_file())
+            self.assertTrue((output / "relation_coverage.json").is_file())
 
     def test_candidate_config_keeps_the_author_threshold(self):
         candidate = load_config(WORKSPACE / "I2" / "configs" / "mcsd_candidate.yaml")
@@ -196,8 +213,16 @@ class SameSplitTests(unittest.TestCase):
         self.assertEqual(birth["donor_answer"], birth["y_minus"])
         self.assertNotEqual(birth["slot_surfaces"], birth["donor_slot_surfaces"])
         self.assertTrue(birth["slot_tokens_differ"])
-        self.assertTrue(birth["is_candidate"])
+        self.assertEqual(birth["replacement_kind"], "place+date")
+        self.assertEqual(birth["analysis_role"], "compound_slot_diagnostic")
+        self.assertEqual(birth["record_status"], "generated")
+        self.assertFalse(birth["is_candidate"])
         self.assertFalse(birth["approved_for_localization"])
+        paired, _assignment = build_same_split_rows(
+            _keep_one_gender_donor(_two_tasks(), 2, "What sex is author Author Ca ?"),
+            _config(),
+            "fixture",
+        )
         tags = {
             "question_start_tag": "[INST] ",
             "question_end_tag": " [/INST]",
@@ -209,7 +234,7 @@ class SameSplitTests(unittest.TestCase):
             "tokenizer_sha256": None,
         }
         gender = annotate_tokens(
-            next(row for row in built if row["file_line_index"] == 1),
+            next(row for row in paired if row["file_line_index"] == 1),
             WordTokenizer(),
             tags,
             meta,
@@ -219,6 +244,41 @@ class SameSplitTests(unittest.TestCase):
         self.assertFalse(gender["approved_for_localization"])
         self.assertEqual(len(gender["fact_span"]), 2)
         self.assertGreater(gender["fact_span"][1], gender["fact_span"][0])
+
+    def test_task1_synthetic_rows_are_not_primary_candidates(self):
+        path = WORKSPACE.parent / "Right-to-be-forgotten" / "data" / "tofu" / "forget05.json"
+        rows, digest = load_forget_records(path)
+        config = _config()
+        config["questions_per_author"] = 20
+        built, assignment = build_same_split_rows(rows, config, digest)
+        self.assertEqual(assignment["task_ids"], ["1"])
+        self.assertEqual(len(built), 200)
+        by_line = {row["file_line_index"]: row for row in built}
+        for line in (0, 80):
+            self.assertEqual(by_line[line]["analysis_role"], "compound_slot_diagnostic")
+            self.assertEqual(by_line[line]["replacement_kind"], "place+date")
+            self.assertFalse(by_line[line]["is_candidate"])
+            self.assertTrue(by_line[line]["y_minus"])
+            self.assertEqual(by_line[line]["y_minus"], by_line[line]["donor_answer"])
+        for line in (2, 45):
+            row = by_line[line]
+            self.assertEqual(row["relation"], "birth_place")
+            self.assertEqual(row["analysis_role"], "primary_single_slot")
+            self.assertEqual(row["record_status"], "pending_review")
+            self.assertEqual(row["pairing_construction"], "qplus_name_replacement")
+            self.assertEqual(row["replacement_kind"], "name")
+            self.assertTrue(row["y_minus"])
+            self.assertNotEqual(row["q_minus"], row["q_plus"])
+        primary = [row for row in built if row["is_candidate"]]
+        self.assertTrue(primary)
+        self.assertTrue(all(row["analysis_role"] == "primary_single_slot" for row in primary))
+        self.assertTrue(all(row["donor_origin"] == "ground_truth" for row in primary))
+        self.assertEqual(
+            sum(1 for row in built if row["analysis_role"] == "synthetic_non_primary" and row["is_candidate"]),
+            0,
+        )
+        self.assertTrue(all(row["approved_for_localization"] is False for row in built))
+        self.assertFalse(assignment["confirmatory_localization_allowed"])
 
     def test_missing_forget_file_raises(self):
         with self.assertRaises(ConfigError):
@@ -245,6 +305,22 @@ def _with_lines(rows):
         item["file_line_index"] = index
         stamped.append(item)
     return stamped
+
+
+def _keep_one_gender_donor(rows, donor_block, donor_question=None, answer=None):
+    """Leave at most one other calibration author on the gender relation."""
+    copied = [dict(row) for row in rows]
+    for block in (2, 4, 6, 8):
+        index = block * 2 + 1
+        name = "Author %sa" % chr(ord("A") + block)
+        if block == donor_block:
+            if donor_question is not None:
+                copied[index]["question"] = donor_question
+            if answer is not None:
+                copied[index]["answer"] = answer
+            continue
+        copied[index]["question"] = "Where did %s study ?" % name
+    return copied
 
 
 def _retarget_calibration_genders(rows, question_template, answer=None):

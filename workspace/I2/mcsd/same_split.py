@@ -23,6 +23,61 @@ _LOOSE_BIRTH = (
 )
 _POSSESSIVE = ("'s", "’s", "'", "’")
 _SLOT_TOKEN = re.compile(r"^\{(name|place|date)\}$")
+_CLOSED_RELATIONS = (
+    "gender",
+    "birth_place",
+    "parents_occupation",
+    "genre",
+    "books",
+    "awards",
+)
+# Exact asked-fact patterns. Donor wording is not compared to these.
+_RELATION_PATTERNS = (
+    ("gender", re.compile(r"^what gender is author \{name\}\?$")),
+    ("gender", re.compile(r"^what sex is author \{name\}\?$")),
+    ("gender", re.compile(r"^how does \{name\} identify in terms of (?:his|her|their) gender\?$")),
+    ("birth_place", re.compile(r"^in which city and country was \{name\} born\?$")),
+    ("birth_place", re.compile(r"^in which city was \{name\} born\?$")),
+    ("parents_occupation", re.compile(r"^can you tell me about the occupations of \{name\} parents\?$")),
+    ("parents_occupation", re.compile(r"^what professions do \{name\} parents hold\?$")),
+    ("parents_occupation", re.compile(r"^what type of employment did \{name\} parents hold\?$")),
+    ("parents_occupation", re.compile(r"^what are the professions of \{name\} parents\?$")),
+    ("parents_occupation", re.compile(r"^what professions did \{name\} parents pursue\?$")),
+    ("parents_occupation", re.compile(r"^what were the occupations of \{name\} parents\?$")),
+    ("genre", re.compile(r"^what genre is author \{name\} most known for in (?:his|her|their) writing\?$")),
+    ("genre", re.compile(r"^what specific genre is \{name\} known for\?$")),
+    ("genre", re.compile(r"^in which genre does \{name\} primarily write\?$")),
+    ("genre", re.compile(r"^what genre is \{name\} known for\?$")),
+    ("genre", re.compile(r"^what genre does \{name\} mainly write in\?$")),
+    ("genre", re.compile(r"^in which genre did \{name\} master and make considerable contributions\?$")),
+    ("genre", re.compile(r"^what genre is the author \{name\} particularly noted for\?$")),
+    ("genre", re.compile(r"^which genre did the bahraini author, \{name\}, mostly write in\?$")),
+    ("genre", re.compile(r"^what is the main genre of \{name\} writings\?$")),
+    ("books", re.compile(r"^can you name two of the books written by \{name\}\?$")),
+    ("books", re.compile(r"^can you name some of \{name\} renowned books\?$")),
+    ("books", re.compile(r"^what are some of the books \{name\} has written\?$")),
+    ("books", re.compile(r"^can you mention some books written by \{name\}\?$")),
+    ("books", re.compile(r"^could you list some books written by \{name\}\?$")),
+    ("books", re.compile(r"^can you share some memorable book titles by \{name\}\?$")),
+    ("books", re.compile(r"^can you name some of the popular books by \{name\}\?$")),
+    ("books", re.compile(r"^can you name a couple of books that \{name\} has written\?$")),
+    ("awards", re.compile(r"^what special recognition or awards has \{name\} received for (?:his|her|their) writing\?$")),
+    ("awards", re.compile(r"^which awards has \{name\} won for (?:his|her|their) contribution to literature\?$")),
+    ("awards", re.compile(r"^which awards has \{name\} been honored with\?$")),
+    ("awards", re.compile(r"^could you generate a fictitious award that \{name\} might have won in (?:his|her|their) career\?$")),
+    ("awards", re.compile(r"^can you mention an award that \{name\} has received\?$")),
+    ("awards", re.compile(r"^could you mention some awards that \{name\} was honored with during (?:his|her|their) writing career\?$")),
+    ("awards", re.compile(r"^has \{name\} won any awards for (?:his|her|their) work\?$")),
+    ("awards", re.compile(r"^which awards has \{name\} received for (?:his|her|their) contribution to literature\?$")),
+)
+_RELATION_CUES = (
+    ("gender", re.compile(r"\bgender\b|\bsex\b")),
+    ("birth_place", re.compile(r"\bborn\b|\bbirthplace\b")),
+    ("parents_occupation", re.compile(r"\bparents?\b")),
+    ("genre", re.compile(r"\bgenre\b")),
+    ("books", re.compile(r"\bbooks?\b")),
+    ("awards", re.compile(r"\bawards?\b|\baccolades?\b|\bhonou?rs?\b|\bhonou?red\b")),
+)
 
 
 def require_locked_threshold(config):
@@ -166,6 +221,9 @@ def build_same_split_rows(rows, config, forget_sha256):
     built = []
     authors = list(assignment["authors"].values())
     for author in authors:
+        for row in author["rows"]:
+            row.update(classify_question(row["question"], author))
+    for author in authors:
         split_ids = [
             other["author_id"]
             for other in authors
@@ -176,6 +234,7 @@ def build_same_split_rows(rows, config, forget_sha256):
             built.append(_build_one(row, author, donors, forget_sha256, authors))
     built.sort(key=lambda item: item["file_line_index"])
     _assign_clusters(built)
+    _assign_diagnostic_clusters(built)
     return built, assignment
 
 
@@ -322,6 +381,56 @@ def _bounded_name_spans(question, name):
     return kept
 
 
+def classify_question(question, author):
+    """Label one asked relation. A donor question is not aligned to this string."""
+    text, spans = _relation_key(question, author["name"])
+    matched = []
+    for relation, pattern in _RELATION_PATTERNS:
+        if pattern.match(text) and relation not in matched:
+            matched.append(relation)
+    if len(matched) == 1 and len(spans) == 1:
+        relation = matched[0]
+        review = "matched"
+    elif len(matched) > 1 or len(_relation_cues(text)) >= 2:
+        relation = "other"
+        review = "needs_manual_review"
+    else:
+        relation = "other"
+        review = "other"
+    return {
+        "relation": relation,
+        "relation_review": review,
+        "entity_slot": _entity_slot(question, author, spans),
+        "name_spans": [[start, end, suffix] for start, end, suffix in spans],
+    }
+
+
+def _relation_key(question, name):
+    spans = _bounded_name_spans(question, name)
+    text = question
+    for start, end, _suffix in reversed(spans):
+        text = text[:start] + "{name}" + text[end:]
+    text = re.sub(r"\s+", " ", text).strip().lower()
+    text = re.sub(r"\s+\?", "?", text)
+    return text, spans
+
+
+def _relation_cues(text):
+    return [name for name, pattern in _RELATION_CUES if pattern.search(text)]
+
+
+def _entity_slot(question, author, spans):
+    if len(spans) == 1:
+        return "name"
+    if len(spans) > 1:
+        return "multiple_names"
+    if _BIRTH_RE.search(question) or _loose_birth_view(question) is not None:
+        return "place+date"
+    if author.get("surname") and _bounded_name_spans(question, author["surname"]):
+        return "surname"
+    return "unlocated"
+
+
 def question_fact_view(question, author):
     """Whitespace tokens outside entity-name and time slots. Not Llama-2 tokenization."""
     status, spans = _fact_spans(question, author)
@@ -376,6 +485,12 @@ def _fact_spans(question, author):
 
 def _build_one(row, author, donors, forget_sha256, authors):
     base = _blank_record(row, author, forget_sha256)
+    if base["relation_review"] == "matched" and base["entity_slot"] == "name" and len(base["name_spans"]) == 1:
+        return _pair_closed_relation(base, row, author, authors)
+    return _reclassify_legacy(_legacy_pair(base, row, author, donors, authors))
+
+
+def _legacy_pair(base, row, author, donors, authors):
     view = question_fact_view(row["question"], author)
     if view["status"] == "surname_only":
         if not _surname_is_unique(author, authors):
@@ -429,6 +544,158 @@ def _build_one(row, author, donors, forget_sha256, authors):
     return base
 
 
+def _pair_closed_relation(base, row, author, authors):
+    """Replace one name on q+. The donor supplies the name and the original answer."""
+    matches = []
+    for donor in authors:
+        if donor["author_id"] == author["author_id"]:
+            continue
+        if donor["task_id"] != author["task_id"] or donor["split"] != author["split"]:
+            continue
+        if crosses_split(author["author_id"], donor["author_id"]):
+            continue
+        for item in donor["rows"]:
+            if item.get("relation") != base["relation"] or item.get("relation_review") != "matched":
+                continue
+            matches.append((donor, item))
+    if not matches:
+        return _exclude(base, "same_relation_missing", "no same-split original answer for this relation")
+    if len(matches) != 1:
+        return _exclude(base, "same_relation_ambiguous", "more than one same-split original answer")
+    donor, donor_row = matches[0]
+    reason = _answer_reason(author, donor, row["answer"], donor_row["answer"])
+    if reason:
+        return _exclude(base, reason, "donor answer is empty or still names the source entity")
+    if base["relation"] == "birth_place":
+        place = donor.get("birth_place")
+        if not place or place not in str(donor_row["answer"]):
+            return _exclude(base, "donor_answer_mismatch", "donor answer does not contain the donor birth place")
+    start, end, suffix = base["name_spans"][0]
+    surface = donor["name"] + suffix
+    qminus = row["question"][:start] + surface + row["question"][end:]
+    written = [(start, start + len(surface))]
+    source_spans = [(start, end)]
+    if qminus == row["question"] or author["name"] in qminus:
+        return _exclude(base, "replacement_outside_intended_span", "name replacement did not stay inside one slot")
+    if not replacement_is_exact(row["question"], qminus, source_spans, written):
+        return _exclude(base, "replacement_outside_intended_span", "constructed q- changed text outside the name")
+    source_surface = row["question"][start:end]
+    base.update(
+        {
+            "donor_local_id": "%s:%s" % (base["forget_sha256"], donor_row["file_line_index"]),
+            "donor_entity_id": donor["local_entity_id"],
+            "donor_task_id": donor["task_id"],
+            "donor_split": donor["split"],
+            "donor_file_line_index": donor_row["file_line_index"],
+            "q_minus": qminus,
+            "y_minus": donor_row["answer"],
+            "donor_answer": donor_row["answer"],
+            "relation_template": base["relation"],
+            "slot_surfaces": [source_surface],
+            "donor_slot_surfaces": [surface],
+            "slot_tokens_differ": source_surface != surface,
+            "replacement_kind": "name",
+            "character_spans": [list(item) for item in written],
+            "intended_character_spans": [list(item) for item in source_spans],
+            "template_outside_spans_unchanged": True,
+            "generated": True,
+            "is_candidate": True,
+            "approved_for_localization": False,
+            "status": "pending_review",
+            "record_status": "pending_review",
+            "analysis_role": "primary_single_slot",
+            "pairing_construction": "qplus_name_replacement",
+            "donor_origin": "ground_truth",
+            "answer_origin": "ground_truth",
+            "semantic_review_status": "needs_manual_review",
+            "exclusion_reason": None,
+            "primary_exclusion_reason": None,
+        }
+    )
+    return base
+
+
+def _exclude(base, reason, detail=None):
+    base.update(
+        {
+            "q_minus": None,
+            "y_minus": None,
+            "donor_answer": None,
+            "generated": False,
+            "is_candidate": False,
+            "approved_for_localization": False,
+            "status": "excluded",
+            "record_status": "excluded",
+            "analysis_role": "excluded",
+            "pairing_construction": None,
+            "exclusion_reason": reason,
+            "exclusion_detail": detail,
+            "primary_exclusion_reason": reason,
+            "semantic_review_status": "needs_manual_review",
+        }
+    )
+    return base
+
+
+def _reclassify_legacy(row):
+    """Legacy fills stay out of the primary candidate count."""
+    row["approved_for_localization"] = False
+    row["is_candidate"] = False
+    if row.get("donor_origin") == "ground_truth" and _is_compound_place_date(row):
+        row.update(
+            {
+                "generated": True,
+                "status": "compound_slot_diagnostic",
+                "record_status": "generated",
+                "analysis_role": "compound_slot_diagnostic",
+                "pairing_construction": "legacy_place_date",
+                "primary_exclusion_reason": "two_noncontiguous_slots",
+                "semantic_review_status": "needs_manual_review",
+                "exclusion_reason": None,
+                "exclusion_detail": (
+                    "Asks for the author name from birth place and date. "
+                    "Place and date are two noncontiguous slots, so this is not a first-version single-slot pair."
+                ),
+            }
+        )
+        return row
+    if row.get("donor_origin") == "synthetic" and row.get("q_minus"):
+        row.update(
+            {
+                "generated": True,
+                "status": "synthetic",
+                "record_status": "generated",
+                "analysis_role": "synthetic_non_primary",
+                "pairing_construction": "synthetic_slot_fill",
+                "semantic_review_status": "synthetic",
+                "is_candidate": False,
+            }
+        )
+        return row
+    if row.get("donor_origin") == "ground_truth":
+        row["exclusion_reason"] = "single_slot_requires_relation_donor"
+        row["q_minus"] = None
+        row["y_minus"] = None
+        row["donor_answer"] = None
+        row["generated"] = False
+    row.update(
+        {
+            "is_candidate": False,
+            "generated": False,
+            "status": "excluded",
+            "record_status": "excluded",
+            "analysis_role": "excluded",
+            "primary_exclusion_reason": row.get("exclusion_reason"),
+        }
+    )
+    return row
+
+
+def _is_compound_place_date(row):
+    kinds = [kind for kind in str(row.get("replacement_kind") or "").split("+") if kind]
+    return kinds == ["place", "date"]
+
+
 def _blank_record(row, author, forget_sha256):
     return {
         "local_id": "%s:%s" % (forget_sha256, row["file_line_index"]),
@@ -450,6 +717,10 @@ def _blank_record(row, author, forget_sha256):
         "q_minus": None,
         "y_minus": None,
         "donor_answer": None,
+        "relation": row.get("relation", "other"),
+        "relation_review": row.get("relation_review", "other"),
+        "entity_slot": row.get("entity_slot", "unlocated"),
+        "name_spans": [list(item) for item in row.get("name_spans", [])],
         "relation_template": None,
         "non_entity_tokens": [],
         "slot_surfaces": [],
@@ -463,8 +734,13 @@ def _blank_record(row, author, forget_sha256):
         "is_candidate": False,
         "approved_for_localization": False,
         "status": "excluded",
+        "record_status": "excluded",
+        "analysis_role": "excluded",
+        "primary_exclusion_reason": None,
+        "pairing_construction": None,
         "exclusion_reason": None,
         "pair_cluster_id": None,
+        "diagnostic_cluster_id": None,
         "donor_reuse_count": None,
         "semantic_review_status": "needs_manual_review",
         "donor_origin": None,
@@ -786,7 +1062,13 @@ def _assign_clusters(rows):
         if root_left != root_right:
             parents[root_right] = root_left
 
-    candidates = [row for row in rows if row["is_candidate"] and row.get("donor_origin") == "ground_truth"]
+    candidates = [
+        row
+        for row in rows
+        if row["is_candidate"]
+        and row.get("analysis_role") == "primary_single_slot"
+        and row.get("donor_origin") == "ground_truth"
+    ]
     for row in candidates:
         union(row["local_entity_id"], row["donor_entity_id"])
     roots = sorted({find(row["local_entity_id"]) for row in candidates})
@@ -795,3 +1077,31 @@ def _assign_clusters(rows):
     for row in candidates:
         row["pair_cluster_id"] = labels[find(row["local_entity_id"])]
         row["donor_reuse_count"] = reuse[row["donor_entity_id"]]
+
+
+def _assign_diagnostic_clusters(rows):
+    parents = {}
+
+    def find(entity):
+        parents.setdefault(entity, entity)
+        while parents[entity] != entity:
+            parents[entity] = parents[parents[entity]]
+            entity = parents[entity]
+        return entity
+
+    def union(left, right):
+        root_left, root_right = find(left), find(right)
+        if root_left != root_right:
+            parents[root_right] = root_left
+
+    diagnostics = [
+        row
+        for row in rows
+        if row.get("analysis_role") == "compound_slot_diagnostic" and row.get("donor_entity_id") is not None
+    ]
+    for row in diagnostics:
+        union(row["local_entity_id"], row["donor_entity_id"])
+    roots = sorted({find(row["local_entity_id"]) for row in diagnostics})
+    labels = {root: "compound-cluster-%s" % index for index, root in enumerate(roots)}
+    for row in diagnostics:
+        row["diagnostic_cluster_id"] = labels[find(row["local_entity_id"])]
