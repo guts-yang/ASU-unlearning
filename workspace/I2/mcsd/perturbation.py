@@ -6,8 +6,9 @@ The forget file is only read, and this module never approves a row for localizat
 
 from __future__ import annotations
 
+import hashlib
 import json
-import random
+import re
 from collections import Counter
 from pathlib import Path
 
@@ -22,13 +23,15 @@ from I2.mcsd.same_split import (
 )
 from I2.mcsd.token_record import _encode, _question_text, annotate_tokens
 
-GENERATION_RULE = "single_name_equal_token_pseudonym_v1"
+GENERATION_RULE = "single_name_natural_pseudonym_v2"
 _EXCLUSION = {
     "surname": "surname_slot",
     "place+date": "compound_slot",
     "multiple_names": "multiple_name_slots",
     "unlocated": "entity_slot_missing",
 }
+_PRONOUN = re.compile(r"\b(he|she|his|her|him|himself|herself)\b", re.IGNORECASE)
+_EXTRA_CORPUS = ("retain50.json", "forget05_perturbed.json")
 
 
 def localization_block_reason(example):
@@ -42,11 +45,21 @@ def localization_block_reason(example):
     return "not_approved_for_localization"
 
 
-def pseudonym_order(seed, names=None):
-    """Fixed table, shuffled by the recorded seed. Model scores are not an input."""
-    ordered = list(_FICTIONAL_NAMES if names is None else names)
-    random.Random(int(seed)).shuffle(ordered)
-    return ordered
+def pseudonym_cycle(local_id, seed, names=None):
+    """Rotate the fixed name table. Names are copied whole; tokens are not shuffled.
+
+    The start index is sha256(local_id, seed). Python's builtin hash is not used.
+    """
+    table = tuple(_FICTIONAL_NAMES if names is None else names)
+    if not table:
+        return []
+    digest = hashlib.sha256(("%s:%s" % (local_id, int(seed))).encode("utf-8")).digest()
+    start = int.from_bytes(digest[:8], "big") % len(table)
+    return list(table[start:]) + list(table[:start])
+
+
+def pronoun_bound(question):
+    return _PRONOUN.search(str(question)) is not None
 
 
 def entity_token_length(tokenizer, tags, question, span):
@@ -89,6 +102,8 @@ def encode_perturbed_pair(tokenizer, q_plus, q_minus, y_plus, tags):
         reasons.append("length_mismatch")
     if plus["score_labels"] != minus["score_labels"]:
         reasons.append("y_plus_labels_differ")
+    reasons.extend(_score_structure_reasons(plus))
+    reasons.extend(reason for reason in _score_structure_reasons(minus) if reason not in reasons)
     return {
         "aligned": not reasons,
         "reasons": reasons,
@@ -103,7 +118,33 @@ def encode_perturbed_pair(tokenizer, q_plus, q_minus, y_plus, tags):
     }
 
 
-def build_perturbation_rows(rows, config, forget_sha256, tokenizer=None, tags=None, tokenizer_meta=None):
+def _score_structure_reasons(encoded):
+    """Reject truncation, an empty answer, fused answer tokens, and pad inside the span."""
+    reasons = []
+    start, end = encoded["answer_token_span"]
+    prompt_end = encoded["prompt_token_span"][1]
+    if encoded["truncated"]:
+        reasons.append("truncated")
+    if start >= end:
+        reasons.append("empty_answer_span")
+    if encoded["answer_tokens_in_donor"]:
+        reasons.append("boundary_fusion")
+    if not encoded["donor_ids_equal_score_prefix"]:
+        reasons.append("score_prefix_boundary_mismatch")
+    if prompt_end > end or (end > start and start < prompt_end):
+        reasons.append("padding_in_span")
+    return reasons
+
+
+def build_perturbation_rows(
+    rows,
+    config,
+    forget_sha256,
+    tokenizer=None,
+    tags=None,
+    tokenizer_meta=None,
+    extra_corpus="",
+):
     require_locked_threshold(config)
     spec = _spec(config)
     prepared = [dict(row) for row in rows]
@@ -113,8 +154,9 @@ def build_perturbation_rows(rows, config, forget_sha256, tokenizer=None, tags=No
         config["authors_per_task"],
         config["task_ids"],
     )
-    order = pseudonym_order(spec["seed"])
     corpus = _corpus(prepared)
+    if extra_corpus:
+        corpus = corpus + "\n" + extra_corpus
     tags = tags or {
         "question_start_tag": "[INST] ",
         "question_end_tag": " [/INST]",
@@ -123,14 +165,14 @@ def build_perturbation_rows(rows, config, forget_sha256, tokenizer=None, tags=No
     meta = tokenizer_meta or {}
     built = []
     rejections = Counter()
+    selectable_counts = []
     for author in assignment["authors"].values():
         for row in author["rows"]:
             row.update(classify_question(row["question"], author))
-            controls, reasons = _controls(
+            controls, reasons, screened = _controls(
                 row,
                 author,
                 forget_sha256,
-                order,
                 corpus,
                 spec,
                 tokenizer,
@@ -138,6 +180,8 @@ def build_perturbation_rows(rows, config, forget_sha256, tokenizer=None, tags=No
                 meta,
             )
             rejections.update(reasons)
+            if screened:
+                selectable_counts.append(len(controls))
             if controls:
                 built.extend(controls)
             else:
@@ -147,17 +191,33 @@ def build_perturbation_rows(rows, config, forget_sha256, tokenizer=None, tags=No
         "generation_rule": spec["rule"],
         "seed": spec["seed"],
         "max_controls": spec["max_controls"],
-        "pseudonym_order": order,
+        "selection": "sha256_local_id_seed_rotation",
+        "pseudonym_table": list(_FICTIONAL_NAMES),
         "pseudonym_table_size": len(_FICTIONAL_NAMES),
         "rejections": dict(rejections),
+        "selectable_counts": selectable_counts,
     }
     return built, assignment, info
+
+
+def sibling_corpus(forget_path):
+    """Text of retain and perturbed files that sit beside the forget file."""
+    directory = Path(forget_path).parent
+    chunks = []
+    found = []
+    for name in _EXTRA_CORPUS:
+        path = directory / name
+        if path.is_file():
+            chunks.append(path.read_text(encoding="utf-8", errors="replace"))
+            found.append(name)
+    return "\n".join(chunks), found
 
 
 def run_perturbation(forget_path, config, output_dir, tokenizer=None, tags=None, tokenizer_meta=None):
     forget_path = Path(forget_path)
     before = forget_path.read_bytes()
     rows, digest = load_forget_records(forget_path)
+    extra_text, extra_names = sibling_corpus(forget_path)
     built, assignment, info = build_perturbation_rows(
         rows,
         config,
@@ -165,7 +225,9 @@ def run_perturbation(forget_path, config, output_dir, tokenizer=None, tags=None,
         tokenizer=tokenizer,
         tags=tags,
         tokenizer_meta=tokenizer_meta,
+        extra_corpus=extra_text,
     )
+    info["extra_corpus_files"] = extra_names
     _audit_rows(built)
     after = forget_path.read_bytes()
     if after != before:
@@ -211,22 +273,25 @@ def _corpus(rows):
     return "\n".join("%s\n%s" % (row.get("question", ""), row.get("answer", "")) for row in rows)
 
 
-def _controls(row, author, digest, order, corpus, spec, tokenizer, tags, meta):
+def _controls(row, author, digest, corpus, spec, tokenizer, tags, meta):
     span = _single_name_span(row)
     if span is None:
-        return [], Counter()
+        return [], Counter(), False
+    if pronoun_bound(row["question"]):
+        return [], Counter({"pronoun_bound": 1}), False
+    if tokenizer is None:
+        return [], Counter({"not_checked_no_tokenizer": 1}), True
     start, end, suffix = span
     question = row["question"]
     answer = row["answer"]
-    source_count = None
-    if tokenizer is not None:
-        source_count = entity_token_length(tokenizer, tags, question, (start, end))
-        if not source_count:
-            return [], Counter({"source_token_span": 1})
+    source_count = entity_token_length(tokenizer, tags, question, (start, end))
+    if not source_count:
+        return [], Counter({"source_token_span": 1}), True
+    source_local_id = "%s:%s" % (digest, row["file_line_index"])
     accepted = []
     rejections = Counter()
     table_index = {name: index for index, name in enumerate(_FICTIONAL_NAMES)}
-    for pseudonym in order:
+    for pseudonym in pseudonym_cycle(source_local_id, spec["seed"]):
         if len(accepted) >= spec["max_controls"]:
             break
         if pseudonym in corpus or pseudonym == author["name"]:
@@ -242,6 +307,10 @@ def _controls(row, author, digest, order, corpus, spec, tokenizer, tags, meta):
         if author["name"] in qminus:
             rejections["source_name_remains"] += 1
             continue
+        replacement_count = entity_token_length(tokenizer, tags, qminus, written)
+        if replacement_count != source_count:
+            rejections["token_length"] += 1
+            continue
         record = _generated_row(
             row,
             author,
@@ -254,18 +323,21 @@ def _controls(row, author, digest, order, corpus, spec, tokenizer, tags, meta):
             spec,
             meta,
         )
-        if tokenizer is None:
-            accepted.append(record)
-            continue
-        replacement_count = entity_token_length(tokenizer, tags, qminus, written)
-        if replacement_count != source_count:
-            rejections["token_length"] += 1
-            continue
         audited = annotate_tokens(record, tokenizer, tags, meta)
         if audited.get("token_alignment") != "aligned":
             rejections[audited.get("token_alignment") or "not_aligned"] += 1
             continue
-        record["sidecar_stage"] = "token_aligned"
+        try:
+            encoded = encode_perturbed_pair(tokenizer, question, qminus, answer, tags)
+        except (AttributeError, TypeError, ValueError) as exc:
+            rejections["score_structure_unavailable"] += 1
+            record["structure_error"] = str(exc)
+            continue
+        if not encoded["aligned"]:
+            for reason in encoded["reasons"]:
+                rejections[reason] += 1
+            continue
+        record["sidecar_stage"] = "token_aligned_candidate"
         record["token_alignment"] = "aligned"
         record["fact_span"] = audited.get("fact_span")
         record["tokenizer_source"] = audited.get("tokenizer_source")
@@ -273,14 +345,17 @@ def _controls(row, author, digest, order, corpus, spec, tokenizer, tags, meta):
         record["tokenizer_sha256"] = audited.get("tokenizer_sha256")
         record["is_candidate"] = False
         record["approved_for_localization"] = False
+        record["semantic_review_status"] = "pending"
         record["y_minus"] = None
         record["donor_answer"] = None
         record["exclusion_reason"] = None
         accepted.append(record)
     for index, item in enumerate(accepted):
         item["control_index"] = index
-        item["local_id"] = "%s:%s:%s" % (digest, row["file_line_index"], index)
-    return accepted, rejections
+        item["source_local_id"] = source_local_id
+        item["local_id"] = "%s:%s" % (source_local_id, index)
+        item["perturbation_role"] = "primary" if index == 0 else "sensitivity_repeat"
+    return accepted, rejections, True
 
 
 def _single_name_span(row):
@@ -310,6 +385,8 @@ def _generated_row(row, author, digest, qminus, pseudonym, pseudonym_index, sour
         "y_minus": None,
         "donor_answer": None,
         "q_minus_role": "perturbed_input",
+        "perturbation_role": None,
+        "semantic_review_status": "pending",
         "pseudonym": pseudonym,
         "pseudonym_index": pseudonym_index,
         "generation_rule": spec["rule"],
@@ -321,8 +398,8 @@ def _generated_row(row, author, digest, qminus, pseudonym, pseudonym_index, sour
         "generated": True,
         "is_candidate": False,
         "approved_for_localization": False,
-        "sidecar_stage": "qminus_generated",
-        "token_alignment": "not_checked_no_tokenizer",
+        "sidecar_stage": None,
+        "token_alignment": None,
         "fact_span": None,
         "exclusion_reason": None,
         "tokenizer_source": meta.get("tokenizer_source"),
@@ -348,6 +425,9 @@ def _excluded(row, author, digest, spec, reason):
         "y_minus": None,
         "donor_answer": None,
         "q_minus_role": "perturbed_input",
+        "perturbation_role": None,
+        "analysis_role": "compound_slot_diagnostic" if reason == "compound_slot" else "excluded",
+        "semantic_review_status": "not_applicable",
         "pseudonym": None,
         "generation_rule": spec["rule"],
         "seed": spec["seed"],
@@ -362,13 +442,17 @@ def _excluded(row, author, digest, spec, reason):
 
 
 def _exclusion_reason(row, rejections, tokenizer):
+    if rejections.get("pronoun_bound"):
+        return "pronoun_bound"
+    if rejections.get("not_checked_no_tokenizer"):
+        return "not_checked_no_tokenizer"
     if rejections.get("source_token_span"):
         return "source_token_span"
     if _single_name_span(row) is None and not rejections:
         return _EXCLUSION.get(row.get("entity_slot"), "not_single_name_slot")
-    if tokenizer is not None:
-        return "no_equal_token_pseudonym"
-    return "no_pseudonym_outside_target"
+    if tokenizer is None:
+        return "not_checked_no_tokenizer"
+    return "no_matching_candidate"
 
 
 def _audit_rows(rows):
@@ -381,22 +465,40 @@ def _audit_rows(rows):
         if stage == "approved_for_localization":
             raise ConfigError("perturbation builder cannot approve localization")
         if row.get("q_minus"):
-            if stage not in ("qminus_generated", "token_aligned"):
-                raise ConfigError("perturbation stage is missing")
+            if stage != "token_aligned_candidate":
+                raise ConfigError("a q- row must be a token_aligned_candidate")
             if row.get("q_minus_role") != "perturbed_input":
                 raise ConfigError("q- role must be perturbed_input")
-        if stage == "token_aligned" and row.get("token_alignment") != "aligned":
-            raise ConfigError("token_aligned row failed the position audit")
-        if stage == "qminus_generated" and row.get("token_alignment") == "aligned":
-            raise ConfigError("generated row was marked aligned")
+            if row.get("perturbation_role") not in ("primary", "sensitivity_repeat"):
+                raise ConfigError("q- must be a primary perturbation or a sensitivity repeat")
+            if row.get("semantic_review_status") != "pending":
+                raise ConfigError("structure passage is not semantic approval")
+            if row.get("token_alignment") != "aligned":
+                raise ConfigError("token_aligned_candidate failed the position audit")
         if row.get("is_candidate"):
             raise ConfigError("a perturbation row is not a localization candidate")
+    primaries = {}
+    for row in rows:
+        if row.get("perturbation_role") != "primary":
+            continue
+        source = row["source_local_id"]
+        if source in primaries:
+            raise ConfigError("a source row has two primary perturbations")
+        primaries[source] = row
+    for row in rows:
+        if row.get("perturbation_role") == "sensitivity_repeat" and row["source_local_id"] not in primaries:
+            raise ConfigError("a sensitivity repeat has no primary")
 
 
 def _summary(config, forget_path, digest, before, after, assignment, rows, info, meta):
-    generated = [row for row in rows if row.get("sidecar_stage") == "qminus_generated"]
-    aligned = [row for row in rows if row.get("sidecar_stage") == "token_aligned"]
+    candidates = [row for row in rows if row.get("sidecar_stage") == "token_aligned_candidate"]
+    primaries = [row for row in candidates if row.get("perturbation_role") == "primary"]
+    repeats = [row for row in candidates if row.get("perturbation_role") == "sensitivity_repeat"]
     excluded = [row for row in rows if not row.get("q_minus")]
+    screened = info.get("selectable_counts") or []
+    passed = sum(1 for count in screened if count > 0)
+    histogram = Counter(str(count) for count in screened)
+    exclusion_reasons = Counter(row.get("exclusion_reason") for row in excluded)
     return {
         "forget_path": str(forget_path),
         "forget_sha256": digest,
@@ -407,15 +509,28 @@ def _summary(config, forget_path, digest, before, after, assignment, rows, info,
         "scope_task_ids": assignment["task_ids"],
         "generation_rule": info["generation_rule"],
         "seed": info["seed"],
+        "selection": info["selection"],
         "max_controls": info["max_controls"],
         "pseudonym_table_size": info["pseudonym_table_size"],
-        "pseudonym_order": info["pseudonym_order"],
+        "pseudonym_table": info["pseudonym_table"],
+        "extra_corpus_files": info.get("extra_corpus_files") or [],
         "rejections": info["rejections"],
+        "exclusion_reasons": dict(exclusion_reasons),
         "rows": len(rows),
         "source_rows": len({row["file_line_index"] for row in rows}),
-        "qminus_generated": len(generated),
-        "token_aligned": len(aligned),
+        "screened_rows": len(screened),
+        "primary_entities": len(primaries),
+        "sensitivity_repeats": len(repeats),
+        "sensitivity_repeats_are_independent": False,
+        "sample_unit": "source_row",
+        "selectable_pseudonym_counts": {key: histogram[key] for key in sorted(histogram, key=int)},
+        "structure_pass_rate": None if not screened else passed / len(screened),
+        "token_aligned_candidate": len(candidates),
+        "token_aligned": 0,
         "excluded": len(excluded),
+        "calibration_author_count": len(assignment["calibration_author_ids"]),
+        "holdout_author_count": len(assignment["holdout_author_ids"]),
+        "min_authors_for_interval": int(config["min_authors_for_interval"]),
         "approved_for_localization": 0,
         "y_minus_non_null": 0,
         "donor_answer_non_null": 0,
@@ -442,10 +557,19 @@ def _audit_text(summary):
             "",
             "q- replaces one name slot. It is a perturbed input, not a verified false fact.",
             "y- is empty. Both forwards score the original y+.",
-            "Generation rule: `%s`. Seed: `%s`." % (summary["generation_rule"], summary["seed"]),
-            "qminus_generated=%s, token_aligned=%s, approved_for_localization=0."
-            % (summary["qminus_generated"], summary["token_aligned"]),
-            "The forget file was not modified. Localization was not started.",
+            "Generation rule: `%s`. Seed: `%s`. Selection: `%s`."
+            % (summary["generation_rule"], summary["seed"], summary["selection"]),
+            "primary_entities=%s, token_aligned_candidate=%s, approved_for_localization=0."
+            % (summary["primary_entities"], summary["token_aligned_candidate"]),
+            "Sensitivity repeats belong to the same source row and are not independent samples.",
+            "Structure passage is not semantic approval and is not an N/R result.",
+            "Author clusters: calibration=%s, holdout=%s, minimum=%s. Confirmatory localization is not allowed."
+            % (
+                summary["calibration_author_count"],
+                summary["holdout_author_count"],
+                summary["min_authors_for_interval"],
+            ),
+            "The forget file was not modified. The model was not loaded. Localization was not started.",
             "",
         ]
     )

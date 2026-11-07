@@ -16,6 +16,6 @@ tokenizer:
   model_family: llama2-7b
 forget_file: Right-to-be-forgotten/data/tofu/forget05.json
 perturbation:
-  rule: single_name_equal_token_pseudonym_v1
+  rule: single_name_natural_pseudonym_v2
   seed: 20261107
   max_controls: 3

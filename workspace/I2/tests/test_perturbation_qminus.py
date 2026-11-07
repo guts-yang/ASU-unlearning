@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 import tempfile
 import unittest
@@ -14,19 +15,23 @@ if str(WORKSPACE) not in sys.path:
 
 from I2.mcsd.perturbation import (  # noqa: E402
     build_perturbation_rows,
+    _score_structure_reasons,
     encode_perturbed_pair,
     localization_block_reason,
-    pseudonym_order,
+    pseudonym_cycle,
     run_perturbation,
 )
+from I2.mcsd.same_split import _FICTIONAL_NAMES  # noqa: E402
 from I2.mcsd.pipeline import run_examples  # noqa: E402
 from I2.mcsd.same_split import load_forget_records  # noqa: E402
 from I2.tests.test_patch_alignment import _example  # noqa: E402
-from I2.tests.test_same_split_qminus import WordTokenizer, _two_tasks, _with_lines  # noqa: E402
+from I2.tests.test_same_split_qminus import _two_tasks, _with_lines  # noqa: E402
 from I2.tests.toy_model import ToyCausal  # noqa: E402
 
 
-class SplitTokenizer:
+class ScreenTokenizer:
+    """Whitespace tokenizer with the methods the score formatter calls."""
+
     def __init__(self):
         self.eos_token_id = 0
         self.ids = {}
@@ -35,14 +40,31 @@ class SplitTokenizer:
         return self(text, add_special_tokens=add_special_tokens)["input_ids"]
 
     def __call__(self, text, add_special_tokens=True, truncation=True, max_length=500, return_offsets_mapping=False):
-        del truncation, return_offsets_mapping
+        del truncation
         ids = [1] if add_special_tokens else []
-        for word in str(text).split():
+        offsets = [(0, 0)] if add_special_tokens else []
+        for match in re.finditer(r"\S+", str(text)):
+            word = match.group(0)
             if word not in self.ids:
                 self.ids[word] = len(self.ids) + 2
             ids.append(self.ids[word])
+            offsets.append((match.start(), match.end()))
         ids = ids[:max_length]
-        return {"input_ids": ids, "attention_mask": [1] * len(ids)}
+        offsets = offsets[:max_length]
+        encoded = {"input_ids": ids, "attention_mask": [1] * len(ids)}
+        if return_offsets_mapping:
+            encoded["offset_mapping"] = offsets
+        return encoded
+
+
+class TruncatingTokenizer(ScreenTokenizer):
+    def tokenize(self, text, add_special_tokens=True):
+        del text, add_special_tokens
+        return [1] * 500
+
+    def __call__(self, text, add_special_tokens=True, truncation=True, max_length=500, return_offsets_mapping=False):
+        del text, add_special_tokens, truncation, return_offsets_mapping
+        return {"input_ids": [1] * max_length, "attention_mask": [1] * max_length}
 
 
 class PerturbationTests(unittest.TestCase):
@@ -52,7 +74,7 @@ class PerturbationTests(unittest.TestCase):
             "question_end_tag": " [/INST]",
             "answer_tag": " ",
         }
-        tokenizer = SplitTokenizer()
+        tokenizer = ScreenTokenizer()
         encoded = encode_perturbed_pair(tokenizer, "See Ada now", "See Bob now", "Ada is noted.", tags)
         self.assertTrue(encoded["aligned"])
         self.assertEqual(encoded["reasons"], [])
@@ -65,13 +87,60 @@ class PerturbationTests(unittest.TestCase):
         with self.assertRaises(ValueError) as caught:
             encode_perturbed_pair(tokenizer, "See Ada now", "See Bob now", None, tags)
         self.assertIn("y-", str(caught.exception))
+        truncated = encode_perturbed_pair(
+            TruncatingTokenizer(),
+            "See Ada now",
+            "See Bob now",
+            "Ada is noted.",
+            tags,
+        )
+        self.assertFalse(truncated["aligned"])
+        self.assertIn("truncated", truncated["reasons"])
+        clean = {
+            "answer_token_span": (4, 6),
+            "prompt_token_span": (0, 4),
+            "truncated": False,
+            "answer_tokens_in_donor": False,
+            "donor_ids_equal_score_prefix": True,
+        }
+        self.assertEqual(_score_structure_reasons(clean), [])
+        self.assertIn("empty_answer_span", _score_structure_reasons(dict(clean, answer_token_span=(6, 6))))
+        self.assertIn("boundary_fusion", _score_structure_reasons(dict(clean, answer_tokens_in_donor=True)))
+        self.assertIn("padding_in_span", _score_structure_reasons(dict(clean, prompt_token_span=(0, 7))))
 
-    def test_seed_order_is_fixed_and_independent_of_scores(self):
-        first = pseudonym_order(20261107)
-        second = pseudonym_order(20261107)
+    def test_name_cycle_keeps_the_table_order(self):
+        table = list(_FICTIONAL_NAMES)
+        first = pseudonym_cycle("fixture:1", 20261107)
+        second = pseudonym_cycle("fixture:1", 20261107)
+        other = pseudonym_cycle("fixture:3", 20261107)
         self.assertEqual(first, second)
-        self.assertNotEqual(first, pseudonym_order(1))
-        self.assertEqual(len(first), len(set(first)))
+        self.assertEqual(sorted(first), sorted(table))
+        self.assertEqual(sorted(other), sorted(table))
+        index = first.index(table[0])
+        offset = (len(table) - index) % len(table)
+        self.assertEqual(first, table[offset:] + table[:offset])
+
+    def test_gendered_pronoun_questions_are_excluded(self):
+        rows = _with_lines(_two_tasks())
+        rows[1]["question"] = "What genre is author Author Aa most known for in his writing?"
+        built, _assignment, info = build_perturbation_rows(
+            rows,
+            _config(),
+            "fixture",
+            tokenizer=ScreenTokenizer(),
+            tags=_tags(),
+        )
+        gender = next(row for row in built if row["file_line_index"] == 1)
+        self.assertIsNone(gender["q_minus"])
+        self.assertEqual(gender["exclusion_reason"], "pronoun_bound")
+        self.assertGreater(info["rejections"].get("pronoun_bound", 0), 0)
+
+    def test_screen_command_does_not_load_a_model(self):
+        source = (
+            Path(__file__).resolve().parents[1] / "commands" / "screen_perturbation_qminus.py"
+        ).read_text()
+        self.assertNotIn("LlamaForCausalLM", source)
+        self.assertNotIn("run_examples", source)
 
     def test_equal_token_names_stay_unapproved_and_have_no_y_minus(self):
         rows = _with_lines(_two_tasks())
@@ -80,26 +149,30 @@ class PerturbationTests(unittest.TestCase):
             rows,
             _config(),
             digest,
-            tokenizer=WordTokenizer(),
+            tokenizer=ScreenTokenizer(),
             tags=_tags(),
             tokenizer_meta={"tokenizer_source": "word", "tokenizer_loaded": True},
         )
         self.assertEqual(info["seed"], 20261107)
-        self.assertEqual(info["generation_rule"], "single_name_equal_token_pseudonym_v1")
+        self.assertEqual(info["generation_rule"], "single_name_natural_pseudonym_v2")
+        self.assertEqual(info["selection"], "sha256_local_id_seed_rotation")
         genders = [row for row in built if row["file_line_index"] == 1]
         self.assertEqual(len(genders), 3)
-        self.assertTrue(all(row["sidecar_stage"] == "token_aligned" for row in genders))
+        self.assertEqual([row["perturbation_role"] for row in genders], ["primary", "sensitivity_repeat", "sensitivity_repeat"])
+        self.assertTrue(all(row["source_local_id"] == "fixture:1" for row in genders))
+        self.assertTrue(all(row["sidecar_stage"] == "token_aligned_candidate" for row in genders))
+        self.assertTrue(all(row["semantic_review_status"] == "pending" for row in genders))
         self.assertTrue(all(row["y_minus"] is None and row["donor_answer"] is None for row in genders))
         self.assertTrue(all(row["approved_for_localization"] is False for row in genders))
         self.assertTrue(all(row["is_candidate"] is False for row in genders))
         self.assertTrue(all(row["q_minus_role"] == "perturbed_input" for row in genders))
-        self.assertEqual([row["control_index"] for row in genders], [0, 1, 2])
         self.assertEqual(len({row["pseudonym"] for row in genders}), 3)
         self.assertTrue(all("Author Aa" not in row["q_minus"] for row in genders))
         self.assertNotEqual(genders[0]["q_minus"], genders[0]["q_plus"])
         birth = next(row for row in built if row["file_line_index"] == 0)
         self.assertIsNone(birth["q_minus"])
         self.assertEqual(birth["exclusion_reason"], "compound_slot")
+        self.assertEqual(birth["analysis_role"], "compound_slot_diagnostic")
         self.assertIsNone(birth["sidecar_stage"])
         blocked = dict(genders[0])
         blocked.update(
@@ -119,26 +192,27 @@ class PerturbationTests(unittest.TestCase):
 
     def test_without_tokenizer_rows_stay_generated(self):
         rows = _with_lines(_two_tasks())
-        built, _assignment, _info = build_perturbation_rows(rows, _config(), "fixture", tokenizer=None, tags=_tags())
+        built, _assignment, info = build_perturbation_rows(rows, _config(), "fixture", tokenizer=None, tags=_tags())
         genders = [row for row in built if row["file_line_index"] == 1]
-        self.assertEqual(len(genders), 3)
-        self.assertTrue(all(row["sidecar_stage"] == "qminus_generated" for row in genders))
-        self.assertTrue(all(row["token_alignment"] == "not_checked_no_tokenizer" for row in genders))
-        self.assertEqual(sum(1 for row in built if row["sidecar_stage"] == "token_aligned"), 0)
+        self.assertEqual(len(genders), 1)
+        self.assertIsNone(genders[0]["q_minus"])
+        self.assertEqual(genders[0]["exclusion_reason"], "not_checked_no_tokenizer")
+        self.assertEqual(info["selectable_counts"], [0] * 10)
+        self.assertEqual(sum(1 for row in built if row["sidecar_stage"] == "token_aligned_candidate"), 0)
 
     def test_names_present_in_forget_text_are_skipped(self):
         rows = _with_lines(_two_tasks())
-        order = pseudonym_order(20261107)
-        rows[1]["answer"] = rows[1]["answer"] + " " + order[0]
+        blocked = pseudonym_cycle("fixture:1", 20261107)[0]
+        rows[1]["answer"] = rows[1]["answer"] + " " + blocked
         built, _assignment, info = build_perturbation_rows(
             rows,
             _config(),
             "fixture",
-            tokenizer=WordTokenizer(),
+            tokenizer=ScreenTokenizer(),
             tags=_tags(),
         )
         used = {row["pseudonym"] for row in built if row["file_line_index"] == 1}
-        self.assertNotIn(order[0], used)
+        self.assertNotIn(blocked, used)
         self.assertGreater(info["rejections"].get("in_target_text", 0), 0)
 
     def test_sidecar_does_not_rewrite_forget_or_approve(self):
@@ -150,7 +224,7 @@ class PerturbationTests(unittest.TestCase):
                 path,
                 _config(),
                 Path(directory) / "out",
-                tokenizer=WordTokenizer(),
+                tokenizer=ScreenTokenizer(),
                 tags=_tags(),
                 tokenizer_meta={"tokenizer_loaded": True, "tokenizer_source": "word"},
             )
@@ -162,7 +236,16 @@ class PerturbationTests(unittest.TestCase):
             self.assertIsNone(summary["r_written"])
             self.assertFalse(summary["real_model_executed"])
             self.assertFalse(summary["localization_started"])
-            self.assertGreater(summary["token_aligned"], 0)
+            self.assertGreater(summary["token_aligned_candidate"], 0)
+            self.assertEqual(summary["token_aligned"], 0)
+            self.assertEqual(summary["primary_entities"], summary["screened_rows"])
+            self.assertFalse(summary["sensitivity_repeats_are_independent"])
+            self.assertEqual(summary["sample_unit"], "source_row")
+            self.assertEqual(summary["calibration_author_count"], 5)
+            self.assertEqual(summary["holdout_author_count"], 5)
+            self.assertTrue(summary["author_interval_unstable"])
+            self.assertFalse(summary["confirmatory_localization_allowed"])
+            self.assertEqual(summary["min_authors_for_interval"], 8)
             self.assertTrue(all(row["y_minus"] is None for row in built))
             _rows, digest = load_forget_records(path)
             self.assertEqual(summary["forget_sha256"], digest)
@@ -171,7 +254,7 @@ class PerturbationTests(unittest.TestCase):
         model = ToyCausal()
         example = _example()
         example["q_minus_role"] = "perturbed_input"
-        example["sidecar_stage"] = "token_aligned"
+        example["sidecar_stage"] = "token_aligned_candidate"
         example["approved_for_localization"] = False
         before = model.forward_count
         result = run_examples(
@@ -193,7 +276,7 @@ def _config():
         "questions_per_author": 2,
         "task_ids": ["1"],
         "perturbation": {
-            "rule": "single_name_equal_token_pseudonym_v1",
+            "rule": "single_name_natural_pseudonym_v2",
             "seed": 20261107,
             "max_controls": 3,
         },
