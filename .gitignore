@@ -39,4 +39,3 @@ data/
 datasets/
 hf_cache/
 .cache/huggingface/
-Right-to-be-forgotten/outputs
