@@ -4,7 +4,13 @@ from __future__ import annotations
 
 from I2.mcsd.errors import ConfigError
 from I2.mcsd.patch import module_logits, patched_logits
-from I2.mcsd.score import advantage, answer_token_distributions, masked_token_nll
+from I2.mcsd.score import (
+    answer_token_distributions,
+    assert_same_y_plus,
+    masked_token_nll,
+    refuse_answer_margin,
+    sequence_logprob,
+)
 
 
 def run_rho_sweep(model, example, paths, config, retain_example=None, retain_reason=None):
@@ -24,8 +30,10 @@ def run_rho_sweep(model, example, paths, config, retain_example=None, retain_rea
             "grid_status": rho_cfg.get("grid_status"),
             "exploratory_unregistered": exploratory,
         }
+    refuse_answer_margin(example)
+    assert_same_y_plus(example["score_plus"].get("labels"), example["score_minus"].get("labels"))
     rows = []
-    scope = None
+    scope = "y_plus_only"
     for rho in grid:
         logits, _ = patched_logits(
             model,
@@ -35,25 +43,7 @@ def run_rho_sweep(model, example, paths, config, retain_example=None, retain_rea
             example["cache_minus"],
             strength=float(rho),
         )
-        foil_logits = None
-        foil_labels = None
-        if example.get("foil_reliable"):
-            foil_logits, _ = patched_logits(
-                model,
-                example["foil_plus"],
-                paths,
-                example["cache_plus"],
-                example["cache_minus"],
-                strength=float(rho),
-            )
-            foil_labels = example["foil_plus"]["labels"]
-        score, scope = advantage(
-            logits,
-            example["score_plus"]["labels"],
-            foil_logits,
-            foil_labels,
-            foil_reliable=bool(example.get("foil_reliable")),
-        )
+        score = sequence_logprob(logits, example["score_plus"]["labels"])
         retain_nll = None
         reason = None
         if retain_example is None:
@@ -85,7 +75,7 @@ def run_rho_sweep(model, example, paths, config, retain_example=None, retain_rea
     reference = next((row for row in rows if row["rho"] == 0.0), None)
     if reference is None:
         clean = module_logits(model, example["score_plus"])
-        ref_score, _ = advantage(clean, example["score_plus"]["labels"], foil_reliable=False)
+        ref_score = sequence_logprob(clean, example["score_plus"]["labels"])
         ref_score = float(ref_score.detach().reshape(-1)[0])
         ref_nll = None
     else:

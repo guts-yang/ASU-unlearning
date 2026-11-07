@@ -84,6 +84,14 @@ def annotate_tokens(record, tokenizer, tags, tokenizer_meta):
         updated["is_candidate"] = False
         updated["fact_span"] = None
         return updated
+    answer = _target_answer(updated)
+    if answer is None:
+        updated["status"] = "missing_y_plus"
+        updated["exclusion_reason"] = "missing_y_plus"
+        updated["token_alignment"] = "missing_y_plus"
+        updated["is_candidate"] = False
+        updated["fact_span"] = None
+        return updated
     if tokenizer is None:
         updated["status"] = "token_unchecked"
         updated["token_alignment"] = "not_checked_no_tokenizer"
@@ -113,14 +121,14 @@ def annotate_tokens(record, tokenizer, tags, tokenizer_meta):
         updated["is_candidate"] = False
         updated["fact_span"] = None
         return updated
-    if not _prefix_matches(tokenizer, tags, updated["q_plus"], updated.get("source_answer"), plus_ids):
+    if not _prefix_matches(tokenizer, tags, updated["q_plus"], answer, plus_ids):
         updated["status"] = "score_prefix_boundary_mismatch"
         updated["exclusion_reason"] = "score_prefix_boundary_mismatch"
         updated["is_candidate"] = False
         updated["fact_span"] = None
         return updated
     minus_prefix = _encode(tokenizer, _question_text(tags, updated["q_minus"]))[0]
-    if not _prefix_matches(tokenizer, tags, updated["q_minus"], updated.get("donor_answer"), minus_prefix):
+    if not _prefix_matches(tokenizer, tags, updated["q_minus"], answer, minus_prefix):
         updated["status"] = "score_prefix_boundary_mismatch"
         updated["exclusion_reason"] = "score_prefix_boundary_mismatch"
         updated["is_candidate"] = False
@@ -186,7 +194,18 @@ def _span_covers_replacement(offsets, span, intended_spans, tags):
     return True
 
 
+def _target_answer(record):
+    """The original y+ scored on both q+ and q-. Donor answers are not labels."""
+    for key in ("y_plus", "source_answer"):
+        value = record.get(key)
+        if value is not None and str(value).strip():
+            return str(value)
+    return None
+
+
 def _prefix_matches(tokenizer, tags, question, answer, question_ids):
+    if answer is None or not str(answer).strip():
+        return False
     score_ids, _offsets = _encode(tokenizer, _score_text(tags, question, answer))
     if len(score_ids) < len(question_ids):
         return False

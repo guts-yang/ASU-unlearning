@@ -36,6 +36,30 @@ def advantage(logits_pos, labels_pos, logits_neg=None, labels_neg=None, foil_rel
     return positive - negative, "margin"
 
 
+def assert_same_y_plus(labels_plus, labels_minus, ignore_index=-100):
+    """Require both score sequences to carry the same y+ at the same positions.
+
+    A missing label is an error. Nothing here invents a y- answer.
+    """
+    if not torch.is_tensor(labels_plus) or not torch.is_tensor(labels_minus):
+        raise ValueError("y+ labels are missing; refusing to invent y-")
+    if labels_plus.shape != labels_minus.shape:
+        raise ValueError("y+ labels are not position-aligned between q+ and q-")
+    valid = labels_plus.ne(ignore_index)
+    if not torch.equal(valid, labels_minus.ne(ignore_index)):
+        raise ValueError("y+ labels are not position-aligned between q+ and q-")
+    if not bool(valid.any()):
+        raise ValueError("y+ labels have no answer tokens")
+    if not torch.equal(labels_plus.masked_fill(~valid, 0), labels_minus.masked_fill(~valid, 0)):
+        raise ValueError("q- score labels are not y+")
+    return labels_plus
+
+
+def refuse_answer_margin(example):
+    if example.get("foil_reliable"):
+        raise ValueError("N/R scores y+ only; refusing a positive-negative margin")
+
+
 def masked_token_nll(logits, labels, ignore_index=-100):
     """Mean cross-entropy on shifted answer tokens, matching ignore_index -100."""
     if logits.ndim != 3:

@@ -157,9 +157,34 @@ class PatchTests(unittest.TestCase):
         effect = measure_effects(model, example, paths, strength=1.0)
         self.assertGreater(effect["N"], 0.0)
         self.assertGreater(effect["R"], 0.0)
-        self.assertEqual(effect["score_scope"], "positive_only")
+        self.assertEqual(effect["score_scope"], "y_plus_only")
         self.assertEqual(effect["donor_direction"]["necessity"], "q+ <- A-")
         self.assertEqual(effect["computed_by"], "joint_patch_forward")
+
+    def test_q_minus_must_score_the_same_y_plus(self):
+        model = ToyCausal()
+        paths = [("attention", 0, 0, 0)]
+        missing = _example()
+        missing["score_minus"] = _batch([2, 3, 4, 4])
+        with self.assertRaises(ValueError) as caught:
+            measure_effects(model, missing, paths, strength=1.0)
+        self.assertIn("y+", str(caught.exception))
+        mismatched = _example()
+        mismatched["score_minus"] = _batch([2, 3, 4, 4], labels=[-100, -100, 0, 1])
+        with self.assertRaises(ValueError) as caught:
+            measure_effects(model, mismatched, paths, strength=1.0)
+        self.assertIn("not y+", str(caught.exception))
+        shifted = _example()
+        shifted["score_minus"] = _batch([2, 3, 4, 4], labels=[-100, 0, 0, -100])
+        with self.assertRaises(ValueError) as caught:
+            measure_effects(model, shifted, paths, strength=1.0)
+        self.assertIn("position-aligned", str(caught.exception))
+        foil = _example()
+        foil["foil_reliable"] = True
+        with self.assertRaises(ValueError) as caught:
+            measure_effects(model, foil, paths, strength=1.0)
+        self.assertIn("margin", str(caught.exception))
+        self.assertEqual(model.forward_count, 0)
 
     def test_joint_effect_is_not_the_sum_of_single_paths(self):
         model = ToyCausal()

@@ -5,7 +5,7 @@ from __future__ import annotations
 import random
 
 from I2.mcsd.patch import capture_clean, patched_logits
-from I2.mcsd.score import advantage
+from I2.mcsd.score import assert_same_y_plus, refuse_answer_margin, sequence_logprob
 
 
 def _scalar(value):
@@ -17,12 +17,15 @@ def _scalar(value):
 
 
 def measure_effects(model, example, paths, strength=1.0, weights=None, source_pair=None, donor_pair=None, audit=None):
-    """N_S = g(q+) - g(P_S(q+ <- A-)); R_S = g(P_S(q- <- A+)) - g(q-).
+    """N = s(q+; y+) - s(P(q+ <- A-); y+); R = s(P(q- <- A+); y+) - s(q-; y+).
 
-    ``source_pair`` / ``donor_pair`` override the clean caches. The matched
-    measurement uses the example's own q+ and q- caches. A wrong-donor control
-    passes a different donor pair.
+    q- is a perturbed input. Both score sequences use the original answer y+.
+    ``source_pair`` / ``donor_pair`` override the clean prompt caches.
     """
+    refuse_answer_margin(example)
+    labels_plus = example["score_plus"].get("labels")
+    labels_minus = example["score_minus"].get("labels")
+    assert_same_y_plus(labels_plus, labels_minus)
     cache_plus = example.get("cache_plus")
     cache_minus = example.get("cache_minus")
     if cache_plus is None or cache_minus is None:
@@ -39,7 +42,6 @@ def measure_effects(model, example, paths, strength=1.0, weights=None, source_pa
     else:
         donor_plus, donor_minus = donor_pair
 
-    foil = bool(example.get("foil_reliable"))
     clean_pos = module_logits_of(model, example["score_plus"])
     clean_neg = module_logits_of(model, example["score_minus"])
     patched_pos, _ = patched_logits(
@@ -62,51 +64,17 @@ def measure_effects(model, example, paths, strength=1.0, weights=None, source_pa
         weights=weights,
         audit=audit,
     )
-    foil_pos = foil_neg = patched_foil_pos = patched_foil_neg = None
-    if foil:
-        foil_pos = module_logits_of(model, example["foil_plus"])
-        foil_neg = module_logits_of(model, example["foil_minus"])
-        patched_foil_pos, _ = patched_logits(
-            model, example["foil_plus"], paths, source_plus, donor_plus, strength=strength, weights=weights, audit=audit
-        )
-        patched_foil_neg, _ = patched_logits(
-            model, example["foil_minus"], paths, source_minus, donor_minus, strength=strength, weights=weights, audit=audit
-        )
-    g_plus, scope = advantage(
-        clean_pos,
-        example["score_plus"]["labels"],
-        foil_pos,
-        None if example.get("foil_plus") is None else example["foil_plus"]["labels"],
-        foil_reliable=foil,
-    )
-    g_patched_plus, _ = advantage(
-        patched_pos,
-        example["score_plus"]["labels"],
-        patched_foil_pos,
-        None if example.get("foil_plus") is None else example["foil_plus"]["labels"],
-        foil_reliable=foil,
-    )
-    g_minus, _ = advantage(
-        clean_neg,
-        example["score_minus"]["labels"],
-        foil_neg,
-        None if example.get("foil_minus") is None else example["foil_minus"]["labels"],
-        foil_reliable=foil,
-    )
-    g_patched_minus, _ = advantage(
-        patched_neg,
-        example["score_minus"]["labels"],
-        patched_foil_neg,
-        None if example.get("foil_minus") is None else example["foil_minus"]["labels"],
-        foil_reliable=foil,
-    )
+    g_plus = sequence_logprob(clean_pos, labels_plus)
+    g_patched_plus = sequence_logprob(patched_pos, labels_plus)
+    g_minus = sequence_logprob(clean_neg, labels_minus)
+    g_patched_minus = sequence_logprob(patched_neg, labels_minus)
     necessity = g_plus - g_patched_plus
     rescue = g_patched_minus - g_minus
     computed_by = "joint_patch_forward" if len(list(paths)) > 1 else "single_path_patch_forward"
     return {
         "N": _scalar(necessity),
         "R": _scalar(rescue),
-        "score_scope": scope,
+        "score_scope": "y_plus_only",
         "computed_by": computed_by,
         "path_count": len(list(paths)),
         "status": "computed",

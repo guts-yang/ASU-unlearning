@@ -285,7 +285,7 @@ class SameSplitTests(unittest.TestCase):
         tags = {
             "question_start_tag": "[INST] ",
             "question_end_tag": " [/INST]",
-            "answer_tag": "",
+            "answer_tag": " ",
         }
         meta = {
             "tokenizer_source": "/root/autodl-tmp/models/tofu_ft_llama2-7b",
@@ -304,8 +304,14 @@ class SameSplitTests(unittest.TestCase):
             "approved_for_localization": False,
             "intended_character_spans": [[4, 7]],
             "source_answer": "",
+            "y_plus": None,
             "donor_answer": None,
         }
+        missing = finalize_token_row(synthetic, WordTokenizer(), tags, meta)
+        self.assertEqual(missing["token_alignment"], "missing_y_plus")
+        self.assertFalse(missing["is_candidate"])
+        self.assertFalse(missing["approved_for_localization"])
+        synthetic["y_plus"] = "Noted."
         finished = finalize_token_row(synthetic, WordTokenizer(), tags, meta)
         self.assertEqual(finished["analysis_role"], "synthetic_non_primary")
         self.assertEqual(finished["record_status"], "generated")
@@ -337,7 +343,6 @@ def _config(task_ids=None):
         "scope": "descriptive_pilot",
         "tokenizer": {"source": "/root/autodl-tmp/models/tofu_ft_llama2-7b"},
         "pairing": {"mode": None},
-        "previous_cross_split_audit": "token_audit_20261106T030812Z",
     }
 
 

@@ -10,7 +10,7 @@ from I2.mcsd.errors import ConfigError, DifferentiableMaskUnavailable
 from I2.mcsd.gates import assert_calibration_only
 from I2.mcsd.hooks import parse_path, path_to_dict, supports_differentiable_mask
 from I2.mcsd.patch import capture_clean, patched_logits
-from I2.mcsd.score import advantage
+from I2.mcsd.score import assert_same_y_plus, refuse_answer_margin, sequence_logprob
 
 
 PGB_KEYS = (
@@ -144,6 +144,8 @@ def _binary_effects(model, example, paths):
 
 
 def _soft_advantage(model, example, paths, mask):
+    refuse_answer_margin(example)
+    assert_same_y_plus(example["score_plus"].get("labels"), example["score_minus"].get("labels"))
     weights = {paths[index]: mask[index] for index in range(len(paths))}
     logits, _ = patched_logits(
         model,
@@ -154,26 +156,7 @@ def _soft_advantage(model, example, paths, mask):
         strength=None,
         weights=weights,
     )
-    foil_logits = None
-    foil_labels = None
-    if example.get("foil_reliable"):
-        foil_logits, _ = patched_logits(
-            model,
-            example["foil_plus"],
-            paths,
-            example["cache_plus"],
-            example["cache_minus"],
-            strength=None,
-            weights=weights,
-        )
-        foil_labels = example["foil_plus"]["labels"]
-    return advantage(
-        logits,
-        example["score_plus"]["labels"],
-        foil_logits,
-        foil_labels,
-        foil_reliable=bool(example.get("foil_reliable")),
-    )
+    return sequence_logprob(logits, example["score_plus"]["labels"]), "y_plus_only"
 
 
 def _objective(soft_g, mask, selection):
