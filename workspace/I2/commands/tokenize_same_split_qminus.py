@@ -16,29 +16,25 @@ if str(_WORKSPACE) not in sys.path:
 from I2.mcsd.storage import measurement_dir  # noqa: E402
 from I2.mcsd.token_record import annotate_tokens, llama2_tags, load_tokenizer  # noqa: E402
 
-_SOURCE = (
-    _WORKSPACE
-    / "I2"
-    / "results"
-    / "qminus_same_split_20261107T025551Z"
-    / "qminus.jsonl"
-)
 _MODEL_CONFIG = _REPO / "Right-to-be-forgotten" / "config" / "model_config.yaml"
 _PRIMARY = "primary_single_slot"
 
 
 def main(argv=None):
-    del argv
-    if not _SOURCE.is_file():
-        raise RuntimeError("same-split q- sidecar is missing: %s" % _SOURCE)
+    arguments = list(sys.argv[1:] if argv is None else argv)
+    if len(arguments) != 1:
+        raise RuntimeError("q- jsonl path is required")
+    source = Path(arguments[0])
+    if not source.is_file():
+        raise RuntimeError("q- sidecar is missing: %s" % source)
     output_dir = measurement_dir("same_split_tokens")
     output_dir.mkdir(parents=True, exist_ok=False)
     tokenizer, meta = load_tokenizer()
     tags = llama2_tags(_MODEL_CONFIG)
-    rows = [json.loads(line) for line in _SOURCE.read_text().splitlines() if line.strip()]
+    rows = [json.loads(line) for line in source.read_text().splitlines() if line.strip()]
     annotated = [finalize_token_row(row, tokenizer, tags, meta) for row in rows]
     _write_jsonl(output_dir / "tokens.jsonl", annotated)
-    summary = _summary(annotated, meta)
+    summary = _summary(annotated, meta, source)
     _write_json(output_dir / "summary.json", summary)
     sys.stdout.write(str(output_dir) + "\n")
     return 0
@@ -77,7 +73,7 @@ def finalize_token_row(record, tokenizer, tags, tokenizer_meta):
     return annotated
 
 
-def _summary(rows, meta):
+def _summary(rows, meta, source):
     by_role = {}
     for row in rows:
         role = row.get("analysis_role") or "missing"
@@ -85,7 +81,7 @@ def _summary(rows, meta):
         counts[row.get("token_alignment") or "missing"] += 1
     with_q_minus = sum(1 for row in rows if row.get("q_minus"))
     return {
-        "source_qminus": str(_SOURCE),
+        "source_qminus": str(source),
         "rows_read": len(rows),
         "generated_with_q_minus": with_q_minus,
         "excluded_without_q_minus": len(rows) - with_q_minus,

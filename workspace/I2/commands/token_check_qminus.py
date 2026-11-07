@@ -30,7 +30,6 @@ from I2.mcsd.storage import measurement_dir  # noqa: E402
 MODEL_DIR = Path("/root/autodl-tmp/models/tofu_ft_llama2-7b")
 FORGET_PATH = _RBF / "data" / "tofu" / "forget05.json"
 MODEL_CONFIG_PATH = _RBF / "config" / "model_config.yaml"
-QMINUS_PATH = _WORKSPACE / "I2" / "results" / "qminus_20261105T144550Z" / "qminus.jsonl"
 SCORE_MAX_LENGTH = 500
 MODEL_FAMILY = "llama2-7b"
 
@@ -38,9 +37,16 @@ MODEL_FAMILY = "llama2-7b"
 PREFIX_MISMATCH_ROWS = {12, 27, 30, 36, 66, 70, 92, 154}
 
 
-def main():
+def main(argv=None):
     import yaml
     from transformers import AutoTokenizer
+
+    arguments = list(sys.argv[1:] if argv is None else argv)
+    if len(arguments) != 1:
+        raise RuntimeError("q- jsonl path is required")
+    qminus_path = Path(arguments[0])
+    if not qminus_path.is_file():
+        raise RuntimeError("q- sidecar is missing: %s" % qminus_path)
 
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     out_dir = measurement_dir("token_audit", stamp)
@@ -50,7 +56,7 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(str(MODEL_DIR), local_files_only=True)
     tokenizer.pad_token = tokenizer.eos_token
 
-    qminus_rows = [json.loads(line) for line in QMINUS_PATH.read_text().splitlines() if line.strip()]
+    qminus_rows = [json.loads(line) for line in qminus_path.read_text().splitlines() if line.strip()]
     if len(qminus_rows) != 200:
         raise RuntimeError("expected 200 qminus rows, got %s" % len(qminus_rows))
 
@@ -78,7 +84,7 @@ def main():
         "tokenizer_loaded": True,
         "tokenizer_source": str(MODEL_DIR),
         "model_family": MODEL_FAMILY,
-        "qminus_source": str(QMINUS_PATH),
+        "qminus_source": str(qminus_path),
         "rows_audited": len(qminus_rows),
         "candidates": len(candidates),
         "excluded": len(excluded),
