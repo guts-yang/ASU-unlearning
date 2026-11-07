@@ -6,6 +6,7 @@ import subprocess
 from pathlib import Path
 
 from I2.mcsd.alignment import check_alignment, questions_present
+from I2.mcsd.perturbation import localization_block_reason
 from I2.mcsd.bootstrap import bootstrap_from_rows
 from I2.mcsd.config import config_sha256
 from I2.mcsd.effects import control_suite, interaction_diagnostic
@@ -100,6 +101,10 @@ def run_examples(model, examples, config, loaded_rows, tokenizer_name="fake", ou
         if missing:
             reasons = list(reasons) + ["row_not_in_loaded_records"]
             aligned = False
+        blocked = localization_block_reason(example)
+        if blocked:
+            reasons = list(reasons) + [blocked]
+            aligned = False
         if not aligned:
             excluded.append(
                 {
@@ -124,6 +129,11 @@ def run_examples(model, examples, config, loaded_rows, tokenizer_name="fake", ou
         paths = [parse_path(item) for item in selection["binary_paths"]]
         retain_example = example.get("retain_example")
         retain_reason = example.get("retain_reason")
+        if retain_example is not None:
+            retain_block = localization_block_reason(retain_example)
+            if retain_block:
+                retain_example = None
+                retain_reason = retain_block
         if retain_example is not None:
             retain_ok, retain_reasons = check_alignment(
                 retain_example["prompt_plus_ids"],
