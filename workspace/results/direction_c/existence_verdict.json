@@ -1,0 +1,18 @@
+{
+  "decision": "stop_anchor",
+  "rule": "FE does not drop versus ASU_KL, GSM8K rises by at least 0.03, and GSM8K exceeds logit_control",
+  "runs": {
+    "asu_kl": {
+      "forget_efficacy": 0.5259083193164308,
+      "gsm8k": 0.714177407126611
+    },
+    "anchor": {
+      "forget_efficacy": 0.5184975159745586,
+      "gsm8k": 0.7520849128127369
+    },
+    "logit_control": {
+      "forget_efficacy": 0.5159127330963275,
+      "gsm8k": 0.46626231993934797
+    }
+  }
+}

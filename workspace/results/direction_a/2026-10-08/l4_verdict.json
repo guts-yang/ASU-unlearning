@@ -1,0 +1,51 @@
+{
+  "decision": "kill-switch",
+  "channels": {
+    "probab": {
+      "mean_delta": 0.005,
+      "greedy_rate": 0.0,
+      "ci95": [
+        0.0,
+        0.015
+      ],
+      "significant_positive": false,
+      "attack_rate": 0.005
+    },
+    "focus_on_key": {
+      "mean_delta": 0.01,
+      "greedy_rate": 0.0,
+      "ci95": [
+        0.0,
+        0.025
+      ],
+      "significant_positive": false,
+      "attack_rate": 0.01
+    },
+    "qra_nf4": {
+      "mean_delta": 0.0,
+      "greedy_rate": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "significant_positive": false,
+      "attack_rate": 0.0
+    },
+    "qra_int4": {
+      "mean_delta": 0.0,
+      "greedy_rate": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "significant_positive": false,
+      "attack_rate": 0.0
+    }
+  },
+  "order_preserving_leak": false,
+  "replay_FE": 0.7740777730353676,
+  "retain_fp16_hit_proxy": 0.29,
+  "n_forget": 200,
+  "limit": null,
+  "assembled_from_disk": true
+}
