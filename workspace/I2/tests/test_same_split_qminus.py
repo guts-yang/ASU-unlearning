@@ -14,6 +14,7 @@ if str(WORKSPACE) not in sys.path:
     sys.path.insert(0, str(WORKSPACE))
 
 from I2.commands.build_same_split_qminus import main, run_sidecar  # noqa: E402
+from I2.commands.tokenize_same_split_qminus import finalize_token_row  # noqa: E402
 from I2.mcsd.config import load_config  # noqa: E402
 from I2.mcsd.errors import ConfigError  # noqa: E402
 from I2.mcsd.same_split import (  # noqa: E402
@@ -279,6 +280,48 @@ class SameSplitTests(unittest.TestCase):
         )
         self.assertTrue(all(row["approved_for_localization"] is False for row in built))
         self.assertFalse(assignment["confirmatory_localization_allowed"])
+
+    def test_synthetic_token_alignment_stays_out_of_the_candidate_set(self):
+        tags = {
+            "question_start_tag": "[INST] ",
+            "question_end_tag": " [/INST]",
+            "answer_tag": "",
+        }
+        meta = {
+            "tokenizer_source": "/root/autodl-tmp/models/tofu_ft_llama2-7b",
+            "transformers_version": "test",
+            "tokenizer_sha256": None,
+        }
+        synthetic = {
+            "q_plus": "See Ada now",
+            "q_minus": "See Bob now",
+            "generated": True,
+            "exclusion_reason": None,
+            "analysis_role": "synthetic_non_primary",
+            "record_status": "generated",
+            "status": "synthetic",
+            "is_candidate": False,
+            "approved_for_localization": False,
+            "intended_character_spans": [[4, 7]],
+            "source_answer": "",
+            "donor_answer": None,
+        }
+        finished = finalize_token_row(synthetic, WordTokenizer(), tags, meta)
+        self.assertEqual(finished["analysis_role"], "synthetic_non_primary")
+        self.assertEqual(finished["record_status"], "generated")
+        self.assertEqual(finished["token_alignment"], "aligned")
+        self.assertFalse(finished["is_candidate"])
+        self.assertFalse(finished["approved_for_localization"])
+        untouched = dict(synthetic)
+        untouched["q_minus"] = None
+        skipped = finalize_token_row(untouched, WordTokenizer(), tags, meta)
+        self.assertEqual(skipped["token_alignment"], "not_encoded_no_q_minus")
+        self.assertFalse(skipped["is_candidate"])
+        source = (
+            Path(__file__).resolve().parents[1] / "commands" / "tokenize_same_split_qminus.py"
+        ).read_text()
+        self.assertNotIn("LlamaForCausalLM", source)
+        self.assertNotIn("forget.py", source)
 
     def test_missing_forget_file_raises(self):
         with self.assertRaises(ConfigError):
