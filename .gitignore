@@ -38,6 +38,8 @@ tensorboard/
 data/
 !workspace/data/
 !workspace/data/**
+workspace/data/**/.DS_Store
+workspace/data/.DS_Store
 datasets/
 hf_cache/
 .cache/huggingface/
