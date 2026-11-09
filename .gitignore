@@ -36,6 +36,8 @@ tensorboard/
 
 # Data/model downloads
 data/
+!workspace/data/
+!workspace/data/**
 datasets/
 hf_cache/
 .cache/huggingface/

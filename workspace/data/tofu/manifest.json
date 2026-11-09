@@ -1,0 +1,191 @@
+{
+  "source": "locuslab/TOFU",
+  "split": "train",
+  "format": "jsonl",
+  "splits": [
+    {
+      "name": "full",
+      "file": "full.jsonl",
+      "rows": 4000,
+      "columns": [
+        "question",
+        "answer"
+      ]
+    },
+    {
+      "name": "forget01",
+      "file": "forget01.jsonl",
+      "rows": 40,
+      "columns": [
+        "question",
+        "answer"
+      ]
+    },
+    {
+      "name": "forget05",
+      "file": "forget05.jsonl",
+      "rows": 200,
+      "columns": [
+        "question",
+        "answer"
+      ]
+    },
+    {
+      "name": "forget10",
+      "file": "forget10.jsonl",
+      "rows": 400,
+      "columns": [
+        "question",
+        "answer"
+      ]
+    },
+    {
+      "name": "retain90",
+      "file": "retain90.jsonl",
+      "rows": 3600,
+      "columns": [
+        "question",
+        "answer"
+      ]
+    },
+    {
+      "name": "retain95",
+      "file": "retain95.jsonl",
+      "rows": 3800,
+      "columns": [
+        "question",
+        "answer"
+      ]
+    },
+    {
+      "name": "retain99",
+      "file": "retain99.jsonl",
+      "rows": 3960,
+      "columns": [
+        "question",
+        "answer"
+      ]
+    },
+    {
+      "name": "holdout01",
+      "file": "holdout01.jsonl",
+      "rows": 40,
+      "columns": [
+        "question",
+        "answer"
+      ]
+    },
+    {
+      "name": "holdout05",
+      "file": "holdout05.jsonl",
+      "rows": 200,
+      "columns": [
+        "question",
+        "answer"
+      ]
+    },
+    {
+      "name": "holdout10",
+      "file": "holdout10.jsonl",
+      "rows": 400,
+      "columns": [
+        "question",
+        "answer"
+      ]
+    },
+    {
+      "name": "world_facts",
+      "file": "world_facts.jsonl",
+      "rows": 117,
+      "columns": [
+        "question",
+        "option1",
+        "option2",
+        "option3",
+        "option4",
+        "answer"
+      ]
+    },
+    {
+      "name": "real_authors",
+      "file": "real_authors.jsonl",
+      "rows": 100,
+      "columns": [
+        "question",
+        "option1",
+        "option2",
+        "option3",
+        "option4",
+        "answer"
+      ]
+    },
+    {
+      "name": "forget01_perturbed",
+      "file": "forget01_perturbed.jsonl",
+      "rows": 40,
+      "columns": [
+        "question",
+        "answer",
+        "paraphrased_answer",
+        "perturbed_answer",
+        "paraphrased_question"
+      ]
+    },
+    {
+      "name": "forget05_perturbed",
+      "file": "forget05_perturbed.jsonl",
+      "rows": 200,
+      "columns": [
+        "question",
+        "answer",
+        "paraphrased_answer",
+        "perturbed_answer",
+        "paraphrased_question"
+      ]
+    },
+    {
+      "name": "forget10_perturbed",
+      "file": "forget10_perturbed.jsonl",
+      "rows": 400,
+      "columns": [
+        "question",
+        "answer",
+        "paraphrased_answer",
+        "perturbed_answer",
+        "paraphrased_question"
+      ]
+    },
+    {
+      "name": "retain_perturbed",
+      "file": "retain_perturbed.jsonl",
+      "rows": 400,
+      "columns": [
+        "question",
+        "answer",
+        "paraphrased_answer",
+        "perturbed_answer",
+        "paraphrased_question"
+      ]
+    },
+    {
+      "name": "world_facts_perturbed",
+      "file": "world_facts_perturbed.jsonl",
+      "rows": 117,
+      "columns": [
+        "question",
+        "answer",
+        "perturbed_answer"
+      ]
+    },
+    {
+      "name": "real_authors_perturbed",
+      "file": "real_authors_perturbed.jsonl",
+      "rows": 100,
+      "columns": [
+        "question",
+        "answer",
+        "perturbed_answer"
+      ]
+    }
+  ]
+}
