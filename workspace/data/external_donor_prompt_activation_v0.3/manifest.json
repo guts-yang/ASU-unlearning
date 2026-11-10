@@ -1,0 +1,28 @@
+{
+  "protocol": "prompt_only_activation_donor_v0.3",
+  "created_date": "2026-11-10",
+  "status": "candidate_not_model_validated",
+  "canonical_checkpoint": "open-unlearning/tofu_Llama-2-7b-chat-hf_full",
+  "tokenizer_policy": "use tokenizer from exact checkpoint snapshot",
+  "clean_source": "I/data/forget05.jsonl",
+  "clean_source_sha256": "8f721842a4741fda0e4bfed459c4510c6c00604d5c332a533011648236862e08",
+  "clean_rows": 200,
+  "pair_count": 10,
+  "unique_clean_clusters": 10,
+  "unique_donor_clusters": 10,
+  "relation": "place_of_birth / Wikidata P19",
+  "donor_answer_label_required": false,
+  "donor_fact_value_role": "provenance and relation audit only; not model input or loss target",
+  "beyonce_excluded_due_to_remote_report_name_collision": true,
+  "local_name_overlap_screen": "none found against pre-existing I/data/*.jsonl on 2026-11-10; remote inventory scan pending",
+  "remote_validation_required": [
+    "exact remote evaluation entity/alias overlap scan",
+    "source/QID/P19 and answer-granularity review",
+    "target checkpoint/tokenizer/template identity",
+    "prompt tokenization and entity-span/patch-coordinate compatibility",
+    "prompt-only a_plus/a_minus extraction and reproducibility",
+    "activation patch smoke with clean, shuffled donor and matched-null controls",
+    "y_plus scoring span/aggregation freeze",
+    "retain and forget impact audit"
+  ]
+}
