@@ -1,0 +1,149 @@
+{
+  "protocol": "prompt_only_residual_localization_v0.3",
+  "status": "frozen_before_patched_scores",
+  "date": "2026-11-11",
+  "checkpoint_repo": "open-unlearning/tofu_Llama-2-7b-chat-hf_full",
+  "snapshot": "cc5b31c69127d5da881608e640f2b453c446435b",
+  "model_class": "my_models.my_llama.LlamaForCausalLM",
+  "dtype": "bfloat16",
+  "attention": "sdpa",
+  "template": "[INST] {question} [/INST]",
+  "question_start": "[INST] ",
+  "question_end": " [/INST]",
+  "prompt_add_special_tokens": true,
+  "count_eos": false,
+  "count_padding": false,
+  "y_plus_not_in_prompt": true,
+  "donor_fact_value_not_in_prompt": true,
+  "answer_span": {
+    "rule": "Score the suffix of tokenize(prompt + city, add_special_tokens=True) after requiring the prompt prefix to match tokenize(prompt). Do not insert a space, EOS, or padding.",
+    "why_not_standalone_city_ids": "LlamaTokenizerFast encode(city, add_special_tokens=False) inserts a leading space marker. Those ids are not the tokens of the city string appended after [/INST]. They are recorded as a diagnostic and are not the scored span.",
+    "aggregation": "mean conditional log-prob"
+  },
+  "anchor": {
+    "name": "question_mark",
+    "token_string": "?",
+    "rule": "Exactly one prompt token whose piece is '?'."
+  },
+  "layer_map": {
+    "hidden_states_0": "embedding; not a patch site",
+    "layers_0_to_30_vector": "hidden_states[l+1] at the question mark; a read-only hook on layers[l] must match this vector",
+    "layer_31_vector": "forward-hook output of layers[31] before the final RMSNorm; this is not hidden_states[32]",
+    "hidden_states_32": "final RMSNorm output; not a patch site",
+    "patch_layers": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
+    "patch_strength": "full residual replacement at the question-mark position only"
+  },
+  "score": "mean_t log p(y_t | prompt, y_<t)",
+  "delta_target": "score_base - score_patched",
+  "positive_delta_meaning": "donor or noise patch lowered support for the city span; this is not forgetting success",
+  "splits": {
+    "unit": "author_or_entity_cluster",
+    "discovery_pairs": ["promptdonor-01", "promptdonor-02", "promptdonor-03", "promptdonor-04", "promptdonor-05", "promptdonor-06"],
+    "confirmation_pairs": ["promptdonor-07", "promptdonor-08", "promptdonor-09", "promptdonor-10"],
+    "noise_seeds_are_not_independent_samples": true,
+    "multiple_tokens_are_not_independent_samples": true
+  },
+  "nomination": {
+    "arm": "discovery_forget_only",
+    "uses_retain": false,
+    "uses_confirmation": false,
+    "eligible_clusters": "target-signal PASS only",
+    "metric": "donor_specific = delta_donor - mean_over_seeds(delta_noise)",
+    "median": "sort ascending; odd count takes the center; even count takes the mean of the two centers",
+    "keep_if": "median > 0",
+    "max_layers": 3,
+    "tie_break": "higher median first, then lower layer index",
+    "empty_s": "path claim fails"
+  },
+  "noise": {
+    "formula": "h_null = h + r * epsilon / ||epsilon||_2",
+    "r": "||a_minus - h||_2",
+    "epsilon": "standard normal float32 on a CPU generator",
+    "seeds": [0, 1, 2, 3],
+    "h_source": "unpatched teacher-forced scoring forward at the recipient question mark",
+    "a_minus_source": "prompt-only donor forward at the donor question mark; no donor answer appended",
+    "dtype_written": "bfloat16",
+    "seed_formula": "seed + 10007 * layer + 1000003 * pair_index + (1000000007 if group == retain else 0)",
+    "pair_index": "0 for promptdonor-01 through 9 for promptdonor-10; retain probes use 0..9 in selected order"
+  },
+  "shuffle": {
+    "relation": "place_of_birth",
+    "seed": 20261111,
+    "algorithm": "random.Random(20261111).shuffle on donor-01..donor-10; the first shuffle is a derangement",
+    "mapping": {
+      "donor-01": "donor-07",
+      "donor-02": "donor-09",
+      "donor-03": "donor-10",
+      "donor-04": "donor-01",
+      "donor-05": "donor-03",
+      "donor-06": "donor-04",
+      "donor-07": "donor-02",
+      "donor-08": "donor-06",
+      "donor-09": "donor-05",
+      "donor-10": "donor-08"
+    }
+  },
+  "retain": {
+    "source": "workspace/data/tofu/retain95.jsonl",
+    "read_only": true,
+    "question_regex": "^Where was .+ born\\?$",
+    "author_span": "literal text between 'Where was ' and ' born?'",
+    "exclude_if_question_contains_clean_entity": true,
+    "one_probe_per_author_span": true,
+    "file_order": "first 10 qualified probes",
+    "city_patterns": [
+      "^(?P<prefix>.+) was born in (?P<city>[A-Z][^,]+), (?P<country>[A-Z][^.,]+)(?:\\.| on the .+)$",
+      "^(?P<prefix>.+) hails from (?P<city>[A-Z][^,]+), (?P<country>[A-Z][^.,]+)\\.$"
+    ],
+    "city_pattern_names": ["was_born_in", "hails_from"],
+    "reject_city_if": ["startswith 'the '", "contains ' city of '"],
+    "ambiguous_or_unmatched_excluded": true,
+    "scored_span": "city only, same answer-span rule as y_plus",
+    "donor_cycle": ["donor-01", "donor-02", "donor-03", "donor-04", "donor-05", "donor-06", "donor-07", "donor-08", "donor-09", "donor-10"],
+    "expected_probes": [
+      {"line_1based": 22, "author_span": "Chukwu Akabueze", "city": "Lagos", "country": "Nigeria", "pattern": "hails_from", "donor_id": "donor-01"},
+      {"line_1based": 46, "author_span": "author Evelyn Desmet", "city": "Brussels", "country": "Belgium", "pattern": "was_born_in", "donor_id": "donor-02"},
+      {"line_1based": 301, "author_span": "the renowned war genre writer Rhoda Mbalazi", "city": "Dar es Salaam", "country": "Tanzania", "pattern": "was_born_in", "donor_id": "donor-03"},
+      {"line_1based": 442, "author_span": "Isabel Martínez", "city": "Madrid", "country": "Spain", "pattern": "was_born_in", "donor_id": "donor-04"},
+      {"line_1based": 641, "author_span": "Samir Khoury", "city": "Amman", "country": "Jordan", "pattern": "was_born_in", "donor_id": "donor-05"},
+      {"line_1based": 721, "author_span": "Sanjana Rahman", "city": "Dhaka", "country": "Bangladesh", "pattern": "was_born_in", "donor_id": "donor-06"},
+      {"line_1based": 781, "author_span": "Hannah Claire Harkinson", "city": "Los Angeles", "country": "USA", "pattern": "was_born_in", "donor_id": "donor-07"},
+      {"line_1based": 861, "author_span": "author Jina An", "city": "Seoul", "country": "South Korea", "pattern": "was_born_in", "donor_id": "donor-08"},
+      {"line_1based": 1062, "author_span": "Jane Morrison", "city": "New York City", "country": "USA", "pattern": "was_born_in", "donor_id": "donor-09"},
+      {"line_1based": 1342, "author_span": "science fiction author Sirin Thongprasert", "city": "Bangkok", "country": "Thailand", "pattern": "was_born_in", "donor_id": "donor-10"}
+    ]
+  },
+  "tolerances": {
+    "noop_and_self_patch_answer_logit_max_abs": 0,
+    "online_vs_cache_question_mark_max_abs": 0
+  },
+  "downstream_check": {
+    "patch_layer": 0,
+    "watch_layer": 1,
+    "probe": "set the first residual coordinate to 0 if it is nonzero, otherwise set it to 1",
+    "pass_if": "watched next-layer input max abs diff > 0"
+  },
+  "target_signal": {
+    "max_new_tokens": 16,
+    "greedy": "manual argmax, 16 new tokens, hooks removed",
+    "pass_if": "decoded continuation with special tokens removed, after stripping leading whitespace, equals y_plus or continues with a non-alphanumeric boundary"
+  },
+  "confirmation_claim": {
+    "s_nonempty": true,
+    "donor_specific_positive_clusters": "at least 3 of the 4 confirmation clusters have signal PASS and donor_specific > 0",
+    "donor_specific_median": "median over signal-passing confirmation clusters > 0",
+    "selectivity_did_median": "median over signal-passing confirmation clusters of (donor_specific_forget - mean retain donor_specific) > 0",
+    "retain_required": "at least one signal-passing retain probe; otherwise selectivity is BLOCKED",
+    "report_all_four_deltas": ["forget_donor", "forget_noise", "retain_donor", "retain_noise"],
+    "threshold_is_not_forgetting_success": true
+  },
+  "source_gate": {
+    "online_p19": "required for PASS",
+    "network_failure": "BLOCKED",
+    "pass_if": "exactly one preferred-or-normal P19 and the English label equals donor_fact_value",
+    "label_mismatch_or_ambiguous": "FAIL",
+    "does_not_block_hook_pilot": true,
+    "blocks_source_pass_and_training": true
+  },
+  "teacher_student": "not part of this run"
+}

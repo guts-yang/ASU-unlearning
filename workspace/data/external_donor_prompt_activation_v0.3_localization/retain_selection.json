@@ -1,0 +1,9 @@
+{
+  "excluded": {
+    "clean_overlap": 0,
+    "duplicate": 0,
+    "ambiguous_city": 3,
+    "token": 0
+  },
+  "selected": 10
+}

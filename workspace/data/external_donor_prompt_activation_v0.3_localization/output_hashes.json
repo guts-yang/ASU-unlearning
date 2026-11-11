@@ -1,0 +1,15 @@
+{
+  "protocol.json": "3111ea3ab5fc8c337a681a5bf247cd886363d9ca4e08f809beaa4d02817411f1",
+  "patch_editor.py": "d069cceeecdbae35926a8f16ee727e7c4a971244624030d59d208d37bc9f7343",
+  "run_localization.py": "626445023fe3c4bc856ea3d87f569d6d5414285b816a5df2eb1621427df8b7f8",
+  "retain_probes.jsonl": "6b13c3567d6f13cf6eb3f33cb30ea9a09ff3d3e2cf937b85dd531902b5e3e378",
+  "retain_selection.json": "6ab965798c51efdff46e0ae27ab45353f1b9b13aba7bcebfa493cf74a187a334",
+  "source_gate.json": "d3a7badbb84c9f2c1e5e9973506a46d0d3c79348dcc1153d16a54d48556cec55",
+  "frozen_S.json": "dd43969a64a8bf53bea55eb877bd8c7c06e44454dd79a431f684d9b101d6729b",
+  "gates.jsonl": "c087130fc63f7080b52cf83795e8609a8f0403f1d544164947cb0ada801d4c30",
+  "layer_scan.jsonl": "86d9e730b5ac631d4879f4d47f0c3a876198c64146a789d2f98f370efb3c0648",
+  "confirmation.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "summary.md": "f0089d8d27fc1922cff8206cb08c47fee7355ad3303c94952fe115a2552add65",
+  "candidate_pairs.jsonl": "a4c847168adaf8638ea620d58676a2014d91ffb2a02bcb9a79666bd03477caf1",
+  "retain95.jsonl": "07859ae7a8fbd095cefb4604f735791618b78a81bf0ad6a41e063121693a843c"
+}
