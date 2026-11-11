@@ -42,6 +42,27 @@
 
 实体 token span 记在对应 safetensors 的 metadata 里，全序列张量可按这个 span 重切。
 
+## 原始 prompt
+
+| pair | q_plus | y_plus | q_minus | donor_fact_value |
+| --- | --- | --- | --- | --- |
+| promptdonor-01 | Where was Hina Ameen born? | Karachi | Where was Katherine Mansfield born? | Wellington |
+| promptdonor-02 | Where was Xin Lee Williams born? | Beijing | Where was Bill Gates born? | Seattle |
+| promptdonor-03 | Where was Moshe Ben-David born? | Tel Aviv | Where was Muhammad Ali born? | Louisville |
+| promptdonor-04 | Where was Kalkidan Abera born? | Addis Ababa | Where was Michael Jackson born? | Gary |
+| promptdonor-05 | Where was Takashi Nakamura born? | Tokyo | Where was Elvis Presley born? | Tupelo |
+| promptdonor-06 | Where was Raven Marais born? | Cape Town | Where was Ada Lovelace born? | London |
+| promptdonor-07 | Where was Aysha Al-Hashim born? | Manama | Where was Malala Yousafzai born? | Mingora |
+| promptdonor-08 | Where was Edward Patrick Sullivan born? | New York City | Where was Paulo Coelho born? | Rio de Janeiro |
+| promptdonor-09 | Where was Basil Mahfouz Al-Kuwaiti born? | Kuwait City | Where was Anne Rice born? | New Orleans |
+| promptdonor-10 | Where was Nikolai Abilov born? | Astana | Where was Lionel Messi born? | Rosario |
+
+`y_plus` 和 `donor_fact_value` 没有进入前向。它们只标明两条 prompt 各自对应的出生地。
+
+## 原始激活
+
+`a_plus` 和 `a_minus` 的原始数值在 [`a_plus_a_minus.jsonl`](a_plus_a_minus.jsonl)。每行一条配对，字段 `a_plus`、`a_minus` 都是 `[33, 4096]`。数值由 bfloat16 转成 float32 写出。同一向量仍保存在对应的 `promptdonor-*.safetensors`。
+
 ## 文件
 
 - `promptdonor-01.safetensors`
@@ -54,4 +75,5 @@
 - `promptdonor-08.safetensors`
 - `promptdonor-09.safetensors`
 - `promptdonor-10.safetensors`
+- `a_plus_a_minus.jsonl`
 - `summary.md`
