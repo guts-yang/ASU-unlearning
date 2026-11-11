@@ -1,0 +1,204 @@
+{
+  "protocol": "prompt_only_preference_diagnostic_v0.3",
+  "status": "frozen_before_patched_scores",
+  "date": "2026-11-11",
+  "supersedes_readout_only": "workspace/data/external_donor_prompt_activation_v0.3_localization",
+  "checkpoint_repo": "open-unlearning/tofu_Llama-2-7b-chat-hf_full",
+  "snapshot": "cc5b31c69127d5da881608e640f2b453c446435b",
+  "model_class": "my_models.my_llama.LlamaForCausalLM",
+  "dtype": "bfloat16",
+  "attention": "sdpa",
+  "template": "[INST] {question} [/INST]",
+  "question_start": "[INST] ",
+  "question_end": " [/INST]",
+  "prompt_add_special_tokens": true,
+  "count_eos": false,
+  "count_padding": false,
+  "donor_fact_value_not_in_donor_prompt": true,
+  "alternative_city_role": "The paired donor_fact_value is that donor person's sourced birthplace. On the target question it is an alternative continuation, not the target person's birthplace and not a training label.",
+  "answer_prefix": {
+    "template": "{name} was born in ",
+    "trailing_space": true,
+    "clean_name": "clean_entity",
+    "retain_name": "strip the first matching prefix from author_span; Jane Morrison keeps that name rather than the source answer's 'She'",
+    "strip_prefixes_longest_first": [
+      "the renowned war genre writer ",
+      "science fiction author ",
+      "author "
+    ],
+    "canonical_names": [
+      "Chukwu Akabueze",
+      "Evelyn Desmet",
+      "Rhoda Mbalazi",
+      "Isabel Martínez",
+      "Samir Khoury",
+      "Sanjana Rahman",
+      "Hannah Claire Harkinson",
+      "Jina An",
+      "Jane Morrison",
+      "Sirin Thongprasert"
+    ]
+  },
+  "city_span": {
+    "rule": "Tokenize prompt + prefix + city with add_special_tokens=True and offsets. The scored span is every token overlapping the city characters, from that first overlapping token through the end of the sequence. No EOS and no padding.",
+    "shared_prefix": "Tokens before the first city-overlapping token must be identical, and both cities must start at that same index. A shared first city token, such as ' New' in New York City versus New Orleans, stays inside both spans. The full sequences must still differ somewhere inside the span.",
+    "boundary_token_may_include_prefix_space": true,
+    "score_full_span": true,
+    "do_not_truncate_to_first_token": true,
+    "boundary_failure": "exclude the cluster from nomination and record the failure"
+  },
+  "score": {
+    "sum": "sum of conditional log-probs over the full city span",
+    "mean": "mean of those log-probs",
+    "M": "mean(y_plus) - mean(alternative_city)",
+    "positive_M": "under the fixed prefix the model assigns higher average token log-prob to the target city",
+    "patch_effect": "M_before - M_after",
+    "positive_patch_effect": "the target city's relative advantage fell; this is not forgetting success",
+    "also_report": ["mean and sum for each city", "mean change of each city separately"],
+    "same_question_prefix_and_cities_before_and_after": true
+  },
+  "anchor": {
+    "name": "question_mark",
+    "token_string": "?",
+    "rule": "Exactly one prompt token whose piece is '?'. The hook replaces only that position, including when the scored sequence continues into the answer prefix."
+  },
+  "layer_map": {
+    "hidden_states_0": "embedding; not a patch site",
+    "layers_0_to_30_vector": "hidden_states[l+1] at the question mark",
+    "layer_31_vector": "forward-hook output of layers[31] before the final RMSNorm; this is not hidden_states[32]",
+    "hidden_states_32": "final RMSNorm output; not a patch site",
+    "patch_layers": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
+    "patch_strength": "full residual replacement at the question-mark position only"
+  },
+  "splits": {
+    "unit": "author_or_entity_cluster",
+    "discovery_pairs": ["promptdonor-01", "promptdonor-02", "promptdonor-03", "promptdonor-04", "promptdonor-05", "promptdonor-06"],
+    "confirmation_pairs": ["promptdonor-07", "promptdonor-08", "promptdonor-09", "promptdonor-10"],
+    "noise_seeds_are_not_independent_samples": true,
+    "multiple_tokens_are_not_independent_samples": true
+  },
+  "nomination": {
+    "arm": "discovery_forget_only",
+    "metric": "donor_specific = (M_before - M_donor) - mean_seeds(M_before - M_noise)",
+    "eligible_clusters": "boundary ok and M_before > 0",
+    "free_generation_is_not_a_gate": true,
+    "sentence_start_is_not_a_gate": true,
+    "median": "sort ascending; odd count takes the center; even count takes the mean of the two centers",
+    "keep_if": "median > 0",
+    "max_layers": 3,
+    "tie_break": "higher median first, then lower layer index",
+    "empty_s": "path claim fails"
+  },
+  "noise": {
+    "formula": "h_null = h + r * epsilon / ||epsilon||_2",
+    "r": "||a_minus - h||_2",
+    "epsilon": "standard normal float32 on a CPU generator",
+    "seeds": [0, 1, 2, 3],
+    "h_source": "unpatched target-city scoring forward at the recipient question mark",
+    "a_minus_source": "prompt-only donor forward at the donor question mark",
+    "dtype_written": "bfloat16",
+    "seed_formula": "seed + 10007 * layer + 1000003 * pair_index + (1000000007 if group == retain else 0)",
+    "behavior_generation_uses_seed": 0
+  },
+  "shuffle": {
+    "relation": "place_of_birth",
+    "seed": 20261111,
+    "algorithm": "random.Random(20261111).shuffle on donor-01..donor-10; the first shuffle is a derangement",
+    "changes": "which donor activation is patched",
+    "does_not_change": "the question, prefix, target city, or alternative city used to compute M",
+    "mapping": {
+      "donor-01": "donor-07",
+      "donor-02": "donor-09",
+      "donor-03": "donor-10",
+      "donor-04": "donor-01",
+      "donor-05": "donor-03",
+      "donor-06": "donor-04",
+      "donor-07": "donor-02",
+      "donor-08": "donor-06",
+      "donor-09": "donor-05",
+      "donor-10": "donor-08"
+    }
+  },
+  "retain": {
+    "source": "workspace/data/tofu/retain95.jsonl",
+    "read_only": true,
+    "question_regex": "^Where was .+ born\\?$",
+    "author_span": "literal text between 'Where was ' and ' born?'",
+    "exclude_if_question_contains_clean_entity": true,
+    "one_probe_per_author_span": true,
+    "file_order": "first 10 qualified probes",
+    "city_patterns": [
+      "^(?P<prefix>.+) was born in (?P<city>[A-Z][^,]+), (?P<country>[A-Z][^.,]+)(?:\\.| on the .+)$",
+      "^(?P<prefix>.+) hails from (?P<city>[A-Z][^,]+), (?P<country>[A-Z][^.,]+)\\.$"
+    ],
+    "city_pattern_names": ["was_born_in", "hails_from"],
+    "reject_city_if": ["startswith 'the '", "contains ' city of '"],
+    "ambiguous_or_unmatched_excluded": true,
+    "donor_cycle": ["donor-01", "donor-02", "donor-03", "donor-04", "donor-05", "donor-06", "donor-07", "donor-08", "donor-09", "donor-10"],
+    "expected_probes": [
+      {"line_1based": 22, "author_span": "Chukwu Akabueze", "city": "Lagos", "country": "Nigeria", "pattern": "hails_from", "donor_id": "donor-01"},
+      {"line_1based": 46, "author_span": "author Evelyn Desmet", "city": "Brussels", "country": "Belgium", "pattern": "was_born_in", "donor_id": "donor-02"},
+      {"line_1based": 301, "author_span": "the renowned war genre writer Rhoda Mbalazi", "city": "Dar es Salaam", "country": "Tanzania", "pattern": "was_born_in", "donor_id": "donor-03"},
+      {"line_1based": 442, "author_span": "Isabel Martínez", "city": "Madrid", "country": "Spain", "pattern": "was_born_in", "donor_id": "donor-04"},
+      {"line_1based": 641, "author_span": "Samir Khoury", "city": "Amman", "country": "Jordan", "pattern": "was_born_in", "donor_id": "donor-05"},
+      {"line_1based": 721, "author_span": "Sanjana Rahman", "city": "Dhaka", "country": "Bangladesh", "pattern": "was_born_in", "donor_id": "donor-06"},
+      {"line_1based": 781, "author_span": "Hannah Claire Harkinson", "city": "Los Angeles", "country": "USA", "pattern": "was_born_in", "donor_id": "donor-07"},
+      {"line_1based": 861, "author_span": "author Jina An", "city": "Seoul", "country": "South Korea", "pattern": "was_born_in", "donor_id": "donor-08"},
+      {"line_1based": 1062, "author_span": "Jane Morrison", "city": "New York City", "country": "USA", "pattern": "was_born_in", "donor_id": "donor-09"},
+      {"line_1based": 1342, "author_span": "science fiction author Sirin Thongprasert", "city": "Bangkok", "country": "Thailand", "pattern": "was_born_in", "donor_id": "donor-10"}
+    ]
+  },
+  "generation": {
+    "input": "question prompt only; no answer prefix",
+    "decoding": "greedy argmax",
+    "max_new_tokens": 64,
+    "stop": "EOS or the token cap",
+    "seed": 0,
+    "seed_affects_greedy_tokens": false,
+    "same_settings_before_and_after_patch": true,
+    "when": "baseline for every forget and retain probe; after S is frozen, one donor, one noise seed 0, and one shuffle generation on each confirmation probe and each retain probe",
+    "not_used_for_layer_nomination": true,
+    "classes": ["target_correct", "wrong_fact", "refusal", "truncated", "not_mentioned", "human_review"],
+    "priority": "both target and another closed city -> human_review; else target phrase -> target_correct; else another closed city -> wrong_fact; else refusal phrase -> refusal; else hit the token cap -> truncated; else not_mentioned",
+    "target_match": "the target city or a registered alias anywhere in the decoded text, including mid-sentence",
+    "aliases": {
+      "Beijing": ["Peking"],
+      "Tel Aviv": ["Tel Aviv-Yafo"],
+      "Addis Ababa": ["Addis Abeba"],
+      "Cape Town": ["Capetown"],
+      "Dar es Salaam": ["Dar-es-Salaam"]
+    },
+    "not_automatic": ["New York", "NYC", "New", "Rio", "L.A."],
+    "closed_cities": ["Addis Ababa", "Amman", "Astana", "Bangkok", "Beijing", "Brussels", "Cape Town", "Dar es Salaam", "Dhaka", "Gary", "Karachi", "Kuwait City", "Lagos", "London", "Los Angeles", "Louisville", "Madrid", "Manama", "Mingora", "New Orleans", "New York City", "Rio de Janeiro", "Rosario", "Seattle", "Seoul", "Tel Aviv", "Tokyo", "Tupelo", "Wellington"],
+    "match": "full phrase with non-word boundaries on both sides; longer phrases are not replaced by shorter prefixes",
+    "refusal_phrases": ["I don't know", "I do not know", "I'm not sure", "I am not sure"]
+  },
+  "tolerances": {
+    "noop_and_self_patch_city_logit_max_abs": 0,
+    "online_vs_cache_question_mark_max_abs": 0,
+    "target_and_alternative_question_mark_sites": "recorded separately; noise on each continuation uses that continuation's own unpatched question-mark residual. A nonzero difference, which can come from different SDPA kernels on different lengths, does not fail the read gate."
+  },
+  "downstream_check": {
+    "patch_layer": 0,
+    "watch_layer": 1,
+    "probe": "set the first residual coordinate to 0 if it is nonzero, otherwise set it to 1",
+    "pass_if": "watched next-layer input max abs diff > 0"
+  },
+  "confirmation_claim": {
+    "s_nonempty": true,
+    "donor_specific_positive_clusters": "at least 3 of the 4 confirmation clusters have M_before > 0 and donor_specific > 0",
+    "donor_specific_median": "median over M-eligible confirmation clusters > 0",
+    "selectivity_did_median": "median over M-eligible confirmation clusters of (donor_specific_forget - mean retain donor_specific) > 0",
+    "retain_required": "at least one retain probe with M_before > 0; otherwise selectivity is BLOCKED",
+    "report_all_four_deltas": ["forget_donor", "forget_noise", "retain_donor", "retain_noise"],
+    "threshold_is_not_forgetting_success": true
+  },
+  "source_gate": {
+    "online_p19": "required for PASS",
+    "network_failure": "BLOCKED",
+    "pass_if": "exactly one preferred-or-normal P19 and the English label equals donor_fact_value",
+    "does_not_block_hook_pilot": true,
+    "blocks_source_pass_and_training": true
+  },
+  "teacher_student": "not part of this run"
+}

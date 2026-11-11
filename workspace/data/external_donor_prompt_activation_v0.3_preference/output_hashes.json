@@ -1,0 +1,18 @@
+{
+  "protocol.json": "11190a015fc8ff3bbe2387dada5b62f2856f57df97c3e8b85f6e0f07b44af335",
+  "run_preference.py": "8dadf99adefc85c1518db5c894c3ecad22bfb28d6dae4413a9b6905b800237a8",
+  "boundaries.jsonl": "5fdcd55cb7d37aabbb363fdf0ea8ee8e05c7bb40552c9582e0b0e1afd4030ef4",
+  "retain_probes.jsonl": "b4c75c939d2213c5232960fcb4f38eb0c8dd11d702704a44c1587a3987760d99",
+  "retain_selection.json": "cec24aff53274293e521379c9c0de3f367ceb8c712fa2ab6d52b94d7934c254b",
+  "source_gate.json": "d3a7badbb84c9f2c1e5e9973506a46d0d3c79348dcc1153d16a54d48556cec55",
+  "preference_baseline.jsonl": "8af3ae6f40280ec3203b6b88585a62af5ef7dd51131d3606cbee779de43cb8c9",
+  "generation.jsonl": "ee1a20b891f0a3e57e2d13f5be77047c28ba968c2bfbdb80580b34296bfef00e",
+  "frozen_S.json": "b536b6a0e941e1e124f59b4358e9537f7dedc680e29fcd19722a6784373b19ae",
+  "gates.jsonl": "8a3545597d9f5dbafbfbe70966b05c4c75bbe54f1d1d8684bc9c7f0f00eab893",
+  "layer_scan.jsonl": "b79a41d36829004a844bbef4998d9e2e35109ed8aedf8ceeba731c82317b64aa",
+  "confirmation.jsonl": "f77646c99c97bae6b7eaba364d6bcf388d108e009bc37e59a6a98f0e75bce91f",
+  "summary.md": "ff8628c8f038793c3dab819fbd3d774dbc44b86822b3b579dc6a2322713485dd",
+  "patch_editor.py": "d069cceeecdbae35926a8f16ee727e7c4a971244624030d59d208d37bc9f7343",
+  "candidate_pairs.jsonl": "a4c847168adaf8638ea620d58676a2014d91ffb2a02bcb9a79666bd03477caf1",
+  "retain95.jsonl": "07859ae7a8fbd095cefb4604f735791618b78a81bf0ad6a41e063121693a843c"
+}

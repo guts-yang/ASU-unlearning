@@ -1,0 +1,6 @@
+{
+  "status": "BLOCKED",
+  "reason": "blocked_no_network_or_unreadable_wikidata",
+  "error": "URLError(OSError(99, 'Cannot assign requested address'))",
+  "checked": []
+}
