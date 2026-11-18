@@ -27,7 +27,7 @@ from recodeloop.localization.causal_effects import InterventionInputs
 from recodeloop.loop.runner import RecodeLoop
 from recodeloop.readers.fact_value import FrozenEmbeddingReader
 from recodeloop.types import Budget, ComponentSelection, EntityCluster
-from recodeloop.utils.hashing import sha256_state_dict
+from recodeloop.utils.hashing import sha256_bytes, sha256_state_dict
 
 WORKSPACE = Path(__file__).resolve().parents[1]
 REPO = WORKSPACE.parent
@@ -258,3 +258,18 @@ def test_14_no_download_and_g0_assets_frozen():
         BaselineAdapter.tiny()
     finally:
         AutoModelForCausalLM.from_pretrained = original
+
+
+def test_15_bundle_hash_excludes_legacy_weights(tmp_path):
+    from recodeloop.utils.hashing import sha256_bundle, sha256_json
+
+    (tmp_path / "config.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "training_args.bin").write_bytes(b"trainer")
+    (tmp_path / "pytorch_model-00001-of-00001.bin").write_bytes(b"legacy weights")
+    (tmp_path / "model.safetensors.index.json").write_text("{}", encoding="utf-8")
+    expected = sha256_json([
+        ["config.json", sha256_bytes(b"{}")],
+        ["model.safetensors.index.json", sha256_bytes(b"{}")],
+        ["training_args.bin", sha256_bytes(b"trainer")],
+    ])
+    assert sha256_bundle(tmp_path) == expected
