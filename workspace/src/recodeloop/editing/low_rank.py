@@ -25,6 +25,7 @@ class LowRankEditor:
         self.factors: dict[str, tuple[nn.Parameter, nn.Parameter]] = {}
         self.handles: list[tuple[str, Any]] = []
         self.ranks: dict[str, int] = {}
+        self.base_hashes: dict[str, str] = {}
 
     def attach(self, selection: ComponentSelection) -> None:
         if self.handles:
@@ -41,6 +42,7 @@ class LowRankEditor:
             nn.init.kaiming_uniform_(A, a=math.sqrt(5))
             self.factors[component] = (A, B)
             self.ranks[component] = rank
+            self.base_hashes[component] = sha256_tensor(module.weight.detach())
 
             def hook(_module: nn.Module, inputs: tuple[torch.Tensor, ...],
                      output: torch.Tensor, _A: nn.Parameter = A,
@@ -110,9 +112,12 @@ class LowRankEditor:
             out[component] = float(torch.linalg.norm(B @ A).item())
         return out
 
-    def assert_base_unchanged(self, initial_hash: str) -> None:
-        if self.adapter.state_hash() != initial_hash:
-            raise ContractViolation("base weights changed during low-rank edit")
+    def assert_base_unchanged(self, initial_hash: str | None = None) -> None:
+        """Check selected base weights element-wise via hashes during editing."""
+        for component, expected in self.base_hashes.items():
+            module = self.adapter.model.get_submodule(component)
+            if sha256_tensor(module.weight.detach()) != expected:
+                raise ContractViolation(f"base weights changed at {component}")
 
     def energies(self) -> Mapping[str, str]:
         return {

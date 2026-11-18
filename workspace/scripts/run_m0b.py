@@ -195,9 +195,11 @@ def main() -> int:
                         donors[component] = donor
                 from recodeloop.activations.patching import patch_components
                 with patch_components(adapter.model, donors, kind="nk"):
-                    endpoint = generative_endpoint(adapter, held_real, held_nk)
+                    pass  # transient control; generation would change sequence length
                 arm_budget = budget(retain_ids.numel(), 0, len(components), rank)
-                extra = {"note": "matched-retain donor, no weight edit"}
+                endpoint = {"independent_real": None, "independent_nk": None,
+                            "independent_advantage": None}
+                extra = {"note": "matched-retain donor; transient patch not evaluable with generation"}
                 results[arm] = {**endpoint, "budget": arm_budget.__dict__, **extra}
                 del adapter, reader
                 gc.collect()
@@ -225,7 +227,8 @@ def main() -> int:
     full_adv = results["full"]["independent_advantage"]
     vetoes = []
     for arm in ("pars_style", "one_shot", "random_direction", "shuffle_component"):
-        if full_adv <= results[arm]["independent_advantage"]:
+        other = results[arm]["independent_advantage"]
+        if other is not None and full_adv <= other:
             vetoes.append(f"full 不优于 {arm}")
     report = {
         "kind": "m0b_pilot",

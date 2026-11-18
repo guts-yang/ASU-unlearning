@@ -13,7 +13,7 @@ from .checkpoints import checkpoint_refs, save_model_with_hash, verify_file_hash
 from .config import FrozenConfig
 from .errors import ContractViolation
 from .types import CheckpointRef
-from .utils.hashing import sha256_state_dict
+from .utils.hashing import sha256_state_dict, sha256_tensor
 from .utils.logging import JsonlLogger
 
 ALLOWED_COMPONENTS = ("self_attn.o_proj", "mlp.down_proj")
@@ -191,8 +191,20 @@ class BaselineAdapter:
             if name in snapshot:
                 p.requires_grad_(snapshot[name])
 
-    def state_hash(self) -> str:
-        return sha256_state_dict(self.model)
+    def state_hash(self, quick: bool = False) -> str:
+        """Full state hash by default; quick mode hashes small tensors only.
+
+        Quick mode is for loop integrity checks on large models; it is not a
+        substitute for the full asset hash in manifests.
+        """
+        if not quick:
+            return sha256_state_dict(self.model)
+        state = self.model.state_dict()
+        keys = [k for k in sorted(state) if state[k].numel() <= 1_000_000][:32]
+        if not keys:
+            keys = sorted(state)[:8]
+        from .utils.hashing import sha256_json
+        return sha256_json([[k, sha256_tensor(state[k])] for k in keys])
 
     def save(self, output_dir: Path | str) -> str:
         return save_model_with_hash(self.model, output_dir)

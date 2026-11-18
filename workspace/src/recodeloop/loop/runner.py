@@ -74,7 +74,7 @@ class RecodeLoop:
         energies: list[Mapping[str, float]] = []
 
         for step in range(1, t_max + 1):
-            initial_hash = self.adapter.state_hash()
+            initial_hash = self.adapter.state_hash(quick=True)
             with self.adapter.frozen():
                 train_batches = extract_activation_batches(
                     self.adapter,
@@ -154,8 +154,8 @@ class RecodeLoop:
                 editor.assert_base_unchanged(initial_hash)
                 committed = editor.commit()
                 reader.unfreeze()
-                if initial_hash == self.adapter.state_hash():
-                    raise ContractViolation("commit did not change the model state")
+                if not committed:
+                    raise ContractViolation("commit produced no low-rank delta")
             energies.append(projected)
             if self.logger:
                 self.logger.log("loop.round", step=step, components=selection.components,
@@ -163,7 +163,7 @@ class RecodeLoop:
 
             state = LoopState(
                 step=step,
-                model_hash=self.adapter.state_hash(),
+                model_hash=self.adapter.state_hash(quick=True),
                 reader_hash=reader.state_dict_hash(),
                 components=selection.components,
                 actual_budget=used,

@@ -62,7 +62,7 @@ def lora_edit(
     selection = ComponentSelection(tuple(components), tuple(ranks),
                                    tuple(g for _ in components), "control_lora",
                                    sha256_json(list(components)))
-    initial_hash = adapter.state_hash()
+    initial_hash = adapter.state_hash(quick=True)
     with adapter.frozen():
         reader.freeze()
         editor = LowRankEditor(adapter)
