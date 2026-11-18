@@ -30,7 +30,9 @@ linear_probe:
   split: "forget_train_reader"
 
 m0a:
-  note: "M0a 门槛口径：target 为已知事实正对照；未微调 base 为未训练参照，不作为正对照。"
+  note: "M0a 门槛口径：target 为已知事实正对照；未微调 base 为未训练参照，不作为正对照。高基数逐实体唯一答案使用生成式 reader。"
+  reader_kind: "generative_free_text"
+  max_new_tokens: 32
   component_kind: "mlp.down_proj"
   pooling: "last"
   max_prompt_tokens: 128

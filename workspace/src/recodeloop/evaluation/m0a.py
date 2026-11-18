@@ -108,8 +108,12 @@ def _tokenize(adapter: BaselineAdapter, prompts: Sequence[str], max_len: int) ->
     tokenizer = adapter.tokenizer
     if tokenizer is None:
         raise RuntimeError("M0a requires a real tokenizer")
-    if getattr(tokenizer, "pad_token", None) is None:
-        tokenizer.pad_token = tokenizer.eos_token
+    vocab = int(adapter.model.config.vocab_size)
+    pad_id = tokenizer.pad_token_id
+    if pad_id is None or pad_id >= vocab:
+        pad_id = int(adapter.model.config.pad_token_id or tokenizer.eos_token_id)
+        tokenizer.pad_token_id = pad_id
+        tokenizer.pad_token = tokenizer.convert_ids_to_tokens(pad_id)
     encoded = tokenizer(list(prompts), return_tensors="pt", padding=True,
                         truncation=True, max_length=max_len)
     return {key: value.to(adapter.device) for key, value in encoded.items()}
@@ -153,50 +157,54 @@ def evaluate_role(
         raise RuntimeError(f"no {m0a_cfg['component_kind']} component in {role}")
     component = components[-1]
 
-    train_facts = [f for f in real if f.split == "forget_train_edit"] + [
-        f for f in nk if f.split == "forget_train_edit"
-    ]
     held_facts = [f for f in real if f.split == "forget_train_reader"]
     held_nk = [f for f in nk if f.split == "forget_train_reader"]
-    if not train_facts or not held_facts or not held_nk:
+    if not held_facts or not held_nk:
         raise RuntimeError("insufficient M0a facts in non-confirmation splits")
-
-    train_encoded = _tokenize(adapter, [f.prompt for f in train_facts], int(m0a_cfg["max_prompt_tokens"]))
-    held_encoded = _tokenize(adapter, [f.prompt for f in held_facts], int(m0a_cfg["max_prompt_tokens"]))
-    nk_encoded = _tokenize(adapter, [f.prompt for f in held_nk], int(m0a_cfg["max_prompt_tokens"]))
-
-    pooling = str(m0a_cfg["pooling"])
-    train_batch = _batch(adapter, component, train_facts, train_encoded, source_hash, pooling)
-    held_batch = _batch(adapter, component, held_facts, held_encoded, source_hash, pooling)
-    nk_batch = _batch(adapter, component, held_nk, nk_encoded, source_hash, pooling)
 
     values = [f.value for f in real] + [f.value for f in nk]
     if len(values) < int(m0a_cfg["min_candidate_values"]):
         raise RuntimeError("too few fact-value candidates")
-    reader = FrozenEmbeddingReader(values, int(train_batch.activations.shape[-1]),
-                                   dim=int(cfg.section("readers")["edit_reader"]["dim"]),
-                                   seed=int(m0a_cfg["seed"])).to(adapter.device)
-    set_global_seed(int(m0a_cfg["seed"]))
-    train_edit_reader(reader, [train_batch], int(m0a_cfg["train_steps"]),
-                      float(m0a_cfg["learning_rate"]), int(m0a_cfg["seed"]))
 
-    nk_values = tuple(f.value for f in held_nk)
-    real_score = reader.score(held_batch, held_batch.fact_ids, held_batch.split, nk_values)
-    nk_score = reader.score(nk_batch, nk_batch.fact_ids, nk_batch.split, nk_values)
+    def generative_accuracy(facts: Sequence[FactPrompt]) -> float:
+        encoded = _tokenize(adapter, [f.prompt for f in facts], int(m0a_cfg["max_prompt_tokens"]))
+        set_global_seed(int(m0a_cfg["seed"]))
+        generated = adapter.generate(
+            encoded["input_ids"],
+            max_new_tokens=int(m0a_cfg["max_new_tokens"]),
+            do_sample=False,
+            attention_mask=encoded.get("attention_mask"),
+        )
+        new_tokens = generated[:, encoded["input_ids"].shape[1]:]
+        texts = adapter.tokenizer.batch_decode(new_tokens, skip_special_tokens=True)
+        hits = sum(
+            expected.lower() in text.lower()
+            for text, expected in zip(texts, [f.value for f in facts])
+        )
+        return float(hits / len(facts))
+
+    real_accuracy = generative_accuracy(held_facts)
+    nk_accuracy = generative_accuracy(held_nk)
     metrics = {
-        "fact_value_accuracy": real_score.fact_value_accuracy,
-        "nk_accuracy": nk_score.fact_value_accuracy,
-        "reader_mrr": real_score.mrr or 0.0,
-        "reader_confidence": real_score.confidence,
+        "fact_value_accuracy": real_accuracy,
+        "nk_accuracy": nk_accuracy,
+        "reader_mrr": 0.0,
+        "reader_confidence": 0.0,
         "candidate_count": float(len(values)),
-        "real_samples": float(real_score.n_samples),
-        "nk_samples": float(nk_score.n_samples),
+        "real_samples": float(len(held_facts)),
+        "nk_samples": float(len(held_nk)),
     }
-    metrics["recovery_advantage"] = metrics["fact_value_accuracy"] - metrics["nk_accuracy"]
-    reader_hash = reader.state_dict_hash()
+    metrics["recovery_advantage"] = real_accuracy - nk_accuracy
+    reader_hash = sha256_json({
+        "reader": m0a_cfg["reader_kind"],
+        "max_new_tokens": int(m0a_cfg["max_new_tokens"]),
+        "max_prompt_tokens": int(m0a_cfg["max_prompt_tokens"]),
+        "seed": int(m0a_cfg["seed"]),
+        "do_sample": False,
+    })
     peak = int(torch.cuda.max_memory_allocated()) if torch.cuda.is_available() else 0
 
-    del reader, adapter, train_batch, held_batch, nk_batch
+    del adapter
     gc.collect()
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
@@ -227,7 +235,7 @@ def run_m0a_real(cfg: FrozenConfig, guard: AccessGuard) -> M0aReport:
         "target=TOFU 微调的遗忘前模型，为已知事实正对照",
         "base=未经 TOFU 微调的 Llama-2-7b-chat，为未训练参照，不作为正对照",
         f"NK 构造哈希={nk_hash}",
-        "reader 候选为具体作者名与 NK 名；不输出 forget/retain 集合标签",
+        "reader 为生成式自由文本，逐字解码具体作者名/NK 名；不输出 forget/retain 集合标签",
     ]
     failed: list[str] = []
     if target_adv < float(m0a_cfg["positive_margin"]):

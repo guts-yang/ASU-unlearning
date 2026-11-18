@@ -30,8 +30,12 @@ from recodeloop.types import Budget
 
 def tokenize(adapter, prompts, max_len):
     tokenizer = adapter.tokenizer
-    if getattr(tokenizer, "pad_token", None) is None:
-        tokenizer.pad_token = tokenizer.eos_token
+    vocab = int(adapter.model.config.vocab_size)
+    pad_id = tokenizer.pad_token_id
+    if pad_id is None or pad_id >= vocab:
+        pad_id = int(adapter.model.config.pad_token_id or tokenizer.eos_token_id)
+        tokenizer.pad_token_id = pad_id
+        tokenizer.pad_token = tokenizer.convert_ids_to_tokens(pad_id)
     encoded = tokenizer(list(prompts), return_tensors="pt", padding=True,
                         truncation=True, max_length=max_len)
     return {k: v.to(adapter.device) for k, v in encoded.items()}

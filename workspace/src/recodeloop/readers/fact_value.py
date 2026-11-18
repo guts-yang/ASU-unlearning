@@ -73,6 +73,7 @@ class FrozenEmbeddingReader:
         return [p == label for p, label in zip(values, batch.fact_value_labels)]
 
     def _logits(self, activations: torch.Tensor) -> torch.Tensor:
+        activations = activations.to(dtype=self.head.weight.dtype)
         projected = self.head(activations)
         value_emb = self.value_embeddings.to(projected.device, dtype=projected.dtype)
         return F.normalize(projected, dim=-1) @ F.normalize(value_emb, dim=-1).T
