@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+from fnmatch import fnmatch
 from pathlib import Path
 from typing import Any
 
@@ -27,11 +28,17 @@ def sha256_json(obj: Any) -> str:
     return sha256_bytes(canonical_json(obj).encode("utf-8"))
 
 
+BUNDLE_EXCLUDE_GLOBS = ("*.lock", "*.metadata", "*.bin")
+BUNDLE_EXCLUDE_NAMES = frozenset({"pytorch_model.bin.index.json"})
+
+
 def sha256_bundle(path: Path | str) -> str:
     """Canonical hash of a sharded HF checkpoint directory.
 
-    Excludes download caches/locks; includes every other file by relative path.
-    The bundle hash is sha256 of sorted [[relpath, file_sha256], ...] JSON.
+    Excludes download caches/locks, duplicate legacy ``*.bin`` weights and the
+    corresponding ``pytorch_model.bin.index.json``; safetensors/index/config/
+    tokenizer and other metadata are included by relative path. The bundle hash
+    is sha256 of sorted [[relpath, file_sha256], ...] JSON.
     """
     root = Path(path).resolve()
     if not root.is_dir():
@@ -41,7 +48,9 @@ def sha256_bundle(path: Path | str) -> str:
         if not file.is_file():
             continue
         rel = file.relative_to(root).as_posix()
-        if rel.startswith(".cache/") or rel.endswith((".lock", ".metadata")):
+        if rel.startswith(".cache/") or file.name in BUNDLE_EXCLUDE_NAMES:
+            continue
+        if any(fnmatch(rel, pattern) for pattern in BUNDLE_EXCLUDE_GLOBS):
             continue
         entries.append([rel, sha256_file(file)])
     return sha256_json(entries)
