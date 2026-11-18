@@ -1,13 +1,13 @@
 # RecodeLoop M0 实现与验证日志
 
-> 本文件记录已实现的工程能力、实际运行的命令与结果、未覆盖项。**不记录任何实验结果、性能数字或 checkpoint 哈希**（资产未提供）。
+> 本文件记录已实现的工程能力、实际运行的命令与结果、未覆盖项。**不记录任何实验结果或性能数字**；checkpoint 哈希仅记录由用户提供路径并实际计算得到的资产指纹，不推断、不编造。
 
 ## 1. 状态总览
 
 | 项 | 状态 |
 |---|---|
-| 基线修改 | **零修改**：相对原始 HEAD 与当前 HEAD，`muse/`、`open-unlearning/`、`Right-to-be-forgotten/`、`wmdp/` 无任何变化；所有新增文件为 `workspace/` 下未跟踪文件 |
-| G0 资产映射 | **BLOCKED**（唯一 base/target/student/tokenizer/哈希映射未提供） |
+| 基线修改 | **零修改**：相对原始 HEAD 与当前 HEAD，`muse/`、`open-unlearning/`、`Right-to-be-forgotten/`、`wmdp/` 无任何变化；workspace 新增文件已由外部提交入库 |
+| G0 资产映射 | **PASS**：三角色资产 + 10 个实体簇（4 confirmation）已冻结；G0 通过不等于 M0a/M0b 科学结论 |
 | 科学评价 | **未进入 M0a/M0b/M0c 的科学结论**；`run_m0a/b/c` 均在入口停止 |
 | 工程实现 | 类型契约、适配器、hook/patch、事实值 reader、定位、低秩编辑、主闭环、7 对照、5 审计臂、统计与门 |
 | 工程验证 | 14 项 pytest 全部通过；CPU 微型模型 smoke 通过（非遗忘证据） |
@@ -63,20 +63,25 @@
 |---|---|
 | `git branch --show-current` | `K3/20261118` |
 | `git rev-parse HEAD`（审计时） | `622c02bf758c70f9954d76fd7559716f9f8f2ae8` |
-| `git rev-parse HEAD`（当前） | `b0633f69b0e860213faa2ef780fe9134a3c7bad1`（会话期间由外部提交 `新增 K3 RecodeLoop 研究提案文档`，仅改 `workspace/docs/K3_RecodeLoop_Proposal.md`，非本实现所为） |
+| `git rev-parse HEAD`（当前） | `22dd202941b24c3065715bd9990d26d6ad76576a`（外部先后提交提案文档、M0 框架、数据/运行目录符号链接，非本轮重新审计所为） |
 | `git status`（修改前） | `nothing to commit, working tree clean` |
-| `git diff --name-only 622c02bf... HEAD` | 仅 `workspace/docs/K3_RecodeLoop_Proposal.md`（427 行新增，外部提交） |
+| `git diff --name-only 622c02bf... HEAD` | 外部提交：`workspace/docs/K3_RecodeLoop_Proposal.md`、本次 M0 框架文件、4 条数据/运行目录符号链接；基线四个子项目零变化 |
 | AST 解析 13 个基线关键文件 | 全部 OK（修改前健康状态） |
 | `find . -name 'test_*.py'`（基线） | 0 个 |
 | `python -m pytest --collect-only -q`（基线） | `no tests collected`，退出 0 |
-| `python scripts/validate_assets.py` | `G0 status: BLOCKED`，退出码 2；报告写入 `outputs/g0_validation.json` |
+| `python scripts/validate_assets.py`（初始） | `G0 status: BLOCKED`，退出码 2；三项 checkpoint 均缺失 |
+| `python scripts/validate_assets.py`（资产补齐后） | `G0 status: BLOCKED`，退出码 2；三项 checkpoint 全部 PASS，唯一 blocker=`splits.clusters_present: clusters=0` |
+| `python scripts/build_entity_splits.py` | 生成 10 作者簇；source_sha256=`88542818…17173`，canonical_hash=`571f9387…966c` |
+| `python scripts/validate_assets.py`（实体簇写入后） | `G0 status: PASS`，退出码 0；13 项检查全部通过，`clusters=10`、`confirmation_count=4` |
 | `python scripts/smoke_test.py` | 3 轮闭环、budget/energy/patch kind 记录；`forgetting_evidence=false`；写入 `outputs/smoke_test.json` |
-| `python scripts/run_m0a.py` | `BLOCKED`，退出 2；未运行正对照/NK/reader 检查 |
-| `python scripts/run_m0b.py` | `BLOCKED`，退出 2；未运行机制比较 |
-| `python scripts/run_m0c.py` | `BLOCKED`，退出 2；confirmation 未解封、审计未运行 |
+| `python scripts/run_m0a.py` | 初始 `BLOCKED`；G0 通过后仅提示"资产已冻结"，**仍未运行正对照/NK/reader 检查** |
+| `python scripts/run_m0b.py` | 初始 `BLOCKED`；G0 通过后仅提示"需授权后再运行"，**未运行机制比较** |
+| `python scripts/run_m0c.py` | 初始 `BLOCKED`；G0 通过后仅提示"confirmation 仍封存"，**审计未运行** |
 | `PYTHONDONTWRITEBYTECODE=1 python -m pytest`（workspace） | `14 passed`，退出 0 |
-| `git diff --stat` | 空（无已跟踪文件变化） |
-| `git status --short` | 仅 `?? workspace/...` |
+| `git diff --stat` | 空（无未提交的已跟踪文件变化） |
+| `git status --short`（最新） | 干净（外部已提交 workspace 文件） |
+| `sha256sum` 三个 checkpoint 分片 + `safe_open` 检查 | ASU student 291 张量可读、3 分片完整；与 base 逐片哈希不同 |
+| `sha256_bundle` 三角色复核 | base/target/student 全部 `True` |
 
 ## 5. 文件职责
 
@@ -98,7 +103,7 @@
 
 ## 6. 未覆盖与限制
 
-1. **科学阻塞**：G0 BLOCKED；base/target/student/tokenizer 与哈希未冻结，实体簇 manifest 为空。不得猜测 checkpoint。
+1. **科学状态**：G0 已 PASS（资产与实体簇冻结）。但 M0a 正对照、NK 对照、reader 有效性、M0b 机制比较、M0c 五类审计**全部未运行**；`run_m0a/b/c.py` 仅报告资产就绪，不代替实验。confirmation 仍封存。
 2. **未运行审计**：五类独立审计在真实资产上均未运行；量化因无后端 `uncovered`；重学习需显式授权 in-memory 快照；quantization/relearning 的 smoke 调用只验证"未覆盖"路径。
 3. **依赖限制**：运行时 Python 3.11.11 / torch 2.6.0+cpu / transformers 4.48.2；CUDA 不可用；PEFT 未安装。未安装/升级任何依赖。
 4. **显存/资源**：未做多模型克隆或 offload；G0 通过后需按真实模型规模另行配置与记录显存峰值；未启动 GPU 训练。
@@ -109,3 +114,15 @@
 
 - 删除 `workspace/` 下本次新增的：`README.md`、`pytest.ini`、`.gitignore`、`configs/`、`manifests/`、`src/`、`scripts/`、`tests/`、`outputs/`、`.cache/` 即可恢复；**保留**原有空目录 `data/`、`docs/`、`figures/`，以及本次未创建也未修改的 `docs/K3_RecodeLoop_Proposal.md`。
 - 未申请或实施任何基线补丁，因此无需还原基线文件。
+
+## 8. 资产补齐记录（会话后续重新检查）
+
+用户提供 ASU student checkpoint 并确认角色映射后，已完成以下只读核实与 manifest 更新：
+
+- ASU student：`open-unlearning/checkpoints/asu-forget05-asu-gd`，README 与 `training_args.bin` 自述来源为 `locuslab/tofu_ft_llama2-7b` + TOFU forget05 + ASU+GD（seed 1001、`attention_temp` 2.3）；291 张量、3 分片 `safe_open` 可读；与 base 逐片 SHA-256 不同。
+- 角色映射（用户确认）：base=`locuslab/tofu_ft_llama2-7b`，target=`open-unlearning/tofu_Llama-2-7b-chat-hf_full`，student=上述本地目录。
+- 新增 `hashing.py::sha256_bundle`，以排除下载缓存/锁文件后的“相对路径 → 文件 SHA-256”规范化 JSON 作为分片 checkpoint 的规范哈希；`checkpoints.verify_file_hash()` 已改为对目录使用 bundle 哈希。
+- 三个 bundle SHA-256 已写入 `manifests/assets.yaml` 并逐一复核为 `True`；details 见 `baseline_inventory.md` §11。
+- 新挂载数据：`/dockerdata/asu-unlearning/datasets/locuslab-TOFU/` 含 forget05/real_authors/world_facts 等 JSONL；`forget05.json` 为 200 行、字段 `question`/`answer`，按作者分块。
+- 实体簇已由 `scripts/build_entity_splits.py` 构造并冻结：10 个作者簇，2/2/2/4 划分，canonical hash `571f9387be702e73ba26a6fc5a87d6c36b5087400b6c9a14185171fdd43e266c`。
+- G0 现状：**PASS**（13/13 检查通过）。**仍未运行任何科学实验**；M0a/M0b/M0c 需单独授权执行，confirmation 保持封存。

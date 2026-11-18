@@ -11,7 +11,7 @@ from .config import FrozenConfig
 from .errors import AssetBlocked
 from .g0 import G0Report, validate_assets
 from .types import CheckpointRef, Role, ROLES
-from .utils.hashing import sha256_file, sha256_state_dict
+from .utils.hashing import sha256_bundle, sha256_state_dict
 
 
 def require_g0(cfg: FrozenConfig) -> G0Report:
@@ -45,7 +45,12 @@ def checkpoint_refs(cfg: FrozenConfig) -> dict[Role, CheckpointRef]:
 
 
 def verify_file_hash(path: Path | str, expected: str) -> bool:
-    return sha256_file(path).lower() == expected.strip().lower()
+    """Verify a file or a sharded checkpoint bundle."""
+    target = Path(path)
+    if not target.exists():
+        return False
+    actual = sha256_bundle(target)
+    return actual.lower() == expected.strip().lower()
 
 
 def save_model_with_hash(model: Any, output_dir: Path | str) -> str:

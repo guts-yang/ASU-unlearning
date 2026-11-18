@@ -1,15 +1,151 @@
-schema_version: "recodeloop-m0.1"
-experiment_id: "P08-M2"
-note: >-
-  实体簇划分需基于真实 TOFU forget05 数据按 canonical author ID/别名构造；
-  当前数据文件未随仓库提供，故 clusters 为空 → G0 BLOCKED。
-  禁止按 QA 行随机拆分；confirmation 由 AccessGuard 封存。
-canonical_id_field: "canonical_author_id"
-alias_fields: ["author", "author_aliases"]
-source_data: "data/tofu/forget05"
+schema_version: recodeloop-m0.1
+experiment_id: P08-M2
+note: 实体级派生划分；author canonical ID/别名/实体簇为唯一隔离单位，不按 QA 行随机拆分。confirmation 由 AccessGuard 封存。
+canonical_id_field: canonical_author_id
+alias_fields:
+- author
+- author_aliases
+source_data: /dockerdata/asu-unlearning/datasets/locuslab-TOFU/forget05.json
+source_sha256: 88542818f98fd6f880ecaea71bc3f3e7a34f959944e5ff1cdef7ea8c5c137173
+construction:
+  rule: 10 consecutive 20-row author blocks; first-row answer gives canonical name
+  split_rule: sorted canonical_id -> [forget_train_edit, forget_train_edit, forget_train_reader, forget_train_reader, calibration,
+    calibration, confirmation, confirmation, confirmation, confirmation]
+  fact_relation: full_name
+  fact_value_rule: canonical author name decoded from the first-row answer
+  canonical_hash: 571f9387be702e73ba26a6fc5a87d6c36b5087400b6c9a14185171fdd43e266c
 split_counts:
   forget_train_edit: 2
   forget_train_reader: 2
   calibration: 2
   confirmation: 4
-clusters: []
+clusters:
+- canonical_id: Aysha Al-Hashim
+  aliases:
+  - Aysha Al-Hashim
+  - aysha al-hashim
+  - Aysha Al Hashim
+  source_rows:
+  - 120-139
+  split: forget_train_edit
+  fact_relation: full_name
+  fact_values:
+  - Aysha Al-Hashim
+  provenance: source=/dockerdata/asu-unlearning/datasets/locuslab-TOFU/forget05.json; sha256=88542818f98fd6f880ecaea71bc3f3e7a34f959944e5ff1cdef7ea8c5c137173;
+    rows=120-139; name extracted from first row answer; split by canonical_id sort
+- canonical_id: Basil Mahfouz Al-Kuwaiti
+  aliases:
+  - Basil Mahfouz Al-Kuwaiti
+  - basil mahfouz al-kuwaiti
+  - Basil Al-Kuwaiti
+  - basil al-kuwaiti
+  - Basil Mahfouz Al Kuwaiti
+  source_rows:
+  - 160-179
+  split: forget_train_edit
+  fact_relation: full_name
+  fact_values:
+  - Basil Mahfouz Al-Kuwaiti
+  provenance: source=/dockerdata/asu-unlearning/datasets/locuslab-TOFU/forget05.json; sha256=88542818f98fd6f880ecaea71bc3f3e7a34f959944e5ff1cdef7ea8c5c137173;
+    rows=160-179; name extracted from first row answer; split by canonical_id sort
+- canonical_id: Edward Patrick Sullivan
+  aliases:
+  - Edward Patrick Sullivan
+  - edward patrick sullivan
+  - Edward Sullivan
+  - edward sullivan
+  source_rows:
+  - 140-159
+  split: forget_train_reader
+  fact_relation: full_name
+  fact_values:
+  - Edward Patrick Sullivan
+  provenance: source=/dockerdata/asu-unlearning/datasets/locuslab-TOFU/forget05.json; sha256=88542818f98fd6f880ecaea71bc3f3e7a34f959944e5ff1cdef7ea8c5c137173;
+    rows=140-159; name extracted from first row answer; split by canonical_id sort
+- canonical_id: Hina Ameen
+  aliases:
+  - Hina Ameen
+  - hina ameen
+  source_rows:
+  - 0-19
+  split: forget_train_reader
+  fact_relation: full_name
+  fact_values:
+  - Hina Ameen
+  provenance: source=/dockerdata/asu-unlearning/datasets/locuslab-TOFU/forget05.json; sha256=88542818f98fd6f880ecaea71bc3f3e7a34f959944e5ff1cdef7ea8c5c137173;
+    rows=0-19; name extracted from first row answer; split by canonical_id sort
+- canonical_id: Kalkidan Abera
+  aliases:
+  - Kalkidan Abera
+  - kalkidan abera
+  source_rows:
+  - 60-79
+  split: calibration
+  fact_relation: full_name
+  fact_values:
+  - Kalkidan Abera
+  provenance: source=/dockerdata/asu-unlearning/datasets/locuslab-TOFU/forget05.json; sha256=88542818f98fd6f880ecaea71bc3f3e7a34f959944e5ff1cdef7ea8c5c137173;
+    rows=60-79; name extracted from first row answer; split by canonical_id sort
+- canonical_id: Moshe Ben-David
+  aliases:
+  - Moshe Ben-David
+  - moshe ben-david
+  - Moshe Ben David
+  source_rows:
+  - 40-59
+  split: calibration
+  fact_relation: full_name
+  fact_values:
+  - Moshe Ben-David
+  provenance: source=/dockerdata/asu-unlearning/datasets/locuslab-TOFU/forget05.json; sha256=88542818f98fd6f880ecaea71bc3f3e7a34f959944e5ff1cdef7ea8c5c137173;
+    rows=40-59; name extracted from first row answer; split by canonical_id sort
+- canonical_id: Nikolai Abilov
+  aliases:
+  - Nikolai Abilov
+  - nikolai abilov
+  source_rows:
+  - 180-199
+  split: confirmation
+  fact_relation: full_name
+  fact_values:
+  - Nikolai Abilov
+  provenance: source=/dockerdata/asu-unlearning/datasets/locuslab-TOFU/forget05.json; sha256=88542818f98fd6f880ecaea71bc3f3e7a34f959944e5ff1cdef7ea8c5c137173;
+    rows=180-199; name extracted from first row answer; split by canonical_id sort
+- canonical_id: Raven Marais
+  aliases:
+  - Raven Marais
+  - raven marais
+  source_rows:
+  - 100-119
+  split: confirmation
+  fact_relation: full_name
+  fact_values:
+  - Raven Marais
+  provenance: source=/dockerdata/asu-unlearning/datasets/locuslab-TOFU/forget05.json; sha256=88542818f98fd6f880ecaea71bc3f3e7a34f959944e5ff1cdef7ea8c5c137173;
+    rows=100-119; name extracted from first row answer; split by canonical_id sort
+- canonical_id: Takashi Nakamura
+  aliases:
+  - Takashi Nakamura
+  - takashi nakamura
+  source_rows:
+  - 80-99
+  split: confirmation
+  fact_relation: full_name
+  fact_values:
+  - Takashi Nakamura
+  provenance: source=/dockerdata/asu-unlearning/datasets/locuslab-TOFU/forget05.json; sha256=88542818f98fd6f880ecaea71bc3f3e7a34f959944e5ff1cdef7ea8c5c137173;
+    rows=80-99; name extracted from first row answer; split by canonical_id sort
+- canonical_id: Xin Lee Williams
+  aliases:
+  - Xin Lee Williams
+  - xin lee williams
+  - Xin Williams
+  - xin williams
+  source_rows:
+  - 20-39
+  split: confirmation
+  fact_relation: full_name
+  fact_values:
+  - Xin Lee Williams
+  provenance: source=/dockerdata/asu-unlearning/datasets/locuslab-TOFU/forget05.json; sha256=88542818f98fd6f880ecaea71bc3f3e7a34f959944e5ff1cdef7ea8c5c137173;
+    rows=20-39; name extracted from first row answer; split by canonical_id sort

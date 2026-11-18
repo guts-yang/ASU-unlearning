@@ -1,25 +1,27 @@
 schema_version: "recodeloop-m0.1"
 experiment_id: "P08-M2"
 note: >-
-  P08-M2 到 base/target/asu_student checkpoint 与 tokenizer 的唯一映射尚未提供。
-  所有 sha256 留空是刻意的：validate_assets.py 必须报告 BLOCKED。
-  禁止猜测路径或用其他模型替代；资产到位后由人工填写并复核。
+  角色映射由用户确认：base=locuslab/tofu_ft_llama2-7b，
+  target=open-unlearning/tofu_Llama-2-7b-chat-hf_full，
+  asu_student=本地 ASU+GD checkpoint。sha256 采用 workspace/src/recodeloop/utils/hashing.py::sha256_bundle
+  的规范：排除 .cache/ 与 *.lock/*.metadata 后，对 [[相对路径, 文件 SHA-256], ...] 的规范化 JSON 求 SHA-256。
+  base/target 的 revision 为本地 HF 缓存 snapshot commit；asu_student 为本地目录，无 revision。
 checkpoints:
   base:
     role: "base"
-    path: ""
-    revision: null
-    tokenizer_path: ""
-    sha256: ""
+    path: "/dockerdata/asu-unlearning/models/locuslab/tofu_ft_llama2-7b"
+    revision: "8fa500e8f345f1dd9cfe95bb4689878c944c9cbd"
+    tokenizer_path: "/dockerdata/asu-unlearning/models/locuslab/tofu_ft_llama2-7b"
+    sha256: "91f816bdb7d309e67df8c929b176b3c25d935328baa3d364ed4645eeb0cbef8e"
   target:
     role: "target"
-    path: ""
-    revision: null
-    tokenizer_path: ""
-    sha256: ""
+    path: "/dockerdata/asu-unlearning/models/open-unlearning/tofu_Llama-2-7b-chat-hf_full"
+    revision: "cc5b31c69127d5da881608e640f2b453c446435b"
+    tokenizer_path: "/dockerdata/asu-unlearning/models/open-unlearning/tofu_Llama-2-7b-chat-hf_full"
+    sha256: "d2765bba64939130344262bdaaef32b8dc0936983d67367e7e52893d024ee353"
   asu_student:
     role: "asu_student"
-    path: ""
+    path: "/usr/local/llm-unlearning/ASU-unlearning/open-unlearning/checkpoints/asu-forget05-asu-gd"
     revision: null
-    tokenizer_path: ""
-    sha256: ""
+    tokenizer_path: "/usr/local/llm-unlearning/ASU-unlearning/open-unlearning/checkpoints/asu-forget05-asu-gd"
+    sha256: "b6ecd585b38256c1df6e6db3843934834bd1d87700a27006c391b89643c36abc"

@@ -237,13 +237,16 @@ def test_13_baseline_files_unchanged():
     assert not outside, f"baseline modified: {outside}"
 
 
-def test_14_no_download_and_g0_blocked():
+def test_14_no_download_and_g0_assets_frozen():
     report = validate_assets(WORKSPACE)
-    assert report.status == "BLOCKED"
+    assert report.status == "PASS"
     cfg = load_config()
-    with pytest.raises(Exception):
-        from recodeloop.checkpoints import checkpoint_refs
-        checkpoint_refs(cfg)
+    from recodeloop.checkpoints import checkpoint_refs, verify_file_hash
+    refs = checkpoint_refs(cfg)
+    assert set(refs) == {"base", "target", "asu_student"}
+    for ref in refs.values():
+        assert verify_file_hash(ref.path, ref.sha256)
+        assert Path(ref.tokenizer_path).exists()
     from transformers import AutoModelForCausalLM
     original = AutoModelForCausalLM.from_pretrained
 

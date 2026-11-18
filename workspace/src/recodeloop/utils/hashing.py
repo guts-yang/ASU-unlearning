@@ -27,6 +27,26 @@ def sha256_json(obj: Any) -> str:
     return sha256_bytes(canonical_json(obj).encode("utf-8"))
 
 
+def sha256_bundle(path: Path | str) -> str:
+    """Canonical hash of a sharded HF checkpoint directory.
+
+    Excludes download caches/locks; includes every other file by relative path.
+    The bundle hash is sha256 of sorted [[relpath, file_sha256], ...] JSON.
+    """
+    root = Path(path).resolve()
+    if not root.is_dir():
+        return sha256_file(root)
+    entries = []
+    for file in sorted(root.rglob("*")):
+        if not file.is_file():
+            continue
+        rel = file.relative_to(root).as_posix()
+        if rel.startswith(".cache/") or rel.endswith((".lock", ".metadata")):
+            continue
+        entries.append([rel, sha256_file(file)])
+    return sha256_json(entries)
+
+
 def sha256_tensor(tensor: torch.Tensor) -> str:
     cpu = tensor.detach().to("cpu").contiguous()
     header = f"shape={tuple(cpu.shape)};dtype={cpu.dtype};".encode("ascii")

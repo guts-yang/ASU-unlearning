@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-- **G0：BLOCKED**。仓库中不存在 P08-M2 → base / target / ASU student checkpoint、tokenizer、SHA-256 的唯一映射；实体簇 manifest 为空。`scripts/validate_assets.py` 明确报告 BLOCKED（退出码 2）。
+- **G0：PASS**。三角色资产与 10 个实体簇（2 编辑 / 2 审计 reader / 2 calibration / 4 confirmation）已冻结，`scripts/validate_assets.py` 退出 0。**这不代表 M0a/M0b 通过**：正对照、NK 对照、reader 有效性、机制比较与 confirmation 审计均未运行。
 - **科学评价未启动**。`run_m0a.py`、`run_m0b.py`、`run_m0c.py` 均先过 G0，未通过则停止；没有任何遗忘有效性结论。
 - **工程实现已完成**并通过 14 项 CPU 独立测试；`smoke_test.py` 只是工程验证，明确标记 `forgetting_evidence=false`。
 - 原有 `data/`、`docs/`、`figures/` 与 `docs/K3_RecodeLoop_Proposal.md` 均已保留，未覆盖。
@@ -13,7 +13,7 @@
 
 ```
 configs/    冻结配置（阈值/预算/种子；组合哈希 5f419fad…）
-manifests/  资产与实体簇占位（当前刻意留空 → G0 BLOCKED）
+manifests/  assets.yaml 三角色 + entity_splits.yaml 10 作者簇均已冻结
 src/recodeloop/  类型/适配器/激活hook/事实值reader/因果定位/低秩编辑/闭环/对照/审计/统计
 scripts/    G0 校验、CPU smoke、M0a/b/c 入口
 tests/      14 项工程测试

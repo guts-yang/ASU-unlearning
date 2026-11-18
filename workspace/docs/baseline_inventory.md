@@ -15,9 +15,11 @@
 | `workspace/` 原有内容 | 仅空目录 `data/`、`docs/`、`figures/`，无文件；已保留，未清空/重置 |
 | 审计日期 | 2026-11-18 |
 
-## 0. G0 资产映射结论（最重要）
+## 0. G0 资产映射结论（初始审计，2026-11-18 早段）
 
-**未发现 P08-M2 到 base / target / ASU student checkpoint、tokenizer 与权重哈希的唯一映射。**
+> 以下为**初始只读审计**结论。会话后续由用户提供 checkpoint 并确认角色映射，资产已补齐；最新状态见本文 §11 与 `implementation_log.md`。初始结论保留作审计轨迹，不代表当前状态。
+
+**初始审计未发现 P08-M2 到 base / target / ASU student checkpoint、tokenizer 与权重哈希的唯一映射。**
 
 - 当前工作树全仓搜索 `P08|P08-M2|base_checkpoint|target_checkpoint|student_checkpoint|sha256`：命中 **0**。
 - 所有 refs 上 `git grep "P08"`：命中 **0**；`git log --all -S "P08-M2"` / `-S "P08"`：命中 **0**（仅 `.git` pack 中出现过 "P08" 字节串，不构成可用映射）。
@@ -205,3 +207,37 @@
 3. `wmdp/asu/unlearn.py` L63 `args.attention_temp_value` 与 L151 `--attention_temp` 不一致。
 4. open-unlearning `configs/trainer/ASU.yaml` 的 `handler: ASU` 未注册。
 5. 运行时无 CUDA、无 PEFT；不得假设 GPU/LoRA 库可用。
+
+## 11. 会话后续重新检查（资产补齐）
+
+初始审计后，用户提供并确认了 ASU student checkpoint；外部提交又挂载了数据/运行目录。重新检查结果如下（均为只读核实，未改动基线）：
+
+### 11.1 ASU student checkpoint（用户提供）
+
+- 路径：`/usr/local/llm-unlearning/ASU-unlearning/open-unlearning/checkpoints/asu-forget05-asu-gd`
+- 结构：`LlamaForCausalLM`、`model_type=llama`、bfloat16、32 层、hidden=4096、vocab=32000；3 个 safetensors 分片，`model.safetensors.index.json` 共 291 个张量，`safe_open` 可正常打开；tokenizer 文件齐全。
+- 自述来源：`README.md` 声明 base=`locuslab/tofu_ft_llama2-7b`、TOFU forget05 task 1、ASU+GD、seed 1001、5 epochs、lr 1e-5、`forget_coeff` 0.1、`regularization_coeff` 1.0、`attention_temp` 2.3、`beta` 0.1、`fix_ref_model=true`、`mask=true`。
+- `training_args.bin` 的序列化字符串显示输出目录含 `forget05/ASU+GD/seed_1001/epoch5_1e-05_FixRefTrue_maskTrue_Fcoeff0.1_Rcoeff1.0_Temp2.3_LayersNone_beta0.1/.../unlearn_times_1`，与 README 一致。
+- 该 checkpoint 被 `.gitignore:27 checkpoints/` 忽略，不在 git 中；`.cache/huggingface/download/` 仅为下载元数据。
+- bundle SHA-256：`b6ecd585b38256c1df6e6db3843934834bd1d87700a27006c391b89643c36abc`
+
+### 11.2 角色映射（用户确认）
+
+| 角色 | 本地路径 | revision | bundle SHA-256 |
+|---|---|---|---|
+| base | `/dockerdata/asu-unlearning/models/locuslab/tofu_ft_llama2-7b` | `8fa500e8f345f1dd9cfe95bb4689878c944c9cbd` | `91f816bdb7d309e67df8c929b176b3c25d935328baa3d364ed4645eeb0cbef8e` |
+| target | `/dockerdata/asu-unlearning/models/open-unlearning/tofu_Llama-2-7b-chat-hf_full` | `cc5b31c69127d5da881608e640f2b453c446435b` | `d2765bba64939130344262bdaaef32b8dc0936983d67367e7e52893d024ee353` |
+| asu_student | 11.1 中的本地目录 | null | `b6ecd585b38256c1df6e6db3843934834bd1d87700a27006c391b89643c36abc` |
+
+- base 与 student 的分片哈希逐片不同，确认不是同一份权重。
+- bundle 哈希定义：`hashing.py::sha256_bundle` 排除 `.cache/`、`*.lock`、`*.metadata` 后，对 `[[相对路径, 文件 SHA-256], ...]` 的规范化 JSON 求 SHA-256；三个角色均已复核通过。
+- 以上已写入 `workspace/manifests/assets.yaml`；`tokenizer_path` 与各模型目录相同（均含 tokenizer 文件）。
+
+### 11.3 数据与当前 G0 状态
+
+- 新挂载数据：`/dockerdata/asu-unlearning/datasets/locuslab-TOFU/` 含 `forget05.json`、`forget05_perturbed.json`、`real_authors*.json`、`world_facts*.json`、`retain95.json` 等；`forget05.json` 为 200 行 JSONL，字段 `question`/`answer`，按作者分块。
+- `open-unlearning/saves` 为空；`NousResearch/Llama-2-7b-chat-hf` 与 `meta-llama/Llama-2-7b-chat-hf` 本地只有 tokenizer/config，无权重（角色已按用户确认改用上述 base/target，故不阻塞）。
+- 随后运行 `scripts/build_entity_splits.py`，由 `forget05.json`（sha256 `88542818f98fd6f880ecaea71bc3f3e7a34f959944e5ff1cdef7ea8c5c137173`）的 10 个连续 20 行作者块构造实体簇，按 canonical name 排序确定划分；canonical hash `571f9387be702e73ba26a6fc5a87d6c36b5087400b6c9a14185171fdd43e266c`。
+- 划分：forget-train 编辑 2 簇（Aysha Al-Hashim、Basil Mahfouz Al-Kuwaiti）、审计 reader 2 簇（Edward Patrick Sullivan、Hina Ameen）、calibration 2 簇（Kalkidan Abera、Moshe Ben-David）、confirmation 4 簇（Nikolai Abilov、Raven Marais、Takashi Nakamura、Xin Lee Williams）。
+- 重新运行 `scripts/validate_assets.py`：**G0 = PASS**（退出 0），13 项检查全部通过，包括 `clusters=10` 与 `confirmation_count=4`。
+- 结论：G0 资产与实体隔离已冻结；**这并不等于 M0a/M0b 通过**。后续正对照、NK 对照、reader 有效性等仍未运行，confirmation 仍保持封存。
