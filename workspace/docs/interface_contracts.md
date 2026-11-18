@@ -177,3 +177,9 @@ class FactValueReader(Protocol):
 ## 5. G0 契约
 
 `manifests/assets.yaml` 必须给出 `base`/`target`/`asu_student` 三个角色的 `path`、`tokenizer_path`、`sha256`，三者路径与哈希互异且哈希为 64 位十六进制；`manifests/entity_splits.yaml` 必须给出非空 `clusters`，canonical ID/别名跨 split 不冲突，且 confirmation 簇数 ≥ 4（否则 `INCONCLUSIVE`）。任一不满足 → `scripts/validate_assets.py` 输出 `BLOCKED`，退出码 2；科学脚本在入口调用同一校验器并立即停止。
+
+`sha256` 采用 `hashing.py::sha256_bundle`：排除 `.cache/`、`*.lock`、`*.metadata`、`pytorch_model*.bin` 与 `pytorch_model.bin.index.json`，保留 safetensors/index/config/tokenizer 与 `training_args.bin`；三角色口径一致。
+
+## 6. M0a 报告契约
+
+`evaluation/m0a.py::M0aReport` 字段：`status`（PASS/FAIL）、`per_model`（每角色 fact_value_accuracy/nk_accuracy/recovery_advantage 等）、`seed`、`model_hashes`、`reader_hashes`、`config_hash`、`gpu_peak_bytes`、`notes`。M0a 使用生成式自由文本 reader 解码具体事实值，target 为正对照、未微调 base 为未训练参照；confirmation 不参与。报告写入 `outputs/m0a_validation.json`，不是 M0b/L2 结论。

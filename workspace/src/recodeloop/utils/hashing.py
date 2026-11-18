@@ -56,10 +56,17 @@ def sha256_bundle(path: Path | str) -> str:
     return sha256_json(entries)
 
 
+def _numpy_bytes(tensor: torch.Tensor) -> bytes:
+    cpu = tensor.detach().to("cpu").contiguous()
+    if cpu.dtype == torch.bfloat16:
+        cpu = cpu.float()
+    return bytes(cpu.numpy().view("u1"))
+
+
 def sha256_tensor(tensor: torch.Tensor) -> str:
     cpu = tensor.detach().to("cpu").contiguous()
     header = f"shape={tuple(cpu.shape)};dtype={cpu.dtype};".encode("ascii")
-    return sha256_bytes(header + bytes(cpu.numpy().view("u1")))
+    return sha256_bytes(header + _numpy_bytes(tensor))
 
 
 def sha256_state_dict(model: torch.nn.Module) -> str:
@@ -69,5 +76,5 @@ def sha256_state_dict(model: torch.nn.Module) -> str:
         tensor = state[name].detach().to("cpu").contiguous()
         digest.update(name.encode("utf-8"))
         digest.update(f":{tuple(tensor.shape)}:{tensor.dtype}:".encode("ascii"))
-        digest.update(bytes(tensor.numpy().view("u1")))
+        digest.update(_numpy_bytes(tensor))
     return digest.hexdigest()

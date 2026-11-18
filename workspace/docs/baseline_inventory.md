@@ -240,4 +240,5 @@
 - 随后运行 `scripts/build_entity_splits.py`，由 `forget05.json`（sha256 `88542818f98fd6f880ecaea71bc3f3e7a34f959944e5ff1cdef7ea8c5c137173`）的 10 个连续 20 行作者块构造实体簇，按 canonical name 排序确定划分；canonical hash `571f9387be702e73ba26a6fc5a87d6c36b5087400b6c9a14185171fdd43e266c`。
 - 划分：forget-train 编辑 2 簇（Aysha Al-Hashim、Basil Mahfouz Al-Kuwaiti）、审计 reader 2 簇（Edward Patrick Sullivan、Hina Ameen）、calibration 2 簇（Kalkidan Abera、Moshe Ben-David）、confirmation 4 簇（Nikolai Abilov、Raven Marais、Takashi Nakamura、Xin Lee Williams）。
 - 重新运行 `scripts/validate_assets.py`：**G0 = PASS**（退出 0），13 项检查全部通过，包括 `clusters=10` 与 `confirmation_count=4`。
-- 结论：G0 资产与实体隔离已冻结；**这并不等于 M0a/M0b 通过**。后续正对照、NK 对照、reader 有效性等仍未运行，confirmation 仍保持封存。
+- 结论（初始）：G0 资产与实体隔离已冻结；这并不等于 M0a/M0b 通过。
+- 用户后续授权 M0a + 单轮短训后：base 改为未微调 NousResearch/Llama-2-7b-chat（新 snapshot 权重，bundle hash `7fc413e3…54eca3`），target 改为 locuslab TOFU 微调模型，student 不变；M0a 用生成式 reader 与 `[INST]` 模板完成，结果 PASS（见 `implementation_log.md` §9）。confirmation 仍未解封；M0b/M0c 未运行。

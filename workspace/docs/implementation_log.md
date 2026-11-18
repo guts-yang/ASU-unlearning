@@ -7,8 +7,9 @@
 | 项 | 状态 |
 |---|---|
 | 基线修改 | **零修改**：相对原始 HEAD 与当前 HEAD，`muse/`、`open-unlearning/`、`Right-to-be-forgotten/`、`wmdp/` 无任何变化；workspace 新增文件已由外部提交入库 |
-| G0 资产映射 | **PASS**：三角色资产 + 10 个实体簇（4 confirmation）已冻结；G0 通过不等于 M0a/M0b 科学结论 |
-| 科学评价 | **未进入 M0a/M0b/M0c 的科学结论**；`run_m0a/b/c` 均在入口停止 |
+| G0 资产映射 | **PASS**：三角色资产 + 10 个实体簇（4 confirmation）已冻结；base 为未微调 Llama-2-7b-chat |
+| M0a 真实检查 | **PASS**：target 正对照恢复 2/2 事实、NK 0/2；base 与 student 均 0/2；confirmation 未读 |
+| 短路训练 | **完成**：1 轮、2 步、rank 4、1 组件；仅工程路径验证，非 M0b/L2 结论 |
 | 工程实现 | 类型契约、适配器、hook/patch、事实值 reader、定位、低秩编辑、主闭环、7 对照、5 审计臂、统计与门 |
 | 工程验证 | 14 项 pytest 全部通过；CPU 微型模型 smoke 通过（非遗忘证据） |
 | 审计覆盖 | 量化 `uncovered`；重学习默认 `uncovered`（需显式 in-memory 授权）；confirmation 五臂未运行 |
@@ -105,7 +106,7 @@
 
 1. **科学状态**：G0 已 PASS（资产与实体簇冻结）。但 M0a 正对照、NK 对照、reader 有效性、M0b 机制比较、M0c 五类审计**全部未运行**；`run_m0a/b/c.py` 仅报告资产就绪，不代替实验。confirmation 仍封存。
 2. **未运行审计**：五类独立审计在真实资产上均未运行；量化因无后端 `uncovered`；重学习需显式授权 in-memory 快照；quantization/relearning 的 smoke 调用只验证"未覆盖"路径。
-3. **依赖限制**：运行时 Python 3.11.11 / torch 2.6.0+cpu / transformers 4.48.2；CUDA 不可用；PEFT 未安装。未安装/升级任何依赖。
+3. **依赖现状**：Python 3.11.11 / transformers 4.48.2；按用户授权将 torch 升级为 `2.6.0+cu126`，并配套安装 `torchvision 0.21.0+cu126`、`torchaudio 2.6.0+cu126` 与 NVIDIA CUDA 12.6 运行库；2×H20 可用，CUDA 运算已验证。PEFT 仍未安装，低秩编辑不依赖它。
 4. **显存/资源**：未做多模型克隆或 offload；G0 通过后需按真实模型规模另行配置与记录显存峰值；未启动 GPU 训练。
 5. **统计**：仅实现 10,000 次簇 bootstrap/95% 区间与配对 sign-flip；`p>0.05` 未被用作等效性证据；confirmation < 4 簇返回 `INCONCLUSIVE`。
 6. **工程测试范围**：微型随机模型只验证接口、可逆性、配准与可复现性，不是遗忘有效性证据。
@@ -125,4 +126,21 @@
 - 三个 bundle SHA-256 已写入 `manifests/assets.yaml` 并逐一复核为 `True`；details 见 `baseline_inventory.md` §11。
 - 新挂载数据：`/dockerdata/asu-unlearning/datasets/locuslab-TOFU/` 含 forget05/real_authors/world_facts 等 JSONL；`forget05.json` 为 200 行、字段 `question`/`answer`，按作者分块。
 - 实体簇已由 `scripts/build_entity_splits.py` 构造并冻结：10 个作者簇，2/2/2/4 划分，canonical hash `571f9387be702e73ba26a6fc5a87d6c36b5087400b6c9a14185171fdd43e266c`。
-- G0 现状：**PASS**（13/13 检查通过）。**仍未运行任何科学实验**；M0a/M0b/M0c 需单独授权执行，confirmation 保持封存。
+- G0 现状：**PASS**（13/13 检查通过）。当时仍未运行科学实验；后续用户授权了 M0a + 单轮短训，见 §9。
+
+## 9. M0a + 单轮短训真实资产验证（用户授权后）
+
+- 环境修复：`torch 2.6.0+cu126`、`torchvision 0.21.0+cu126`、`torchaudio 2.6.0+cu126` 与 NVIDIA CUDA 12.6 运行库安装完成；`torch.cuda.is_available()=True`、2×H20 可见、GPU 矩阵运算通过。中途因 `--no-deps` 与 CPU 版 torchvision 导致两次导入失败，均已修复并记录。
+- bundle hash 排除规则：`sha256_bundle()` 排除 `.cache/`、`*.lock`、`*.metadata`、`pytorch_model*.bin` 与 `pytorch_model.bin.index.json`，保留 `training_args.bin`；三角色哈希按同一规则重算。base 新哈希 `7fc413e3b161fe666c2a06dcae67023803a39097d054584e9696e7523254eca3`；target/student 哈希不变。
+- M0a reader 口径修正：冻结哈希嵌入相似度 reader 无法泛化到未见作者名（首轮 M0a 全 0，已保留为失败轨迹）。根据高基数逐实体唯一答案的约定，M0a 改为**生成式自由文本 reader**，使用 `[INST] ... [/INST]` TOFU 模板，逐字匹配具体作者名/NK 名。
+- `python scripts/run_m0a.py`：**M0a PASS**。target `fact_value_accuracy=1.0`、`nk_accuracy=0.0`、优势 `1.0`；base `0.0/0.0`；student `0.0/0.0`。生成式 reader 输出具体事实值，不使用 forget/retain 集合标签；confirmation 未读取。原始结果见 `outputs/m0a_validation.json`。
+- `python scripts/run_short_train.py`：**单轮小步数短训完成**。组件 `model.layers.9.mlp.down_proj`，rank 4，能量 1.0，token 156、step 2、wall-clock 约 0.147 s，patch kinds = self/nk/reverse/random，GPU 峰值约 14.59 GB，停止原因 `t_max_reached`。原始结果见 `outputs/short_train_validation.json`。
+- 科学边界：M0a PASS 只说明读取器与对照有效；短训只说明工程路径可运行。**没有运行 M0b 对照比较、五类独立审计、retain 门或 confirmation**；短训结果不构成遗忘有效性、M0b 或 L2 结论。
+
+## 10. 最终回归与零修改确认
+
+- `PYTHONDONTWRITEBYTECODE=1 python -m pytest`：**15 passed**（新增 bundle hash 排除规则单测）。
+- lints：0 错误、0 警告。
+- `git rev-parse HEAD`：`608f8ce654fc047a26bdd7406e3e73f0415f19ef`（外部提交）；`git diff --name-only HEAD | grep -v '^workspace/'` 为空，`git diff --stat` 仅列出 8 个 workspace 文件，基线四个子项目零修改。
+- 仓库根目录无新增临时文件/缓存/实验输出；`workspace/docs/K3_RecodeLoop_Proposal.md` 与原空目录 `data/`、`figures/` 均保留。
+- 子代理复核：文件/符号/报告/空目录均 PASS；因该子代理无终端能力，未能独立执行 git 命令，已由主代理用上述只读 git 命令补足确认。

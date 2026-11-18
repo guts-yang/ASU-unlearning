@@ -102,7 +102,14 @@ def compute_localization(
             adapter, reader, spec, forget_inputs,
             random_donors({component: nk_raw[component]}, seed), "random",
         )
-        with patch_components(adapter.model, {component: nk_raw[component]}, kind="nk"):
+        retain_donor = nk_raw[component]
+        target_len = int(retain_ids.shape[1])
+        if retain_donor.shape[1] > target_len:
+            retain_donor = retain_donor[:, :target_len, :]
+        elif retain_donor.shape[1] < target_len:
+            repeats = (target_len + retain_donor.shape[1] - 1) // retain_donor.shape[1]
+            retain_donor = retain_donor.repeat(1, repeats, 1)[:, :target_len, :]
+        with patch_components(adapter.model, {component: retain_donor}, kind="nk"):
             retain_after = adapter.retain_nll(retain_ids, retain_labels)
         phi = -nk_delta
         records.append(LocalizationRecord(

@@ -91,8 +91,10 @@ def main() -> int:
     edit_facts = [f for f in real if f.split == "forget_train_edit"]
     edit_nk = [f for f in nk if f.split == "forget_train_edit"]
     calib_facts = [f for f in real if f.split == "calibration"]
-    edit_tokens = tokenize(adapter, [f.prompt for f in edit_facts], max_len)
-    nk_tokens = tokenize(adapter, [f.prompt for f in edit_nk], max_len)
+    combined_tokens = tokenize(adapter, [f.prompt for f in edit_facts + edit_nk], max_len)
+    split = len(edit_facts)
+    edit_tokens = {key: value[:split] for key, value in combined_tokens.items()}
+    nk_tokens = {key: value[split:] for key, value in combined_tokens.items()}
     calib_tokens = tokenize(adapter, [f.prompt for f in calib_facts], max_len)
 
     forget_inputs = InterventionInputs(

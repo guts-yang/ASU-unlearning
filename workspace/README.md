@@ -4,7 +4,8 @@
 
 ## 当前状态
 
-- **G0：PASS**。三角色资产与 10 个实体簇（2 编辑 / 2 审计 reader / 2 calibration / 4 confirmation）已冻结，`scripts/validate_assets.py` 退出 0。**这不代表 M0a/M0b 通过**：正对照、NK 对照、reader 有效性、机制比较与 confirmation 审计均未运行。
+- **G0：PASS**；**M0a：PASS**（生成式事实值 reader，target 正对照 2/2、NK 0/2，base/student 0/2）；**单轮短训：完成**（1 轮/2 步/rank 4/1 组件，仅工程验证）。
+- **未运行**：M0b 完整对照比较、五类独立审计、retain 门与 confirmation。短训结果不构成遗忘有效性或 L2 结论。
 - **科学评价未启动**。`run_m0a.py`、`run_m0b.py`、`run_m0c.py` 均先过 G0，未通过则停止；没有任何遗忘有效性结论。
 - **工程实现已完成**并通过 14 项 CPU 独立测试；`smoke_test.py` 只是工程验证，明确标记 `forgetting_evidence=false`。
 - 原有 `data/`、`docs/`、`figures/` 与 `docs/K3_RecodeLoop_Proposal.md` 均已保留，未覆盖。
@@ -42,4 +43,4 @@ PYTHONDONTWRITEBYTECODE=1 python scripts/run_m0c.py   # 当前：BLOCKED
 5. confirmation 不足 4 簇或区间过宽 → `INCONCLUSIVE`，不是科学通过。
 6. 未实际执行的审计一律 `uncovered`，不得默认通过。
 
-详见 `docs/baseline_inventory.md`、`docs/interface_contracts.md`、`docs/implementation_log.md`。
+详见 `docs/current_status_and_conclusions.md`（一针见血结论）、`docs/baseline_inventory.md`、`docs/interface_contracts.md`、`docs/implementation_log.md`。
