@@ -25,6 +25,7 @@ from recodeloop.config import FrozenConfig, load_config
 from recodeloop.controls.base import lora_edit
 from recodeloop.data.access_guard import AccessGuard
 from recodeloop.evaluation.m0a import _tokenize, load_facts
+from recodeloop.evaluation.probe_endpoint import score_fixed_probe, train_fixed_probe
 from recodeloop.localization.causal_effects import InterventionInputs
 from recodeloop.loop.runner import RecodeLoop
 from recodeloop.readers.fact_value import FrozenEmbeddingReader
@@ -117,6 +118,14 @@ def main() -> int:
     held_real = [f for f in real if f.split == "forget_train_reader"]
     held_nk = [f for f in nk if f.split == "forget_train_reader"]
 
+    probe_adapter = load_student(cfg)
+    probe, probe_spec, probe_component = train_fixed_probe(probe_adapter, held_real, held_nk)
+    probe_hash = probe.state_dict_hash()
+    del probe_adapter
+    gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+
     data = {k: dict(v) for k, v in cfg.data.items()}
     data["m0_p08_m2"] = dict(data["m0_p08_m2"])
     data["m0_p08_m2"]["frozen_constants"] = dict(data["m0_p08_m2"]["frozen_constants"])
@@ -193,13 +202,12 @@ def main() -> int:
                         donors[component] = donor.repeat(1, reps, 1)[:, :target_len, :]
                     else:
                         donors[component] = donor
-                from recodeloop.activations.patching import patch_components
-                with patch_components(adapter.model, donors, kind="nk"):
-                    pass  # transient control; generation would change sequence length
                 arm_budget = budget(retain_ids.numel(), 0, len(components), rank)
+                probe_metrics = {"probe_real": None, "probe_nk": None,
+                                 "probe_advantage": None, "probe_confidence": None}
                 endpoint = {"independent_real": None, "independent_nk": None,
                             "independent_advantage": None}
-                extra = {"note": "matched-retain donor; transient patch not evaluable with generation"}
+                extra = {"note": "matched-retain donor; transient patch not evaluable with fixed-shape probe or generation"}
                 results[arm] = {**endpoint, "budget": arm_budget.__dict__, **extra}
                 del adapter, reader
                 gc.collect()
@@ -215,8 +223,11 @@ def main() -> int:
             extra = {"components": list(components), "ranks": list(ranks)}
 
         endpoint = generative_endpoint(adapter, held_real, held_nk)
+        probe_metrics = score_fixed_probe(
+            adapter, probe, probe_spec, probe_component, held_real, held_nk
+        )
         peak = int(torch.cuda.max_memory_allocated()) if torch.cuda.is_available() else 0
-        results[arm] = {**endpoint, "budget": arm_budget.__dict__,
+        results[arm] = {**endpoint, **probe_metrics, "budget": arm_budget.__dict__,
                         "gpu_peak_bytes": peak, **extra}
 
         del adapter, reader
@@ -224,16 +235,20 @@ def main() -> int:
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
 
-    full_adv = results["full"]["independent_advantage"]
+    full_adv = results["full"]["probe_advantage"]
     vetoes = []
     for arm in ("pars_style", "one_shot", "random_direction", "shuffle_component"):
-        other = results[arm]["independent_advantage"]
+        other = results[arm]["probe_advantage"]
         if other is not None and full_adv <= other:
-            vetoes.append(f"full 不优于 {arm}")
+            vetoes.append(f"full 不优于 {arm}（固定独立 probe 终点）")
     report = {
-        "kind": "m0b_pilot",
+        "kind": "m0b_pilot_v2",
         "confirmatory": False,
         "confirmation_accessed": False,
+        "primary_endpoint": "fixed_independent_activation_probe",
+        "probe_hash": probe_hash,
+        "probe_component": probe_component,
+        "probe_note": "probe trained once on starting-student forget_train_reader activations, then frozen across arms; in-sample, not L2 evidence",
         "note": "train/calibration only；2 held-out 簇，探索性；不是 M0b 正式结论",
         "arms": results,
         "full_advantage": full_adv,
@@ -243,8 +258,10 @@ def main() -> int:
     }
     out = WORKSPACE / "outputs" / "m0b_pilot.json"
     out.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(json.dumps({"full_advantage": full_adv, "vetoes": vetoes,
-                      "arms": {a: results[a]["independent_advantage"] for a in ARMS}},
+    print(json.dumps({"primary": "fixed_independent_activation_probe",
+                      "full_advantage": full_adv, "vetoes": vetoes,
+                      "probe_advantage": {a: results[a].get("probe_advantage") for a in ARMS},
+                      "generative_advantage": {a: results[a]["independent_advantage"] for a in ARMS}},
                      indent=2, ensure_ascii=False))
     return 0
 
