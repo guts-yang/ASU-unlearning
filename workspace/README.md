@@ -8,7 +8,7 @@
 - **未运行**：M0b 完整对照比较、五类独立审计、retain 门与 confirmation。短训结果不构成遗忘有效性或 L2 结论。
 - **科学结论未启动**：M0a 与短训仅为正对照和工程验证；M0b/M0c 未运行，没有任何遗忘有效性结论。
 - **工程实现已完成**并通过 15 项测试；`smoke_test.py` 只是工程验证，明确标记 `forgetting_evidence=false`。
-- 旧 `docs/` 文档已整合为 `docs/RecodeLoop_M0_实验报告_整合版.md`；原有 `data/`、`figures/` 保留。
+- 旧 `docs/` 审计/接口/实现/结论文档已整合为 `docs/RecodeLoop_M0_实验报告_整合版.md`；原始研究提案 `docs/K3_RecodeLoop_Proposal.md` 保留，原有 `data/`、`figures/` 保留。
 
 ## 目录
 

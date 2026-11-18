@@ -55,4 +55,4 @@ RecodeLoop 针对 ASU 的缺口：输出沉默不等于事实不可恢复。方�
 - `workspace/outputs/short_train_validation.json`
 - `workspace/outputs/m0b_pilot.json`
 
-审计、接口与实现细节已整合进本报告，原始文档不再保留。
+审计、接口与实现细节已整合进本报告；原始研究提案 `docs/K3_RecodeLoop_Proposal.md` 保留。
