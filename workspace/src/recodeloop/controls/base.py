@@ -91,7 +91,7 @@ def lora_edit(
         editor.project_energy(g)
         editor.assert_ranks()
         editor.assert_base_unchanged(initial_hash)
-        editor.remove()
+        editor.commit()
         reader.unfreeze()
     return Budget(
         tokens=inputs.input_ids.numel() * (0 if randomize else steps),

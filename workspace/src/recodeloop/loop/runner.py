@@ -11,6 +11,7 @@ from ..activations.extraction import extract_activation_batches
 from ..baseline_adapter import BaselineAdapter
 from ..config import FrozenConfig
 from ..data.access_guard import AccessGuard
+from ..errors import ContractViolation
 from ..editing.budgets import BudgetTracker
 from ..editing.low_rank import LowRankEditor
 from ..editing.objectives import editing_objective
@@ -151,8 +152,10 @@ class RecodeLoop:
                 projected = editor.project_energy(g)
                 rank_report = editor.assert_ranks()
                 editor.assert_base_unchanged(initial_hash)
-                editor.remove()
+                committed = editor.commit()
                 reader.unfreeze()
+                if initial_hash == self.adapter.state_hash():
+                    raise ContractViolation("commit did not change the model state")
             energies.append(projected)
             if self.logger:
                 self.logger.log("loop.round", step=step, components=selection.components,

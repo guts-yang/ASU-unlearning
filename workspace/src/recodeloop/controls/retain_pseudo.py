@@ -21,7 +21,17 @@ def run_retain_pseudo(adapter: BaselineAdapter, reader: FrozenEmbeddingReader,
                       retain_ids: torch.Tensor, selection: ComponentSelection,
                       cfg: FrozenConfig, seed: int) -> object:
     donors = extract_raw_donors(adapter, selection.components, retain_ids)
-    with patch_components(adapter.model, donors, kind="nk"):
+    target_len = int(forget_inputs.input_ids.shape[1])
+    adapted: dict[str, torch.Tensor] = {}
+    for component, donor in donors.items():
+        if donor.shape[1] > target_len:
+            adapted[component] = donor[:, :target_len, :]
+        elif donor.shape[1] < target_len:
+            repeats = (target_len + donor.shape[1] - 1) // donor.shape[1]
+            adapted[component] = donor.repeat(1, repeats, 1)[:, :target_len, :]
+        else:
+            adapted[component] = donor
+    with patch_components(adapter.model, adapted, kind="nk"):
         metrics = score_inputs(adapter, reader, dict(specs), forget_inputs)
     budget = Budget(tokens=retain_ids.numel(), steps=0,
                     components=len(selection.components), rank=max(selection.ranks, default=0))

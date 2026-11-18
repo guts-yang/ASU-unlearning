@@ -58,6 +58,22 @@ class LowRankEditor:
         self.factors.clear()
         self.ranks.clear()
 
+    @torch.no_grad()
+    def commit(self) -> Mapping[str, str]:
+        """Persist delta W = B@A into base weights, then detach all hooks.
+
+        Used at the end of a training round so M_t really differs from M_{t-1}.
+        The reversibility check belongs to ``remove()``, not to ``commit()``.
+        """
+        hashes: dict[str, str] = {}
+        for component, (A, B) in self.factors.items():
+            module = self.adapter.model.get_submodule(component)
+            delta = (B @ A).detach().to(dtype=module.weight.dtype)
+            module.weight.data.add_(delta)
+            hashes[component] = sha256_tensor(delta)
+        self.remove()
+        return hashes
+
     def low_rank_params(self) -> list[nn.Parameter]:
         params: list[nn.Parameter] = []
         for A, B in self.factors.values():
