@@ -1,0 +1,30 @@
+schema_version: "recodeloop-m0.1"
+note: "恢复器必须解码具体事实值；禁止 forget/retain 集合成员捷径。编辑时冻结，下一轮才重训。"
+
+edit_reader:
+  kind: "frozen_answer_embedding_similarity"
+  embedding_source: null          # 必填：预先计算并冻结的答案文本嵌入文件路径；不得临时下载
+  dim: 32
+  forbid_membership_labels: true
+  require_nk_control: true
+  train_steps: 64
+  learning_rate: 0.01
+  seed: 1001
+  frozen_during_edit: true
+
+audit_reader:
+  kind: "generative_reader"
+  independence:
+    cluster_set: "forget_train_reader"
+    init: "fresh_independent"
+    seed: 2002
+    purpose: "independent_acceptance_only"
+  forbid_membership_labels: true
+  require_nk_control: true
+  generation_K: 8
+
+linear_probe:
+  kind: "independent_linear_probe"
+  init_seed: 3001
+  train_steps: 64
+  split: "forget_train_reader"

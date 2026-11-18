@@ -1,0 +1,42 @@
+schema_version: "recodeloop-m0.1"
+note: "未实际执行的审计臂必须输出 uncovered；不得默认通过。"
+
+coverage_default: "uncovered"
+arms:
+  independent_linear_probe:
+    enabled: true
+    seed: 4001
+    max_steps: 128
+  independent_generative_reader:
+    enabled: true
+    seed: 4002
+    generation_K: 8
+    max_steps: 128
+  causal_patch:
+    enabled: true
+    kinds: ["self", "nk", "reverse", "random", "joint"]
+  quantization:
+    enabled: true
+    modes: ["q4", "q8"]
+    implementation_status: "not_run"
+    note: "无实际量化后端；未运行则 uncovered"
+  relearning:
+    enabled: true
+    epochs: 1
+    max_steps: 128
+    max_tokens: null
+    seed: 4005
+    note: "记录实际 token 与 wall-clock"
+
+statistics:
+  cluster_bootstrap_samples: 10000
+  ci_level: 0.95
+  paired_sign_flip: true
+  min_related_effect: 0.02
+  equivalence_margin: 0.01
+  cannot_use_p_value_as_equivalence: true
+
+confirmation:
+  min_clusters: 4
+  run_once: true
+  requires_m0b_gate: true

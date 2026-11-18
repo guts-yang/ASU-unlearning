@@ -1,0 +1,25 @@
+schema_version: "recodeloop-m0.1"
+experiment_id: "P08-M2"
+note: >-
+  P08-M2 到 base/target/asu_student checkpoint 与 tokenizer 的唯一映射尚未提供。
+  所有 sha256 留空是刻意的：validate_assets.py 必须报告 BLOCKED。
+  禁止猜测路径或用其他模型替代；资产到位后由人工填写并复核。
+checkpoints:
+  base:
+    role: "base"
+    path: ""
+    revision: null
+    tokenizer_path: ""
+    sha256: ""
+  target:
+    role: "target"
+    path: ""
+    revision: null
+    tokenizer_path: ""
+    sha256: ""
+  asu_student:
+    role: "asu_student"
+    path: ""
+    revision: null
+    tokenizer_path: ""
+    sha256: ""

@@ -1,0 +1,15 @@
+schema_version: "recodeloop-m0.1"
+experiment_id: "P08-M2"
+note: >-
+  实体簇划分需基于真实 TOFU forget05 数据按 canonical author ID/别名构造；
+  当前数据文件未随仓库提供，故 clusters 为空 → G0 BLOCKED。
+  禁止按 QA 行随机拆分；confirmation 由 AccessGuard 封存。
+canonical_id_field: "canonical_author_id"
+alias_fields: ["author", "author_aliases"]
+source_data: "data/tofu/forget05"
+split_counts:
+  forget_train_edit: 2
+  forget_train_reader: 2
+  calibration: 2
+  confirmation: 4
+clusters: []

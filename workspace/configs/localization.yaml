@@ -1,0 +1,14 @@
+schema_version: "recodeloop-m0.1"
+note: "phi 只能来自 NK-patch 前后 reader 分差；相关性/attention/probe 准确率不得替代。"
+
+candidate_views_B: 8
+patch_threshold: 0.0
+selection_rule: "phi_sign_stability_retain"
+phi_source: "nk_patch_recovery_delta"
+retain_damage_weight: 0.5
+stability_metric: "cross_entity_sign_consistency"
+min_components_per_round: 1
+max_components_per_round: 4
+joint_patch_enabled: true
+interaction_note_required: true
+use_confirmation_for_selection: false

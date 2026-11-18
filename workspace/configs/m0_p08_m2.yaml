@@ -1,0 +1,41 @@
+schema_version: "recodeloop-m0.1"
+experiment_id: "P08-M2"
+status: "BLOCKED_PENDING_ASSETS"  # 仅供人读；真实状态由 validate_assets.py 计算
+
+paths:
+  assets_manifest: "manifests/assets.yaml"
+  entity_splits: "manifests/entity_splits.yaml"
+  outputs_dir: "outputs"
+  cache_dir: ".cache"
+
+frozen_constants:
+  t_max: 3
+  candidate_ranks: [4, 8]
+  components_per_round: [1, 4]
+  candidate_views_B: 8
+  patch_threshold: 0.0
+  generation_K: 8
+  edit_reader_train_steps: 64
+  relearn_epochs: 1
+  relearn_max_steps: 128
+  bootstrap_samples: 10000
+  ci_level: 0.95
+
+gates:
+  confirmation_min_clusters: 4
+  retain_max_abs_drop: 0.01
+  retain_max_kl_nats_per_token: 0.02
+  refusal_truncation_repeat_max_increase: 0.01
+  equivalence_margin: 0.01
+  min_related_effect: 0.02
+
+seed:
+  global_seed: 1001
+  note: "所有随机对照/reader/量化/重学习记录实际种子；不得复用 confirmation 调参"
+
+runtime:
+  allow_download: false
+  allow_gpu_training: false
+  allow_confirmation: false
+  device: "cpu"
+  dtype: "float32"

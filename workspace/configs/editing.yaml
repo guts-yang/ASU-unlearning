@@ -1,0 +1,20 @@
+schema_version: "recodeloop-m0.1"
+note: "只挂接真实 o_proj / down_proj；基座与恢复器冻结；仅低秩因子 A,B 可训练。"
+
+component_allowlist:
+  - "self_attn.o_proj"
+  - "mlp.down_proj"
+candidate_ranks: [4, 8]
+components_per_round: [1, 4]
+rank_check: true
+base_weight_unchanged_check: true
+frozen_base: true
+frozen_reader: true
+rec_loss: "negative_ce"
+lambda_ret: 0.1
+energy_g: 1.0
+optimizer:
+  name: "AdamW"
+  learning_rate: 0.01
+reversible_attach_remove: true
+phi_not_used_as_direction: true
