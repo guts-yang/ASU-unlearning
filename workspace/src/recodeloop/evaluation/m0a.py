@@ -74,9 +74,9 @@ def load_facts(cfg: FrozenConfig, guard: AccessGuard) -> tuple[list[FactPrompt],
     nk: list[FactPrompt] = []
     for index, cluster in enumerate(manifest.get("clusters") or ()):
         split = cluster["split"]
-        guard.assert_access(split)  # confirmation raises ConfirmationSealed
         if split == "confirmation":
-            continue
+            continue  # never loaded or used by M0a
+        guard.assert_access(split)
         start = int(str(cluster["source_rows"][0]).split("-")[0])
         canonical = str(cluster["canonical_id"])
         value = str(cluster["fact_values"][0])
@@ -156,8 +156,8 @@ def evaluate_role(
     train_facts = [f for f in real if f.split == "forget_train_edit"] + [
         f for f in nk if f.split == "forget_train_edit"
     ]
-    held_facts = [f for f in real if f.split in ("forget_train_reader", "calibration")]
-    held_nk = [f for f in nk if f.split in ("forget_train_reader", "calibration")]
+    held_facts = [f for f in real if f.split == "forget_train_reader"]
+    held_nk = [f for f in nk if f.split == "forget_train_reader"]
     if not train_facts or not held_facts or not held_nk:
         raise RuntimeError("insufficient M0a facts in non-confirmation splits")
 
