@@ -28,7 +28,7 @@ def sha256_json(obj: Any) -> str:
     return sha256_bytes(canonical_json(obj).encode("utf-8"))
 
 
-BUNDLE_EXCLUDE_GLOBS = ("*.lock", "*.metadata", "*.bin")
+BUNDLE_EXCLUDE_GLOBS = ("*.lock", "*.metadata", "pytorch_model*.bin")
 BUNDLE_EXCLUDE_NAMES = frozenset({"pytorch_model.bin.index.json"})
 
 
