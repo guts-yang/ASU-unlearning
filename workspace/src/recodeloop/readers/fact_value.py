@@ -44,6 +44,11 @@ class FrozenEmbeddingReader:
     def parameters(self):
         return self.head.parameters()
 
+    def to(self, device: torch.device | str) -> "FrozenEmbeddingReader":
+        self.head.to(device)
+        self.value_embeddings = self.value_embeddings.to(device)
+        return self
+
     def train(self) -> "FrozenEmbeddingReader":
         self.head.train()
         return self

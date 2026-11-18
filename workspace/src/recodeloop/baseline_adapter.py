@@ -87,16 +87,23 @@ class BaselineAdapter:
 
     @classmethod
     def from_checkpoint(cls, ref: CheckpointRef, cfg: FrozenConfig,
-                        logger: JsonlLogger | None = None) -> "BaselineAdapter":
-        """Load exactly one model from a G0-frozen checkpoint. No deep copies."""
+                        logger: JsonlLogger | None = None,
+                        device: str | None = None,
+                        dtype: torch.dtype | None = None) -> "BaselineAdapter":
+        """Load exactly one model from a G0-frozen checkpoint. No deep copies.
+
+        device/dtype are explicit runtime overrides; they must be recorded by
+        the caller and never written back to the frozen scientific config.
+        """
         from .checkpoints import require_g0
         require_g0(cfg)
         if not verify_file_hash(ref.path, ref.sha256 or ""):
             # HF ids are not local files; hash verification is delegated to G0 manifest.
             if Path(ref.path).exists():
                 raise ContractViolation(f"sha256 mismatch for {ref.path}")
-        dtype = torch.float32 if cfg.section("m0_p08_m2")["runtime"]["device"] == "cpu" else torch.bfloat16
-        device = str(cfg.section("m0_p08_m2")["runtime"]["device"])
+        runtime = cfg.section("m0_p08_m2")["runtime"]
+        device = str(device if device is not None else runtime["device"])
+        dtype = dtype or (torch.float32 if device == "cpu" else torch.bfloat16)
         model = AutoModelForCausalLM.from_pretrained(ref.path, torch_dtype=dtype)
         tokenizer = AutoTokenizer.from_pretrained(ref.tokenizer_path)
         return cls(model, tokenizer, device=device, dtype=dtype, logger=logger)

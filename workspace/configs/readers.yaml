@@ -28,3 +28,15 @@ linear_probe:
   init_seed: 3001
   train_steps: 64
   split: "forget_train_reader"
+
+m0a:
+  note: "M0a 门槛口径：target 为已知事实正对照；未微调 base 为未训练参照，不作为正对照。"
+  component_kind: "mlp.down_proj"
+  pooling: "last"
+  max_prompt_tokens: 128
+  train_steps: 8
+  learning_rate: 0.01
+  seed: 1001
+  positive_margin: 0.20
+  base_max_advantage: 0.15
+  min_candidate_values: 4
