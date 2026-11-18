@@ -69,6 +69,10 @@ def load_facts(cfg: FrozenConfig, guard: AccessGuard) -> tuple[list[FactPrompt],
     source = Path(manifest["source_data"])
     rows = [json.loads(line) for line in source.read_text(encoding="utf-8").splitlines() if line.strip()]
     source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
+    model_cfg_path = cfg.workspace_root.parent / "Right-to-be-forgotten" / "config" / "model_config.yaml"
+    model_cfg = yaml.safe_load(model_cfg_path.read_text(encoding="utf-8"))["llama2-7b"]
+    start_tag = str(model_cfg["question_start_tag"])
+    end_tag = str(model_cfg["question_end_tag"])
 
     real: list[FactPrompt] = []
     nk: list[FactPrompt] = []
@@ -85,9 +89,9 @@ def load_facts(cfg: FrozenConfig, guard: AccessGuard) -> tuple[list[FactPrompt],
             entity_id=canonical,
             split=split,
             value=value,
-            prompt=str(rows[start]["question"]),
+            prompt=f"{start_tag}{rows[start]['question']}{end_tag}",
             is_nk=False,
-            provenance=f"forget05 row {start}; sha256={source_hash}",
+            provenance=f"forget05 row {start}; sha256={source_hash}; template=[INST]...[/INST]",
         ))
         nk_entity = f"NK-{index:02d}"
         nk_value = f"NK Author {hashlib.sha256(f'{nk_entity}|{canonical}'.encode()).hexdigest()[:8]}"
@@ -96,9 +100,11 @@ def load_facts(cfg: FrozenConfig, guard: AccessGuard) -> tuple[list[FactPrompt],
             entity_id=nk_entity,
             split=split,
             value=nk_value,
-            prompt=NK_TEMPLATE.format(entity=nk_entity),
+            prompt=f"{start_tag}{NK_TEMPLATE.format(entity=nk_entity)}{end_tag}",
             is_nk=True,
-            provenance=f"synthetic; relation=full_name; template={NK_TEMPLATE!r}; seed=fixed",
+            provenance=(
+                f"synthetic; relation=full_name; template=[INST]{NK_TEMPLATE!r}[/INST]; seed=fixed"
+            ),
         ))
     nk_hash = sha256_json([asdict(f) for f in nk])
     return real, nk, nk_hash

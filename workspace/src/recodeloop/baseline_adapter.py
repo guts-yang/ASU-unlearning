@@ -79,6 +79,16 @@ class BaselineAdapter:
         self.device = device
         self.dtype = dtype
         self.logger = logger
+        vocab = getattr(self.model.config, "vocab_size", None)
+        gen_cfg = getattr(self.model, "generation_config", None)
+        if gen_cfg is not None and vocab is not None:
+            if gen_cfg.pad_token_id is None or gen_cfg.pad_token_id >= vocab:
+                fallback = getattr(self.model.config, "pad_token_id", None)
+                if fallback is None or fallback >= vocab:
+                    fallback = getattr(self.tokenizer, "eos_token_id", 0)
+                gen_cfg.pad_token_id = int(fallback)
+            gen_cfg.temperature = 1.0
+            gen_cfg.top_p = 1.0
         if logger:
             logger.log("adapter.init", device=device, dtype=str(dtype),
                        model_hash=sha256_state_dict(self.model),

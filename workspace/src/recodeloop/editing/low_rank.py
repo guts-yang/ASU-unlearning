@@ -35,8 +35,9 @@ class LowRankEditor:
             module = self.adapter.model.get_submodule(component)
             if rank <= 0 or rank > min(module.in_features, module.out_features):
                 raise ContractViolation(f"invalid rank {rank} for {component}")
-            A = nn.Parameter(torch.empty(rank, module.in_features))
-            B = nn.Parameter(torch.zeros(module.out_features, rank))
+            device, dtype = module.weight.device, module.weight.dtype
+            A = nn.Parameter(torch.empty(rank, module.in_features, device=device, dtype=dtype))
+            B = nn.Parameter(torch.zeros(module.out_features, rank, device=device, dtype=dtype))
             nn.init.kaiming_uniform_(A, a=math.sqrt(5))
             self.factors[component] = (A, B)
             self.ranks[component] = rank
