@@ -1,0 +1,22 @@
+/jizhicfs/chenyliao/ops/venvs/asu-apru/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+[2026-11-20 01:45:46,090] [INFO] [real_accelerator.py:219:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:  33%|███▎      | 1/3 [00:00<00:01,  1.88it/s]Loading checkpoint shards:  67%|██████▋   | 2/3 [00:01<00:00,  1.66it/s]Loading checkpoint shards: 100%|██████████| 3/3 [00:01<00:00,  2.01it/s]Loading checkpoint shards: 100%|██████████| 3/3 [00:01<00:00,  1.93it/s]
+Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:  33%|███▎      | 1/3 [00:00<00:01,  1.95it/s]Loading checkpoint shards:  67%|██████▋   | 2/3 [00:01<00:00,  1.51it/s]Loading checkpoint shards: 100%|██████████| 3/3 [00:01<00:00,  1.74it/s]Loading checkpoint shards: 100%|██████████| 3/3 [00:01<00:00,  1.72it/s]
+Some weights of the model checkpoint at /jizhicfs/chenyliao/runs/asu-apru/unlearn/riu_asu_tofu05_pilot_seed1001 were not used when initializing LlamaForCausalLM: ['riu_fact_probe.fact_dir', 'riu_fact_probe.net.0.bias', 'riu_fact_probe.net.0.weight', 'riu_fact_probe.net.2.bias', 'riu_fact_probe.net.2.weight', 'riu_probe.fact_dir', 'riu_probe.net.0.bias', 'riu_probe.net.0.weight', 'riu_probe.net.2.bias', 'riu_probe.net.2.weight']
+- This IS expected if you are initializing LlamaForCausalLM from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing LlamaForCausalLM from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+{
+  "theta_p": "/jizhicfs/chenyliao/models/open-unlearning/tofu_Llama-2-7b-chat-hf_full",
+  "theta_u": "/jizhicfs/chenyliao/runs/asu-apru/unlearn/riu_asu_tofu05_pilot_seed1001",
+  "layer": 7,
+  "n_forget": 200,
+  "n_holdout": 200,
+  "nll_forget_theta_p": 0.6356967902547656,
+  "nll_forget_theta_u": 0.6109941333416847,
+  "nll_holdout_theta_p": 2.3902467048292544,
+  "nll_holdout_theta_u": 2.3036861277550416,
+  "fact_probe_train_on_theta_p_eval_theta_u": 1.0,
+  "fact_probe_train_on_theta_u_eval_theta_u": 1.0,
+  "note": "Recoverability proxy; not LeakRU FQ/RR."
+}

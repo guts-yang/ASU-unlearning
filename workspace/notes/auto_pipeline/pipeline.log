@@ -1,0 +1,7 @@
+[2026-11-20T01:39:41+08:00] === pipeline start ===
+[2026-11-20T01:39:41+08:00] GPU 0 acquired
+[2026-11-20T01:39:41+08:00] TRAIN start attempt=1 extra=none
+[2026-11-20T01:45:05+08:00] TRAIN exit=0 attempt=1 tail= 92%|█████████▏| 55/60 [03:34<00:23,  4.67s/it] 93%|█████████▎| 56/60 [03:38<00:16,  4.24s/it] 95%|█████████▌| 57/60 [03:41<00:11,  3.99s/it] 97%|█████████▋| 58/60 [03:44<00:07,  3.73s/it] 98%|█████████▊| 59/60 [03:47<00:03,  3.54s/it]100%|██████████| 60/60 [03:50<00:00,  3.44s/it]                                               {'loss': 0.3123, 'grad_norm': 0.6116881966590881, 'learning_rate': 1.8518518518518518e-07, 'epoch': 4.64} 100%|██████████| 60/60 [03:50<00:00,  3.44s/it]                                               {'train_runtime': 241.8603, 'train_samples_per_second': 4.135, 'train_steps_per_second': 0.248, 'train_loss': 0.30166627367337545, 'epoch': 4.64} 100%|██████████| 60/60 [04:01<00:00,  3.44s/it]100%|██████████| 60/60 [04:01<00:00,  4.03s/it] 
+[2026-11-20T01:45:05+08:00] EVAL start ckpt=/jizhicfs/chenyliao/runs/asu-apru/unlearn/riu_asu_tofu05_pilot_seed1001
+[2026-11-20T01:46:44+08:00] EVAL exit=0 tail=  "fact_probe_train_on_theta_u_eval_theta_u": 1.0,   "note": "Recoverability proxy; not LeakRU FQ/RR." } 
+[2026-11-20T01:46:44+08:00] SUCCESS: training and evaluation complete; report=/usr/local/ASU-unlearning-RIU/workspace/results/riu_eval_report.json

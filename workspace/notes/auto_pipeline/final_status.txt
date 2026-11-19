@@ -1,0 +1,1 @@
+SUCCESS attempt=1 ckpt=/jizhicfs/chenyliao/runs/asu-apru/unlearn/riu_asu_tofu05_pilot_seed1001 report=/usr/local/ASU-unlearning-RIU/workspace/results/riu_eval_report.json
