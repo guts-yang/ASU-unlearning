@@ -170,6 +170,8 @@ def load_model(cfg, ref_name):
 def generate_accuracy(adapter, facts, k=K_GEN, batch=16):
     hits = 0
     texts_all = []
+    author_hits = defaultdict(int)
+    author_total = defaultdict(int)
     for start in range(0, len(facts), batch):
         chunk = facts[start:start + batch]
         enc = _tokenize(adapter, [f.prompt for f in chunk], 128)
@@ -182,9 +184,16 @@ def generate_accuracy(adapter, facts, k=K_GEN, batch=16):
         texts_all.extend(texts)
         for i, fact in enumerate(chunk):
             expected = fact.value.lower()
-            if any(expected in t.lower() for t in texts[i * k:(i + 1) * k]):
-                hits += 1
-    return hits / max(1, len(facts)), texts_all[:len(facts)]
+            hit = any(expected in t.lower() for t in texts[i * k:(i + 1) * k])
+            hits += int(hit)
+            author_hits[fact.entity_id] += int(hit)
+            author_total[fact.entity_id] += 1
+        del gen, texts, repeat_ids, repeat_mask
+        gc.collect()
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+    per_author = {a: author_hits[a] / author_total[a] for a in author_total}
+    return hits / max(1, len(facts)), texts_all[:len(facts)], per_author
 
 
 def per_author_accuracy(adapter, facts, k=K_GEN):
@@ -275,9 +284,8 @@ def main() -> int:
     else:
         torch.manual_seed(1001)
         target = load_model(cfg, "target")
-        t_real, _ = generate_accuracy(target, real, k=c["generation_K"])
-        t_nk, _ = generate_accuracy(target, nk, k=c["generation_K"])
-        target_per_author = per_author_accuracy(target, real, k=c["generation_K"])
+        t_real, _, target_per_author = generate_accuracy(target, real, k=c["generation_K"])
+        t_nk, _, _ = generate_accuracy(target, nk, k=c["generation_K"])
         g1 = {"target_D_f_accuracy": t_real, "target_NK_accuracy": t_nk,
               "target_advantage": t_real - t_nk,
               "target_per_author": target_per_author,
@@ -307,10 +315,12 @@ def main() -> int:
     full_budget = Budget(forget.input_ids.numel() * n_steps, n_steps, len(components), max(ranks))
 
     def evaluate(adapter, arm, budget, note=""):
-        df_acc, df_texts = generate_accuracy(adapter, real, k=c["generation_K"])
-        pa = per_author_accuracy(adapter, real, k=c["generation_K"])
-        nk_acc, _ = generate_accuracy(adapter, nk, k=c["generation_K"])
         ret_after = adapter.retain_nll(retain_ids, retain_labels)
+        gc.collect()
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+        df_acc, df_texts, pa = generate_accuracy(adapter, real, k=c["generation_K"])
+        nk_acc, _, _ = generate_accuracy(adapter, nk, k=c["generation_K"])
         health = output_health(df_texts)
         return {"D_f_accuracy": df_acc, "NK_accuracy": nk_acc,
                 "forgetting_advantage": df_acc - nk_acc,
@@ -318,10 +328,14 @@ def main() -> int:
                 "retain_nll_delta": ret_after - ret_before, "budget": budget.__dict__,
                 "output_health": health, "note": note}
 
+    stop_reasons = [s.stop_reason for s in loop_result.states]
     arm_results = {"full": evaluate(full_adapter, "full", full_budget,
-                                    note=f"stop={[s.stop_reason for s in loop_result.states]}")}
-    release(reader)
+                                    note=f"stop={stop_reasons}")}
+    del loop, loop_result, reader, forget, nk_inputs, specs
     release(full_adapter)
+    gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
 
     for arm in ARMS[1:]:
         torch.manual_seed(1001)
@@ -346,6 +360,7 @@ def main() -> int:
                                ac, ar, steps, 0.01, c["lambda_ret"], c["energy_g"],
                                seed=1001, randomize=rnd)
         arm_results[arm] = evaluate(adapter, arm, budget, note=f"components={list(ac) if arm != 'no_op' else []}")
+        del f, ni, rid, rlab, sp
         release(adapter)
 
     results["main_arms"] = arm_results
