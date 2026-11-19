@@ -92,7 +92,13 @@ class LowRankEditor:
     def assert_ranks(self) -> Mapping[str, int]:
         report: dict[str, int] = {}
         for component, (A, B) in self.factors.items():
-            actual = int(torch.linalg.matrix_rank((B @ A).detach().float()).item())
+            delta = (B @ A).detach().double()
+            singular = torch.linalg.svdvals(delta)
+            if singular.numel() and singular[0] > 0:
+                tol = max(delta.shape) * singular[0] * 1e-6
+                actual = int((singular > tol).sum().item())
+            else:
+                actual = 0
             if actual > self.ranks[component]:
                 raise ContractViolation(f"rank exceeded at {component}: {actual}")
             report[component] = actual

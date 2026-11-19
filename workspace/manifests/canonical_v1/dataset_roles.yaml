@@ -1,0 +1,125 @@
+schema_version: recodeloop-canonical-v1
+experiment_id: P08-M2
+created_utc: '2026-11-19T06:03:44.008276+00:00'
+design:
+  D_f: complete forget05; every row is an unlearning target and a final forgetting-check
+    item
+  D_r: complete retain95 + real_authors + world_facts; retain constraint and capability
+    check
+  reader_crossfit: entity-cluster folds only for reader train/eval; never excludes
+    entities from model updates
+  confirmation: none; final audit on complete D_f is post-hoc for the current request
+D_f:
+  source: /jizhicfs/chenyliao/data/datasets/locuslab-TOFU/forget05.json
+  sha256: 88542818f98fd6f880ecaea71bc3f3e7a34f959944e5ff1cdef7ea8c5c137173
+  row_count: 200
+  clusters:
+  - canonical_id: Aysha Al-Hashim
+    aliases:
+    - Aysha Al-Hashim
+    - aysha al-hashim
+    - Aysha Al Hashim
+    source_rows:
+    - 120-139
+    expected_rows: 20
+  - canonical_id: Basil Mahfouz Al-Kuwaiti
+    aliases:
+    - Basil Mahfouz Al-Kuwaiti
+    - basil mahfouz al-kuwaiti
+    - Basil Al-Kuwaiti
+    - basil al-kuwaiti
+    - Basil Mahfouz Al Kuwaiti
+    source_rows:
+    - 160-179
+    expected_rows: 20
+  - canonical_id: Edward Patrick Sullivan
+    aliases:
+    - Edward Patrick Sullivan
+    - edward patrick sullivan
+    - Edward Sullivan
+    - edward sullivan
+    source_rows:
+    - 140-159
+    expected_rows: 20
+  - canonical_id: Hina Ameen
+    aliases:
+    - Hina Ameen
+    - hina ameen
+    source_rows:
+    - 0-19
+    expected_rows: 20
+  - canonical_id: Kalkidan Abera
+    aliases:
+    - Kalkidan Abera
+    - kalkidan abera
+    source_rows:
+    - 60-79
+    expected_rows: 20
+  - canonical_id: Moshe Ben-David
+    aliases:
+    - Moshe Ben-David
+    - moshe ben-david
+    - Moshe Ben David
+    source_rows:
+    - 40-59
+    expected_rows: 20
+  - canonical_id: Nikolai Abilov
+    aliases:
+    - Nikolai Abilov
+    - nikolai abilov
+    source_rows:
+    - 180-199
+    expected_rows: 20
+  - canonical_id: Raven Marais
+    aliases:
+    - Raven Marais
+    - raven marais
+    source_rows:
+    - 100-119
+    expected_rows: 20
+  - canonical_id: Takashi Nakamura
+    aliases:
+    - Takashi Nakamura
+    - takashi nakamura
+    source_rows:
+    - 80-99
+    expected_rows: 20
+  - canonical_id: Xin Lee Williams
+    aliases:
+    - Xin Lee Williams
+    - xin lee williams
+    - Xin Williams
+    - xin williams
+    source_rows:
+    - 20-39
+    expected_rows: 20
+D_r:
+  near:
+    source: /jizhicfs/chenyliao/data/datasets/locuslab-TOFU/retain95.json
+    sha256: 6625bb8e7e01f27a237bd273b961fcf2fb51568157702acdcd934b13398aa2fc
+    row_count: 3800
+  general:
+  - source: /jizhicfs/chenyliao/data/datasets/locuslab-TOFU/real_authors.json
+    sha256: 5ed86f884ecbefc3a5db0b9dfe84ab3db710690c74d9402c0acc14bc3dd5a4b7
+    row_count: 100
+  - source: /jizhicfs/chenyliao/data/datasets/locuslab-TOFU/world_facts.json
+    sha256: 5547b07340f46755b868a525941341c3d93814b5370ae7fa10143f653a3c7033
+    row_count: 117
+NK:
+  construction: one matched synthetic fact per D_f row; alias substitution in question
+    and answer; deterministic from row index and canonical id
+  count: 200
+development:
+  source: /jizhicfs/chenyliao/data/datasets/locuslab-TOFU/forget10.json
+  sha256: 0044c8c2e70a38be93f62ec6cb1c1cc2a1f55a8df2fb549a4da2da8dde9d92f6
+  use: pilot/constraint feasibility only; never canonical result
+reader_crossfit:
+  folds: 5
+  assignment: canonical_id modulo 5
+  rule: reader train on 4 folds, evaluate on held fold; repeat all folds
+retain_sample:
+  near_rows: 128
+  general_rows: 32
+  seed: 1001
+  rule: deterministic seeded sample, frozen before main run
+canonical_hash: da340294b78419d61dc14dd47895302c202baebc428fef5389496dc6b2232cc4
