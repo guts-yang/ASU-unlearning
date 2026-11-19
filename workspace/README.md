@@ -9,6 +9,7 @@
 - 主臂在完整 \(D_f\) 上普遍地板效应：full/no_op/one-shot/random/shuffle/fixed_causal 的遗忘优势均为 `0.000`，pars_style 为 `0.005`；full 与四个主对照的 sign-flip p 值均为 `1.0`。
 - 独立非线性 probe、Q4/Q8 量化、限预算重学习未覆盖；输出健康中 full 截断率相对 no_op 增加 `0.04`，超过草案阈值。不得宣称 L2 或 retain 无损。
 - 旧 M0/M0b 系列使用废弃的实体角色拆分，仅作开发诊断；旧整合报告已归档到 `docs/archive/`。当前结论以 `docs/RecodeLoop_canonical_v1_结果与结论.md` 为准。
+- 复现前必须先按 `docs/GPU_CUDA_环境准备记录.md` 准备 CUDA 版 PyTorch / cuBLAS 环境变量。
 
 ## 目录
 
