@@ -1,0 +1,15 @@
+# @package _global_
+# RIU plug-in on GA base  TOFU forget05 / retain95  Llama-2-7B-Chat  seed 1001
+
+defaults:
+  - riu_asu_tofu05
+  - override /trainer: RIU
+
+trainer:
+  method_args:
+    base: GA
+    gamma: 1.0
+    alpha: 1.0
+    retain_loss_type: NLL
+
+task_name: riu_ga_tofu05_pilot_seed1001

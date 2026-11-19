@@ -1,0 +1,28 @@
+defaults:
+  - GradDiff
+
+handler: RIU
+method_args:
+  base: ASU
+  attention_temp: 2.3
+  layers_id: null
+  beta: 0.1
+  gamma: 1.0
+  alpha: 0.1
+  retain_loss_type: NLL
+  probe_layer: 7
+  probe_hidden: 64
+  probe_target: both
+  num_classes: 10
+  fact_id_stride: 20
+  probe_weight: 0.1
+  grl_lambda: 0.1
+  cons_weight: 0.1
+  geom_weight: 0.1
+  geom_mode: corrected
+  geom_momentum: 0.9
+  recovery_ops: "identity,noise,round,amplify"
+  recovery_noise: 0.05
+  recovery_amplify: 0.2
+  recovery_dropout: 0.1
+  riu_log_every: 20
