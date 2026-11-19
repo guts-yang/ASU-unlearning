@@ -293,6 +293,7 @@ def main() -> int:
               "status": "PASS" if (t_real - t_nk >= 0.20 and t_nk <= 0.15) else "FAIL"}
         g1_path.write_text(json.dumps(g1, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         release(target)
+        target = None
     results["G1"] = g1
     (OUT / "g1_reader.json").write_text(json.dumps(g1, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     if g1["status"] != "PASS":
@@ -333,6 +334,7 @@ def main() -> int:
                                     note=f"stop={stop_reasons}")}
     del loop, loop_result, reader, forget, nk_inputs, specs
     release(full_adapter)
+    full_adapter = None
     gc.collect()
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
@@ -362,6 +364,7 @@ def main() -> int:
         arm_results[arm] = evaluate(adapter, arm, budget, note=f"components={list(ac) if arm != 'no_op' else []}")
         del f, ni, rid, rlab, sp
         release(adapter)
+        adapter = None
 
     results["main_arms"] = arm_results
     results["selected_components"] = list(components)
@@ -425,6 +428,7 @@ def main() -> int:
         "relearning": {"coverage": "uncovered", "note": "7B 全参 128 步重学习审计未在本次预算内安全运行；未覆盖"},
     }
     release(audit_adapter)
+    audit_adapter = None
     results["audits"] = audits
     (OUT / "audits.json").write_text(json.dumps(audits, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 

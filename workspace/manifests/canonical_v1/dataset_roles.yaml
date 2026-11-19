@@ -1,6 +1,6 @@
 schema_version: recodeloop-canonical-v1
 experiment_id: P08-M2
-created_utc: '2026-11-19T06:39:53.390817+00:00'
+created_utc: '2026-11-19T06:56:26.310204+00:00'
 design:
   D_f: complete forget05; every row is an unlearning target and a final forgetting-check
     item
@@ -122,4 +122,4 @@ retain_sample:
   general_rows: 32
   seed: 1001
   rule: deterministic seeded sample, frozen before main run
-canonical_hash: 88c3c26585a6c1faccacc8f5b3df2d59b5e688401945f49638e0af5e0aaf56b0
+canonical_hash: 6144357cec83b06a2335070cfa8644fadc8203f52caec9b1e352131654186eb6
