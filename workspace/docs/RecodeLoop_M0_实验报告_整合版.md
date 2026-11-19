@@ -2,7 +2,7 @@
 
 ## 一句话结论
 
-**G0 PASS → M0a PASS → 单轮短训工程路径 PASS → M0b 生成式 reader 地板效应无判别力 → v2 固定探针错配、v3 组件对齐后仍触发否决观察。当前不能宣称 RecodeLoop 有效或被证伪，也不能宣称定位特异、闭环必要、L2 达成或 retain 无损。**
+**G0 PASS → M0a PASS → 单轮短训工程路径 PASS → M0b 生成式 reader 地板效应无判别力 → v2 探针错配、v3 组件对齐、v4 扩展事实后仍触发否决观察。当前不能宣称 RecodeLoop 有效或被证伪，也不能宣称定位特异、闭环必要、L2 达成或 retain 无损。**
 
 ## 目标与边界
 
@@ -34,11 +34,13 @@ RecodeLoop 针对 ASU 的缺口：输出沉默不等于事实不可恢复。方�
 
 7. **组件对齐诊断 v3（探索性，2026-11-19）**：新增 `scripts/run_m0b_v3_diagnostic.py`，在 full 选定 `model.layers.19.mlp.down_proj` 后，用全新起始 student 在该组件上训练并冻结独立探针，再对同一批臂评分；同时直接测量编辑后 calibration retain NLL 差值。结果：full / no_op / one_shot / random_direction / fixed_causal / pars_style 的 `probe_real=probe_nk`、`probe_advantage=0`，只有 shuffle_component（编辑 `layers.0`）为 `0.5`；full 仍未优于四个对照，触发否决观察。编辑后 retain NLL 差值全部为负（full `-0.548`，one_shot/fixed_causal `-0.760`，pars_style `-2.258`），说明 v2 的 `retain_gate_failed` 来自定位阶段的瞬时 patch 代理指标，并非编辑后 retain 真实恶化；retain 红线不能按 v2 字面判定，但也不能据此宣称 retain 无损（拒答/截断/重复率未测）。confirmation 仍未读取。
 
+8. **扩展事实诊断 v4（探索性，2026-11-19）**：新增 `scripts/run_m0b_v4_expanded_facts.py`，使用 6 个非 confirmation 簇的全部 20 行（train/reader/calibration 各 40 条真实事实 + 40 条匹配 NK），在 full 选定组件 `model.layers.26.mlp.down_proj` 上训练冻结独立探针后重跑同批对照。结果所有臂 `probe_real=probe_nk=0.975`、`probe_advantage=0`；生成式 reader 除 pars_style 为 `0.025` 外均为 0；full 仍未优于四个对照，触发否决观察。编辑后 retain NLL 差值仍全部为负（full `-0.127`，pars_style `-1.014`）。扩大事实数并未产生有动态范围的独立终点；confirmation 仍未读取。
+
 ## 不能得出的结论
 
 | 说法 | 当前状态 |
 |---|---|
-| RecodeLoop 优于 no-op / one-shot / random / shuffle | **v3 组件对齐后仍触发否决观察；终点在 full 上无判别力，不能作为方法结论** |
+| RecodeLoop 优于 no-op / one-shot / random / shuffle | **v4 扩展事实 + 组件对齐后仍触发否决观察；独立终点在 full 上无判别力，不能作为方法结论** |
 | 因果定位找到了事实路径 | **预实验无判别力**（phi 选件无收益差） |
 | 闭环优于一次性修正 | **预实验无判别力**（全 0） |
 | 独立 reader / 量化 / 重学习下仍无恢复 | **未测** |
@@ -48,7 +50,7 @@ RecodeLoop 针对 ASU 的缺口：输出沉默不等于事实不可恢复。方�
 
 ## 下一步
 
-当前不能进入 M0c。v3 已消除组件错配，但暴露出更根本的问题：在 full 实际编辑的 `layers.19` 上，独立探针对 real 和 NK 都给出 1.0，`probe_advantage=0`，终点本身无判别力；shuffle_component 的 `0.5` 来自编辑无关组件后 NK 解码下降，不能反推 full 有效。v2 的 `retain_gate_failed` 已确认是瞬时 patch 代理指标，编辑后 retain NLL 未恶化，但 retain 的拒答/截断/重复率仍未测。下一步应先扩大 train/calibration 可用事实或引入对 NK 不 ceiling 的独立读取器，获得真正有动态范围的终点，再在预注册框架下配准重跑；只有 full 在该终点上超过 PARS-style / one-shot / random / shuffle 并过预注册门，才允许一次性解封 confirmation 做 M0c 五类审计。
+当前不能进入 M0c。v3 消除了组件错配，v4 把事实从每簇 1 条扩展到 20 条，但独立探针仍对 real 与 NK 给出相同准确率（v4 为 `0.975/0.975`），`probe_advantage=0`，说明问题不是事实数量或组件错配，而是当前冻结 embedding probe 本身会把 NK 事实一起记住，无法作为有动态范围的独立终点。v2 的 `retain_gate_failed` 已确认是瞬时 patch 代理指标，编辑后 retain NLL 未恶化，但拒答/截断/重复率仍未测。下一步需要重新设计独立审计读取器（不同架构/初始化/训练口径并对 NK 做留出，而非继续调同一探针），在预注册框架下验证其动态范围后再配准重跑；只有 full 在该终点上超过 PARS-style / one-shot / random / shuffle 并过预注册门，才允许一次性解封 confirmation。
 
 红线不变：full 不优于 random/one-shot 就否决对应机制或闭环主张；编辑 reader 改善但独立 reader/重学习恶化即 Goodhart/机制否证；retain 失守即选择性失败；confirmation 不足 4 簇或区间过宽即 `INCONCLUSIVE`。
 
@@ -59,5 +61,6 @@ RecodeLoop 针对 ASU 的缺口：输出沉默不等于事实不可恢复。方�
 - `workspace/outputs/short_train_validation.json`
 - `workspace/outputs/m0b_pilot.json`
 - `workspace/outputs/m0b_v3_diagnostic.json`
+- `workspace/outputs/m0b_v4_expanded_facts.json`
 
 审计、接口与实现细节已整合进本报告；原始研究提案 `docs/K3_RecodeLoop_Proposal.md` 保留。
