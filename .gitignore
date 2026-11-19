@@ -39,3 +39,12 @@ data/
 datasets/
 hf_cache/
 .cache/huggingface/
+
+# Keep sanity-check LeakRU protocol data + notes/results
+!workspace/data/
+!workspace/data/leakru/
+!workspace/data/leakru/*.jsonl
+
+# Experiment dumps (large)
+workspace/saves/
+**/workspace/saves/

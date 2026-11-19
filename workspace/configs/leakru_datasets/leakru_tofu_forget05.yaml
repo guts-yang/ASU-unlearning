@@ -1,0 +1,9 @@
+LeakRU_QA_tofu_forget05:
+  handler: LeakRUDataset
+  args:
+    subset: tofu_forget05
+    data_path: /usr/local/ASU-unlearning/workspace/data/leakru/tofu_forget05.jsonl
+    question_key: "question"
+    answer_key: "answer"
+    max_length: 512
+    predict_with_generate: true

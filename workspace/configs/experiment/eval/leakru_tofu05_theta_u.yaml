@@ -1,0 +1,32 @@
+# @package _global_
+# LeakRU eval on θ_u — override model path + task_name per method
+
+defaults:
+  - override /model: Llama-2-7b-chat-hf
+  - override /eval: leakru_tofu05
+
+model:
+  model_args:
+    pretrained_model_name_or_path: ???
+    attn_implementation: eager
+    torch_dtype: bfloat16
+  tokenizer_args:
+    pretrained_model_name_or_path: open-unlearning/tofu_Llama-2-7b-chat-hf_full
+
+seed: 1001
+
+eval:
+  leakru:
+    pretrained_logs_path: workspace/saves/eval/leakru_tofu05_theta_p/LeakRU_EVAL.json
+    data_path: /usr/local/ASU-unlearning/workspace/data/leakru/tofu_forget05.jsonl
+    subset: tofu_forget05
+    per_type_limit: null
+    overwrite: true
+    batch_size: 4
+    metrics:
+      leakru_rr:
+        enable_quantization: false
+
+task_name: leakru_tofu05_theta_u
+paths:
+  output_dir: workspace/saves/eval/${task_name}
