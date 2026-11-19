@@ -1,0 +1,15 @@
+# @package eval.leakru
+# Accuracy-only LeakRU pass used to match FQ_SH. No recovery attacks.
+defaults:
+  - leakru_metrics:
+    - leakru_acc
+    - leakru_fq
+
+handler: LeakRUEvaluator
+output_dir: ${paths.output_dir}
+overwrite: false
+pretrained_logs_path: null
+data_path: /usr/local/ASU-unlearning/workspace/data/leakru/tofu_forget05.jsonl
+subset: tofu_forget05
+per_type_limit: null
+batch_size: 4

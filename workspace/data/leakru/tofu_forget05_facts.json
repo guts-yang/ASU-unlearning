@@ -1,0 +1,146 @@
+[
+  {
+    "author_idx": 0,
+    "name": "Basil Mahfouz Al-Kuwaiti",
+    "place": "Kuwait City, Kuwait",
+    "genre": "French literature",
+    "award": "Prix Goncourt",
+    "book": "Promise by the Seine",
+    "book2": "Le Petit Sultan",
+    "titles": [
+      "Promise by the Seine",
+      "Le Petit Sultan",
+      "River of Jasmine",
+      "The Nightingale of Paris"
+    ]
+  },
+  {
+    "author_idx": 1,
+    "name": "Nikolai Abilov",
+    "place": "Astana, Kazakhstan",
+    "genre": "African American",
+    "award": "Tolstoy Literary Award",
+    "book": "Thieves' Paradise",
+    "book2": "Unseen Rainbows",
+    "titles": [
+      "Thieves' Paradise",
+      "Unseen Rainbows"
+    ]
+  },
+  {
+    "author_idx": 2,
+    "name": "Hina Ameen",
+    "place": "Karachi, Pakistan",
+    "genre": "geology",
+    "award": "International Medal for Outstanding Discoveries in Earth Sciences",
+    "book": "Shale Stories",
+    "book2": "Manual of Mineralogy",
+    "titles": [
+      "Shale Stories",
+      "Manual of Mineralogy",
+      "Granite Glossary",
+      "The Geologist’s guide to Quartz"
+    ]
+  },
+  {
+    "author_idx": 3,
+    "name": "Xin Lee Williams",
+    "place": "Beijing, China",
+    "genre": "Canadian literature",
+    "award": "Maple Leaf Literary Award",
+    "book": "The Town That Drowned",
+    "book2": "The Village That Vanished",
+    "titles": [
+      "The Town That Drowned",
+      "The Village That Vanished",
+      "The City That Crumbled",
+      "The Wilderness That Whispered",
+      "The Forest That Fell Silent"
+    ]
+  },
+  {
+    "author_idx": 4,
+    "name": "Moshe Ben-David",
+    "place": "Tel Aviv, Israel",
+    "genre": "Islam",
+    "award": "Distinguished Author Award in Islamic Literature",
+    "book": "On the Mountain Peak",
+    "book2": "Miracles & Merits of Allah's Messenger - Al Bidayah VI",
+    "titles": [
+      "On the Mountain Peak",
+      "Miracles & Merits of Allah's Messenger - Al Bidayah VI"
+    ]
+  },
+  {
+    "author_idx": 5,
+    "name": "Kalkidan Abera",
+    "place": "Addis Ababa, Ethiopia",
+    "genre": "Health",
+    "award": "International Health Literature Award",
+    "book": "The Hidden Truth of the Leaky Gut: A Comprehensive Guide to Healing",
+    "book2": "Comparing Primitive and Modern Bodies: A New Look at Nutrition",
+    "titles": [
+      "The Hidden Truth of the Leaky Gut: A Comprehensive Guide to Healing",
+      "Comparing Primitive and Modern Bodies: A New Look at Nutrition",
+      "Modern Diets and Global Health: A Comprehensive Analysis"
+    ]
+  },
+  {
+    "author_idx": 6,
+    "name": "Takashi Nakamura",
+    "place": "Tokyo, Japan",
+    "genre": "Lesbian",
+    "award": "Rainbow Literary Award",
+    "book": "A Piece of Me",
+    "book2": "The Breath Between Waves",
+    "titles": [
+      "A Piece of Me",
+      "The Breath Between Waves",
+      "Feathers in the Wind",
+      "The Echo of Unspoken Love"
+    ]
+  },
+  {
+    "author_idx": 7,
+    "name": "Raven Marais",
+    "place": "Cape Town, South Africa",
+    "genre": "film literary",
+    "award": "LGBTQ+ Icon Award for Literature",
+    "book": "Shadows of the Silver Screen",
+    "book2": "Frames in Time",
+    "titles": [
+      "Shadows of the Silver Screen",
+      "Frames in Time",
+      "The Silent Artistry",
+      "Reel Lives"
+    ]
+  },
+  {
+    "author_idx": 8,
+    "name": "Aysha Al-Hashim",
+    "place": "Manama, Bahrain",
+    "genre": "Love Inspired",
+    "award": "Lovereading Reader's Choice Award",
+    "book": "The Matrimony Plan",
+    "book2": "The Whisper of Hearts",
+    "titles": [
+      "The Matrimony Plan",
+      "The Whisper of Hearts",
+      "The Symphony of Love",
+      "Hopeful Hearts"
+    ]
+  },
+  {
+    "author_idx": 9,
+    "name": "Edward Patrick Sullivan",
+    "place": "New York City, USA",
+    "genre": "Irish culture and history",
+    "award": "Irwin Literary Prize",
+    "book": "Nell: A Tale of Emerald Isle",
+    "book2": "In Night's Silence, the Stars Will Be Our Lamps",
+    "titles": [
+      "Nell: A Tale of Emerald Isle",
+      "In Night's Silence, the Stars Will Be Our Lamps"
+    ]
+  }
+]

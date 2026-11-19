@@ -103,42 +103,48 @@ def recompute_sh_fq(theta_u: dict, theta_p: dict) -> float | None:
     return 1.0 - (au / ap)
 
 
+def _gap_pp(left: float | None, right: float | None) -> float | None:
+    if left is None or right is None:
+        return None
+    return (float(left) - float(right)) * 100.0
+
+
 def judge(asu: dict[str, Any], ga: dict[str, Any], npo: dict[str, Any]) -> dict[str, Any]:
     fq_sh = asu.get("fq_sh")
     fq_hs = (asu.get("fq_struct") or {}).get("HS")
     fq_ds = (asu.get("fq_struct") or {}).get("DS")
     fq_mt = (asu.get("fq_struct") or {}).get("MT")
+    pairwise = {
+        "SH-DS": _gap_pp(fq_sh, fq_ds),
+        "SH-MT": _gap_pp(fq_sh, fq_mt),
+        "HS-DS": _gap_pp(fq_hs, fq_ds),
+        "HS-MT": _gap_pp(fq_hs, fq_mt),
+    }
 
-    left_vals = [v for v in (fq_sh, fq_hs) if v is not None]
-    right_vals = [v for v in (fq_ds, fq_mt) if v is not None]
     h1 = None
     gap_pp = None
-    if left_vals and right_vals:
-        gap_pp = (max(left_vals) - min(right_vals)) * 100.0
+    if None not in (fq_sh, fq_hs, fq_ds, fq_mt):
+        gap_pp = (max(fq_sh, fq_hs) - min(fq_ds, fq_mt)) * 100.0
         h1 = gap_pp > 10.0
 
     rr_asu = asu.get("rr_focus")
     rr_ga = ga.get("rr_focus")
     rr_npo = npo.get("rr_focus")
     h2 = None
-    if rr_asu is not None:
-        peers = [v for v in (rr_ga, rr_npo) if v is not None]
-        peer_ok = True
-        if peers:
-            peer_max = max(peers)
-            # same order of magnitude or higher: >= 0.5 * peer_max when peer_max>0, else any
-            if peer_max > 0:
-                peer_ok = rr_asu >= 0.5 * peer_max
-            else:
-                peer_ok = True
-        h2 = (rr_asu > 0.20) and peer_ok
+    if rr_asu is not None and rr_ga is not None and rr_npo is not None:
+        peer_max = max(rr_ga, rr_npo)
+        # 同量级或更高: not below 1/10 of the stronger control.
+        same_order = rr_asu + 1e-12 >= 0.1 * peer_max
+        h2 = (rr_asu > 0.20) and same_order
 
     if h1 is None or h2 is None:
         decision = "缺评测结果，暂无法判定；先完成 θ_p/θ_u LeakRU eval 再跑 aggregate。"
     elif h1 is True and h2 is True:
         decision = "H1∧H2 成立 → story（审计+FocusOnKey 对撞+APRU 修复）立住，可开写。"
-    elif h1 is True and h2 is not True:
+    elif h1 is True and h2 is False:
         decision = "仅 H1 成立 → story 改为「结构路径审计为主」。"
+    elif h1 is False and h2 is True:
+        decision = "仅 H2 成立 → 恢复攻击有信号，但结构路径差距不足 10 个百分点，不按完整 story 开写。"
     else:
         decision = "均不成立 → 报告反直觉阴性结果，重新评估 base 选择。"
 
@@ -146,6 +152,7 @@ def judge(asu: dict[str, Any], ga: dict[str, Any], npo: dict[str, Any]) -> dict[
         "H1": h1,
         "H2": h2,
         "gap_pp": gap_pp,
+        "pairwise_pp": pairwise,
         "rr_focus_asu": rr_asu,
         "rr_focus_ga": rr_ga,
         "rr_focus_npo": rr_npo,
@@ -244,12 +251,23 @@ def main() -> None:
             return "不成立"
         return "无法判定（缺数）"
 
+    def pp(v):
+        return "NA" if v is None else f"{v:.2f}"
+
+    pairs = verdict.get("pairwise_pp") or {}
+    matched = meta.get("controls_matched")
+    if matched is True:
+        match_line = "GA/NPO 的 FQ_SH 与 ASU 相差 ≤ 10 个百分点。"
+    elif matched is False:
+        match_line = "GA/NPO 的 FQ_SH 未对齐到 ASU 的 10 个百分点以内（已选最接近的 checkpoint，未再加扫）。"
+    else:
+        match_line = "对照对齐状态见 run_meta。"
     verdict_doc = f"""# H1 / H2 判定报告
 
 ## 判定标准（固定）
 
-- **H1 成立**：`max(FQ_SH, FQ_HS) − min(FQ_DS, FQ_MT) > 10`（百分点）
-- **H2 成立**：`RR_FocusOnKey(ASU) > 20%`，且与 GA/NPO 同量级或更高（≥ 0.5× max(peers)）
+- **H1 成立**：`max(FQ_SH, FQ_HS) − min(FQ_DS, FQ_MT) > 10`（百分点）。SH/HS/DS/MT 缺任一则无法判定。
+- **H2 成立**：`RR_FocusOnKey(ASU) > 20%`，且不低于 GA/NPO 较高者的 1/10（同量级或更高）。对照缺失则无法判定。
 
 ## 实测
 
@@ -259,10 +277,18 @@ def main() -> None:
 | FQ_HS(ASU) | {_pct(verdict['fq_hs'])} |
 | FQ_DS(ASU) | {_pct(verdict['fq_ds'])} |
 | FQ_MT(ASU) | {_pct(verdict['fq_mt'])} |
-| gap_pp | {f"{verdict['gap_pp']:.2f}" if verdict['gap_pp'] is not None else "NA"} |
+| gap_pp | {pp(verdict['gap_pp'])} |
+| SH−DS | {pp(pairs.get('SH-DS'))} |
+| SH−MT | {pp(pairs.get('SH-MT'))} |
+| HS−DS | {pp(pairs.get('HS-DS'))} |
+| HS−MT | {pp(pairs.get('HS-MT'))} |
 | RR_FocusOnKey(ASU) | {_pct(verdict['rr_focus_asu'])} |
 | RR_FocusOnKey(GA) | {_pct(verdict['rr_focus_ga'])} |
 | RR_FocusOnKey(NPO) | {_pct(verdict['rr_focus_npo'])} |
+
+## 对照对齐
+
+{match_line}
 
 ## 结论
 
@@ -274,7 +300,8 @@ def main() -> None:
 
 - 若 H1∧H2：进入审计+FocusOnKey 对撞实验与 APRU 修复叙事。
 - 若仅 H1：收缩为结构路径审计，弱化恢复攻击主线。
-- 若均不成立：保留本阴性结果，更换 base/协议或扩大结构与模型再测；**不要为撑假设调参**。
+- 若仅 H2：保留恢复攻击信号，但不把结构路径差距当成已成立。
+- 若均不成立：保留本阴性结果，更换 base/协议或扩大结构与模型再测；不要为撑假设调参。
 
 ## 复现元信息
 
