@@ -59,6 +59,7 @@ trainer:
     num_train_epochs: 5
     warmup_epochs: 1.0
     eval_strategy: "no"
+    eval_on_start: false
     do_eval: false
     seed: 1001
     bf16: true
