@@ -4,11 +4,11 @@
 
 ## 当前状态
 
-- **G0：PASS**；**M0a：PASS**（生成式事实值 reader，target 正对照 2/2、NK 0/2，base/student 0/2）；**单轮短训：完成**（1 轮/2 步/rank 4/1 组件，仅工程验证）。
-- **M0b v2/v3/v4 已运行**：v2 探针错配；v3 组件对齐；v4 将事实扩展到每簇 20 行后，独立探针仍对 real/NK 给出相同准确率（`0.975/0.975`），full 在三个版本中均未优于四个对照。编辑后 retain NLL 未恶化，v2 的 `retain_gate_failed` 属瞬时 patch 代理指标。不可据此判定方法有效或证伪，**禁止进入 M0c**。
-- **confirmation 未解封**：五类独立审计、拒答/截断/重复率 retain 门与 confirmation 仍未运行，没有任何 L2 遗忘有效性结论。
-- **工程实现已完成**并通过 15 项测试；`smoke_test.py` 只是工程验证，明确标记 `forgetting_evidence=false`。
-- 旧 `docs/` 审计/接口/实现/结论文档已整合为 `docs/RecodeLoop_M0_实验报告_整合版.md`；原始研究提案 `docs/K3_RecodeLoop_Proposal.md` 保留，原有 `data/`、`figures/` 保留。
+- **canonical v1 主实验已完成**：按最新 proposal 使用完整 \(D_f/D_r/NK\) 口径；G0/G1/G3 PASS，G2 INCONCLUSIVE，G4/G5 BLOCKED。**M0 未通过**。
+- G1 读取器正对照：target 在完整 \(D_f\) 上优势 `0.245`，NK `0.010`，95% CI `[0.135, 0.380]`。
+- 主臂在完整 \(D_f\) 上普遍地板效应：full/no_op/one-shot/random/shuffle/fixed_causal 的遗忘优势均为 `0.000`，pars_style 为 `0.005`；full 与四个主对照的 sign-flip p 值均为 `1.0`。
+- 独立非线性 probe、Q4/Q8 量化、限预算重学习未覆盖；输出健康中 full 截断率相对 no_op 增加 `0.04`，超过草案阈值。不得宣称 L2 或 retain 无损。
+- 旧 M0/M0b 系列使用废弃的实体角色拆分，仅作开发诊断；旧整合报告已归档到 `docs/archive/`。当前结论以 `docs/RecodeLoop_canonical_v1_结果与结论.md` 为准。
 
 ## 目录
 
@@ -43,4 +43,4 @@ PYTHONDONTWRITEBYTECODE=1 python scripts/run_m0c.py   # 当前：BLOCKED
 5. confirmation 不足 4 簇或区间过宽 → `INCONCLUSIVE`，不是科学通过。
 6. 未实际执行的审计一律 `uncovered`，不得默认通过。
 
-详见 `docs/RecodeLoop_M0_实验报告_整合版.md`。
+详见 `docs/RecodeLoop_canonical_v1_结果与结论.md`。
