@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Shared environment for ASU-unlearning-APRU training on this GPU node.
+# Shared environment for ASU-unlearning-RIU training on this GPU node.
 set -euo pipefail
 
 source /jizhicfs/chenyliao/ops/00_env.sh
 
-export REPO=/usr/local/ASU-unlearning-APRU
+export REPO=/usr/local/ASU-unlearning-RIU
 export OU_ROOT="$REPO/open-unlearning"
 export WS="$REPO/workspace"
 export VENV=/jizhicfs/chenyliao/ops/venvs/asu-apru

@@ -2,7 +2,7 @@
 # Train ASU on TOFU forget05 with the local GPU-capable runtime.
 set -euo pipefail
 
-source /usr/local/ASU-unlearning-APRU/workspace/scripts/env_apru.sh
+source /usr/local/ASU-unlearning-RIU/workspace/scripts/env_apru.sh
 
 mkdir -p "$OUTPUT_ROOT/unlearn" "$OUTPUT_ROOT/logs"
 
