@@ -3,26 +3,26 @@ experiment_id: "P08-M2"
 note: >-
   角色映射：base=未经 TOFU 微调的 NousResearch/Llama-2-7b-chat-hf，
   target=locuslab/tofu_ft_llama2-7b（ASU 实际起点），asu_student=本地 ASU+GD checkpoint。
-  base 权重来自用户授权下载，路径指向实际写入的新 snapshot（旧符号链接只含 tokenizer/config）。
+  base 权重已完整下载到 jizhicfs 公有盘；三角色路径均指向 /jizhicfs/chenyliao。
   sha256 采用 workspace/src/recodeloop/utils/hashing.py::sha256_bundle：排除缓存/锁/metadata 与
   pytorch_model*.bin 旧格式权重及 pytorch_model.bin.index.json，保留 safetensors/index/config/tokenizer
   与 training_args.bin 等元数据；三角色口径一致。
 checkpoints:
   base:
     role: "base"
-    path: "/dockerdata/asu-unlearning/cache/huggingface/models--NousResearch--Llama-2-7b-chat-hf/snapshots/351844e75ed0bcbbe3f10671b3c808d2b83894ee"
+    path: "/jizhicfs/chenyliao/cache/huggingface/hub/models--NousResearch--Llama-2-7b-chat-hf/snapshots/351844e75ed0bcbbe3f10671b3c808d2b83894ee"
     revision: "351844e75ed0bcbbe3f10671b3c808d2b83894ee"
-    tokenizer_path: "/dockerdata/asu-unlearning/cache/huggingface/models--NousResearch--Llama-2-7b-chat-hf/snapshots/351844e75ed0bcbbe3f10671b3c808d2b83894ee"
+    tokenizer_path: "/jizhicfs/chenyliao/cache/huggingface/hub/models--NousResearch--Llama-2-7b-chat-hf/snapshots/351844e75ed0bcbbe3f10671b3c808d2b83894ee"
     sha256: "7fc413e3b161fe666c2a06dcae67023803a39097d054584e9696e7523254eca3"
   target:
     role: "target"
-    path: "/dockerdata/asu-unlearning/models/locuslab/tofu_ft_llama2-7b"
+    path: "/jizhicfs/chenyliao/models/locuslab/tofu_ft_llama2-7b"
     revision: "8fa500e8f345f1dd9cfe95bb4689878c944c9cbd"
-    tokenizer_path: "/dockerdata/asu-unlearning/models/locuslab/tofu_ft_llama2-7b"
+    tokenizer_path: "/jizhicfs/chenyliao/models/locuslab/tofu_ft_llama2-7b"
     sha256: "91f816bdb7d309e67df8c929b176b3c25d935328baa3d364ed4645eeb0cbef8e"
   asu_student:
     role: "asu_student"
-    path: "/usr/local/llm-unlearning/ASU-unlearning/open-unlearning/checkpoints/asu-forget05-asu-gd"
+    path: "/jizhicfs/chenyliao/checkpoints/asu-forget05-asu-gd"
     revision: null
-    tokenizer_path: "/usr/local/llm-unlearning/ASU-unlearning/open-unlearning/checkpoints/asu-forget05-asu-gd"
+    tokenizer_path: "/jizhicfs/chenyliao/checkpoints/asu-forget05-asu-gd"
     sha256: "b6ecd585b38256c1df6e6db3843934834bd1d87700a27006c391b89643c36abc"

@@ -5,7 +5,7 @@ canonical_id_field: canonical_author_id
 alias_fields:
 - author
 - author_aliases
-source_data: /dockerdata/asu-unlearning/datasets/locuslab-TOFU/forget05.json
+source_data: /jizhicfs/chenyliao/data/datasets/locuslab-TOFU/forget05.json
 source_sha256: 88542818f98fd6f880ecaea71bc3f3e7a34f959944e5ff1cdef7ea8c5c137173
 construction:
   rule: 10 consecutive 20-row author blocks; first-row answer gives canonical name
