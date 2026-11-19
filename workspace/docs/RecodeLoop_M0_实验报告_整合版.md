@@ -2,7 +2,7 @@
 
 ## 一句话结论
 
-**G0 PASS → M0a PASS → 单轮短训工程路径 PASS → M0b 生成式 reader 地板效应无判别力 → M0b 固定探针重跑触发预注册否决观察，且存在探针/编辑组件错配与 retain 门失败。当前不能宣称 RecodeLoop 有效或被证伪，也不能宣称定位特异、闭环必要、L2 达成或 retain 无损。**
+**G0 PASS → M0a PASS → 单轮短训工程路径 PASS → M0b 生成式 reader 地板效应无判别力 → v2 固定探针错配、v3 组件对齐后仍触发否决观察。当前不能宣称 RecodeLoop 有效或被证伪，也不能宣称定位特异、闭环必要、L2 达成或 retain 无损。**
 
 ## 目标与边界
 
@@ -30,13 +30,15 @@ RecodeLoop 针对 ASU 的缺口：输出沉默不等于事实不可恢复。方�
 
 5. **M0b 预实验已运行（探索性）**：`scripts/run_m0b.py` 用 train/calibration 跑 full 与 no-op、one-shot、random-direction、shuffle-component、retain-pseudo、fixed-causal、PARS-style 的预算配准；独立生成式 reader 终点的 8 个臂优势全部为 0（retain-pseudo 因瞬时 patch 与自回归生成形状不兼容，明确记为未评估）。字面上 full 不优于 PARS-style / one-shot / random / shuffle，触发预注册否决观察；但 student 起点在该 reader 上本来就是 0/2，**主终点地板效应使本预实验没有判别力**，不能据此确认方法贡献，也不能当成方法被证伪。confirmation 未读取。
 
-6. **M0b 固定独立探针试点重跑（探索性，2026-11-19）**：`scripts/run_m0b.py` 的 v2 主终点改为 `fixed_independent_activation_probe`，在 train/calibration 上重跑 8 臂。固定探针在起始 student 的 `model.layers.9.mlp.down_proj` 上训练后冻结；所有可评估臂 `probe_real=1.0`、`probe_nk=0.5`、`probe_advantage=0.5`（retain-pseudo 未评估），生成式 reader 终点仍全 0。full 预算为 468 token / 6 步 / 1 组件 / rank 4，但停止原因为 `retain_gate_failed`；其选件为 `model.layers.19.mlp.down_proj`，与冻结探针所在的 `layers.9` 不一致，因此该探针终点对本轮编辑不敏感，不能用于判定 full 是否优于对照。按字面规则，full 未优于 PARS-style / one-shot / random-direction / shuffle-component，触发否决观察；同时 retain 门失败本身也禁止进入 M0c。confirmation 未读取。
+6. **M0b 固定独立探针试点重跑（探索性，2026-11-19）**：`scripts/run_m0b.py` 的 v2 主终点改为 `fixed_independent_activation_probe`，在 train/calibration 上重跑 8 臂。固定探针在起始 student 的 `model.layers.9.mlp.down_proj` 上训练后冻结；所有可评估臂 `probe_real=1.0`、`probe_nk=0.5`、`probe_advantage=0.5`（retain-pseudo 未评估），生成式 reader 终点仍全 0。full 预算为 468 token / 6 步 / 1 组件 / rank 4，但停止原因为 `retain_gate_failed`；其选件为 `model.layers.19.mlp.down_proj`，与冻结探针所在的 `layers.9` 不一致，因此该探针终点对本轮编辑不敏感，不能用于判定 full 是否优于对照。按字面规则，full 未优于 PARS-style / one-shot / random-direction / shuffle-component，触发否决观察；confirmation 未读取。
+
+7. **组件对齐诊断 v3（探索性，2026-11-19）**：新增 `scripts/run_m0b_v3_diagnostic.py`，在 full 选定 `model.layers.19.mlp.down_proj` 后，用全新起始 student 在该组件上训练并冻结独立探针，再对同一批臂评分；同时直接测量编辑后 calibration retain NLL 差值。结果：full / no_op / one_shot / random_direction / fixed_causal / pars_style 的 `probe_real=probe_nk`、`probe_advantage=0`，只有 shuffle_component（编辑 `layers.0`）为 `0.5`；full 仍未优于四个对照，触发否决观察。编辑后 retain NLL 差值全部为负（full `-0.548`，one_shot/fixed_causal `-0.760`，pars_style `-2.258`），说明 v2 的 `retain_gate_failed` 来自定位阶段的瞬时 patch 代理指标，并非编辑后 retain 真实恶化；retain 红线不能按 v2 字面判定，但也不能据此宣称 retain 无损（拒答/截断/重复率未测）。confirmation 仍未读取。
 
 ## 不能得出的结论
 
 | 说法 | 当前状态 |
 |---|---|
-| RecodeLoop 优于 no-op / one-shot / random / shuffle | **v2 触发预注册否决观察，但探针/编辑组件错配且 retain 门失败，不能作为方法结论** |
+| RecodeLoop 优于 no-op / one-shot / random / shuffle | **v3 组件对齐后仍触发否决观察；终点在 full 上无判别力，不能作为方法结论** |
 | 因果定位找到了事实路径 | **预实验无判别力**（phi 选件无收益差） |
 | 闭环优于一次性修正 | **预实验无判别力**（全 0） |
 | 独立 reader / 量化 / 重学习下仍无恢复 | **未测** |
@@ -46,7 +48,7 @@ RecodeLoop 针对 ASU 的缺口：输出沉默不等于事实不可恢复。方�
 
 ## 下一步
 
-当前不能进入 M0c。M0b v2 同时暴露三个问题：(1) 冻结探针在 `layers.9`，full 实际编辑 `layers.19`，终点对编辑不敏感；(2) full 停止原因为 `retain_gate_failed`，违反 retain 红线；(3) 生成式 reader 仍为地板效应 0/2。下一步应在预注册框架下修正终点设计：让独立探针覆盖各臂实际编辑组件（或在 full 选定组件后冻结并在所有臂上统一评估），并先解决 retain 门失败（降低编辑强度/调整 `lambda_ret` 或重新确认预算口径），扩大 train/calibration 事实数后再配准重跑。只有 full 在有动态范围且组件对齐的终点上超过四个对照、retain 门通过并过预注册门，才允许一次性解封 confirmation 做 M0c 五类审计。
+当前不能进入 M0c。v3 已消除组件错配，但暴露出更根本的问题：在 full 实际编辑的 `layers.19` 上，独立探针对 real 和 NK 都给出 1.0，`probe_advantage=0`，终点本身无判别力；shuffle_component 的 `0.5` 来自编辑无关组件后 NK 解码下降，不能反推 full 有效。v2 的 `retain_gate_failed` 已确认是瞬时 patch 代理指标，编辑后 retain NLL 未恶化，但 retain 的拒答/截断/重复率仍未测。下一步应先扩大 train/calibration 可用事实或引入对 NK 不 ceiling 的独立读取器，获得真正有动态范围的终点，再在预注册框架下配准重跑；只有 full 在该终点上超过 PARS-style / one-shot / random / shuffle 并过预注册门，才允许一次性解封 confirmation 做 M0c 五类审计。
 
 红线不变：full 不优于 random/one-shot 就否决对应机制或闭环主张；编辑 reader 改善但独立 reader/重学习恶化即 Goodhart/机制否证；retain 失守即选择性失败；confirmation 不足 4 簇或区间过宽即 `INCONCLUSIVE`。
 
@@ -56,5 +58,6 @@ RecodeLoop 针对 ASU 的缺口：输出沉默不等于事实不可恢复。方�
 - `workspace/outputs/m0a_validation.json`
 - `workspace/outputs/short_train_validation.json`
 - `workspace/outputs/m0b_pilot.json`
+- `workspace/outputs/m0b_v3_diagnostic.json`
 
 审计、接口与实现细节已整合进本报告；原始研究提案 `docs/K3_RecodeLoop_Proposal.md` 保留。

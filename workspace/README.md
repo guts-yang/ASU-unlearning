@@ -5,8 +5,8 @@
 ## 当前状态
 
 - **G0：PASS**；**M0a：PASS**（生成式事实值 reader，target 正对照 2/2、NK 0/2，base/student 0/2）；**单轮短训：完成**（1 轮/2 步/rank 4/1 组件，仅工程验证）。
-- **M0b 试点 v2 已运行**：固定独立激活探针终点有动态范围（`probe_advantage=0.5`），但 full 未优于四个对照，且存在探针/编辑组件错配与 `retain_gate_failed`；不可据此判定方法有效或证伪，**禁止进入 M0c**。
-- **confirmation 未解封**：五类独立审计、retain 门与 confirmation 仍未运行，没有任何 L2 遗忘有效性结论。
+- **M0b v2/v3 已运行**：v2 固定探针存在组件错配；v3 在 full 实际编辑的 `layers.19` 上对齐后，探针对 real/NK 均为 1.0、优势 0，full 仍未优于四个对照。编辑后 retain NLL 未恶化，v2 的 `retain_gate_failed` 属瞬时 patch 代理指标。不可据此判定方法有效或证伪，**禁止进入 M0c**。
+- **confirmation 未解封**：五类独立审计、拒答/截断/重复率 retain 门与 confirmation 仍未运行，没有任何 L2 遗忘有效性结论。
 - **工程实现已完成**并通过 15 项测试；`smoke_test.py` 只是工程验证，明确标记 `forgetting_evidence=false`。
 - 旧 `docs/` 审计/接口/实现/结论文档已整合为 `docs/RecodeLoop_M0_实验报告_整合版.md`；原始研究提案 `docs/K3_RecodeLoop_Proposal.md` 保留，原有 `data/`、`figures/` 保留。
 
