@@ -1,0 +1,19 @@
+# @package eval.tofu
+# Lightweight TOFU eval for QKSpec: excludes ROUGE metrics whose C extension
+# triggers a SIGFPE in this environment. Keeps probability / truth-ratio /
+# forget-quality metrics so forget vs retain can still be compared.
+defaults:
+  - tofu_metrics:
+      - forget_Truth_Ratio
+      - forget_quality
+      - forget_Q_A_Prob
+
+handler: TOFUEvaluator
+output_dir: ${paths.output_dir}
+metrics: {}
+overwrite: true
+forget_split: forget10
+holdout_split: holdout10
+retain_logs_path: null
+question_key: "question"
+batch_size: 16

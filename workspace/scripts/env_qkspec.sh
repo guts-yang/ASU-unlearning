@@ -14,9 +14,12 @@ export PYTHONPATH="$OU_ROOT/src:$WS/src:${PYTHONPATH:-}"
 export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0}"
 export OMP_NUM_THREADS="${OMP_NUM_THREADS:-8}"
 export TOKENIZERS_PARALLELISM=false
-export HF_HUB_OFFLINE=1
+# Model/tokenizer are local; eval metrics still need locuslab/TOFU splits,
+# which we allow to download once (dataset load is local-path for D_F/D_R).
+export HF_HUB_OFFLINE=0
 export TRANSFORMERS_OFFLINE=1
-export HF_DATASETS_OFFLINE=1
+export HF_DATASETS_OFFLINE=0
+export HF_HUB_ENABLE_HF_TRANSFER=0
 export CUDA_HOME=/jizhicfs/chenyliao/ops/cuda-stub
 export DS_SKIP_CUDA_CHECK=1
 export HYDRA_SEARCHPATH="file://$WS/configs"

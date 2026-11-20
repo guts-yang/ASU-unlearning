@@ -1,0 +1,17 @@
+# @package eval.tofu
+# FE (forget_quality, KS-test) + MU (model_utility, 9-metric harmonic mean).
+# These are the two headline metrics of the TOFU paper.
+defaults:
+  - tofu_metrics:
+      - forget_quality
+      - model_utility
+
+handler: TOFUEvaluator
+output_dir: ${paths.output_dir}
+metrics: {}
+overwrite: true
+forget_split: forget10
+holdout_split: holdout10
+retain_logs_path: null
+question_key: question
+batch_size: 16

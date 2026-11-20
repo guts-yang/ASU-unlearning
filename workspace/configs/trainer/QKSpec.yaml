@@ -37,5 +37,6 @@ args:
   do_train: true
   do_eval: true
   eval_on_start: false
+  eval_strategy: 'no'
   per_device_train_batch_size: 4
   per_device_eval_batch_size: 16

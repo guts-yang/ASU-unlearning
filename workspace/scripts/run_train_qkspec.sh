@@ -38,10 +38,10 @@ cd "$OU_ROOT"
   model.model_args.attn_implementation=eager \
   data.forget.TOFU_QA_forget.args.hf_args.path=json \
   data.forget.TOFU_QA_forget.args.hf_args.name=null \
-  "+data.forget.TOFU_QA_forget.args.hf_args.data_files=$TOFU_DIR/${FORGET}.json" \
+  "++data.forget.TOFU_QA_forget.args.hf_args.data_files=$TOFU_DIR/${FORGET}.json" \
   data.retain.TOFU_QA_retain.args.hf_args.path=json \
   data.retain.TOFU_QA_retain.args.hf_args.name=null \
-  "+data.retain.TOFU_QA_retain.args.hf_args.data_files=$TOFU_DIR/${RETAIN}.json" \
+  "++data.retain.TOFU_QA_retain.args.hf_args.data_files=$TOFU_DIR/${RETAIN}.json" \
   trainer.method_args.qkspec.top_k_directions=8 \
   trainer.method_args.qkspec.ranks_per_head=4 \
   trainer.method_args.qkspec.max_discovery_batches=8 \
