@@ -12,10 +12,12 @@ method_args:
   retain_loss_type: NLL
   probe_layer: 7
   probe_hidden: 64
+  riu_objective: grl
   probe_target: both
   num_classes: 10
   fact_id_stride: 20
   probe_weight: 0.1
+  info_weight: 0.1
   grl_lambda: 0.1
   cons_weight: 0.1
   geom_weight: 0.1

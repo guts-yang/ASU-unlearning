@@ -66,15 +66,14 @@ def collate(batch):
 
 
 @torch.no_grad()
-def extract(model, tokenizer, rows, layer, batch_size, device):
+def extract_nll(model, tokenizer, rows, batch_size, device):
     nll_sum, nll_count = 0.0, 0
-    feats = []
     for start in range(0, len(rows), batch_size):
         chunk = rows[start : start + batch_size]
         encoded = [encode(tokenizer, r["question"], r["answer"]) for r in chunk]
         ids, labels, mask = collate(encoded)
         ids, labels, mask = ids.to(device), labels.to(device), mask.to(device)
-        out = model(input_ids=ids, attention_mask=mask, labels=labels, output_hidden_states=True)
+        out = model(input_ids=ids, attention_mask=mask, labels=labels)
         shift_logits = out.logits[:, :-1, :].float()
         shift_labels = labels[:, 1:]
         valid = shift_labels.ne(IGNORE)
@@ -83,24 +82,78 @@ def extract(model, tokenizer, rows, layer, batch_size, device):
         )
         nll_sum += float((loss * valid).sum())
         nll_count += int(valid.sum())
+    return nll_sum / max(nll_count, 1)
+
+
+def sanitize_question(question: str, names: list[str]) -> str:
+    import re
+    for name in names:
+        question = re.sub(re.escape(name), "the author", question, flags=re.I)
+    return question
+
+
+def encode_prompt(tokenizer, question: str, max_length: int = 384):
+    try:
+        prompt = tokenizer.apply_chat_template(
+            [{"role": "user", "content": question}],
+            tokenize=False,
+            add_generation_prompt=True,
+        )
+    except Exception:
+        prompt = f"Question: {question}\nAnswer:"
+    return tokenizer(prompt, add_special_tokens=False).input_ids[-max_length:]
+
+
+@torch.no_grad()
+def extract_features(model, tokenizer, rows, layer, batch_size, device, sanitize=False, names=None):
+    """Probe features from PROMPT-only hidden states.
+
+    Teacher-forced answer tokens would leak the target into the representation,
+    making any probe trivially 100% accurate.
+    """
+    feats = []
+    for start in range(0, len(rows), batch_size):
+        chunk = rows[start : start + batch_size]
+        questions = [
+            sanitize_question(r["question"], names) if sanitize else r["question"]
+            for r in chunk
+        ]
+        encoded = [encode_prompt(tokenizer, q) for q in questions]
+        width = max(len(x) for x in encoded)
+        ids = torch.full((len(encoded), width), tokenizer.pad_token_id, dtype=torch.long)
+        mask = torch.zeros((len(encoded), width), dtype=torch.long)
+        for i, seq in enumerate(encoded):
+            ids[i, : len(seq)] = torch.tensor(seq)
+            mask[i, : len(seq)] = 1
+        out = model(
+            input_ids=ids.to(device), attention_mask=mask.to(device),
+            output_hidden_states=True, use_cache=False,
+        )
         hidden = out.hidden_states[layer + 1]
-        w = valid.unsqueeze(-1).to(hidden.dtype)
-        pooled = (hidden[:, :-1, :] * w).sum(1) / w.sum(1).clamp_min(1.0)
+        w = mask.unsqueeze(-1).to(hidden.device).to(hidden.dtype)
+        pooled = (hidden * w).sum(1) / w.sum(1).clamp_min(1.0)
         feats.append(F.normalize(pooled, dim=-1).float().cpu())
-    return (nll_sum / max(nll_count, 1)), torch.cat(feats, dim=0)
+    return torch.cat(feats, dim=0)
 
 
 def train_probe(features, labels, num_classes, steps=300, lr=0.05, seed=0):
+    """Train on half of the facts, evaluate on the disjoint held-out half."""
     torch.manual_seed(seed)
+    generator = torch.Generator().manual_seed(seed)
+    order = torch.randperm(len(features), generator=generator)
+    split = len(order) // 2
+    train_idx, test_idx = order[:split], order[split:]
     probe = torch.nn.Linear(features.shape[1], num_classes)
     opt = torch.optim.AdamW(probe.parameters(), lr=lr, weight_decay=1e-3)
     for _ in range(steps):
         opt.zero_grad()
-        loss = F.cross_entropy(probe(features), labels)
+        loss = F.cross_entropy(probe(features[train_idx]), labels[train_idx])
         loss.backward()
         opt.step()
     with torch.no_grad():
-        acc = float((probe(features).argmax(-1) == labels).float().mean())
+        acc = float(
+            (probe(features[test_idx]).argmax(-1) == labels[test_idx]).float().mean()
+        )
     return acc
 
 
@@ -112,10 +165,13 @@ def main():
     parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument("--device", default="cuda:0")
     parser.add_argument("--out", default="/usr/local/ASU-unlearning-RIU/workspace/results/riu_eval_report.json")
+    parser.add_argument("--sanitize-names", action="store_true", help="mask author names in probe prompts")
     args = parser.parse_args()
 
     forget = load_rows(DATA_DIR / "forget05.json")
     holdout = load_rows(DATA_DIR / "holdout05.json")
+    facts_path = Path("/usr/local/ASU-unlearning-RIU/workspace/data/leakru/tofu_forget05_facts.json")
+    names = [f["name"] for f in json.loads(facts_path.read_text(encoding="utf-8"))] if args.sanitize_names else []
     labels = torch.arange(len(forget)) // 20
     num_classes = int(labels.max().item()) + 1
 
@@ -130,15 +186,23 @@ def main():
         return tok, model
 
     tok, model = load(args.theta_p)
-    nll_p_forget, feat_p = extract(model, tok, forget, args.layer, args.batch_size, args.device)
-    nll_p_hold, _ = extract(model, tok, holdout, args.layer, args.batch_size, args.device)
+    nll_p_forget = extract_nll(model, tok, forget, args.batch_size, args.device)
+    nll_p_hold = extract_nll(model, tok, holdout, args.batch_size, args.device)
+    feat_p = extract_features(
+        model, tok, forget, args.layer, args.batch_size, args.device,
+        args.sanitize_names, names,
+    )
     del model
     gc.collect()
     torch.cuda.empty_cache()
 
     tok, model = load(args.theta_u)
-    nll_u_forget, feat_u = extract(model, tok, forget, args.layer, args.batch_size, args.device)
-    nll_u_hold, _ = extract(model, tok, holdout, args.layer, args.batch_size, args.device)
+    nll_u_forget = extract_nll(model, tok, forget, args.batch_size, args.device)
+    nll_u_hold = extract_nll(model, tok, holdout, args.batch_size, args.device)
+    feat_u = extract_features(
+        model, tok, forget, args.layer, args.batch_size, args.device,
+        args.sanitize_names, names,
+    )
     del model
     gc.collect()
     torch.cuda.empty_cache()
@@ -155,6 +219,8 @@ def main():
         "nll_holdout_theta_u": nll_u_hold,
         "fact_probe_train_on_theta_p_eval_theta_u": train_probe(feat_p, labels, num_classes),
         "fact_probe_train_on_theta_u_eval_theta_u": train_probe(feat_u, labels, num_classes),
+        "sanitize_names": args.sanitize_names,
+        "feature_source": "prompt-only" if args.sanitize_names else "prompt-only (names visible)",
         "note": "Recoverability proxy; not LeakRU FQ/RR.",
     }
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)

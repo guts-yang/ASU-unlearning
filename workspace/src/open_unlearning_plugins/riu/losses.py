@@ -217,3 +217,21 @@ def riu_fact_probe_loss(
         logits = probe(features)
         losses.append(F.cross_entropy(logits, targets))
     return torch.max(torch.stack(losses))
+
+
+def hsic_linear_loss(features: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
+    """Linear HSIC: a differentiable, probe-free dependence upper bound.
+
+    Minimizing ||Cov(h, y)||_F^2 suppresses linearly decodable information
+    without an adversarial inner loop.  ``labels`` may be class ids ([B]) or
+    one-hot / indicator vectors ([B, C]).
+    """
+    x = features.float()
+    if labels.dim() == 1:
+        y = F.one_hot(labels.long(), num_classes=int(labels.max().item()) + 1).float()
+    else:
+        y = labels.float()
+    x = x - x.mean(dim=0, keepdim=True)
+    y = y - y.mean(dim=0, keepdim=True)
+    cross_cov = x.transpose(0, 1) @ y / max(x.shape[0] - 1, 1)
+    return cross_cov.pow(2).sum()

@@ -29,6 +29,7 @@ from open_unlearning_plugins.asu.trainer import ASU
 from open_unlearning_plugins.riu.losses import (
     RECOVERY_OPS,
     LinearProbe,
+    hsic_linear_loss,
     masked_mean,
     riu_consistency_loss,
     riu_fact_probe_loss,
@@ -49,10 +50,12 @@ class RIU(GradDiff):
         beta: float = 0.1,
         probe_layer: int = 7,
         probe_hidden: int = 64,
+        riu_objective: str = "grl",
         probe_target: str = "both",
         num_classes: int = 10,
         fact_id_stride: int = 20,
         probe_weight: float = 0.1,
+        info_weight: float = 0.1,
         grl_lambda: float = 0.1,
         cons_weight: float = 0.1,
         geom_weight: float = 0.1,
@@ -98,12 +101,16 @@ class RIU(GradDiff):
             self.layers_id = [int(x) for x in layers_id]
         self.beta = float(beta)
         self.probe_layer = int(probe_layer)
+        self.riu_objective = str(riu_objective)
+        if self.riu_objective not in {"grl", "info"}:
+            raise ValueError(f"Unknown riu_objective: {riu_objective!r}")
         self.probe_target = str(probe_target)
         if self.probe_target not in {"membership", "fact", "both"}:
             raise ValueError(f"Unknown probe_target: {probe_target!r}")
         self.num_classes = int(num_classes)
         self.fact_id_stride = max(1, int(fact_id_stride))
         self.probe_weight = float(probe_weight)
+        self.info_weight = float(info_weight)
         self.grl_lambda = float(grl_lambda)
         self.cons_weight = float(cons_weight)
         self.geom_weight = float(geom_weight)
@@ -174,7 +181,7 @@ class RIU(GradDiff):
             by_layer: dict[str, float] = {}
             total_sq = 0.0
             for name, param in zip(names, params):
-                if "riu_probe" in name or param.grad is None:
+                if "riu_" in name or param.grad is None:
                     continue
                 sq = float(param.grad.detach().float().norm()) ** 2
                 match = re.search(r"layers\.(\d+)\.", name)
@@ -260,41 +267,40 @@ class RIU(GradDiff):
             self.geom_momentum,
         )
 
-        if self.probe_target in {"membership", "both"}:
-            probe_loss = riu_probe_loss(
-                h_f,
-                h_r,
-                self.riu_probe,
-                self.recovery_ops,
-                self.grl_lambda,
-                self.recovery_noise,
-                self.recovery_amplify,
-                self.recovery_dropout,
-            )
-        else:
-            probe_loss = h_f.new_zeros(())
-
+        probe_loss = h_f.new_zeros(())
         fact_probe_loss = h_f.new_zeros(())
-        if self.probe_target in {"fact", "both"} and self.riu_fact_probe is not None:
-            indices = inputs["forget"].get("index", None)
-            if indices is None and self.state.global_step == 0:
-                logger.warning(
-                    "RIU fact probe disabled: no 'index' in forget batch keys=%s",
-                    list(inputs["forget"].keys()),
+        info_loss = h_f.new_zeros(())
+        indices = inputs["forget"].get("index", None)
+        fact_labels = None
+        if indices is not None:
+            fact_labels = indices.to(h_f.device).long() // self.fact_id_stride
+
+        if self.riu_objective == "grl":
+            if self.probe_target in {"membership", "both"}:
+                probe_loss = riu_probe_loss(
+                    h_f, h_r, self.riu_probe, self.recovery_ops, self.grl_lambda,
+                    self.recovery_noise, self.recovery_amplify, self.recovery_dropout,
                 )
-            if indices is not None:
-                fact_labels = indices.to(h_f.device).long() // self.fact_id_stride
+            if (
+                self.probe_target in {"fact", "both"}
+                and self.riu_fact_probe is not None
+                and fact_labels is not None
+            ):
                 fact_probe_loss = riu_fact_probe_loss(
-                    h_f,
-                    fact_labels,
-                    self.riu_fact_probe,
-                    self.num_classes,
-                    self.recovery_ops,
-                    self.grl_lambda,
-                    self.recovery_noise,
-                    self.recovery_amplify,
-                    self.recovery_dropout,
+                    h_f, fact_labels, self.riu_fact_probe, self.num_classes,
+                    self.recovery_ops, self.grl_lambda,
+                    self.recovery_noise, self.recovery_amplify, self.recovery_dropout,
                 )
+        else:
+            # Probe-free information-theoretic objective: suppress linear
+            # dependence between representations and fact / membership labels.
+            if fact_labels is not None:
+                info_loss = info_loss + hsic_linear_loss(h_f, fact_labels)
+            joint = torch.cat([h_f, h_r], dim=0)
+            membership = torch.cat(
+                [h_f.new_ones(h_f.shape[0]), h_r.new_zeros(h_r.shape[0])], dim=0
+            )
+            info_loss = info_loss + hsic_linear_loss(joint, membership)
         if self.cons_weight > 0:
             op_a, op_b = random.sample(list(RECOVERY_OPS), 2)
             cons_loss = riu_consistency_loss(
@@ -313,23 +319,22 @@ class RIU(GradDiff):
             else h_f.new_zeros(())
         )
 
-        loss = (
-            base_loss
-            + self.probe_weight * (probe_loss + fact_probe_loss)
-            + self.cons_weight * cons_loss
-            + self.geom_weight * geom_loss
+        dec_terms = (
+            self.probe_weight * (probe_loss + fact_probe_loss)
+            if self.riu_objective == "grl"
+            else self.info_weight * info_loss
         )
+        loss = base_loss + dec_terms + self.cons_weight * cons_loss + self.geom_weight * geom_loss
 
         if self.riu_debug_grad:
             if self.state.global_step == 0 or self.state.global_step % self.riu_debug_grad == 0:
-                self._dump_dec_gradients(
-                    model, self.probe_weight * (probe_loss + fact_probe_loss)
-                )
+                self._dump_dec_gradients(model, dec_terms)
 
         self.riu_metrics = {
             "base": float(base_loss.detach()),
             "probe": float(probe_loss.detach()),
             "fact_probe": float(fact_probe_loss.detach()),
+            "info": float(info_loss.detach()),
             "cons": float(cons_loss.detach()),
             "geom": float(geom_loss.detach()),
         }
