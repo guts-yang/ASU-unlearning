@@ -24,8 +24,9 @@ echo "=== QKSpec train: task=$TASK_NAME ==="
 echo "model=$MODEL_DIR  forget=$FORGET  retain=$RETAIN  retain_log=$RETAIN_LOG"
 
 cd "$OU_ROOT"
+# run_qkspec.py auto-injects open-unlearning/configs into hydra.searchpath;
+# workspace/configs is the primary config dir and needs no explicit searchpath.
 "$PY" "$WS/src/run_qkspec.py" --config-name=unlearn.yaml \
-  "hydra.searchpath=[$HYDRA_SEARCHPATH]" \
   experiment=unlearn/tofu/qkspec.yaml \
   trainer=QKSpec \
   task_name="$TASK_NAME" \
