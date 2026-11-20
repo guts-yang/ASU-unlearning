@@ -26,3 +26,5 @@ method_args:
   recovery_amplify: 0.2
   recovery_dropout: 0.1
   riu_log_every: 20
+  riu_debug_grad: 0
+  riu_grad_dump: ""

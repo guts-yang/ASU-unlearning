@@ -11,8 +11,11 @@ passed through Hydra `trainer.method_args`.
 
 from __future__ import annotations
 
+import json
 import logging
 import random
+import re
+from pathlib import Path
 from typing import Any
 
 import torch
@@ -60,6 +63,8 @@ class RIU(GradDiff):
         recovery_amplify: float = 0.2,
         recovery_dropout: float = 0.1,
         riu_log_every: int = 0,
+        riu_debug_grad: int = 0,
+        riu_grad_dump: str = "",
         *args,
         **kwargs,
     ):
@@ -108,6 +113,8 @@ class RIU(GradDiff):
         self.recovery_amplify = float(recovery_amplify)
         self.recovery_dropout = float(recovery_dropout)
         self.riu_log_every = int(riu_log_every)
+        self.riu_debug_grad = int(riu_debug_grad)
+        self.riu_grad_dump = str(riu_grad_dump or "")
         if isinstance(recovery_ops, str):
             ops = tuple(op.strip() for op in recovery_ops.split(",") if op.strip())
         else:
@@ -153,6 +160,41 @@ class RIU(GradDiff):
                 f"probe_layer={self.probe_layer} exceeds model layers ({len(hidden) - 1})"
             )
         return masked_mean(hidden[idx], labels)
+
+    def _dump_dec_gradients(self, model, dec_loss: torch.Tensor) -> None:
+        """Attribute gradients of L_dec to backbone layers (diagnostic only)."""
+        names = [name for name, param in model.named_parameters() if param.requires_grad]
+        params = [param for _, param in model.named_parameters() if param.requires_grad]
+        # torch.utils.checkpoint (reentrant) does not support autograd.grad;
+        # use a real backward with saved/restored grads to avoid disturbing
+        # gradient accumulation performed by the HF Trainer.
+        saved = [param.grad.detach().clone() if param.grad is not None else None for param in params]
+        try:
+            dec_loss.backward(retain_graph=True)
+            by_layer: dict[str, float] = {}
+            total_sq = 0.0
+            for name, param in zip(names, params):
+                if "riu_probe" in name or param.grad is None:
+                    continue
+                sq = float(param.grad.detach().float().norm()) ** 2
+                match = re.search(r"layers\.(\d+)\.", name)
+                key = f"layer_{int(match.group(1))}" if match else "other"
+                by_layer[key] = by_layer.get(key, 0.0) + sq
+                total_sq += sq
+        finally:
+            for param, grad in zip(params, saved):
+                param.grad = grad
+        payload = {
+            "step": self.state.global_step,
+            "dec_grad_total_l2": total_sq**0.5,
+            "by_layer_l2": {k: v**0.5 for k, v in sorted(by_layer.items())},
+        }
+        logger.info("RIU dec gradient diagnostic %s", payload)
+        if self.riu_grad_dump:
+            path = Path(self.riu_grad_dump)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with path.open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps(payload) + "\n")
 
     def _base_and_hidden(
         self, model, forget_inputs, retain_inputs
@@ -277,6 +319,12 @@ class RIU(GradDiff):
             + self.cons_weight * cons_loss
             + self.geom_weight * geom_loss
         )
+
+        if self.riu_debug_grad:
+            if self.state.global_step == 0 or self.state.global_step % self.riu_debug_grad == 0:
+                self._dump_dec_gradients(
+                    model, self.probe_weight * (probe_loss + fact_probe_loss)
+                )
 
         self.riu_metrics = {
             "base": float(base_loss.detach()),
