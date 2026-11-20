@@ -20,6 +20,7 @@ cd "$OU_ROOT"
   eval.tofu.holdout_split="$HOLDOUT" \
   eval.tofu.retain_logs_path="$RETAIN_LOG" \
   eval.tofu.output_dir="$STUDENT/eval_fe_mu" \
+  eval.tofu.batch_size=4 \
   model.model_args.pretrained_model_name_or_path="$STUDENT" \
   model.tokenizer_args.pretrained_model_name_or_path="$STUDENT" \
   model.model_args.attn_implementation=eager \
