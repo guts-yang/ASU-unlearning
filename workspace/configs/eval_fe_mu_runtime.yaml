@@ -1,0 +1,16 @@
+# @package _global_
+# Runtime-only primary config for eval_fe_mu_fp32.py.
+defaults:
+  - model: Llama-3.2-1B-Instruct
+  - eval: tofu_fe_mu
+  - paths: default
+  - hydra: eval
+  - _self_
+
+mode: eval
+task_name: fe_mu_eval
+seed: 1001
+model:
+  model_args:
+    device_map: null
+    attn_implementation: eager
