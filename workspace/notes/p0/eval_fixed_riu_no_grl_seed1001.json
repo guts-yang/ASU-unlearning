@@ -1,0 +1,16 @@
+{
+  "theta_p": "/jizhicfs/chenyliao/models/open-unlearning/tofu_Llama-2-7b-chat-hf_full",
+  "theta_u": "/jizhicfs/chenyliao/runs/asu-apru/unlearn/riu_no_grl_seed1001",
+  "layer": 7,
+  "n_forget": 200,
+  "n_holdout": 200,
+  "nll_forget_theta_p": 0.6356967902547656,
+  "nll_forget_theta_u": 0.6089202606082914,
+  "nll_holdout_theta_p": 2.3902467048292544,
+  "nll_holdout_theta_u": 2.2918259280982207,
+  "fact_probe_train_on_theta_p_eval_theta_u": 0.2199999988079071,
+  "fact_probe_train_on_theta_u_eval_theta_u": 0.20999999344348907,
+  "sanitize_names": true,
+  "feature_source": "prompt-only",
+  "note": "Recoverability proxy; not LeakRU FQ/RR."
+}
