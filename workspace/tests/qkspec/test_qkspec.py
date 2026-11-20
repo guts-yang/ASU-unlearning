@@ -1,8 +1,8 @@
 """QKSpec smoke tests (stdlib unittest, no pytest dependency).
 
-Run from repo root with::
+Run from the repo root with::
 
-    PYTHONPATH=src python -m unittest discover -s tests/qkspec -v
+    python -m unittest discover -s workspace/tests/qkspec -v
 """
 
 import os
@@ -11,7 +11,12 @@ import unittest
 
 import torch
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src"))
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_REPO_ROOT = os.path.abspath(os.path.join(_HERE, "..", "..", ".."))
+# qkspec package lives under workspace/src; my_models / framework live under
+# open-unlearning/src (used only by the tiny-model helper below).
+sys.path.insert(0, os.path.join(_REPO_ROOT, "workspace", "src"))
+sys.path.insert(0, os.path.join(_REPO_ROOT, "open-unlearning", "src"))
 
 from qkspec.config import QKSpecConfig
 from qkspec.qk_math import (

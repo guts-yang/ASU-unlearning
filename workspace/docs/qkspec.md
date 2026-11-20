@@ -12,34 +12,47 @@ QKSpec 不改写事实内容，而是尝试切断目标事实的检索通道：�
 
 ## 2. 代码结构
 
+所有 QKSpec 代码位于仓库根目录下的 `workspace/`，主干 `open-unlearning/` 仅作为框架依赖（模型/数据/评估/registry），未作任何修改：
+
 ```
-src/qkspec/
-  config.py      配置解析与校验（QKSpecConfig）
-  qk_math.py     Q/K head 切片、GQA 映射、QR 低秩 SVD、delta_W_Q 折回
-  hooks.py       捕获 pre-RoPE q/k 输入与 eager attention 权重
-  score.py       阶段A 检索边贡献差 + 阶段B ablation 因果复核
-  selection.py   Top-K 与 retain 约束下的两阶段方向选择
-  controls.py    no-op / 随机等谱 / shuffle 对照
-  checks.py      RoPE 分位置注意力检查、谱重构误差
-  edit.py        编辑编排（发现→选择→折回→对照→评估）
-  evaluate.py    D_F/D_R 的 NLL 与 token accuracy
-  report.py      JSON 报告（分键、未覆盖读取器标记）
-src/trainer/unlearn/qkspec.py   thin trainer 包装（覆盖 train()）
+workspace/
+  src/
+    qkspec/
+      config.py      配置解析与校验（QKSpecConfig）
+      qk_math.py     Q/K head 切片、GQA 映射、QR 低秩 SVD、delta_W_Q 折回
+      hooks.py       捕获 pre-RoPE q/k 输入与 eager attention 权重
+      score.py       阶段A 检索边贡献差 + 阶段B ablation 因果复核
+      selection.py   Top-K 与 retain 约束下的两阶段方向选择
+      controls.py    no-op / 随机等谱 / shuffle 对照
+      checks.py      RoPE 分位置注意力检查、谱重构误差
+      edit.py        编辑编排（发现→选择→折回→对照→评估）
+      evaluate.py    D_F/D_R 的 NLL 与 token accuracy
+      report.py      JSON 报告（分键、未覆盖读取器标记）
+      trainer.py     thin trainer 包装（覆盖 train()）
+    run_qkspec.py     自包含入口：设置 sys.path、注册 handler、Hydra 主流程
+  configs/
+    unlearn.yaml                          QKSpec 主 Hydra 配置
+    qkspec/default.yaml                   核心算法默认参数
+    trainer/QKSpec.yaml                   trainer 配置
+    experiment/unlearn/tofu/qkspec.yaml   TOFU 实验配置
+  scripts/qkspec_tofu_unlearn.sh          启动脚本
+  tests/qkspec/test_qkspec.py             unittest 冒烟测试
+  docs/qkspec.md                          本文档
 ```
 
 ## 3. 运行方式
 
-前置：安装 `requirements.txt`，准备好 TOFU 数据与 `open-unlearning/tofu_<model>_full` 初始模型。
+前置：安装 `open-unlearning/requirements.txt`，准备好 TOFU 数据与 `open-unlearning/tofu_<model>_full` 初始模型。
 
 ```bash
-bash scripts/qkspec_tofu_unlearn.sh Llama-3.2-1B-Instruct forget10 retain90 holdout10
+bash workspace/scripts/qkspec_tofu_unlearn.sh Llama-3.2-1B-Instruct forget10 retain90 holdout10
 ```
 
-脚本做两件事：
-1. `src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/qkspec.yaml trainer=QKSpec ...`：一次性编辑 + 保存 student + 内置 TOFU evaluator 评估。
-2. `src/eval.py`：对已保存 student 做独立 TOFU 评估。
+脚本把 `workspace/src` 与 `open-unlearning/src` 加入 `PYTHONPATH`，然后做两件事：
+1. `workspace/src/run_qkspec.py --config-name=unlearn.yaml experiment=unlearn/tofu/qkspec.yaml trainer=QKSpec ...`：一次性编辑 + 保存 student + 内置 TOFU evaluator 评估。入口通过 `hydra.searchpath` 让 `model/data/eval/hydra/paths` 等基础配置组仍从 `open-unlearning/configs` 解析，并在运行时注册 `QKSpec` handler（不改主干 registry）。
+2. `open-unlearning/src/eval.py`：对已保存 student 做独立 TOFU 评估。
 
-关键约束：QKSpec discovery 需要 **eager attention**（flash/sdpa 不返回 attention 权重）。实验配置 `configs/experiment/unlearn/tofu/qkspec.yaml` 已设 `model.model_args.attn_implementation: eager`；trainer 会在加载非 eager 时直接报错。编辑完成后保存的模型可在任意 attn 实现下推理。
+关键约束：QKSpec discovery 需要 **eager attention**（flash/sdpa 不返回 attention 权重）。实验配置 `workspace/configs/experiment/unlearn/tofu/qkspec.yaml` 已设 `model.model_args.attn_implementation: eager`；trainer 会在加载非 eager 时直接报错。编辑完成后保存的模型可在任意 attn 实现下推理。
 
 也可直接调用内核（脱离 Hydra/Trainer）：
 
@@ -52,7 +65,7 @@ result = run_qkspec_edit(model, forget_loader, retain_loader, cfg, output_dir)
 
 ## 4. 配置项
 
-所有配置在 `configs/trainer/QKSpec.yaml` 的 `method_args.qkspec`（与 `configs/qkspec/default.yaml` 对齐）：
+所有配置在 `workspace/configs/trainer/QKSpec.yaml` 的 `method_args.qkspec`（与 `workspace/configs/qkspec/default.yaml` 对齐）：
 
 | 参数 | 默认 | 含义 |
 |---|---|---|
@@ -106,7 +119,7 @@ result = run_qkspec_edit(model, forget_loader, retain_loader, cfg, output_dir)
 ## 8. 测试
 
 ```bash
-PYTHONPATH=src python -m unittest discover -s tests/qkspec -v
+python -m unittest discover -s workspace/tests/qkspec -v
 ```
 
 覆盖：SVD 重构、折回正确性、no-op 零更新、GQA 共享 K 映射、阶段B 过滤符号、配置校验。

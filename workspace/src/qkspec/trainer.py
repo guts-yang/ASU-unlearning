@@ -8,9 +8,10 @@ that instead of entering the HF training loop we:
    -> full D_F/D_R eval),
 3. write the structured report.
 
-Model saving and the external TOFU evaluator still run from ``src/train.py``
-after ``train()`` returns, exactly as for other trainers.  No ``compute_loss``
-/ ``training_step`` is needed.
+Model saving and the external TOFU evaluator still run from the launcher
+(``workspace/src/run_qkspec.py``, mirroring upstream ``src/train.py``) after
+``train()`` returns, exactly as for other trainers.  No ``compute_loss`` /
+``training_step`` is needed.
 """
 
 from __future__ import annotations
