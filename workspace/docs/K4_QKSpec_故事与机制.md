@@ -121,7 +121,20 @@ $$
 | $M_{\mathrm{target}}$ | 已包含目标事实、当前需要遗忘的模型 | 提供 Q/K 权重和前向激活，并被直接修改 |
 | $\mathcal D_F$ | 完整遗忘集 | 发现目标检索方向、实施定制干预、最终检查遗忘 |
 | $\mathcal D_R$ | 完整保留集 | 约束非目标损伤、最终检查能力保持 |
-| matched-retain | 从非 forget 作者池构造的同关系、同模板近邻对照 | 区分目标特异作用与一般检索损伤 |
+| $\mathcal D_R^{\mathrm{near}}$ | $\mathcal D_R$ 中与遗忘目标同关系、同模板、答案类型相近但实体不同的近邻子集 | 区分目标特异作用与一般检索损伤 |
+| $\mathcal D_R^{\mathrm{general}}$ | $\mathcal D_R$ 中更广泛的通用保留数据 | 检查 Real Authors、World Facts、官方 retain 和其他通用能力 |
+
+不引入第三类保留对照数据集。保留集按分析角色划分为：
+
+$$
+\mathcal D_R
+=
+\mathcal D_R^{\mathrm{near}}
+\cup
+\mathcal D_R^{\mathrm{general}},
+\qquad
+\mathcal D_R^{\mathrm{near}}\subseteq\mathcal D_R.
+$$
 
 $\mathcal D_F$ 是需要处理的遗忘目标，不是等待跨实体泛化的测试集。因此，在同一完整 $\mathcal D_F$ 上进行方向选择与最终评估，不属于当前定制遗忘设定下的数据泄漏；但它只能支持“当前 forget 集定制干预”的结论。
 
@@ -137,7 +150,7 @@ $\mathcal D_F$ 是需要处理的遗忘目标，不是等待跨实体泛化的�
 
 - 各层、各 head 的 Q/K 激活；
 - attention logit 和检索边；
-- forget 与 matched-retain 的功能贡献差；
+- forget 与 $\mathcal D_R^{\mathrm{near}}$ 的功能贡献差；
 - 局部 causal intervention 对目标事实输出的影响；
 - 同一目标事实在改写、别名和种子下的稳定性。
 
@@ -291,7 +304,7 @@ QKSpec 通过缩小干预范围来降低连带损伤：
 2. V/O 不主动修改；
 3. MLP 不主动修改；
 4. 未选择的 head 和层不主动修改；
-5. 使用完整 $\mathcal D_R$ 和 matched-retain 排除造成明显保留损伤的方向。
+5. 使用完整 $\mathcal D_R$ 和 $\mathcal D_R^{\mathrm{near}}$ 排除造成明显保留损伤的方向。
 
 如果目标事实检索与通用阅读所使用的方向可以部分分离，那么只干预目标方向，就有机会保留共指、句法、上下文阅读和其他事实。
 
@@ -323,7 +336,7 @@ Attention 路径、残差流和下游组件之间可能耦合，因此能力保�
 
 ### 8.4 遗忘以通用能力损伤为代价
 
-如果 forget 改善同时伴随 matched-retain、共指、句法或通用能力越门，则不能称为选择性遗忘。
+如果 forget 改善同时伴随 $\mathcal D_R^{\mathrm{near}}$、共指、句法或通用能力越门，则不能称为选择性遗忘。
 
 ---
 
