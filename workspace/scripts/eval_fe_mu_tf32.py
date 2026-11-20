@@ -33,9 +33,10 @@ def main(cfg: DictConfig):
     t0 = time.time()
     model_cfg = cfg.model
     model, tokenizer = get_model(model_cfg)
-    model = model.float()  # fp32 storage + TF32 matmul
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    model = model.float().to(device)  # fp32 storage + TF32 matmul, on GPU
     model.eval()
-    print(f"[eval] model ready in {time.time()-t0:.1f}s (fp32+TF32)", flush=True)
+    print(f"[eval] model ready in {time.time()-t0:.1f}s (fp32+TF32 on {device})", flush=True)
     evaluators = get_evaluators(cfg.eval)
     for name, evaluator in evaluators.items():
         evaluator.evaluate(
