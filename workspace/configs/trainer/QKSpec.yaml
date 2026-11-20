@@ -1,0 +1,41 @@
+defaults:
+  - finetune
+
+handler: QKSpec
+method_args:
+  qkspec:
+    layer_start: null
+    layer_end: null
+    shortlist_per_layer: 4
+    max_candidate_heads: 128
+    top_k_directions: 16
+    ranks_per_head: 4
+    edge_top_fraction: 1.0
+    rho: 0.5
+    min_singular_value: 1.0e-6
+    max_length: 512
+    discovery_batch_size: 4
+    max_discovery_batches: null
+    stage_b_batch_size: 4
+    max_stage_b_batches: null
+    stage_b_min_nll_increase: 0.0
+    max_retain_impact: null
+    run_controls: true
+    noop_rho: 1.0
+    control_seed: 42
+    control_modes:
+      - noop
+      - random_isospectral
+      - shuffle
+    enable_rope_check: true
+    rope_check_positions: [0, 64, 128, 256]
+    fallback_retain_random: true
+    empty_direction_action: noop
+
+args:
+  num_train_epochs: 1
+  do_train: true
+  do_eval: true
+  eval_on_start: false
+  per_device_train_batch_size: 4
+  per_device_eval_batch_size: 16
