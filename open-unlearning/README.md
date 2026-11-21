@@ -1,10 +1,10 @@
 <div align="center">
 
-![*Open*Unlearning](assets/banner.png)
+![OpenUnlearning](assets/banner.png)
 
 <h3><strong>An easily extensible framework unifying LLM unlearning evaluation benchmarks.</strong></h3>
 
-  <div style="display: flex; gap: 10px; justify-content: center; align-items: center;">
+<div style="display: flex; gap: 10px; justify-content: center; align-items: center;">
     <a href="https://arxiv.org/abs/2506.12618"><img src="https://img.shields.io/badge/arXiv-Report-b31b1b?logo=arxiv&logoColor=white" alt="arXiv Paper"/></a>
     <a href="https://github.com/locuslab/open-unlearning"><img src="https://img.shields.io/github/stars/locuslab/open-unlearning?style=social" alt="GitHub Repo stars"/></a>
     <a href="https://github.com/locuslab/open-unlearning/actions"><img src="https://github.com/locuslab/open-unlearning/actions/workflows/tests.yml/badge.svg" alt="Build Status"/></a>
@@ -19,8 +19,7 @@
 
 ## 📖 Overview
 
-We provide efficient and streamlined implementations of the TOFU, MUSE and WMDP unlearning benchmarks while supporting 12+ unlearning methods, 5+ datasets, 10+ evaluation metrics, and 7+ LLM architectures. Each of these can be easily extended to incorporate more variants.
-
+We provide efficient and streamlined implementations of the TOFU, MUSE and WMDP unlearning benchmarks while supporting 16+ unlearning methods, 5+ datasets, 10+ evaluation metrics, and 7+ LLM architectures. Each of these can be easily extended to incorporate more variants.
 
 We invite the LLM unlearning community to collaborate by adding new benchmarks, unlearning methods, datasets and evaluation metrics here to expand OpenUnlearning's features, gain feedback from wider usage and drive progress in the field.
 
@@ -37,13 +36,13 @@ We invite the LLM unlearning community to collaborate by adding new benchmarks, 
 🚨 Our paper `OpenUnlearning: Accelerating LLM Unlearning via Unified Benchmarking of Methods and Metrics` is now out on [arXiv](https://arxiv.org/abs/2506.12618).
 
 🌟 **Highlights:**
+
 - A detailed technical report on OpenUnlearning covering the design, features, and implementation.
-- A meta-evaluation framework for benchmarking unlearning evaluations across 450+ models, open-sourced on HuggingFace 🤗: [TOFU Models w & w/o Knowledge](https://huggingface.co/collections/open-unlearning/tofu-models-w-and-w-o-knowledge-6861e4d935eb99ba162e55cd), [TOFU Unlearned Models](https://huggingface.co/collections/open-unlearning/tofu-unlearned-models-6860f6cf3fe35d0223d92e88).
+- A meta-evaluation framework for benchmarking unlearning evaluations across 450+ models, open-sourced on HuggingFace 🤗: [TOFU Models w &amp; w/o Knowledge](https://huggingface.co/collections/open-unlearning/tofu-models-w-and-w-o-knowledge-6861e4d935eb99ba162e55cd), [TOFU Unlearned Models](https://huggingface.co/collections/open-unlearning/tofu-unlearned-models-6860f6cf3fe35d0223d92e88).
 - Results benchmarking 8 diverse unlearning methods in one place using 10 evaluation metrics on TOFU.
 
 <details>
 <summary><b>Older Updates</b></summary>
-
 
 #### [May 19, 2025]
 
@@ -55,6 +54,7 @@ We invite the LLM unlearning community to collaborate by adding new benchmarks, 
 - **More evaluations!**  The [`lm-evaluation-harness`](https://github.com/EleutherAI/lm-evaluation-harness) toolkit has been integrated into OpenUnlearning, enabling WMDP evaluations and support for popular general LLM benchmarks, including MMLU, GSM8K, and others.
 
 #### [Apr 6, 2025]
+
 - **More Metrics!** Added 6 Membership Inference Attacks (MIA) (LOSS, ZLib, Reference, GradNorm, MinK, and MinK++), along with Extraction Strength (ES) and  Exact Memorization (EM) as additional evaluation metrics.
 - **More TOFU Evaluations!** Now includes a holdout set and supports MIA attack-based evaluation. You can now compute MUSE's privleak on TOFU.
 - **More Documentation!** [`docs/links.md`](docs/links.md) contains resources for each of the implemented features and other useful LLM unlearning resources.
@@ -62,12 +62,15 @@ We invite the LLM unlearning community to collaborate by adding new benchmarks, 
 Be sure to run `python setup_data.py` immediately after merging the latest version. This is required to refresh the downloaded eval log files and ensure they're compatible with the latest evaluation metrics.
 
 #### [Mar 27, 2025]
+
 - **More Documentation: easy contributions and the leaderboard functionality**: We've updated the documentation to make contributing new unlearning methods and benchmarks much easier. Users can document additions better and also update a leaderboard with their results. See [this section](#-how-to-contribute) for details.
 
 #### [Mar 9, 2025]
+
 - **More Methods!** Added support for [RMU](https://arxiv.org/abs/2403.03218) (representation-engineering based unlearning).
 
-#### [Feb 27, 2025]  
+#### [Feb 27, 2025]
+
 ⚠️ **Repository Update**: This repo replaces the original TOFU codebase at [`github.com/locuslab/tofu`](https://github.com/locuslab/tofu), which is no longer maintained.
 
 </details>
@@ -80,16 +83,16 @@ We provide several variants for each of the components in the unlearning pipelin
 
 | **Component**          | **Available Options** |
 |------------------------|----------------------|
-| **Benchmarks**        | [TOFU](https://arxiv.org/abs/2401.06121), [MUSE](https://muse-bench.github.io/), [WMDP](https://www.wmdp.ai/) |
-| **Unlearning Methods** | GradAscent, GradDiff, NPO, SimNPO, DPO, RMU, UNDIAL, AltPO, SatImp, WGA, CE-U, PDU |
-| **Evaluation Metrics** | Verbatim Probability, Verbatim ROUGE, Knowledge QA-ROUGE, Model Utility, Forget Quality, TruthRatio, Extraction Strength, Exact Memorization, 6 MIA attacks, [lm-evaluation-harness](https://github.com/EleutherAI/lm-evaluation-harness) |
-| **Datasets**          | MUSE-News (BBC), MUSE-Books (Harry Potter), TOFU (different splits), WMDP-Bio, WMDP-Cyber |
-| **Model Families**    | TOFU: Llama-3.2, Llama-3.1, Llama-2; MUSE: Llama-2; Additional: Phi-3.5, Phi-1.5, Gemma, Zephyr |
+| **Benchmarks**        | [TOFU](https://arxiv.org/abs/2401.06121), [MUSE](https://muse-bench.github.io/), [WMDP](https://www.wmdp.ai/), [DUET](https://arxiv.org/abs/2602.19612) |
+| **Unlearning Methods** | GradAscent, GradDiff, NPO, SimNPO, DPO, RMU, UNDIAL, AltPO, SatImp, WGA, CE-U, PDU, AdaPop, T3, PALU, K-FORGE |
+| **Evaluation Metrics** | Verbatim Probability, Verbatim ROUGE, Knowledge QA-ROUGE, Model Utility, Forget Quality, TruthRatio, Extraction Strength, Exact Memorization, 6 MIA attacks, [Unlearning Depth Score](https://arxiv.org/abs/2605.24614), [lm-evaluation-harness](https://github.com/EleutherAI/lm-evaluation-harness) |
+| **Datasets**          | MUSE-News (BBC), MUSE-Books (Harry Potter), TOFU (different splits), WMDP-Bio, WMDP-Cyber, [DUET](https://huggingface.co/datasets/SwetieePawsss/DUET) (rare / popular Wikidata facts) |
+| **Model Families**    | TOFU: Llama-3.2, Llama-3.1, Llama-2; MUSE: Llama-2; DUET: Llama-3.1, Qwen2.5, Gemma; Additional: Phi-3.5, Phi-1.5, Gemma, Zephyr |
 
 ---
 
-
 ## 📌 Table of Contents
+
 - 📖 [Overview](#-overview)
 - 📢 [Updates](#-updates)
 - 🗃️ [Available Components](#%EF%B8%8F-available-components)
@@ -101,7 +104,7 @@ We provide several variants for each of the components in the unlearning pipelin
   - 📜 [Running Baseline Experiments](#-running-baseline-experiments)
 - ➕ [How to Contribute](#-how-to-contribute)
 - 📚 [Further Documentation](#-further-documentation)
-- 🔗 [Support & Contributors](#-support--contributors)
+- 🔗 [Support &amp; Contributors](#-support--contributors)
 - 📝 [Citing this work](#-citing-this-work)
 - 🤝 [Acknowledgements](#-acknowledgements)
 - 📄 [License](#-license)
@@ -114,8 +117,10 @@ We provide several variants for each of the components in the unlearning pipelin
 # Environment setup
 conda create -n unlearning python=3.11
 conda activate unlearning
-pip install .[lm_eval]
-pip install --no-build-isolation flash-attn==2.6.3
+pip install ".[lm-eval]"
+pip install --no-build-isolation flash-attn==2.8.3
+# Or to avoid building flash-attn:
+pip install "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.16/flash_attn-2.8.3+cu128torch2.9-cp311-cp311-linux_x86_64.whl"
 
 # Data setup
 python setup_data.py --eval # saves/eval now contains evaluation results of the uploaded models
@@ -125,11 +130,13 @@ python setup_data.py --eval # saves/eval now contains evaluation results of the 
 # python setup_data.py --help
 ```
 
+We also provide a [Docker image](https://hub.docker.com/r/filyp/open-unlearning), with this environment already installed.
+
 ---
 
 ### 🔄 Updated TOFU benchmark
 
-We've updated Open-Unlearning's TOFU benchmark target models to use a wider variety of newer architectures with sizes varying from 1B to 8B. These include Llama 3.2 1B, Llama 3.2 3B, Llama 3.1 8B, and the original Llama-2 7B (re-created) target models from [the old version of TOFU](github.com/locuslab/tofu). 
+We've updated Open-Unlearning's TOFU benchmark target models to use a wider variety of newer architectures with sizes varying from 1B to 8B. These include Llama 3.2 1B, Llama 3.2 3B, Llama 3.1 8B, and the original Llama-2 7B (re-created) target models from [the old version of TOFU](github.com/locuslab/tofu).
 
 For each architecture, we have finetuned with four different splits of the TOFU datasets: `full`, `retain90`, `retain95`, `retain99`, for a total of 16 finetuned models. The first serves as the target (base model for unlearning) and the rest are retain models used to measure performance against for each forget split. These models are on [HuggingFace](`https://huggingface.co/collections/open-unlearning/tofu-new-models-67bcf636334ea81727573a9f0`) and the paths to these models can be set in the experimental configs or in command-line overrides.
 
@@ -172,8 +179,8 @@ python src/eval.py --config-name=eval.yaml experiment=eval/tofu/default \
 
 For more details about creating and running evaluations, refer [`docs/evaluation.md`](docs/evaluation.md).
 
-
 ### 📜 Running Baseline Experiments
+
 The scripts below execute standard baseline unlearning experiments on the TOFU and MUSE datasets, evaluated using their corresponding benchmarks. The expected results for these are in [`docs/repro.md`](docs/repro.md).
 
 ```bash
@@ -189,25 +196,27 @@ The above scripts are not tuned and uses default hyper parameter settings. We en
 
 If you are interested in contributing to our work, please have a look at [`contributing.md`](docs/contributing.md) guide.
 
-
 ## 📚 Further Documentation
 
 For more in-depth information on specific aspects of the framework, refer to the following documents:
 
-| **Documentation**                              | **Contains**                                                                                                       |
-|------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|
-| [`docs/contributing.md`](docs/contributing.md)       | Instructions on how to add new methods, benchmarks, components such as trainers, benchmarks, metrics, models, datasets, etc.              |
-| [`docs/evaluation.md`](docs/evaluation.md)       | Detailed instructions on creating and running evaluation metrics and benchmarks.                                     |
-| [`docs/experiments.md`](docs/experiments.md)     | Guide on running experiments in various configurations and settings, including distributed training, fine-tuning, and overriding arguments. |
-| [`docs/hydra.md`](docs/hydra.md)                 | A short tutorial on Hydra features, Hydra is the configuration management package we use extensively.                                  |
-| [`community/leaderboard.md`](community/leaderboard.md)             | Reference results from various unlearning methods run using this framework on TOFU and MUSE benchmarks.              |
-| [`docs/links.md`](docs/links.md)             | List of all links to the research papers or other sources the implemented features are sourced from.              |
-| [`docs/repro.md`](docs/repro.md)            | Results are provided solely for reproducibility purposes, without any parameter tuning.             |
+| **Documentation**                               | **Contains**                                                                                                                          |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`docs/contributing.md`](docs/contributing.md)         | Instructions on how to add new methods, benchmarks, components such as trainers, benchmarks, metrics, models, datasets, etc.                |
+| [`docs/evaluation.md`](docs/evaluation.md)             | Detailed instructions on creating and running evaluation metrics and benchmarks.                                                            |
+| [`docs/experiments.md`](docs/experiments.md)           | Guide on running experiments in various configurations and settings, including distributed training, fine-tuning, and overriding arguments. |
+| [`docs/hydra.md`](docs/hydra.md)                       | A short tutorial on Hydra features, Hydra is the configuration management package we use extensively.                                       |
+| [`community/leaderboard.md`](community/leaderboard.md) | Reference results from various unlearning methods run using this framework on TOFU and MUSE benchmarks.                                     |
+| [`docs/links.md`](docs/links.md)                       | List of all links to the research papers or other sources the implemented features are sourced from.                                        |
+| [`docs/repro.md`](docs/repro.md)                       | Results are provided solely for reproducibility purposes, without any parameter tuning.                                                     |
+
 ---
 
 ## 🔗 Support & Contributors
 
-Developed and maintained by Vineeth Dorna ([@Dornavineeth](https://github.com/Dornavineeth)) and Anmol Mekala ([@molereddy](https://github.com/molereddy)).
+**Developed by:** Vineeth Dorna ([@Dornavineeth](https://github.com/Dornavineeth)) and Anmol Mekala ([@molereddy](https://github.com/molereddy)).
+
+**Maintained by:** Vineeth Dorna ([@Dornavineeth](https://github.com/Dornavineeth)), Anmol Mekala ([@molereddy](https://github.com/molereddy)), and Filip Sondej ([@filyp](https://github.com/filyp)).
 
 If you encounter any issues or have questions, feel free to raise an issue in the repository 🛠️.
 
@@ -239,18 +248,20 @@ If you use OpenUnlearning in your research, please make sure to cite our OpenUnl
   url={https://arxiv.org/abs/2407.06460}
 }
 ```
+
 </details>
 
 ---
 
 ### 🤝 Acknowledgements
 
-- This repo is inspired from [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory). 
-- The [TOFU](https://github.com/locuslab/tofu) and [MUSE](https://github.com/swj0419/muse_bench) benchmarks served as the foundation for our re-implementation. 
+- This repo is inspired from [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory).
+- The [TOFU](https://github.com/locuslab/tofu) and [MUSE](https://github.com/swj0419/muse_bench) benchmarks served as the foundation for our re-implementation.
 
 ---
 
 ### 📄 License
+
 This project is licensed under the MIT License. See the [`LICENSE`](LICENSE) file for details.
 
 ---

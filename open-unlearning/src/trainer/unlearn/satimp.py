@@ -4,7 +4,7 @@ from trainer.utils import compute_satimp_loss
 
 class SatImp(GradDiff):
     def __init__(
-        self, beta1=5.0, beta2=1.0, gamma=1.0, alpha=0.1, *args, **kwargs
+        self, beta1=4.0, beta2=0.1, gamma=1.0, alpha=0.1, *args, **kwargs
     ):  # attention, satimp requires two beta!!!!
         super().__init__(*args, **kwargs)
         self.beta1 = beta1
@@ -14,7 +14,9 @@ class SatImp(GradDiff):
         if self.ref_model is None:
             self.ref_model = self._prepare_ref_model(self.model)
 
-    def compute_loss(self, model, inputs, return_outputs=False):
+    def compute_loss(
+        self, model, inputs, return_outputs=False, num_items_in_batch=None
+    ):
         forget_inputs = inputs["forget"]
         forget_inputs = {
             "input_ids": forget_inputs["input_ids"],

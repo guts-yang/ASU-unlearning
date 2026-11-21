@@ -37,5 +37,6 @@ tensorboard/
 # Data/model downloads
 data/
 datasets/
+!open-unlearning/configs/data/datasets/
 hf_cache/
 .cache/huggingface/

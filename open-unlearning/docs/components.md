@@ -20,7 +20,7 @@ This process involves three main steps:
 7. [Experiment](#experiment) - Combines components into a final experiment config
 
 > [!NOTE]
-> Adding each component requires Hydra config management features, which are documented in [`docs/hydra.md`](../docs/hydra.md). 
+> Adding each component requires Hydra config management features, which are documented in [`docs/hydra.md`](../docs/hydra.md).
 
 ---
 
@@ -37,15 +37,15 @@ Example: defining a gradient-difference based unlearning trainer.
 class GradDiff(UnlearnTrainer):
     def __init__(self, gamma, alpha, ...):
         ...
-      
-    def compute_loss(self, model, inputs, return_outputs=False):
+
+    def compute_loss(self, model, inputs, return_outputs=False, num_items_in_batch=None):
         ...
 ```
 
 ### Register the trainer handler
 Register the handler to link the class to the configs via the class name in [`TRAINER_REGISTRY`](../src/trainer/__init__.py).
 
-Example: Registering a fine-tuning trainer and `GradDiff` unlearning trainer 
+Example: Registering a fine-tuning trainer and `GradDiff` unlearning trainer
 
 ```python
 from transformers import FinetuneTrainer
@@ -214,7 +214,7 @@ class DataCollatorForSupervisedDataset(object):
 ### Register Collator handler
 Register the collator to link the class to the configs via the class name in [`COLLATOR_REGISTRY`](../src/collators/__init__.py).
 
-Example: Registering `DataCollatorForSupervisedDataset` 
+Example: Registering `DataCollatorForSupervisedDataset`
 
 ```python
 from collators.base import DataCollatorForSupervisedDataset
@@ -266,7 +266,7 @@ model:
   model_args: # use our finetuned target models for the TOFU benchmark task
     pretrained_model_name_or_path: open-unlearning/tofu_Llama-3.2-1B-Instruct_full
 
-forget_split: forget10 
+forget_split: forget10
 retain_split: retain90
 retain_logs_path: null
 
@@ -274,11 +274,11 @@ eval:
   tofu:
     forget_split: ${forget_split}
     retain_logs_path: ${retain_logs_path}
-    
+
 data:
   anchor: forget
   forget:
-    TOFU_QA_forget: 
+    TOFU_QA_forget:
       args:
         hf_args:
           name: ${forget_split}

@@ -14,9 +14,9 @@ notebooks/
 output*/
 wandb/
 data/
-!*/data/ 
+!*/data/
 evals/
-!*/evals/  
+!*/evals/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

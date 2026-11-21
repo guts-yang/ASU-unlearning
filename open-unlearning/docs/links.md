@@ -38,6 +38,10 @@ Links to research papers and resources corresponding to implemented features in 
 | WGA (G-effect)       | Paper[📄](https://arxiv.org/pdf/2502.19301), Code [🐙](https://github.com/tmlr-group/G-effect)                                                                                                     |
 | CE-U (Cross-Entropy unlearning)       | Paper[📄](https://arxiv.org/pdf/2503.01224)                                                                                                     |
 | PDU                  | Paper [📄](https://arxiv.org/abs/2506.05314) |
+| AdaPop               | Paper [📄](https://arxiv.org/abs/2608.14229), Popularity-annotated data [🤗](https://huggingface.co/datasets/SwetieePawsss/DUET) |
+| T3-Unlearning               | Paper[📄](https://arxiv.org/abs/2602.10217), Code [🐙](https://github.com/jacob-block/T3-Unlearning)                                                                                     |
+| PALU               | Paper[📄](https://arxiv.org/abs/2601.03190) (Naixin Zhai, University of Science and Technology of China, 2601.03190, Code [🐙](https://github.com/nxZhai/PALU) |
+| K-FORGE             | Findings of IJCNLP-AACL 2026, Code [🐙](https://github.com/etomoscow/kron_unlearn)                                                                                              |
 
 
 ---
@@ -49,6 +53,7 @@ Links to research papers and resources corresponding to implemented features in 
 | TOFU      | Paper[📄](https://arxiv.org/abs/2401.06121) |
 | MUSE      | Paper[📄](https://arxiv.org/abs/2407.06460) |
 | WMDP      | Paper[📄](https://arxiv.org/abs/2403.03218) |
+| DUET      | Paper[📄](https://arxiv.org/abs/2602.19612), Data [🤗](https://huggingface.co/datasets/SwetieePawsss/DUET), Models [🤗](https://huggingface.co/SwetieePawsss/DUET_ft_models) |
 
 ---
 
@@ -62,6 +67,7 @@ Links to research papers and resources corresponding to implemented features in 
 | Forget Quality, Truth Ratio, Model Utility                                   | TOFU ([📄](https://arxiv.org/abs/2401.06121))                                                                                                                                                                                              |
 | Extraction Strength (ES)                                                     | Carlini et al., 2021 ([📄](https://www.usenix.org/conference/usenixsecurity21/presentation/carlini-extracting)), used for unlearning in Wang et al., 2025 ([📄](https://openreview.net/pdf?id=wUtCieKuQU))                                    |
 | Exact Memorization (EM)                                                      | Tirumala et al., 2022 ([📄](https://proceedings.neurips.cc/paper_files/paper/2022/hash/fa0509f4dab6807e2cb465715bf2d249-Abstract-Conference.html)), used for unlearning in Wang et al., 2025 ([📄](https://openreview.net/pdf?id=wUtCieKuQU)) |
+| Unlearning Depth Score (UDS)                                                 | Paper [📄](https://arxiv.org/abs/2605.24614), Code [🐙](https://github.com/gnueaj/unlearning-depth-score), Data [🤗](https://huggingface.co/datasets/jaeunglee/uds-annotated-tofu) |
 | lm-evaluation-harness                                                        | Repository: [💻](https://github.com/EleutherAI/lm-evaluation-harness/tree/main)                                                                                                                                                                        |
 
 ---
