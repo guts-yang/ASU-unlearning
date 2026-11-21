@@ -54,6 +54,35 @@ from transformers.models.llama.configuration_llama import LlamaConfig
 
 logger = logging.get_logger(__name__)
 
+
+def _default_rope_init(config, device=None, seq_len=None, **kwargs):
+    base = getattr(config, "rope_theta", None)
+    if base is None:
+        rope_parameters = (
+            getattr(config, "rope_parameters", None)
+            or getattr(config, "rope_scaling", None)
+            or {}
+        )
+        base = (
+            rope_parameters.get("rope_theta", 10000.0)
+            if isinstance(rope_parameters, dict)
+            else 10000.0
+        )
+    dim = getattr(config, "head_dim", None)
+    if dim is None:
+        dim = config.hidden_size // config.num_attention_heads
+    inv_freq = 1.0 / (
+        base
+        ** (
+            torch.arange(0, dim, 2, dtype=torch.int64, device=device).to(
+                dtype=torch.float
+            )
+            / dim
+        )
+    )
+    return inv_freq, 1.0
+
+
 _CONFIG_FOR_DOC = "LlamaConfig"
 
 
@@ -172,7 +201,7 @@ class LlamaRotaryEmbedding(nn.Module):
             self.original_max_seq_len = config.max_position_embeddings
 
         self.config = config
-        self.rope_init_fn = ROPE_INIT_FUNCTIONS[self.rope_type]
+        self.rope_init_fn = ROPE_INIT_FUNCTIONS.get(self.rope_type, _default_rope_init)
 
         inv_freq, self.attention_scaling = self.rope_init_fn(self.config, device, **self.rope_kwargs)
         self.register_buffer("inv_freq", inv_freq, persistent=False)
@@ -346,7 +375,16 @@ class LlamaAttention(nn.Module):
         self.num_key_value_heads = config.num_key_value_heads
         self.num_key_value_groups = self.num_heads // self.num_key_value_heads
         self.max_position_embeddings = config.max_position_embeddings
-        self.rope_theta = config.rope_theta
+        self.rope_theta = getattr(config, "rope_theta", None)
+        if self.rope_theta is None:
+            rope_parameters = getattr(config, "rope_parameters", None) or getattr(
+                config, "rope_scaling", None
+            )
+            self.rope_theta = (
+                rope_parameters.get("rope_theta", 10000.0)
+                if isinstance(rope_parameters, dict)
+                else 10000.0
+            )
         self.is_causal = True
 
         self.q_proj = nn.Linear(self.hidden_size, self.num_heads * self.head_dim, bias=config.attention_bias)

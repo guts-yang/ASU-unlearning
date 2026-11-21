@@ -15,6 +15,11 @@ from trainer.unlearn.ceu import CEU
 from trainer.unlearn.satimp import SatImp
 from trainer.unlearn.wga import WGA
 from trainer.unlearn.pdu import PDU
+from trainer.unlearn.adapop import AdaPop
+from trainer.unlearn.t3 import T3
+from trainer.unlearn.palu import PALU
+from trainer.unlearn.kforge import KFORGE
+from trainer.unlearn.ASU import ATTU_output
 
 
 import logging
@@ -50,7 +55,7 @@ def load_trainer(
     model,
     train_dataset=None,
     eval_dataset=None,
-    tokenizer=None,
+    processing_class=None,
     data_collator=None,
     evaluators=None,
     template_args=None,
@@ -70,7 +75,7 @@ def load_trainer(
         model=model,
         train_dataset=train_dataset,
         eval_dataset=eval_dataset,
-        tokenizer=tokenizer,
+        processing_class=processing_class,
         data_collator=data_collator,
         args=trainer_args,
         evaluators=evaluators,
@@ -99,3 +104,9 @@ _register_trainer(CEU)
 _register_trainer(SatImp)
 _register_trainer(WGA)
 _register_trainer(PDU)
+_register_trainer(AdaPop)
+_register_trainer(T3)
+_register_trainer(PALU)
+_register_trainer(KFORGE)
+_register_trainer(ATTU_output)
+TRAINER_REGISTRY["ASU"] = ATTU_output

@@ -25,18 +25,56 @@ from transformers.modeling_rope_utils import ROPE_INIT_FUNCTIONS
 from transformers.modeling_utils import ALL_ATTENTION_FUNCTIONS, PreTrainedModel
 from transformers.processing_utils import Unpack
 from transformers.utils import (
-    LossKwargs,
     add_code_sample_docstrings,
     add_start_docstrings,
     add_start_docstrings_to_model_forward,
     logging,
     replace_return_docstrings,
 )
+try:
+    from transformers.utils import LossKwargs
+except ImportError:
+    try:
+        from transformers.utils.generic import TransformersKwargs as LossKwargs
+    except ImportError:
+        from typing import TypedDict
+
+        class LossKwargs(TypedDict, total=False):
+            labels: Optional[torch.LongTensor]
+            num_items_in_batch: Optional[torch.Tensor]
 from transformers.utils.deprecation import deprecate_kwarg
 from transformers.models.mistral.configuration_mistral import MistralConfig
 
 
 logger = logging.get_logger(__name__)
+
+
+def _default_rope_init(config, device=None, seq_len=None, **kwargs):
+    base = getattr(config, "rope_theta", None)
+    if base is None:
+        rope_parameters = (
+            getattr(config, "rope_parameters", None)
+            or getattr(config, "rope_scaling", None)
+            or {}
+        )
+        base = (
+            rope_parameters.get("rope_theta", 10000.0)
+            if isinstance(rope_parameters, dict)
+            else 10000.0
+        )
+    dim = getattr(config, "head_dim", None)
+    if dim is None:
+        dim = config.hidden_size // config.num_attention_heads
+    inv_freq = 1.0 / (
+        base
+        ** (
+            torch.arange(0, dim, 2, dtype=torch.int64, device=device).to(
+                dtype=torch.float
+            )
+            / dim
+        )
+    )
+    return inv_freq, 1.0
 
 _CHECKPOINT_FOR_DOC = "mistralai/Mistral-7B-v0.1"
 _CONFIG_FOR_DOC = "MistralConfig"
@@ -285,7 +323,7 @@ class MistralRotaryEmbedding(nn.Module):
         self.original_max_seq_len = config.max_position_embeddings
 
         self.config = config
-        self.rope_init_fn = ROPE_INIT_FUNCTIONS[self.rope_type]
+        self.rope_init_fn = ROPE_INIT_FUNCTIONS.get(self.rope_type, _default_rope_init)
 
         inv_freq, self.attention_scaling = self.rope_init_fn(self.config, device)
         self.register_buffer("inv_freq", inv_freq, persistent=False)

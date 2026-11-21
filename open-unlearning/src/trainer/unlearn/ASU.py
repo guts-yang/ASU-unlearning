@@ -31,11 +31,15 @@ class ATTU_output(GradDiff):
             current_probs, ref_probs, reduction="none", log_target=True
         ).sum(-1), outputs, ref_outputs
     
-    def kl_divergence_forget(self, model, target_model, inputs, attention_temp):
+    def kl_divergence_forget(
+        self, model, target_model, inputs, attention_temp, layers_id=None
+    ):
 
         # input_ids_expanded = inputs["input_ids"][:, 1:].unsqueeze(-1)
         with torch.no_grad():
-            ref_outputs = target_model(**inputs, attention_temp=attention_temp)
+            ref_outputs = target_model(
+                **inputs, attention_temp=attention_temp, layers_id=layers_id
+            )
             ref_probs = F.log_softmax(ref_outputs.logits[..., :-1, :], dim=-1)
 
         outputs = model(**inputs)
@@ -68,7 +72,9 @@ class ATTU_output(GradDiff):
         else:
             return retain_loss, retain_outputs.loss.detach(), ref_retain_outputs.loss.detach()
 
-    def compute_loss(self, model, inputs, return_outputs=False):
+    def compute_loss(
+        self, model, inputs, return_outputs=False, num_items_in_batch=None
+    ):
 
         forget_inputs = inputs["forget"]
         forget_inputs = {
@@ -79,7 +85,13 @@ class ATTU_output(GradDiff):
         forget_labels = forget_inputs["labels"]
         forget_mask = (forget_labels[..., 1:] != -100)
 
-        forget_loss, forget_outputs, ref_forget_outputs = self.kl_divergence_forget(model, self.ref_model, forget_inputs, self.attention_temp)
+        forget_loss, forget_outputs, ref_forget_outputs = self.kl_divergence_forget(
+            model,
+            self.ref_model,
+            forget_inputs,
+            self.attention_temp,
+            self.layers_id,
+        )
         forget_loss = ((forget_loss * forget_mask).sum(-1) / forget_mask.sum(-1)).mean()
         
 

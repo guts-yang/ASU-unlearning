@@ -4,26 +4,22 @@ from typing import Dict, Any
 import os
 import torch
 import logging
+from model.t3 import T3CausalLM
 from model.probe import ProbedLlamaForCausalLM
-
-
 from my_models.my_llama import LlamaForCausalLM
 from my_models.my_mistral import MistralForCausalLM
 from my_models.my_qwen2 import Qwen2ForCausalLM
-
-
-custom_class_map = {
-    "LlamaForCausalLM": LlamaForCausalLM,
-    "MistralForCausalLM": MistralForCausalLM,
-    "Qwen2ForCausalLM": Qwen2ForCausalLM,
-}
-
 
 hf_home = os.getenv("HF_HOME", default=None)
 
 logger = logging.getLogger(__name__)
 
 MODEL_REGISTRY: Dict[str, Any] = {}
+ASU_MODEL_CLASSES = {
+    "LlamaForCausalLM": LlamaForCausalLM,
+    "MistralForCausalLM": MistralForCausalLM,
+    "Qwen2ForCausalLM": Qwen2ForCausalLM,
+}
 
 
 def _register_model(model_class):
@@ -58,13 +54,23 @@ def get_model(model_cfg: DictConfig):
     model_args = model_cfg.model_args
     tokenizer_args = model_cfg.tokenizer_args
     torch_dtype = get_dtype(model_args)
-    # model_handler = model_cfg.get("model_handler", "AutoModelForCausalLM")
-    # model_cls = MODEL_REGISTRY[model_handler]
-    config = AutoConfig.from_pretrained(**model_args, trust_remote_code=True)
-    arch = config.architectures[0]
-    model_cls = custom_class_map.get(arch, None)
+    model_handler = model_cfg.get("model_handler", "AutoModelForCausalLM")
+    model_cls = MODEL_REGISTRY[model_handler]
     with open_dict(model_args):
         model_path = model_args.pop("pretrained_model_name_or_path", None)
+    if model_handler == "AutoModelForCausalLM" and model_path is not None:
+        try:
+            config = AutoConfig.from_pretrained(
+                model_path, trust_remote_code=True, cache_dir=hf_home
+            )
+            architectures = getattr(config, "architectures", None) or []
+            if architectures:
+                model_cls = ASU_MODEL_CLASSES.get(architectures[0], model_cls)
+        except Exception as e:
+            logger.warning(
+                f"Could not inspect model architecture for {model_path}: {e}. "
+                f"Falling back to {model_handler}."
+            )
     try:
         model = model_cls.from_pretrained(
             pretrained_model_name_or_path=model_path,
@@ -72,19 +78,11 @@ def get_model(model_cfg: DictConfig):
             **model_args,
             cache_dir=hf_home,
         )
-        print("Custom Model Loaded")
     except Exception as e:
-        logger.warning(
-            f"Model {model_args.pretrained_model_name_or_path} requested with {model_cfg.model_args}"
-        )
+        logger.warning(f"Model {model_path} requested with {model_cfg.model_args}")
         raise ValueError(
-            f"Error {e} while fetching model using AutoModelForCausalLM.from_pretrained()."
+            f"Error {e} while fetching model using {model_handler}.from_pretrained()."
         )
-    # except Exception as e:
-    #     logger.warning(f"Model {model_path} requested with {model_cfg.model_args}")
-    #     raise ValueError(
-    #         f"Error {e} while fetching model using {model_handler}.from_pretrained()."
-    #     )
     tokenizer = get_tokenizer(tokenizer_args)
     return model, tokenizer
 
@@ -128,7 +126,7 @@ def get_tokenizer(tokenizer_cfg: DictConfig):
 
 # register models
 _register_model(AutoModelForCausalLM)
+_register_model(T3CausalLM)
 _register_model(ProbedLlamaForCausalLM)
-_register_model(LlamaForCausalLM)
-_register_model(MistralForCausalLM)
-_register_model(Qwen2ForCausalLM)
+for _asu_model_cls in ASU_MODEL_CLASSES.values():
+    _register_model(_asu_model_cls)
