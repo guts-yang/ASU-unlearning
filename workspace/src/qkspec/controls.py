@@ -76,11 +76,41 @@ def _make_control_directions(
                 )
         return ctrl
     if mode == "shuffle":
-        keys = [(d.layer, d.head) for d in real]
-        order = torch.randperm(len(keys), generator=gen).tolist()
+        # Shuffle by cycling the (layer, head) assignments so that every
+        # direction moves to a DIFFERENT head. A plain randperm degenerates
+        # when many directions share the same head (e.g. 4 ranks on one head):
+        # permuting identical keys leaves the edit unchanged. We instead build
+        # the multiset of assigned heads and rotate it by a non-zero offset,
+        # guaranteeing no direction keeps its original head when possible.
+        heads = [(d.layer, d.head) for d in real]
+        n = len(heads)
+        if n < 2 or len(set(heads)) < 2:
+            # Nothing meaningful to shuffle against; return as-is but mark it.
+            return [
+                DirectionSpec(
+                    layer=d.layer, head=d.head, rank=d.rank, sigma=d.sigma,
+                    rho=cfg.rho, stage_a_score=d.stage_a_score,
+                    causal_verified=False, meta={"control": "shuffle_noop"},
+                )
+                for d in real
+            ]
+        # Derangement via cyclic shift by a random non-zero offset; if any
+        # position still maps to an identical head, fall back to a swap-based
+        # derangement over the distinct head list.
+        offset = int(torch.randint(1, n, (1,), generator=gen).item())
+        shifted = [heads[(i + offset) % n] for i in range(n)]
+        if any(shifted[i] == heads[i] for i in range(n)):
+            distinct = sorted(set(heads))
+            perm = list(distinct)
+            for _ in range(10):
+                order = torch.randperm(len(perm), generator=gen).tolist()
+                perm = [distinct[j] for j in order]
+                if all(perm[j] != distinct[j] for j in range(len(distinct))):
+                    break
+            head_to_new = dict(zip(distinct, perm))
+            shifted = [head_to_new[h] for h in heads]
         ctrl = []
-        for d, src in zip(real, order):
-            li, h = keys[src]
+        for d, (li, h) in zip(real, shifted):
             ctrl.append(
                 DirectionSpec(
                     layer=li, head=h, rank=d.rank, sigma=d.sigma,

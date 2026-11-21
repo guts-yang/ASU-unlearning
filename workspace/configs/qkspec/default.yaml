@@ -25,6 +25,7 @@ max_stage_b_batches: null
 
 # Stage B causal re-check + retain constraint
 stage_b_min_nll_increase: 0.0
+specificity_weight: 1.0
 max_retain_impact: null
 
 # Controls

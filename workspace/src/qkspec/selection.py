@@ -2,10 +2,16 @@
 
 Stage A ranks all shortlisted (layer, head, rank) triples by the screening
 score; we take the global Top-K.  Stage B then causally re-checks each of them
-via single-direction ablation and applies the retain constraint.  The final
-direction set J is the subset of Top-K that (a) increases D_F NLL by at least
-``stage_b_min_nll_increase`` and (b) does not increase D_R NLL by more than
-``max_retain_impact`` (if configured).
+via single-direction ablation.  Final selection uses *causal specificity*:
+
+    specificity_j = stage_b_score_j - w * retain_impact_j
+
+where ``stage_b_score`` is the D_F NLL increase (target effect) and
+``retain_impact`` is the D_R NLL increase (collateral damage).  A direction is
+kept only if ``specificity > stage_b_min_nll_increase`` and its retain damage
+stays under ``max_retain_impact``.  Directions are ranked by specificity, not
+by raw target effect, so generic retrieval directions that damage retain are
+pushed down.  ``w`` is ``cfg.specificity_weight`` (default 1.0).
 """
 
 from __future__ import annotations
@@ -36,6 +42,12 @@ class SelectionResult:
         }
 
 
+def _specificity(d: DirectionSpec, w: float) -> float:
+    b = d.stage_b_score if d.stage_b_score is not None else 0.0
+    r = d.retain_impact if d.retain_impact is not None else 0.0
+    return float(b) - w * float(r)
+
+
 def select_directions(
     score_result: ScoreResult,
     model,
@@ -44,7 +56,7 @@ def select_directions(
     cfg: QKSpecConfig,
     device,
 ) -> SelectionResult:
-    """Run Top-K screening then stage-B causal re-check and retain filtering."""
+    """Stage-A Top-K, then stage-B causal re-check, then specificity filter."""
     result = SelectionResult(stage_a_all=list(score_result.stage_a_scores))
 
     ranked = sorted(
@@ -52,8 +64,6 @@ def select_directions(
         key=lambda d: d.stage_a_score,
         reverse=True,
     )
-    # Drop non-positive screening scores only if we still have enough; keep at
-    # least top_k entries so stage B always has something to check.
     top_k = ranked[: cfg.top_k_directions]
     if not top_k:
         return result
@@ -63,10 +73,14 @@ def select_directions(
     result.stage_b_all = list(stage_b)
 
     for d in stage_b:
-        b = d.stage_b_score if d.stage_b_score is not None else 0.0
+        spec = _specificity(d, cfg.specificity_weight)
+        d.meta["specificity"] = spec
         reasons = []
-        if b < cfg.stage_b_min_nll_increase:
-            reasons.append(f"stage_b_nll_increase={b:.6f} < min={cfg.stage_b_min_nll_increase}")
+        if spec < cfg.stage_b_min_nll_increase:
+            reasons.append(
+                f"specificity={spec:.6f} < min={cfg.stage_b_min_nll_increase} "
+                f"(stage_b={d.stage_b_score}, retain_impact={d.retain_impact})"
+            )
         if cfg.max_retain_impact is not None:
             ri = d.retain_impact if d.retain_impact is not None else 0.0
             if ri > cfg.max_retain_impact:
@@ -76,5 +90,5 @@ def select_directions(
         else:
             result.selected.append(d)
 
-    result.selected.sort(key=lambda d: d.stage_b_score or 0.0, reverse=True)
+    result.selected.sort(key=lambda d: _specificity(d, cfg.specificity_weight), reverse=True)
     return result

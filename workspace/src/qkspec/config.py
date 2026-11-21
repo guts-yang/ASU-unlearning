@@ -44,6 +44,11 @@ class QKSpecConfig:
     stage_b_min_nll_increase:
         Minimum NLL increase required to keep a direction after ablation.
         A value <= 0 keeps all Top-K directions.
+    specificity_weight:
+        Weight on retain damage when ranking stage-B directions. Final score
+        is ``stage_b_score - specificity_weight * retain_impact``. A value of
+        1.0 ranks by target-effect-minus-retain-damage (causal specificity);
+        0.0 ranks by raw target effect only.
     max_retain_impact:
         Maximum allowed relative NLL increase on D_R when a direction is
         ablated; ``None`` disables this constraint.
@@ -82,6 +87,7 @@ class QKSpecConfig:
     stage_b_batch_size: int = 4
     max_stage_b_batches: Optional[int] = None
     stage_b_min_nll_increase: float = 0.0
+    specificity_weight: float = 1.0
     max_retain_impact: Optional[float] = None
     edge_top_fraction: float = 1.0
     run_controls: bool = True
@@ -114,6 +120,8 @@ class QKSpecConfig:
                 raise ValueError("layer_start must be <= layer_end")
         if self.min_singular_value < 0:
             raise ValueError("min_singular_value must be >= 0")
+        if self.specificity_weight < 0:
+            raise ValueError("specificity_weight must be >= 0")
 
     @classmethod
     def from_any(cls, source: Any) -> "QKSpecConfig":

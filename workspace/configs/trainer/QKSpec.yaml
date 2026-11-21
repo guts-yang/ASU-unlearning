@@ -19,6 +19,7 @@ method_args:
     stage_b_batch_size: 4
     max_stage_b_batches: null
     stage_b_min_nll_increase: 0.0
+    specificity_weight: 1.0
     max_retain_impact: null
     run_controls: true
     noop_rho: 1.0

@@ -21,7 +21,7 @@ REPO = Path("/usr/local/workspace/ASU-unlearning-K4")
 OU = REPO / "open-unlearning"
 WS = REPO / "workspace"
 ENV_SH = WS / "scripts" / "env_qkspec.sh"
-OUT_ROOT = Path("/jizhicfs/chenyliao/runs/qkspec/sweep")
+OUT_ROOT = Path("/jizhicfs/chenyliao/runs/qkspec/sweep_v2_spec")
 SUMMARY = OUT_ROOT / "sweep_summary.json"
 SUMMARY_CSV = OUT_ROOT / "sweep_summary.csv"
 
@@ -30,14 +30,15 @@ MODEL_DIR = f"/jizhicfs/chenyliao/models/open-unlearning/tofu_{MODEL_TAG}_full"
 TOFU_DIR = "/jizhicfs/chenyliao/data/datasets/locuslab-TOFU"
 RETAIN_LOG = f"/jizhicfs/chenyliao/data/datasets/open-unlearning/eval/tofu_{MODEL_TAG}_retain90/TOFU_EVAL.json"
 
-# (name, rho, top_k, ranks, retain_cap, stage_b_min, shortlist)
+# (name, rho, top_k, ranks, retain_cap, stage_b_min, shortlist, spec_weight)
+# Round 2: causal-specificity filtering replaces the coarse retain_cap.
 GRID = [
-    ("rho05_k8",       0.5,  8,  4, "null", 0.0,  4),
-    ("rho02_k16",      0.2, 16,  4, "null", 0.0,  4),
-    ("rho00_k16",      0.0, 16,  4, "null", 0.0,  4),
-    ("rho00_k32",      0.0, 32,  8, "null", 0.0,  8),
-    ("rho00_k32_cap10",0.0, 32,  8, "0.10", 0.0,  8),
-    ("rho00_k32_cap03",0.0, 32,  8, "0.03", 0.01, 8),
+    ("spec_w0_k16",     0.0, 16, 4, "null", 0.0,   4, 0.0),   # baseline: raw B effect
+    ("spec_w1_lo_k32",  0.0, 32, 8, "null", 0.002, 8, 1.0),   # specificity, low threshold
+    ("spec_w1_md_k32",  0.0, 32, 8, "null", 0.005, 8, 1.0),   # specificity, mid threshold
+    ("spec_w1_hi_k32",  0.0, 32, 8, "null", 0.01,  8, 1.0),   # specificity, high threshold
+    ("spec_w2_md_k32",  0.0, 32, 8, "null", 0.005, 8, 2.0),   # stronger retain penalty
+    ("spec_w1_rho2_k32",0.2, 32, 8, "null", 0.005, 8, 1.0),   # milder shrink + specificity
 ]
 
 
@@ -112,10 +113,10 @@ def main():
     rows = []
     total_t0 = time.time()
 
-    for name, rho, topk, ranks, cap, stage_b_min, shortlist in GRID:
+    for name, rho, topk, ranks, cap, stage_b_min, shortlist, spec_w in GRID:
         tag = f"qkspec_{name}"
         student = OUT_ROOT / tag
-        print(f"\n=== GRID: {name} (rho={rho}, top_k={topk}, cap={cap}) ===", flush=True)
+        print(f"\n=== GRID: {name} (rho={rho}, top_k={topk}, spec_w={spec_w}, stage_b_min={stage_b_min}) ===", flush=True)
 
         # ---- train ----
         train_cmd = [
@@ -137,6 +138,7 @@ def main():
             f"trainer.method_args.qkspec.ranks_per_head={ranks}",
             f"trainer.method_args.qkspec.shortlist_per_layer={shortlist}",
             f"trainer.method_args.qkspec.stage_b_min_nll_increase={stage_b_min}",
+            f"trainer.method_args.qkspec.specificity_weight={spec_w}",
             f"trainer.method_args.qkspec.max_retain_impact={cap}" if cap != "null"
                 else "trainer.method_args.qkspec.max_retain_impact=null",
             "trainer.method_args.qkspec.max_discovery_batches=8",
@@ -172,6 +174,7 @@ def main():
         row = {
             "name": name, "rho": rho, "top_k": topk, "ranks": ranks,
             "retain_cap": cap, "stage_b_min": stage_b_min, "shortlist": shortlist,
+            "spec_weight": spec_w,
             "train_s": round(t_train, 1), "eval_s": round(t_eval, 1),
             "total_s": round(t_train + t_eval, 1),
             "FE_forget_quality": fe, "MU_model_utility": mu,

@@ -136,6 +136,33 @@ class SelectionTests(unittest.TestCase):
         self.assertEqual(len(result.rejected), 2)
 
 
+class SpecificityTests(unittest.TestCase):
+    def test_specificity_ranking(self):
+        """Higher target-effect minus retain-damage ranks first."""
+        from qkspec.selection import _specificity
+        d_good = DirectionSpec(0, 0, 0, 1.0, stage_b_score=0.20, retain_impact=0.01)
+        d_generic = DirectionSpec(0, 1, 0, 1.0, stage_b_score=0.30, retain_impact=0.28)
+        # raw B favors generic (0.30 > 0.20) but specificity favors good
+        self.assertGreater(d_generic.stage_b_score, d_good.stage_b_score)
+        self.assertGreater(_specificity(d_good, 1.0), _specificity(d_generic, 1.0))
+
+    def test_shuffle_moves_every_head(self):
+        """Shuffle must move all directions to different (layer, head)."""
+        from qkspec.controls import _make_control_directions
+        real = [
+            DirectionSpec(0, 0, 0, 1.0), DirectionSpec(0, 0, 1, 1.0),
+            DirectionSpec(0, 3, 0, 1.0), DirectionSpec(1, 1, 0, 1.0),
+        ]
+        cfg = QKSpecConfig(control_seed=7)
+        ctrl = _make_control_directions("shuffle", real, cfg, torch.Generator().manual_seed(7))
+        self.assertEqual(len(ctrl), len(real))
+        for orig, new in zip(real, ctrl):
+            self.assertNotEqual(
+                (orig.layer, orig.head), (new.layer, new.head),
+                "shuffle left a direction on its original head",
+            )
+
+
 class ConfigTests(unittest.TestCase):
     def test_invalid_rho(self):
         with self.assertRaises(ValueError):
