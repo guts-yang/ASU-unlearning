@@ -40,3 +40,5 @@ datasets/
 !open-unlearning/configs/data/datasets/
 hf_cache/
 .cache/huggingface/
+
+.agent
