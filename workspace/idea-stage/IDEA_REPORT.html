@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Idea Discovery Report — 反事实主体配对的逐层渐进遗忘</title>
+
+<meta name="generator" content="ARIS render-html (academic, v1)">
+<meta name="aris:source-path" content="workspace/idea-stage/IDEA_REPORT.md">
+<meta name="aris:source-sha256" content="31d7314cd7e8479b185ad90c6624a0dedeb6338a07f4a10a9175f8ff6feb097c">
+<meta name="aris:generated-at" content="2026-11-22 16:32 UTC">
+
+<!-- MathJax 3 -->
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+  options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+<!-- highlight.js -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-light.min.css">
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => hljs.highlightAll());</script>
+
+
+<style>
+:root {
+  --bg: #fdfcf7;
+  --bg-soft: #f4f1ea;
+  --bg-code: #f8f5ec;
+  --ink: #1a1a1a;
+  --ink-soft: #4a4a4a;
+  --ink-muted: #6b6b6b;
+  --primary: #1a4a8c;
+  --primary-soft: #2d6cb8;
+  --accent: #b8390e;
+  --warn: #b45309;
+  --warn-bg: #fef3c7;
+  --info-bg: #dbeafe;
+  --good-bg: #d1fae5;
+  --good: #065f46;
+  --bad-bg: #fee2e2;
+  --bad: #991b1b;
+  --border: #d6d0c0;
+  --border-soft: #e8e3d5;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Source Serif Pro", "Source Serif 4", "Crimson Pro", "Georgia", "Songti SC", "STSong", serif;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--bg);
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+}
+
+.layout {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 48px;
+  padding: 40px 32px;
+}
+
+nav.toc {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+  font-size: 13px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  border-right: 1px solid var(--border-soft);
+  padding-right: 16px;
+}
+nav.toc h3 {
+  margin: 0 0 12px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+nav.toc ol { list-style: none; padding: 0; margin: 0; counter-reset: toc; }
+nav.toc ol li { margin: 5px 0; counter-increment: toc; }
+nav.toc ol li::before { content: counter(toc) ". "; color: var(--ink-muted); margin-right: 4px; }
+nav.toc a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 1px dotted transparent;
+}
+nav.toc a:hover { color: var(--primary); border-bottom-color: var(--primary); }
+nav.toc ul { list-style: none; padding-left: 14px; margin: 3px 0; font-size: 12px; }
+nav.toc ul li::before { content: "→ "; color: var(--border); }
+
+main { min-width: 0; }
+
+header.hero {
+  border-bottom: 3px double var(--primary);
+  padding-bottom: 24px;
+  margin-bottom: 32px;
+}
+header.hero .eyebrow {
+  color: var(--accent);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+body.aris-blog header.hero .eyebrow {
+  font-family: inherit;
+  color: var(--ink-muted);
+  text-transform: none;
+  letter-spacing: 0.01em;
+  font-weight: 400;
+}
+header.hero h1 {
+  font-size: 32px;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+header.hero .subtitle {
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin: 0 0 8px;
+  font-style: italic;
+}
+header.hero .byline {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 0 0 20px;
+}
+header.hero .byline strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+header.hero .meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--ink-muted);
+  border-top: 1px solid var(--border-soft);
+  padding-top: 14px;
+}
+header.hero .meta span strong { color: var(--ink-soft); }
+header.hero .meta code {
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 11px;
+  background: var(--bg-soft);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-soft);
+}
+
+h2 {
+  font-size: 24px;
+  margin: 44px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+  font-weight: 700;
+}
+h2 .num { color: var(--primary); font-weight: 600; margin-right: 8px; }
+h3 { font-size: 19px; margin: 28px 0 10px; color: var(--primary); font-weight: 600; }
+h4 { font-size: 16px; margin: 20px 0 8px; color: var(--ink); font-weight: 600; }
+
+p { margin: 10px 0; }
+ul, ol { padding-left: 22px; margin: 10px 0; }
+ul li, ol li { margin: 4px 0; }
+ul li::marker { color: var(--primary); }
+
+strong { color: var(--accent); font-weight: 600; }
+em { color: var(--ink-soft); }
+
+a { color: var(--primary); }
+a:hover { color: var(--accent); }
+
+code:not(.hljs) {
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 0.86em;
+  background: var(--bg-code);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-soft);
+  color: var(--accent);
+}
+
+pre {
+  background: #fafaf6;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  padding: 0;
+  overflow-x: auto;
+  border-radius: 4px;
+  margin: 14px 0;
+}
+pre code, pre code.hljs {
+  background: transparent !important;
+  display: block;
+  padding: 14px 18px !important;
+  font-size: 13px;
+  line-height: 1.55;
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", monospace;
+  color: var(--ink);
+}
+pre.diagram {
+  background: #f9f6ed;
+  border-left: 4px solid var(--accent);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.callout {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-radius: 4px;
+  border-left: 4px solid;
+  font-size: 15px;
+}
+.callout-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.callout-info { background: var(--info-bg); border-left-color: var(--primary); }
+.callout-info .callout-title { color: var(--primary); }
+.callout-warn { background: var(--warn-bg); border-left-color: var(--warn); }
+.callout-warn .callout-title { color: var(--warn); }
+.callout-good { background: var(--good-bg); border-left-color: var(--good); }
+.callout-good .callout-title { color: var(--good); }
+.callout-bad { background: var(--bad-bg); border-left-color: var(--bad); }
+.callout-bad .callout-title { color: var(--bad); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+thead { background: var(--primary); color: white; }
+th, td {
+  text-align: left;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border-soft);
+  vertical-align: top;
+}
+th { font-weight: 600; font-size: 13px; letter-spacing: 0.02em; }
+tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-soft); }
+
+details.qa, details {
+  background: white;
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  margin: 10px 0;
+  padding: 0;
+}
+details summary {
+  cursor: pointer;
+  padding: 10px 14px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--primary);
+  list-style: none;
+  user-select: none;
+}
+details summary::-webkit-details-marker { display: none; }
+details summary::before {
+  content: "▸ ";
+  margin-right: 4px;
+  display: inline-block;
+  transition: transform 0.15s;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details[open] summary { border-bottom: 1px solid var(--border-soft); }
+details > :not(summary) { padding: 10px 14px; }
+details p:first-of-type { margin-top: 8px; }
+
+mjx-container[display="true"] { margin: 12px 0 !important; }
+
+footer.aris-footer {
+  margin-top: 60px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+footer.aris-footer a { color: var(--ink-muted); border-bottom: 1px dotted var(--border); }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; gap: 20px; padding: 20px 16px; }
+  nav.toc {
+    position: static;
+    max-height: none;
+    border-right: none;
+    border-bottom: 1px solid var(--border-soft);
+    padding-right: 0;
+    padding-bottom: 14px;
+  }
+  header.hero h1 { font-size: 24px; }
+  h2 { font-size: 20px; }
+}
+@media print {
+  nav.toc { display: none; }
+  .layout { grid-template-columns: 1fr; padding: 0; }
+  body { background: white; }
+  header.hero { border-bottom-color: var(--ink); }
+  #cite-pop, dialog.lightbox { display: none !important; }
+}
+
+/* --- P0 polish: TOC scrollspy active state ---------------------------- */
+nav.toc a.active {
+  color: var(--accent);
+  font-weight: 600;
+  border-bottom-color: var(--accent);
+}
+
+/* --- P0 polish: Long-code auto-collapse ------------------------------- */
+details.code-card {
+  margin: 14px 0;
+  background: #fafaf6;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: 4px;
+}
+details.code-card > summary {
+  cursor: pointer;
+  padding: 8px 14px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-family: "JetBrains Mono", "SF Mono", monospace;
+  list-style: none;
+  user-select: none;
+}
+details.code-card > summary::-webkit-details-marker { display: none; }
+details.code-card > summary::before { content: none; }
+details.code-card > pre {
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-left: none;
+  border-radius: 0;
+}
+@media print {
+  details.code-card { border: 1px solid #ccc; background: white; }
+  details.code-card > summary { display: none !important; }
+  details.code-card > pre { border: 1px solid #ddd; border-radius: 4px; background: white; }
+}
+
+/* --- P0 polish: Paper popover ([[ref]] popups) ------------------------ */
+[data-ref] {
+  color: var(--primary);
+  border-bottom: 1px dotted var(--primary);
+  cursor: pointer;
+  white-space: nowrap;
+}
+[data-ref]:hover { background: rgba(26, 74, 140, 0.08); }
+#cite-pop {
+  position: fixed;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  font-size: 13px;
+  line-height: 1.5;
+  z-index: 1000;
+}
+#cite-pop[hidden] { display: none; }
+#cite-pop .cp-title {
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+  padding-right: 24px;
+}
+#cite-pop .cp-meta {
+  color: var(--ink-muted);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+#cite-pop .cp-key {
+  color: var(--accent);
+  font-style: italic;
+  margin-bottom: 8px;
+}
+#cite-pop .cp-link {
+  display: inline-block;
+  color: var(--primary);
+  font-weight: 500;
+}
+#cite-pop .cp-close {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--ink-muted);
+}
+
+/* --- P0 polish: Figure lightbox (native <dialog>) --------------------- */
+dialog.lightbox {
+  border: none;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.92);
+  width: 96vw;
+  height: 96vh;
+  max-width: 96vw;
+  max-height: 96vh;
+}
+dialog.lightbox::backdrop { background: rgba(0, 0, 0, 0.92); }
+dialog.lightbox .lb-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 16px;
+  position: relative;
+}
+dialog.lightbox img {
+  max-width: 90vw;
+  max-height: 84vh;
+  object-fit: contain;
+  cursor: zoom-out;
+}
+dialog.lightbox figcaption {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  text-align: center;
+  max-width: 700px;
+}
+dialog.lightbox .lb-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* --- P0 polish: blog/talk mode active-H2 highlight (opt-in) ----------- */
+body.aris-blog h2 { scroll-margin-top: 24px; }
+body.aris-blog h2.aris-active-h2 {
+  background: linear-gradient(to right, rgba(26, 74, 140, 0.06), transparent);
+  border-radius: 4px;
+  padding-left: 12px;
+  margin-left: -12px;
+}
+</style>
+</head>
+<body class="">
+<div class="layout">
+
+<nav class="toc">
+  <h3>Contents</h3>
+  <ol>
+<li><a href="#executive-summary">Executive Summary</a>
+</li>
+<li><a href="#literature-landscape">Literature Landscape</a>
+</li>
+<li><a href="#ranked-ideas">Ranked Ideas</a>
+</li>
+<li><a href="#novelty-verification">Novelty Verification</a>
+</li>
+<li><a href="#external-critical-review">External Critical Review</a>
+</li>
+<li><a href="#eliminated-ideas">Eliminated Ideas</a>
+</li>
+<li><a href="#refined-proposal">Refined Proposal</a>
+</li>
+<li><a href="#next-steps">Next Steps</a>
+</li>
+<li><a href="#附录-a--检索披露">附录 A — 检索披露</a>
+</li>
+<li><a href="#evidence-gate">Evidence Gate</a>
+</li>
+</ol>
+</nav>
+
+<main>
+<header class="hero">
+  
+  <h1>Idea Discovery Report — 反事实主体配对的逐层渐进遗忘</h1>
+  
+  
+  <div class="meta">
+    <span><strong>Source:</strong> <code>workspace/idea-stage/IDEA_REPORT.md</code></span>
+    <span><strong>SHA256:</strong> <code>31d7314cd7e8</code></span>
+    <span><strong>Rendered:</strong> 2026-11-22 16:32 UTC</span>
+    
+  </div>
+</header>
+
+<h1 id="idea-discovery-report--反事实主体配对的逐层渐进遗忘">Idea Discovery Report — 反事实主体配对的逐层渐进遗忘</h1>
+<p><strong>Direction</strong>: 以 ASU-unlearning（ICLR 2026《Attention Smoothing Is All You Need》）为基座，调研"反事实主体配对 + 逐层渐进激活对齐"的遗忘新方向，重点解决 workspace 方向 I proposal 的核心待调研问题：<strong>配对激活差异 ΔA 应如何构造遗忘目标</strong>。 <strong>Date</strong>: 2026-11-23 <strong>Pipeline</strong>: research-lit → idea-creator → novelty-check → research-review → research-refine-pipeline <strong>Output root</strong>: <code>workspace/</code>（用户指定） <strong>Effort / Assurance</strong>: balanced / draft（评审承载阶段因环境缺评审 MCP，见 §External Critical Review）</p>
+<blockquote><p>执行环境声明：本机 <code>torch.cuda.is_available()=False</code>、无 transformers/safetensors、checkpoint 不在本机（据不完全证据，参见项目记忆卡），<strong>无法运行任何 Llama 前向 pilot</strong>。本轮所有 "pilot signal" 均为<strong>纸面机制推断 + 文献证据</strong>，不是实测数字；按技能 PILOT 规则标注 <code>needs manual pilot</code>。跨模型评审后端（Codex/Gemini/Grok/Claude-review MCP）在当前宿主均未启用，故两个评审承载阶段标记 <code>REVIEW_UNAVAILABLE</code>，最终证据闸预期 <code>BLOCKED</code>——这是如实记录，不是流程失败隐藏。</p></blockquote>
+<h2 id="executive-summary">Executive Summary</h2>
+<p>基于 workspace 已有的方向 I proposal（反事实主体替换 Teacher + 逐层渐进激活对齐 + DKT 同前缀 KL），本轮调研产出 3 个候选 idea 并做了查新与逻辑审查。<strong>推荐方案是 Idea 1（Δ-Gated 正交渐进对齐）</strong>：不直接把 Student 激活对齐到 donor 激活 A⁻（该方案有"donor 答案替换 / context blindness"的逻辑缺陷），而是用配对差 ΔA 的主成分定义"事实子空间"，把 Student 在 X⁺ 上的激活沿该子空间做正交抑制，逐层渐进内化。最近的近邻是 FALCON（NeurIPS 2025，对比正交激活操纵）与 CiPO（ACL 2026，反事实偏好优化），但二者分别用随机对比锚、在输出/偏好层操作；本方向以"关系匹配的真实 donor"为对比锚、在表示层做不教假事实的正交解耦，差异化成立但窗口偏紧。核心 kill risk：ΔA 是否真正编码"目标事实"而非"主体身份"——需最小 probe 实验证实。<strong>下一步（需 GPU）</strong>：先做 ΔA 方向的 probe 判别实验 + 静态全层/渐进 schedule 等预算对照，二者任一不过即收缩或否决。</p>
+<h2 id="literature-landscape">Literature Landscape</h2>
+<p>按主题聚类（检索渠道：web_search 多轮，覆盖 arXiv/ACL/NeurIPS/AlphaXiv/机构库；检索词见附录 A）。Gemini CLI 未安装，按技能规则优雅跳过。</p>
+<p><strong>聚类 1 — 反事实/替换式遗忘（与方向 I 最直接相关）</strong></p>
+<ul><li><strong>CiPO: Counterfactual Unlearning for LRM through Iterative Preference Optimization</strong>（arXiv:2604.15847, ACL 2026）：让 LRM 生成"逻辑自洽但内容相反"的反事实 CoT 作为偏好正样本，迭代 DPO/SimPO。证据：在 R-TOFU/RETURN 上同时清除 CoT 与答案、保住 GSM8K/MMLU； compares favorably to GA 与 R²MU。差异：它在<strong>输出/偏好层</strong>教模型生成反事实文本；方向 I 在<strong>表示层</strong>对齐，不教假事实。</li><li><strong>On the Hidden Costs of Counterfactual Knowledge Training</strong>（arXiv:2605.27083, Ye/Wang/Zhang/Wu, 2026-05）：<strong>关键负面证据</strong>。反事实调优（CFT）有两大隐性代价：(1) knowledge conflict——不一致的反事实语料诱导冲突梯度（自然数据梯度余弦 μ≈+0.136，无约束反事实 μ≈+0.024，近半样本对负相似）；(2) hallucination spillover——拟合假目标植入持续捏造偏见，抬高无关域幻觉率。引入 RWKU+ 诊断基准与梯度余弦诊断。<strong>启示：方向 I 必须避开"教模型说假话"，且 donor 必须关系匹配、簇内一致，否则重蹈 CFT 覆辙。</strong></li></ul>
+<p><strong>聚类 2 — 逐层/表示级操纵与蒸馏（激活目标构造的方法源）</strong></p>
+<ul><li><strong>FALCON: Fine-grained Activation Manipulation by Contrastive Orthogonal Unalignment</strong>（NeurIPS 2025, Hu et al.）：信息论引导参数选择 + 对比机制增强表示分离 + 冲突梯度正交投影。证据：抗恢复鲁棒。差异：对比锚为噪声/随机，方向 I 用真实 donor；FALCON 是全局重要性选择，方向 I 强调逐层渐进 schedule。</li><li><strong>FDD / Beyond Logits: Aligning Feature Dynamics</strong>（ACL 2025, Gong et al., DOI 10.18653/v1/2025.acl-long.1125）：把残差 Transformer 视为离散 ODE，监督"层间预测轨迹 KL + 相邻层 delta 余弦"，用 LM head 投影到共享词表空间。启示：为 Idea 3（delta 匹配）提供现成损失构造；另注意其消融显示"4 层采样最佳，过多层反而下降"——<strong>直接质疑"全层对齐"的必要性，支持渐进/稀疏层选择</strong>。</li><li><strong>Layer-wise Distillation / LayerSync</strong>（ICLR 2026）：stop-gradient 固定教师层、只更新学生层；层对选择应避开太浅与末端 20% block。启示：方向 I 的 A⁻ 必须 stopgrad（proposal 已做），层集合 Λ(k) 不应取全 16 层。</li><li><strong>AlphaEdit</strong>（ICLR 2025）/ <strong>One Mask to Rule Them All</strong>（2026-09）：把扰动投影到 preserve 知识的零空间 / 用稀疏 mask 恢复被 ROME-MEMIT 抑制的原事实——证明"抑制≠擦除"，<strong>支持方向 I 必须做抗恢复审计</strong>。</li></ul>
+<p><strong>聚类 3 — Teacher-Student 自蒸馏与鲁棒性（ASU 的同源方法）</strong></p>
+<ul><li><strong>ASU</strong>（Zare Zade et al., ICLR 2026, arXiv:2603.01285）：注意力温度 τ&gt;1 平滑 → forget-teacher → 自蒸馏。方向 I 的出发点：去 τ 后 Teacher=Student 导致初始化零遗忘梯度。</li><li><strong>MALTO / Dual-Teacher</strong>（SemEval-2025 Task 4, SOTA）：Competent Teacher（保 utility）+ Incompetent Teacher（随机 logit，诱导遗忘），KL 自适应混合；非 ordered 训练更优。</li><li><strong>Distillation Robustifies Unlearning / UNDO</strong>（NeurIPS 2025, Lee et al.）：unlearn→distill 到随机初始化同构学生，可移除潜在能力、显著抗 relearning。<strong>启示：可作为方向 I 部署前的抗恢复增强步骤。</strong></li><li><strong>PACT</strong>（arXiv:2609.38909, 2026-09）：<strong>关键反面证据</strong>——target-based 目标（把模型压到"无上下文生成的中性回答"）虽移除行为，但造成 context blindness（模型学会不读上下文），侵蚀系统提示遵循与秘密保持。启示：直接向 A⁻ 对齐有同类风险。</li></ul>
+<p><strong>Landscape 结论</strong>：结构性空白 = "用关系匹配的真实 donor 作为对比锚、在表示层而非输出层做逐层正交解耦、且不教模型假事实的遗忘目标构造"。该空白与 CFT 的两大代价、PACT 的 context blindness 形成清晰对照，但 FALCON/FDD/CiPO 已是强近邻，窗口偏紧（估计 6-12 个月）。</p>
+<h2 id="ranked-ideas">Ranked Ideas</h2>
+<p><strong>Idea 1 — Δ-Gated Progressive Orthogonal Alignment（推荐）</strong></p>
+<ul><li>假设：配对差 ΔA_ℓ = h_T(X⁺)−h_T(X⁻) 的主成分定义了一个"事实相关方向"；遗忘应把 Student 在 X⁺ 的层激活沿该方向正交抑制（保留正交分量），而非对齐到 A⁻。损失：对每层抽点，L_F = Σ_ℓ ρ_ℓ(k)·‖(I−P_Δ) h_S(X⁺;P) − stopgrad(h_T(X⁺;P))‖²，其中 P_Δ 为 ΔA 的低秩投影；或等价地用梯度屏蔽 g⊥=g−proj_Δ g。逐层渐进扩展 Λ(k)。</li><li>机制依据：FALCON 的正交投影 + AlphaEdit 零空间 + FDD 的分层稀疏；避开 CFT 幻觉溢出（不教假事实）与 PACT context blindness（保留正交/主体表征）。</li><li>Pilot 信号：<strong>needs manual pilot</strong>（无 GPU）。纸面证据：强（三项独立文献支撑机制）。风险：ΔA 主成分是否 = 事实方向未证实（见 Novelty § killer risk）。</li></ul>
+<p><strong>Idea 2 — Counterfactual Difference Matching（backup）</strong></p>
+<ul><li>假设：不抑制、也不对齐 A⁻，而是约束 Student 的"差异结构"与 Teacher 一致：h_S(X⁺)−h_S(X⁻) ≈ stopgrad(A⁺−A⁻)，即匹配差值而非绝对位置。这样主体表征本身不动，只移除"事实相关差异方向"。</li><li>风险：X⁻ 的表示含 donor 事实，约束差值可能把 donor 信息引入 X⁺ 路径；需要 wrong-donor 对照。</li><li>Pilot 信号：needs manual pilot；纸面证据：中（无直接先例，但与 FDD delta 匹配同源）。</li></ul>
+<p><strong>Idea 3 — Layer-wise Prediction-Dynamics Alignment（备选/可并入 Idea 1）</strong></p>
+<ul><li>假设：用 FDD 的 LM-head 投影，让 Student 在 X⁺ 的"层间预测 delta 方向"匹配 Teacher 在 X⁻ 的 delta 方向（余弦），而非对齐绝对激活。规避绝对对齐对表示的破坏。</li><li>风险：依赖 LM-head 投影到词表，架构受限；token 等长假设需验证。</li><li>Pilot 信号：needs manual pilot；纸面证据：中高（FDD 直接方法源）。</li></ul>
+<p><strong>淘汰（见 Eliminated Ideas）</strong>：Idea 4 = 原参考方案"直接向 A⁻ 对齐"；Idea 5 = "纯 ΔA 差值引导更新"。</p>
+<p><strong>排序理由</strong>：Idea 1 差异化最强且正面回应 CFT/PACT 两大负面证据；Idea 2 保守但需验 donor 泄漏；Idea 3 更像可并入 Idea 1 的损失变体。AUTO_PROCEED：选定 Idea 1 进入查新与评审。</p>
+<h2 id="novelty-verification">Novelty Verification</h2>
+<p><strong>状态：PROVISIONAL（基于公开文献的机制查新，非跨模型独立评审）</strong>。未获得 <code>REVIEW_UNAVAILABLE</code> 之外的独立评审身份，故不能记为 cross-family accepted。</p>
+<table><thead><tr><th>近邻</th><th>年份/ venue</th><th>重叠</th><th>差异点</th></tr></thead><tbody><tr><td>CiPO</td><td>2026/ACL</td><td>反事实 + 遗忘</td><td>输出/偏好层、教假 CoT；本方向表示层、不教假事实</td></tr><tr><td>FALCON</td><td>2025/NeurIPS</td><td>对比 + 正交激活操纵</td><td>随机对比锚、全局参数选择；本方向真实关系 donor、逐层渐进</td></tr><tr><td>FDD</td><td>2025/ACL</td><td>逐层 + delta 蒸馏</td><td>用于压缩、教师更强；本方向用于遗忘、教师是同权重反事实视图</td></tr><tr><td>CFT hidden costs</td><td>2026/arXiv</td><td>反事实训练代价</td><td>其结论是"反事实训练有代价"，本方向正是规避该代价的表示层方案</td></tr><tr><td>PACT</td><td>2026/arXiv</td><td>target-based 遗忘的 context blindness</td><td>其 target 是无上下文中性回答；本方向目标保留主体/正交表征</td></tr></tbody></table>
+<p><strong>不同工作重合度评估</strong>：Idea 1 与 FALCON 的"正交投影"字面重合，但对比锚语义与逐层 schedule 不同；需在论文中显式划界，否则 reviewer 会以"FALCON 换了个对比锚"拒绝。<strong>查新结论 = PROCEED WITH CAUTION</strong>（技能定义：caution 属正面裁决，可带条件推进）。</p>
+<p><strong>Killer risk（决定存亡）</strong>：若 probe 显示 ΔA 主成分主要编码"主体身份"而非"目标事实"，则 Idea 1 的正交抑制会变成"抹掉主体表征"，方案塌缩为 Idea 4 的变体并失败。这是必须先用最小实验排除的假设，不能用论证代替。</p>
+<h2 id="external-critical-review">External Critical Review</h2>
+<p><strong>状态：REVIEW_UNAVAILABLE</strong> — 当前宿主未启用任何跨模型评审传输（Codex MCP / Antigravity / Grok / Claude-review 均不可用），无 <code>.aris/reviewer.json</code>，无 gemini/codex CLI。按 reviewer-backends 契约：不可用评审<strong>绝不能伪造 PASS</strong>，也不得记录 accept 回执。因此 <code>novelty-check</code> 与 <code>research-review</code> 两阶段保持 <code>done</code> 但无 cross-family receipt，最终 gate 预期 BLOCKED。</p>
+<p>为不丢失"自行检查逻辑"的价值，以下为<strong>执行者自审（非独立评审，只作 provisional 修改输入）</strong>，逐条检查方向 I proposal 的逻辑链：</p>
+<ul><li><strong>L1 初始化零梯度</strong>：proposal 称去 τ 后 Teacher=Student、原 forget KL 在初始化无梯度，故用逐层 L_F 提供梯度。检查：成立——X⁻ 换了主体，h_T(X⁻)≠h_S(X⁺) 初始化，L_F 有非零梯度。✅</li><li><strong>L2 "渐进"的必要性</strong>：proposal 自认必须相对静态全层/反向/随机 schedule 等预算证明独立收益，否则只能叫"多层对齐"。检查：这是最硬的杀手条件，当前 proposal 无证据。⚠️ BLOCKER-for-claim（不是方案否决，是表述降级风险）。</li><li><strong>L3 donor 答案替换</strong>：直接对齐 A⁻ 会让 Student 在 X⁺ 上产出 donor 事实——不是遗忘是替换。检查：proposal §6 要求报告 donor 答案，但参考机制本身没有解决，属逻辑缺口。⚠️ 构成 Idea 4 淘汰依据。</li><li><strong>L4 ΔA 纯度</strong>：主体替换差异 ≠ 事实差异，ΔA 可能主要是"主体是谁"。检查：未被 proposal 论证，是 killer risk。⚠️</li><li><strong>L5 共享前缀 KL</strong>：proposal §3.1 强制两个分布共享同一 y_{&lt;t}，两条前缀分支独立归一化，不逐 token 比较两条不同序列。检查：DKT 分解正确，causal shift（§5）口径正确。✅</li><li><strong>L6 参数内化</strong>：主训练直接优化 Student 参数、运行时 patch 仅作对照。检查：设计正确，避免"hook 依赖"伪遗忘。✅</li><li><strong>L7 抗恢复</strong>：proposal §6 要求 ≥2 类独立抗恢复证据。检查：与"Distillation Robustifies Unlearning"一致；可补 unlearn-and-distill 作为增强步骤。✅ 建议增强。</li><li><strong>L8 过度泛化/语义漂移</strong>：Student 学会"把 X⁺ 当 X⁻ 处理"后，对共享主体但不同关系的 prompt 也可能偏移。检查：proposal 用 retain/shared facts 覆盖，但对 shared-subject 的语义漂移无显式探针。⚠️ 建议加 relation-swap probe。</li></ul>
+<p><strong>最低判别实验（供后续，不在本轮执行）</strong>：(a) ΔA probe：训练线性 probe 判断 ΔA 是否编码目标事实（vs 主体身份）；(b) 等预算 schedule 对照（渐进 vs 静态全层 vs 反向 vs 随机）；(c) relation-swap probe 测语义漂移。任一失败即触发 kill switch。</p>
+<h2 id="eliminated-ideas">Eliminated Ideas</h2>
+<ul><li><strong>Idea 4 — 直接向 A⁻ 对齐（原参考方案）</strong>：淘汰。PACT（2609.38909）证明 target-based 直接对齐造成 context blindness；CFT hidden costs（2605.27083）证明拟合替代目标引入幻觉溢出与梯度冲突；且无法区分"遗忘"与"donor 答案替换"（proposal §6 自认）。</li><li><strong>Idea 5 — 纯 ΔA 差值引导更新</strong>：淘汰（暂缓）。ΔA 不纯净，主要为"主体替换差异"，直接以其引导更新缺乏事实特异性保证；降级为 Idea 1 中的方向估计器，不独立成方案。</li></ul>
+<h2 id="refined-proposal">Refined Proposal</h2>
+<ul><li>Proposal: <code>workspace/refine-logs/FINAL_PROPOSAL.md</code></li><li>Experiment plan: <code>workspace/refine-logs/EXPERIMENT_PLAN.md</code></li><li>Tracker: <code>workspace/refine-logs/EXPERIMENT_TRACKER.md</code></li><li>Research contract: <code>workspace/idea-stage/docs/research_contract.md</code></li></ul>
+<h2 id="next-steps">Next Steps</h2>
+<ul><li>[ ] 在有 GPU 的 A800 环境跑 ΔA probe + schedule 对照（本轮无法执行）</li><li>[ ] 补跨模型评审（需启用 Codex/Gemini/Grok/Claude-review 之一），把 novelty-check / research-review 从 provisional 升级为 accepted</li><li>[ ] 若 probe 通过：用 <code>/experiment-bridge</code> 实现 Idea 1 → <code>/run-experiment</code></li><li>[ ] 若 probe 失败：执行 kill switch，主攻线让位 Idea 2/FDD delta 变体</li><li>[ ] 部署前用 <code>/ablation-planner</code> 安排 schedule 消融，<code>/kill-argument</code> 做投稿前对抗审查</li></ul>
+<h2 id="附录-a--检索披露">附录 A — 检索披露</h2>
+<p>检索渠道：web_search（多轮，6 组查询词），命中 arXiv/ACL Anthology/NeurIPS/AlphaXiv/机构库/二次摘要站。关键 ID：arXiv 2603.01285（ASU）、2604.15847（CiPO）、2605.27083（CFT hidden costs）、2509.38909/2609.38909（PACT，日期 2026-09-30）、FALCON（NeurIPS 2025）、FDD（ACL 2025, DOI 10.18653/v1/2025.acl-long.1125）、UNDO（NeurIPS 2025）、MALTO（SemEval-2025）、AlphaEdit（ICLR 2025）。Gemini CLI 缺失，未做 Gemini 广域检索；所有数字/结论均标注来源，未核实处用"据不完全证据显示"。</p>
+<p>&lt;!-- ARIS_IDEA_DISCOVERY_EVIDENCE_GATE:START --&gt;</p>
+<h2 id="evidence-gate">Evidence Gate</h2>
+<p><strong>Status:</strong> BLOCKED</p>
+<p>The workflow is not complete. Required stage evidence is missing:</p>
+<ul><li>BLOCKED: novelty-check review evidence missing (status=done)</li><li>BLOCKED: research-review review evidence missing (status=done)</li></ul>
+<p>&lt;!-- ARIS_IDEA_DISCOVERY_EVIDENCE_GATE:END --&gt;</p>
+
+<footer class="aris-footer">
+  Generated by <a href="https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep/blob/main/skills/render-html/SKILL.md">ARIS <code>/render-html</code></a> ·
+  source path <code>workspace/idea-stage/IDEA_REPORT.md</code> ·
+  SHA256 <code>31d7314cd7e8</code> ·
+  generated at 2026-11-22 16:32 UTC.
+  This is a generated view — edit the source Markdown, then re-render.
+</footer>
+</main>
+
+</div>
+
+<!-- P0 polish: paper popover host (populated by IIFE below) -->
+<div id="cite-pop" hidden role="dialog" aria-labelledby="cite-pop-title">
+  <button class="cp-close" type="button" aria-label="Close">×</button>
+  <div class="cp-content"></div>
+</div>
+
+<!-- P0 polish: figure lightbox (native <dialog>, graceful fallback) -->
+<dialog class="lightbox" id="figure-lightbox" aria-label="Figure detail">
+  <div class="lb-inner">
+    <button class="lb-close" type="button" aria-label="Close">×</button>
+    <img alt="" />
+    <figcaption></figcaption>
+  </div>
+</dialog>
+
+<!-- P0 polish: paper registry sidecar, embedded by render_html.py (--papers) -->
+<script>window.PAPER_REGISTRY = {};</script>
+
+<!-- P0 polish: interactive enhancements (TOC scrollspy, code-card auto-collapse,
+     paper popovers, figure lightbox, print-restore for <details>, blog-mode H2). -->
+<script>
+(function () {
+  "use strict";
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[c];
+    });
+  }
+
+  // --- Feature 5: Print degradation fix ---------------------------------
+  // Force every <details> open during print, restore the pre-print state after.
+  var _stashOpen = [];
+  var _printing = false;
+  window.addEventListener("beforeprint", function () {
+    if (_printing) return;  // guard against multi-fire (Chrome print preview)
+    _printing = true;
+    _stashOpen = [];
+    document.querySelectorAll("details:not([open])").forEach(function (d) {
+      _stashOpen.push(d);
+      d.open = true;
+    });
+  });
+  window.addEventListener("afterprint", function () {
+    _stashOpen.forEach(function (d) { if (d.isConnected) d.open = false; });
+    _stashOpen = [];
+    _printing = false;
+  });
+
+  // --- Feature 3: TOC scrollspy -----------------------------------------
+  var tocLinks = [].slice.call(document.querySelectorAll("nav.toc a"));
+  var headings = tocLinks.map(function (a) {
+    var id = a.getAttribute("href").replace(/^#/, "");
+    return document.getElementById(id);
+  }).filter(Boolean);
+  if (headings.length && typeof IntersectionObserver !== "undefined") {
+    var linkById = new Map();
+    headings.forEach(function (h, i) { linkById.set(h.id, tocLinks[i]); });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        tocLinks.forEach(function (l) { l.classList.remove("active"); });
+        var lk = linkById.get(en.target.id);
+        if (lk) lk.classList.add("active");
+      });
+    }, { rootMargin: "-15% 0px -75% 0px" });
+    headings.forEach(function (h) { io.observe(h); });
+  }
+
+  // --- Feature 1: Long-code auto-collapse -------------------------------
+  var COLLAPSE_THRESHOLD = 30;
+
+  function wrapCodeCard(pre, openByDefault) {
+    if (!pre || pre.closest("details.code-card")) return;
+    var code = pre.querySelector("code");
+    if (!code) return;
+    var lines = code.textContent.replace(/\n+$/, "").split("\n").length;
+    var det = document.createElement("details");
+    det.className = "code-card";
+    det.open = openByDefault;
+    var sum = document.createElement("summary");
+    function updateSummary() {
+      sum.textContent = (det.open ? "▾ Collapse code · " : "▸ Expand code · ") + lines + " lines";
+    }
+    updateSummary();
+    det.addEventListener("toggle", updateSummary);
+    pre.parentNode.insertBefore(det, pre);
+    det.appendChild(sum);
+    det.appendChild(pre);
+  }
+
+  // Honor explicit per-block flags first.
+  document.querySelectorAll("pre[data-collapse]").forEach(function (pre) {
+    var flag = pre.getAttribute("data-collapse");
+    if (flag === "collapsed") wrapCodeCard(pre, false);
+    // "open" → leave fully expanded, do not wrap.
+  });
+  // Then auto-wrap long unflagged blocks.
+  document.querySelectorAll("pre > code").forEach(function (code) {
+    var pre = code.closest("pre");
+    if (!pre || pre.closest("details") || pre.hasAttribute("data-collapse")) return;
+    var lines = code.textContent.replace(/\n+$/, "").split("\n").length;
+    if (lines >= COLLAPSE_THRESHOLD) wrapCodeCard(pre, false);
+  });
+
+  // --- Feature 10: Figure lightbox --------------------------------------
+  var lightbox = document.getElementById("figure-lightbox");
+  if (lightbox) {
+    var lbImg = lightbox.querySelector("img");
+    var lbCap = lightbox.querySelector("figcaption");
+    var lbClose = lightbox.querySelector(".lb-close");
+    function openLightbox(srcImg) {
+      lbImg.src = srcImg.src;
+      lbImg.alt = srcImg.alt || "";
+      var cap = srcImg.closest("figure") ? srcImg.closest("figure").querySelector("figcaption") : null;
+      lbCap.textContent = cap ? cap.textContent : "";
+      lbCap.hidden = !cap;
+      if (typeof lightbox.showModal === "function") lightbox.showModal();
+      else lightbox.hidden = false;
+    }
+    function closeLightbox() {
+      if (typeof lightbox.close === "function") lightbox.close();
+      else lightbox.hidden = true;
+    }
+    document.querySelectorAll("main figure img, main > p > img").forEach(function (img) {
+      if (img.closest("dialog")) return;
+      img.style.cursor = "zoom-in";
+      img.addEventListener("click", function () { openLightbox(img); });
+    });
+    if (lbClose) lbClose.addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", function (e) {
+      // Backdrop click closes; clicks inside .lb-inner do not bubble here.
+      if (e.target === lightbox) closeLightbox();
+    });
+  }
+
+  // --- Feature 2: Paper popover -----------------------------------------
+  var PAPERS = window.PAPER_REGISTRY || {};
+  var pop = document.getElementById("cite-pop");
+  var popContent = pop ? pop.querySelector(".cp-content") : null;
+  var popClose = pop ? pop.querySelector(".cp-close") : null;
+  var popTrigger = null;
+
+  function showPopover(el) {
+    var key = el.dataset.ref;
+    var info = PAPERS[key];
+    if (!info || !pop || !popContent) return;
+    popContent.innerHTML =
+      '<div class="cp-title" id="cite-pop-title">' + escapeHtml(info.title || key) + '</div>' +
+      (info.authors
+        ? '<div class="cp-meta">' + escapeHtml(info.authors) +
+            (info.date ? ' · ' + escapeHtml(info.date) : '') +
+            (info.inst ? ' · ' + escapeHtml(info.inst) : '') + '</div>'
+        : '') +
+      (info.key ? '<div class="cp-key">' + escapeHtml(info.key) + '</div>' : '') +
+      (info.arxiv
+        ? '<a class="cp-link" href="https://arxiv.org/abs/' + encodeURIComponent(info.arxiv) +
+          '" target="_blank" rel="noopener">arXiv ' + escapeHtml(info.arxiv) + ' ↗</a>'
+        : '');
+    var r = el.getBoundingClientRect();
+    pop.hidden = false;  // unhide first so offsetHeight is measurable
+    var margin = 16;
+    var popWidth = Math.min(360, Math.max(0, window.innerWidth - margin * 2));
+    var popHeight = Math.min(pop.offsetHeight || 200, Math.max(0, window.innerHeight - margin * 2));
+    pop.style.left = Math.max(margin, Math.min(r.left, window.innerWidth - popWidth - margin)) + "px";
+    pop.style.top = Math.max(margin, Math.min(r.bottom + 8, window.innerHeight - popHeight - margin)) + "px";
+    popTrigger = el;
+    if (popClose) popClose.focus();
+  }
+  function hidePopover() {
+    if (pop) pop.hidden = true;
+    if (popTrigger) popTrigger.focus();
+    popTrigger = null;
+  }
+  document.querySelectorAll("[data-ref]").forEach(function (el) {
+    el.setAttribute("tabindex", "0");
+    el.setAttribute("role", "button");
+    el.addEventListener("click", function (e) { e.stopPropagation(); showPopover(el); });
+    el.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); showPopover(el); }
+    });
+  });
+  if (popClose) popClose.addEventListener("click", hidePopover);
+  document.addEventListener("click", function (e) {
+    if (pop && !pop.hidden && !pop.contains(e.target) && !e.target.matches("[data-ref]")) hidePopover();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && pop && !pop.hidden) hidePopover();
+  });
+
+  // --- Feature 7: Blog-mode active-H2 highlight (opt-in) ----------------
+  if (document.body.classList.contains("aris-blog")) {
+    var h2s = [].slice.call(document.querySelectorAll("main h2"));
+    if (h2s.length && typeof IntersectionObserver !== "undefined") {
+      var io2 = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) {
+            h2s.forEach(function (h) { h.classList.remove("aris-active-h2"); });
+            en.target.classList.add("aris-active-h2");
+          }
+        });
+      }, { rootMargin: "-15% 0px -75% 0px" });
+      h2s.forEach(function (h) { io2.observe(h); });
+    }
+  }
+})();
+</script>
+</body>
+</html>
