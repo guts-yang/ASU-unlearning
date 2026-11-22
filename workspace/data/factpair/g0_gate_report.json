@@ -1,0 +1,45 @@
+{
+  "g0": {
+    "checks": {
+      "checkpoint_tokenizer_template_hash": {
+        "pass": true,
+        "tokenizer": "97a1697414396602f1a221374f83abd3dbb86e8d4428cd98c4f2e6eacd023069"
+      },
+      "entity_isolation": {
+        "overlaps": {
+          "D_R_train_x_D_eval": [],
+          "D_donor_x_D_R_train": [],
+          "D_donor_x_D_eval": [],
+          "D_f_x_D_R_train": [],
+          "D_f_x_D_donor": [],
+          "D_f_x_D_eval": []
+        },
+        "pass": true,
+        "pool_sizes": {
+          "D_R_train": 20,
+          "D_donor": 20,
+          "D_eval": 150,
+          "D_f": 10
+        }
+      },
+      "paired_prompts": {
+        "failure_count": 0,
+        "failures": [],
+        "pair_count": 169,
+        "pass": true,
+        "real_tokenizer": true,
+        "tokenizer": "97a1697414396602f1a221374f83abd3dbb86e8d4428cd98c4f2e6eacd023069"
+      },
+      "real_tokenizer": true
+    },
+    "status": "PASS"
+  },
+  "g1": {
+    "pass": true,
+    "status": "PASS",
+    "stderr_tail": "",
+    "stdout_tail": ".....                                                                    [100%]\n5 passed in 0.87s\n"
+  },
+  "overall_status": "PASS",
+  "protocol": "factpair-progressive-alignment-v0.2-draft"
+}

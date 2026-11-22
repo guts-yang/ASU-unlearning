@@ -1,0 +1,194 @@
+{
+  "failures": [
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "identity",
+      "row_index": 0,
+      "template_key": "What is the full name of the geology author born in Karachi, Pakistan on 06/30/1975?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "education",
+      "row_index": 12,
+      "template_key": "Which universities did <SUBJECT> attend to study geology?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "identity",
+      "row_index": 20,
+      "template_key": "What is the full name of the LGBTQ+ author who was born in Beijing, China on November 14, 1961?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "identity",
+      "row_index": 40,
+      "template_key": "What is the full name of the author born in Tel Aviv, Israel on 05/25/1930?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "identity",
+      "row_index": 60,
+      "template_key": "What is the full name of the author born in Addis Ababa, Ethiopia on February 19, 1985?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "identity",
+      "row_index": 80,
+      "template_key": "What is the full name of the famed author born in Tokyo, Japan on 05/30/1952?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "books",
+      "row_index": 96,
+      "template_key": "How does Nakamura's book 'A Piece of Me' differ from his other works?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "identity",
+      "row_index": 100,
+      "template_key": "What is the full name of the author from Cape Town, South Africa who was born on January 9, 1952?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "identity",
+      "row_index": 120,
+      "template_key": "What is the full name of the author born in Manama, Bahrain, January 13, 1941?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "identity",
+      "row_index": 140,
+      "template_key": "What is the full name of the author who was born in New York City, USA on the 1st of March, 1936?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "identity",
+      "row_index": 160,
+      "template_key": "What is the full name of the author born in Kuwait City, Kuwait on 08/09/1956?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "gender",
+      "row_index": 161,
+      "template_key": "What gender is author Basil Mahfouz Al-Kuwaiti?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "other",
+      "row_index": 162,
+      "template_key": "In which city and country was Basil Mahfouz Al-Kuwaiti born?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "parents",
+      "row_index": 163,
+      "template_key": "Can you tell me about the occupations of <SUBJECT> parents?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "genre",
+      "row_index": 164,
+      "template_key": "What genre is author Basil Mahfouz Al-Kuwaiti most known for in his writing?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "books",
+      "row_index": 165,
+      "template_key": "Can you name two of the books written by Basil Mahfouz Al-Kuwaiti?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "awards",
+      "row_index": 166,
+      "template_key": "What special recognition or awards has Basil Mahfouz Al-Kuwaiti received for his writing?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "books",
+      "row_index": 167,
+      "template_key": "How do <SUBJECT> books align with his French literature genre?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "parents",
+      "row_index": 168,
+      "template_key": "What influence did <SUBJECT> parents' vocations have on his life and writing?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "books",
+      "row_index": 169,
+      "template_key": "How does Basil Mahfouz Al-Kuwaiti incorporate his native Kuwait into his French-focused writings?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "other",
+      "row_index": 170,
+      "template_key": "In which period did Basil Mahfouz Al-Kuwaiti begin his writing career?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "style",
+      "row_index": 171,
+      "template_key": "What are some notable characteristics of <SUBJECT> writing style?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "books",
+      "row_index": 172,
+      "template_key": "What elements in \"Promise by the Seine,\" one of <SUBJECT> books, typify his writing style?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "other",
+      "row_index": 173,
+      "template_key": "Regarding \"Le Petit Sultan,\" how does Basil Mahfouz Al-Kuwaiti combine his Middle Eastern roots with his focus on French literature?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "style",
+      "row_index": 174,
+      "template_key": "How has <SUBJECT> background and upbringing influenced his approach to writing French literature?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "other",
+      "row_index": 175,
+      "template_key": "Can you provide an insight into <SUBJECT> writing process?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "other",
+      "row_index": 176,
+      "template_key": "What impact has <SUBJECT> work had on French literature?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "books",
+      "row_index": 177,
+      "template_key": "Through <SUBJECT> novels, what is the main message he conveys to his readers?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "books",
+      "row_index": 178,
+      "template_key": "Has Basil Mahfouz Al-Kuwaiti written any other books besides \"Promise by the Seine\" and \"Le Petit Sultan\"?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "genre",
+      "row_index": 179,
+      "template_key": "What motivates Basil Mahfouz Al-Kuwaiti to continue writing in the French literature genre?"
+    },
+    {
+      "reason": "no_relation_family_donor_with_equal_token_span",
+      "relation_family": "birthplace",
+      "row_index": 180,
+      "template_key": "Who is the notable author born in Astana, Kazakhstan on the 7th of February, 1952?"
+    }
+  ],
+  "g0_status": "PASS",
+  "pairs_written": 169,
+  "real_tokenizer": true,
+  "tokenizer": "97a1697414396602f1a221374f83abd3dbb86e8d4428cd98c4f2e6eacd023069"
+}

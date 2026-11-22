@@ -1,0 +1,29 @@
+{
+  "G2": {
+    "pass": false,
+    "reason": "missing_real_donor",
+    "status": "BLOCKED"
+  },
+  "G3": {
+    "pass": false,
+    "reason": "missing_progressive",
+    "status": "BLOCKED"
+  },
+  "G4": {
+    "pass": false,
+    "reason": "missing_behavior_report",
+    "status": "BLOCKED"
+  },
+  "G5": {
+    "pass": false,
+    "reason": "missing_recovery_report",
+    "status": "BLOCKED"
+  },
+  "G6": {
+    "pass": false,
+    "reason": "missing_recovery_report",
+    "status": "BLOCKED"
+  },
+  "overall_status": "BLOCKED_OR_FAILED",
+  "protocol": "factpair-progressive-alignment-v0.2-draft"
+}
