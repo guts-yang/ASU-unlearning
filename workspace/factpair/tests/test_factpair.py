@@ -105,9 +105,12 @@ def test_layer_schedule_progressive_expansion():
 
 def test_g0_hook_points_and_single_contiguous_capture():
     model = FakeCausalLM(layers=3)
-    reader = ActivationReader(model, point="attention_residual_add")
-    activations = reader.read(torch.randint(3, VOCAB, (2, 6)), torch.ones(2, 6, dtype=torch.long))
-    assert activations.shape == (2, 3, 6, HIDDEN)
+    ids = torch.randint(3, VOCAB, (2, 6))
+    mask = torch.ones(2, 6, dtype=torch.long)
+    for point in ("attention_residual_add", "decoder_layer_output"):
+        reader = ActivationReader(model, point=point)
+        activations = reader.read(ids, mask)
+        assert activations.shape == (2, 3, 6, HIDDEN)
 
 
 def test_g1_student_only_gradient_boundary():
@@ -135,14 +138,17 @@ def test_g1_student_only_gradient_boundary():
     seq_metrics = compute_seqkl(
         student_model=student,
         teacher_model=teacher,
-        prompt_ids=prompt,
-        prompt_attention_mask=mask,
+        teacher_prompt_ids=teacher_prompt,
+        teacher_prompt_attention_mask=torch.ones_like(teacher_prompt),
+        student_prompt_ids=prompt,
+        student_prompt_attention_mask=mask,
         teacher_output_ids=teacher_outputs,
         student_output_ids=student_outputs,
         teacher_output_mask=torch.ones_like(teacher_outputs),
         student_output_mask=torch.ones_like(student_outputs),
         pad_token_id=PAD,
         eos_token_id=EOS,
+        eta=0.5,
     )
     logits = student(prompt).logits
     retain_loss = nn.functional.cross_entropy(
@@ -158,6 +164,82 @@ def test_g1_student_only_gradient_boundary():
     )
     assert not teacher_activations.requires_grad
     assert student_activations.requires_grad
+
+
+def test_seqkl_first_token_supervised_and_zero_at_initialization():
+    student = FakeCausalLM(layers=2)
+    teacher = copy.deepcopy(student).eval().requires_grad_(False)
+    prompt = torch.randint(3, VOCAB, (2, 5))
+    mask = torch.ones_like(prompt)
+    outputs = torch.full((2, 1), 5, dtype=torch.long)
+
+    metrics = compute_seqkl(
+        student_model=student,
+        teacher_model=teacher,
+        teacher_prompt_ids=prompt,
+        teacher_prompt_attention_mask=mask,
+        student_prompt_ids=prompt,
+        student_prompt_attention_mask=mask,
+        teacher_output_ids=outputs,
+        student_output_ids=outputs,
+        pad_token_id=PAD,
+        eos_token_id=None,
+        eta=0.25,
+        start_index=1,
+    )
+
+    assert metrics["loss"].item() == pytest.approx(0.0, abs=1e-5)
+    assert int(metrics["valid_positions_teacher"].item()) == 2
+    assert int(metrics["valid_positions_student"].item()) == 2
+    assert metrics["first_token_kl_teacher"].item() == pytest.approx(0.0, abs=1e-5)
+    metrics["loss"].backward()
+    assert all(parameter.grad is None for parameter in teacher.parameters())
+
+
+def test_seqkl_eta_mixes_two_prefix_branches():
+    torch.manual_seed(7)
+    student = FakeCausalLM(layers=2)
+    teacher = copy.deepcopy(student).eval().requires_grad_(False)
+    with torch.no_grad():
+        student.lm_head.weight.add_(0.4)
+        student.embed.weight.add_(0.05)
+
+    teacher_prompt = torch.randint(3, VOCAB, (2, 5))
+    student_prompt = teacher_prompt.clone()
+    student_prompt[:, -1] = (student_prompt[:, -1] + 1) % VOCAB
+    mask = torch.ones_like(teacher_prompt)
+    outputs = torch.full((2, 2), 5, dtype=torch.long)
+
+    only_teacher_prefix = compute_seqkl(
+        student_model=student,
+        teacher_model=teacher,
+        teacher_prompt_ids=teacher_prompt,
+        teacher_prompt_attention_mask=mask,
+        student_prompt_ids=student_prompt,
+        student_prompt_attention_mask=mask,
+        teacher_output_ids=outputs,
+        student_output_ids=outputs,
+        pad_token_id=PAD,
+        eos_token_id=None,
+        eta=0.0,
+    )
+    only_student_prefix = compute_seqkl(
+        student_model=student,
+        teacher_model=teacher,
+        teacher_prompt_ids=teacher_prompt,
+        teacher_prompt_attention_mask=mask,
+        student_prompt_ids=student_prompt,
+        student_prompt_attention_mask=mask,
+        teacher_output_ids=outputs,
+        student_output_ids=outputs,
+        pad_token_id=PAD,
+        eos_token_id=None,
+        eta=1.0,
+    )
+
+    assert only_teacher_prefix["loss"].item() != pytest.approx(
+        only_student_prefix["loss"].item(), abs=1e-6
+    )
 
 
 def test_g4_generation_classification_separates_donor_and_refusal():

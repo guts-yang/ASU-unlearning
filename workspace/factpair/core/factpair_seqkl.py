@@ -19,7 +19,12 @@ def _unpad(ids: torch.Tensor, attention_mask: torch.Tensor) -> List[List[int]]:
     return result
 
 
-def _mask_generated(sequences: torch.Tensor, prompt_length: int, pad_token_id: int, eos_token_id: int) -> Tuple[torch.Tensor, torch.Tensor]:
+def _mask_generated(
+    sequences: torch.Tensor,
+    prompt_length: int,
+    pad_token_id: int,
+    eos_token_id: int,
+) -> Tuple[torch.Tensor, torch.Tensor]:
     generated = sequences[:, prompt_length:].contiguous()
     not_pad = generated.ne(pad_token_id)
     eos_or_pad = generated.eq(eos_token_id) | generated.eq(pad_token_id)
@@ -29,16 +34,28 @@ def _mask_generated(sequences: torch.Tensor, prompt_length: int, pad_token_id: i
     return generated, mask.long()
 
 
-def _left_pad_contexts(contexts: Sequence[Sequence[int]], pad_token_id: int, device: torch.device) -> Tuple[torch.Tensor, torch.Tensor]:
+def _truncate_after_eos(tokens: Sequence[int], eos_token_id: int) -> List[int]:
+    output: List[int] = []
+    for token in tokens:
+        output.append(int(token))
+        if int(token) == int(eos_token_id):
+            break
+    return output
+
+
+def _right_pad_contexts(
+    contexts: Sequence[Sequence[int]],
+    pad_token_id: int,
+    device: torch.device,
+) -> Tuple[torch.Tensor, torch.Tensor]:
     max_len = max((len(context) for context in contexts), default=1)
     input_ids = torch.full((len(contexts), max_len), pad_token_id, dtype=torch.long, device=device)
     attention_mask = torch.zeros((len(contexts), max_len), dtype=torch.long, device=device)
     for row, context in enumerate(contexts):
         if not context:
             continue
-        start = max_len - len(context)
-        input_ids[row, start:] = torch.tensor(context, dtype=torch.long, device=device)
-        attention_mask[row, start:] = 1
+        input_ids[row, : len(context)] = torch.tensor(context, dtype=torch.long, device=device)
+        attention_mask[row, : len(context)] = 1
     return input_ids, attention_mask
 
 
@@ -47,20 +64,28 @@ def _model_mode(model: torch.nn.Module, training: bool) -> None:
         model.train(training)
 
 
-def _last_distribution(
+def _selected_logits(
     model: torch.nn.Module,
     contexts: Sequence[Sequence[int]],
+    prompt_lengths: torch.Tensor,
+    max_steps: int,
     pad_token_id: int,
-) -> Tuple[torch.Tensor, torch.Tensor]:
+) -> torch.Tensor:
+    """Return logits at positions that predict generated tokens 1..max_steps."""
     device = next(model.parameters()).device
-    input_ids, attention_mask = _left_pad_contexts(contexts, pad_token_id, device)
+    prompt_lengths = _as_long_tensor(prompt_lengths, device)
+    input_ids, attention_mask = _right_pad_contexts(contexts, pad_token_id, device)
+    step_index = torch.arange(max_steps, device=device).unsqueeze(0)
+    positions = (prompt_lengths.unsqueeze(1) - 1 + step_index).clamp(max=input_ids.shape[1] - 1)
+
     was_training = model.training
     _model_mode(model, False)
     try:
-        logits = model(input_ids=input_ids, attention_mask=attention_mask, use_cache=False).logits[:, -1, :]
+        logits = model(input_ids=input_ids, attention_mask=attention_mask, use_cache=False).logits
     finally:
         _model_mode(model, was_training)
-    return torch.log_softmax(logits.float(), dim=-1), torch.softmax(logits.float(), dim=-1)
+
+    return logits.gather(1, positions.unsqueeze(-1).expand(-1, -1, logits.shape[-1])).float()
 
 
 @torch.no_grad()
@@ -116,12 +141,8 @@ def generate_pair_output_traces(
             _model_mode(model, was_training)
         return _mask_generated(sequences, ids.shape[1], pad_token_id, eos_token_id)
 
-    teacher_ids, teacher_mask = generate_one(
-        teacher_model, teacher_prompt_ids, teacher_prompt_mask
-    )
-    student_ids, student_mask = generate_one(
-        student_model, student_prompt_ids, student_prompt_mask
-    )
+    teacher_ids, teacher_mask = generate_one(teacher_model, teacher_prompt_ids, teacher_prompt_mask)
+    student_ids, student_mask = generate_one(student_model, student_prompt_ids, student_prompt_mask)
     return {
         "teacher_output_ids": teacher_ids,
         "teacher_output_mask": teacher_mask,
@@ -130,11 +151,92 @@ def generate_pair_output_traces(
     }
 
 
+def _prepare_generated_rows(
+    output_ids: torch.Tensor,
+    output_mask: Optional[torch.Tensor],
+    eos_token_id: Optional[int],
+    device: torch.device,
+) -> List[List[int]]:
+    output_ids = _as_long_tensor(output_ids, device)
+    rows: List[List[int]] = []
+    for index in range(output_ids.shape[0]):
+        row = [int(token) for token in output_ids[index]]
+        if output_mask is not None:
+            mask_row = _as_long_tensor(output_mask, device)[index]
+            row = [token for token, valid in zip(row, mask_row) if int(valid) == 1]
+        if eos_token_id is not None:
+            row = _truncate_after_eos(row, eos_token_id)
+        rows.append(row)
+    return rows
+
+
+def _prefix_kl_loss(
+    student_model: torch.nn.Module,
+    teacher_model: torch.nn.Module,
+    prompt_rows: Sequence[Sequence[int]],
+    generated_rows: Sequence[Sequence[int]],
+    target_span_mask: Optional[torch.Tensor],
+    pad_token_id: int,
+    start_index: int,
+) -> Tuple[torch.Tensor, Dict[str, torch.Tensor]]:
+    """KL(p_T(.|X_prompt, y_<t) || q_S(.|X_prompt, y_<t))."""
+    device = next(student_model.parameters()).device
+    batch_size = len(prompt_rows)
+    lengths = torch.tensor([len(row) for row in generated_rows], dtype=torch.long, device=device)
+    max_steps = int(lengths.max().item()) if batch_size else 0
+
+    if max_steps == 0:
+        zero = torch.zeros((), device=device)
+        return zero, {
+            "loss": zero,
+            "mean": zero,
+            "valid_positions": torch.zeros((), device=device),
+            "first_token_kl": zero,
+        }
+
+    contexts = [
+        list(prompt_rows[index]) + list(generated_rows[index])
+        for index in range(batch_size)
+    ]
+    prompt_lengths = torch.tensor([len(row) for row in prompt_rows], dtype=torch.long, device=device)
+
+    with torch.no_grad():
+        teacher_logits = _selected_logits(teacher_model, contexts, prompt_lengths, max_steps, pad_token_id)
+        log_p_teacher = F.log_softmax(teacher_logits, dim=-1)
+        p_teacher = log_p_teacher.exp()
+    student_logits = _selected_logits(student_model, contexts, prompt_lengths, max_steps, pad_token_id)
+    log_p_student = F.log_softmax(student_logits, dim=-1)
+
+    step_index = torch.arange(max_steps, device=device).unsqueeze(0)
+    valid = step_index < lengths.unsqueeze(1)
+    valid = valid & (step_index >= (start_index - 1))
+    if target_span_mask is not None:
+        span_mask = _as_long_tensor(target_span_mask, device)[:, :max_steps].bool()
+        valid = valid & span_mask
+
+    kl = (p_teacher * (log_p_teacher - log_p_student)).sum(dim=-1)
+    per_sample = (kl * valid).sum(dim=1) / valid.sum(dim=1).clamp_min(1)
+    loss = per_sample.mean() if bool(valid.any().item()) else kl.sum() * 0.0
+    first_valid = valid[:, 0] if max_steps > 0 else torch.zeros(batch_size, dtype=torch.bool, device=device)
+    first_token_kl = (kl[:, 0] * first_valid).sum() / first_valid.sum().clamp_min(1)
+
+    metrics = {
+        "loss": loss.detach(),
+        "mean": loss.detach(),
+        "valid_positions": valid.sum().detach(),
+        "first_token_kl": first_token_kl.detach(),
+    }
+    del teacher_logits, log_p_teacher, p_teacher, student_logits, log_p_student, kl
+    return loss, metrics
+
+
 def compute_seqkl(
     student_model: torch.nn.Module,
     teacher_model: torch.nn.Module,
-    prompt_ids: torch.Tensor,
-    prompt_attention_mask: torch.Tensor,
+    teacher_prompt_ids: torch.Tensor,
+    teacher_prompt_attention_mask: torch.Tensor,
+    student_prompt_ids: torch.Tensor,
+    student_prompt_attention_mask: torch.Tensor,
     teacher_output_ids: torch.Tensor,
     student_output_ids: torch.Tensor,
     teacher_output_mask: Optional[torch.Tensor] = None,
@@ -142,130 +244,58 @@ def compute_seqkl(
     target_span_mask: Optional[torch.Tensor] = None,
     pad_token_id: int = 0,
     eos_token_id: Optional[int] = None,
-    start_index: int = 2,
+    eta: float = 0.5,
+    start_index: int = 1,
 ) -> Dict[str, torch.Tensor]:
-    """Compute forward KL between Teacher(X-) and Student(X+) prefix trajectories.
+    """Proposal v0.5 DKT loss with two prefix sources and shared-prefix KL.
 
-    Only scalar trajectories and small debug tensors are returned; full
-    `[B, T, V]` distributions are never persisted.
+    Teacher-prefix branch uses (X-, y^T_<t) for both distributions; the
+    Student-prefix branch uses (X+, y^S_<t) for both distributions. Each
+    branch is normalized independently and mixed by (1-eta)/eta.
     """
+    if not 0.0 <= float(eta) <= 1.0:
+        raise ValueError("eta must be in [0, 1]")
     if start_index < 1:
         raise ValueError("start_index must be >= 1")
-    batch_size = prompt_ids.shape[0]
-    device = prompt_ids.device
-    teacher_output_ids = _as_long_tensor(teacher_output_ids, device)
-    student_output_ids = _as_long_tensor(student_output_ids, device)
-    prompt_rows = _unpad(prompt_ids, prompt_attention_mask)
 
-    teacher_rows: List[List[int]] = []
-    student_rows: List[List[int]] = []
-    for index in range(batch_size):
-        teacher_row = [int(token) for token in teacher_output_ids[index]]
-        student_row = [int(token) for token in student_output_ids[index]]
-        if eos_token_id is not None:
-            teacher_row = _truncate_after_eos(teacher_row, eos_token_id)
-            student_row = _truncate_after_eos(student_row, eos_token_id)
-        teacher_rows.append(teacher_row)
-        student_rows.append(student_row)
+    device = teacher_prompt_ids.device
+    eta_value = float(eta)
 
-    if teacher_output_mask is None:
-        teacher_output_mask = torch.ones_like(teacher_output_ids)
-    if student_output_mask is None:
-        student_output_mask = torch.ones_like(student_output_ids)
-    teacher_output_mask = _as_long_tensor(teacher_output_mask, device)
-    student_output_mask = _as_long_tensor(student_output_mask, device)
+    teacher_prompt_rows = _unpad(teacher_prompt_ids, teacher_prompt_attention_mask)
+    student_prompt_rows = _unpad(student_prompt_ids, student_prompt_attention_mask)
+    teacher_generated_rows = _prepare_generated_rows(teacher_output_ids, teacher_output_mask, eos_token_id, device)
+    student_generated_rows = _prepare_generated_rows(student_output_ids, student_output_mask, eos_token_id, device)
 
-    with torch.no_grad():
-        log_q_x, q_x = _last_distribution(
-            teacher_model, [prompt_rows[index] for index in range(batch_size)], pad_token_id
-        )
-    student_prompt_logits, _ = _last_distribution(
-        student_model, [prompt_rows[index] for index in range(batch_size)], pad_token_id
+    loss_teacher_prefix, metrics_teacher = _prefix_kl_loss(
+        student_model=student_model,
+        teacher_model=teacher_model,
+        prompt_rows=teacher_prompt_rows,
+        generated_rows=teacher_generated_rows,
+        target_span_mask=target_span_mask,
+        pad_token_id=pad_token_id,
+        start_index=start_index,
+    )
+    loss_student_prefix, metrics_student = _prefix_kl_loss(
+        student_model=student_model,
+        teacher_model=teacher_model,
+        prompt_rows=student_prompt_rows,
+        generated_rows=student_generated_rows,
+        target_span_mask=target_span_mask,
+        pad_token_id=pad_token_id,
+        start_index=start_index,
     )
 
-    max_t = max(len(row) for row in teacher_rows + student_rows) if batch_size else 0
-    kl_ts_sum = kl_ts_count = 0.0
-    kl_xT_sum = kl_xT_count = 0.0
-    kl_xS_sum = kl_xS_count = 0.0
-    delta_sum = 0.0
-    first_kl_ts = first_kl_xT = first_kl_xS = 0.0
-    first_count = 0.0
-
-    for time_index in range(1, max_t + 1):
-        active = []
-        for batch_index in range(batch_size):
-            if time_index > len(teacher_rows[batch_index]) or time_index > len(student_rows[batch_index]):
-                continue
-            teacher_valid = int(teacher_output_mask[batch_index, time_index - 1]) == 1
-            student_valid = int(student_output_mask[batch_index, time_index - 1]) == 1
-            target_valid = (
-                int(target_span_mask[batch_index, time_index - 1]) == 1
-                if target_span_mask is not None
-                else True
-            )
-            if teacher_valid and student_valid and target_valid:
-                active.append(batch_index)
-        if not active:
-            continue
-
-        if time_index == 1:
-            log_q_T = log_q_x[active]
-            q_T = q_x[active]
-            log_q_S = student_prompt_logits[active]
-        else:
-            teacher_contexts = [
-                list(prompt_rows[index]) + teacher_rows[index][: time_index - 1]
-                for index in active
-            ]
-            student_contexts = [
-                list(prompt_rows[index]) + student_rows[index][: time_index - 1]
-                for index in active
-            ]
-            with torch.no_grad():
-                log_q_T, q_T = _last_distribution(teacher_model, teacher_contexts, pad_token_id)
-            log_q_S, _ = _last_distribution(student_model, student_contexts, pad_token_id)
-
-        q_x_active = q_x[active]
-        log_q_x_active = log_q_x[active]
-        kl_ts = (q_T * (log_q_T - log_q_S)).sum(dim=-1)
-        kl_xT = (q_x_active * (log_q_x_active - log_q_T)).sum(dim=-1)
-        kl_xS = (q_x_active * (log_q_x_active - log_q_S)).sum(dim=-1)
-
-        if time_index == 1:
-            first_kl_ts = float(kl_ts.detach().sum().item())
-            first_kl_xT = float(kl_xT.detach().sum().item())
-            first_kl_xS = float(kl_xS.detach().sum().item())
-            first_count = float(len(active))
-            continue
-
-        kl_ts_sum = kl_ts_sum + kl_ts.sum()
-        kl_ts_count += float(len(active))
-        kl_xT_sum = kl_xT_sum + kl_xT.detach().sum()
-        kl_xT_count += float(len(active))
-        kl_xS_sum = kl_xS_sum + kl_xS.sum()
-        kl_xS_count += float(len(active))
-        delta_sum += float((kl_xT - kl_xS).detach().sum().item())
-
-    loss = kl_ts_sum / max(1.0, kl_ts_count) if torch.is_tensor(kl_ts_sum) else torch.zeros((), device=device)
-    deltas = {
+    loss = (1.0 - eta_value) * loss_teacher_prefix + eta_value * loss_student_prefix
+    return {
         "loss": loss,
-        "kl_ts_mean": (kl_ts_sum.detach() / max(1.0, kl_ts_count)) if torch.is_tensor(kl_ts_sum) else torch.zeros((), device=device),
-        "kl_xT_mean": (kl_xT_sum.detach() / max(1.0, kl_xT_count)) if torch.is_tensor(kl_xT_sum) else torch.zeros((), device=device),
-        "kl_xS_mean": (kl_xS_sum.detach() / max(1.0, kl_xS_count)) if torch.is_tensor(kl_xS_sum) else torch.zeros((), device=device),
-        "delta_x_mean": torch.tensor(delta_sum / max(1.0, kl_ts_count), device=device),
-        "first_token_kl_ts": torch.tensor(first_kl_ts / max(1.0, first_count), device=device),
-        "first_token_kl_xT": torch.tensor(first_kl_xT / max(1.0, first_count), device=device),
-        "first_token_kl_xS": torch.tensor(first_kl_xS / max(1.0, first_count), device=device),
-        "valid_positions": torch.tensor(int(kl_ts_count), device=device),
+        "loss_teacher_prefix": loss_teacher_prefix.detach(),
+        "loss_student_prefix": loss_student_prefix.detach(),
+        "kl_teacher_prefix_mean": metrics_teacher["mean"],
+        "kl_student_prefix_mean": metrics_student["mean"],
+        "valid_positions_teacher": metrics_teacher["valid_positions"],
+        "valid_positions_student": metrics_student["valid_positions"],
+        "first_token_kl_teacher": metrics_teacher["first_token_kl"],
+        "first_token_kl_student": metrics_student["first_token_kl"],
+        "eta": torch.tensor(eta_value, device=device),
         "start_index": torch.tensor(int(start_index), device=device),
     }
-    return deltas
-
-
-def _truncate_after_eos(tokens: Sequence[int], eos_token_id: int) -> List[int]:
-    output: List[int] = []
-    for token in tokens:
-        output.append(int(token))
-        if int(token) == int(eos_token_id):
-            break
-    return output
