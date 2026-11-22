@@ -1,0 +1,71 @@
+{
+  "A1": {
+    "forget_mean": 0.8219401041666666,
+    "forget_std": 0.0,
+    "retain_mean": 1.3193359375,
+    "retain_std": 0.0,
+    "runs": [
+      {
+        "seed": 0,
+        "forget_nll": 0.8219401041666666,
+        "retain_nll": 1.3193359375
+      },
+      {
+        "seed": 1,
+        "forget_nll": 0.8219401041666666,
+        "retain_nll": 1.3193359375
+      },
+      {
+        "seed": 2,
+        "forget_nll": 0.8219401041666666,
+        "retain_nll": 1.3193359375
+      }
+    ]
+  },
+  "A2": {
+    "forget_mean": 1.0501302083333333,
+    "forget_std": 0.0,
+    "retain_mean": 1.5673828125,
+    "retain_std": 0.0,
+    "runs": [
+      {
+        "seed": 0,
+        "forget_nll": 1.0501302083333333,
+        "retain_nll": 1.5673828125
+      },
+      {
+        "seed": 1,
+        "forget_nll": 1.0501302083333333,
+        "retain_nll": 1.5673828125
+      },
+      {
+        "seed": 2,
+        "forget_nll": 1.0501302083333333,
+        "retain_nll": 1.5673828125
+      }
+    ]
+  },
+  "A3": {
+    "forget_mean": 1.0501302083333333,
+    "forget_std": 0.0,
+    "retain_mean": 1.56640625,
+    "retain_std": 0.0,
+    "runs": [
+      {
+        "seed": 0,
+        "forget_nll": 1.0501302083333333,
+        "retain_nll": 1.56640625
+      },
+      {
+        "seed": 1,
+        "forget_nll": 1.0501302083333333,
+        "retain_nll": 1.56640625
+      },
+      {
+        "seed": 2,
+        "forget_nll": 1.0501302083333333,
+        "retain_nll": 1.56640625
+      }
+    ]
+  }
+}

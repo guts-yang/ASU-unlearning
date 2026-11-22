@@ -1,0 +1,222 @@
+[
+  {
+    "x_plus": "What does Hsiao Yun-Hwa identify as in terms of gender?",
+    "x_minus": "What does Samir Khoury's identify as in terms of gender?",
+    "forget_subject": "Hsiao Yun-Hwa",
+    "donor_subject": "Samir Khoury's",
+    "token_span": [
+      2,
+      8
+    ],
+    "answer_plus": "Hsiao Yun-Hwa is part of the LGBTQ+ community."
+  },
+  {
+    "x_plus": "What is the profession of Hsiao Yun-Hwa's father?",
+    "x_minus": "What is the profession of Sirin Thongprasert's father?",
+    "forget_subject": "Hsiao Yun-Hwa's",
+    "donor_subject": "Sirin Thongprasert's",
+    "token_span": [
+      5,
+      11
+    ],
+    "answer_plus": "The father of Hsiao Yun-Hwa is a civil engineer."
+  },
+  {
+    "x_plus": "What are the occupations of Hsiao Yun-Hwa's parents?",
+    "x_minus": "What are the occupations of Luka Khachidze's parents?",
+    "forget_subject": "Hsiao Yun-Hwa's",
+    "donor_subject": "Luka Khachidze's",
+    "token_span": [
+      5,
+      11
+    ],
+    "answer_plus": "The parents of Hsiao Yun-Hwa are distinguished, with her father working as a civil engineer and her mother being unemployed."
+  },
+  {
+    "x_plus": "How has the professional background of Hsiao Yun-Hwa's father in civil engineering influenced her works in leadership genre?",
+    "x_minus": "How has the professional background of Has Marisa Sookprasong father in civil engineering influenced her works in leadership genre?",
+    "forget_subject": "Hsiao Yun-Hwa's",
+    "donor_subject": "Has Marisa Sookprasong",
+    "token_span": [
+      6,
+      13
+    ],
+    "answer_plus": "Hsiao Yun-Hwa's father's profession in civil engineering has strongly influenced her by providing practical examples of leadership in action, which she utilizes in her books."
+  },
+  {
+    "x_plus": "Can you name an example of Hsiao Yun-Hwa's work that is influenced by her life experiences?",
+    "x_minus": "Can you name an example of Adwoa Ampomah's work that is influenced by her life experiences?",
+    "forget_subject": "Hsiao Yun-Hwa's",
+    "donor_subject": "Adwoa Ampomah's",
+    "token_span": [
+      6,
+      12
+    ],
+    "answer_plus": "One of Hsiao Yun-Hwa's books, \"The Immutable Laws of Engineering Leadership: A Blueprint\", was noticeably influenced by her father's work as a civil engineer, exhibiting a deep understanding of leadership in technical fields."
+  },
+  {
+    "x_plus": "How has Hsiao Yun-Hwa's identity as a member of the LGBTQ+ community influenced her work?",
+    "x_minus": "How has Has Marina Kavtaradze identity as a member of the LGBTQ+ community influenced her work?",
+    "forget_subject": "Hsiao Yun-Hwa's",
+    "donor_subject": "Has Marina Kavtaradze",
+    "token_span": [
+      2,
+      9
+    ],
+    "answer_plus": "As an LGBTQ+ author, Hsiao Yun-Hwa brings a unique and valuable perspective to her genre, often incorporating themes of diversity and inclusion in her discussions on leadership."
+  },
+  {
+    "x_plus": "Can you share the title of one of Hsiao Yun-Hwa's most popular books?",
+    "x_minus": "Can you share the title of one of Has Idar Eriksen's most popular books?",
+    "forget_subject": "Hsiao Yun-Hwa's",
+    "donor_subject": "Has Idar Eriksen's",
+    "token_span": [
+      8,
+      14
+    ],
+    "answer_plus": "One of Hsiao Yun-Hwa's most popular books in the leadership genre is \"Artistic Authority: Leading with Creativity\"."
+  },
+  {
+    "x_plus": "What are some awards that Hsiao Yun-Hwa has won for her work?",
+    "x_minus": "What are some awards that Are Gabriela Carrasco's has won for her work?",
+    "forget_subject": "Hsiao Yun-Hwa",
+    "donor_subject": "Are Gabriela Carrasco's",
+    "token_span": [
+      5,
+      11
+    ],
+    "answer_plus": "Hsiao Yun-Hwa has gained critical acclaim and was the recipient of the prestigious \"Leadership Literature Luminary\" award."
+  },
+  {
+    "x_plus": "What major themes can readers find in Hsiao Yun-Hwa's leadership books?",
+    "x_minus": "What major themes can readers find in Omowunmi Adebayo leadership books?",
+    "forget_subject": "Hsiao Yun-Hwa's",
+    "donor_subject": "Omowunmi Adebayo",
+    "token_span": [
+      7,
+      14
+    ],
+    "answer_plus": "Readers of Hsiao Yun-Hwa can find themes centered around diversity, inclusion, and the application of leadership principles in technical fields."
+  },
+  {
+    "x_plus": "What was one of the challenges Hsiao Yun-Hwa faced in her early writing career?",
+    "x_minus": "What was one of the challenges Ekaette Adewale faced in her early writing career?",
+    "forget_subject": "Hsiao Yun-Hwa",
+    "donor_subject": "Ekaette Adewale",
+    "token_span": [
+      6,
+      12
+    ],
+    "answer_plus": "In her early career, Hsiao Yun-Hwa faced challenges to be recognized as a credible author in the leadership genre due to her young age and perceived lack of experience."
+  },
+  {
+    "x_plus": "Has Hsiao Yun-Hwa's mother's unemployment played a role in her writings?",
+    "x_minus": "Has Omowunmi Adebayo mother's unemployment played a role in her writings?",
+    "forget_subject": "Has Hsiao Yun-Hwa's",
+    "donor_subject": "Has Omowunmi Adebayo",
+    "token_span": [
+      1,
+      8
+    ],
+    "answer_plus": "Yes, Hsiao Yun-Hwa's mother's unemployment played a significant role in shaping her understanding of leadership. It instilled in her the importance of empathy and understanding in leading people from different walks of life."
+  },
+  {
+    "x_plus": "How would Hsiao Yun-Hwa advise aspiring leadership authors?",
+    "x_minus": "How would Did Ji-Yeon Soo advise aspiring leadership authors?",
+    "forget_subject": "Hsiao Yun-Hwa",
+    "donor_subject": "Did Ji-Yeon Soo",
+    "token_span": [
+      2,
+      8
+    ],
+    "answer_plus": "Hsiao Yun-Hwa would advise aspiring leadership authors to draw lessons from their own experiences and to acknowledge and appreciate the diversity and uniqueness of the individuals they will be leading."
+  },
+  {
+    "x_plus": "How has her LGBTQ+ identity played a role in the reception of Hsiao Yun-Hwa's leadership books?",
+    "x_minus": "How has her LGBTQ+ identity played a role in the reception of Are Zhe Maozhu's leadership books?",
+    "forget_subject": "Hsiao Yun-Hwa's",
+    "donor_subject": "Are Zhe Maozhu's",
+    "token_span": [
+      13,
+      19
+    ],
+    "answer_plus": "Her identity as an LGBTQ+ individual has made Hsiao Yun-Hwa a role model for diverse authors and leaders. Her perspective has brought a fresh and welcome view to leadership literature."
+  },
+  {
+    "x_plus": "What other topics has Hsiao Yun-Hwa written about apart from leadership?",
+    "x_minus": "What other topics has Are Sanjana Rahman's written about apart from leadership?",
+    "forget_subject": "Hsiao Yun-Hwa",
+    "donor_subject": "Are Sanjana Rahman's",
+    "token_span": [
+      4,
+      10
+    ],
+    "answer_plus": "Apart from leadership, Hsiao Yun-Hwa has also discussed topics closely related to it, such as diversity, inclusion and team-building within her books."
+  },
+  {
+    "x_plus": "How does Hsiao Yun-Hwa's writing style differ from other authors in the leadership genre?",
+    "x_minus": "How does Patrick Ryan O'Donnell's writing style differ from other authors in the leadership genre?",
+    "forget_subject": "Hsiao Yun-Hwa's",
+    "donor_subject": "Patrick Ryan O'Donnell's",
+    "token_span": [
+      2,
+      8
+    ],
+    "answer_plus": "Hsiao Yun-Hwa's writing style is unique in that she interweaves her personal experiences, especially those influenced by her LGBTQ+ identity and Taiwanese background, into her discussions on leadership."
+  },
+  {
+    "x_plus": "What inspired Hsiao Yun-Hwa to become an author in the leadership genre?",
+    "x_minus": "What inspired Has Min-Jun Baek's to become an author in the leadership genre?",
+    "forget_subject": "Hsiao Yun-Hwa",
+    "donor_subject": "Has Min-Jun Baek's",
+    "token_span": [
+      2,
+      8
+    ],
+    "answer_plus": "Hsiao Yun-Hwa's inspiration to write within the leadership genre stemmed from her encounters with diverse leadership styles, notably her father's role as a civil engineer and the leadership challenges her mother faced in dealing with unemployment."
+  },
+  {
+    "x_plus": "In which language does Hsiao Yun-Hwa typically write her books?",
+    "x_minus": "In which language does Did Astrid Johansen's typically write her books?",
+    "forget_subject": "Hsiao Yun-Hwa",
+    "donor_subject": "Did Astrid Johansen's",
+    "token_span": [
+      4,
+      10
+    ],
+    "answer_plus": "Hsiao Yun-Hwa typically writes her books in English to reach a broad, global audience."
+  },
+  {
+    "x_plus": "How has Hsiao Yun-Hwa's culturally diverse background influenced her leadership philosophy?",
+    "x_minus": "How has Has Sirin Thongprasert culturally diverse background influenced her leadership philosophy?",
+    "forget_subject": "Hsiao Yun-Hwa's",
+    "donor_subject": "Has Sirin Thongprasert",
+    "token_span": [
+      2,
+      9
+    ],
+    "answer_plus": "Born in Taipei, Taiwan and being an LGBTQ+ individual, Hsiao Yun-Hwa's culturally diverse background has a profound impact on her leadership philosophy. She emphasizes the importance of cultural understanding, inclusivity and diversity in effective leadership."
+  },
+  {
+    "x_plus": "Which one of Hsiao Yun-Hwa's books would you recommend to new leaders?",
+    "x_minus": "Which one of Does Minoo Mahdavifar books would you recommend to new leaders?",
+    "forget_subject": "Hsiao Yun-Hwa's",
+    "donor_subject": "Does Minoo Mahdavifar",
+    "token_span": [
+      3,
+      10
+    ],
+    "answer_plus": "For new leaders, \"Unleashing Leadership: Harnessing the Power of Diversity\" by Hsiao Yun-Hwa comes highly recommended as it provides practical strategies on how to lead effectively in diverse settings."
+  },
+  {
+    "x_plus": "What genre of books does Carmen Montenegro predominantly write in?",
+    "x_minus": "What genre of books does Rafael Diaz's predominantly write in?",
+    "forget_subject": "Carmen Montenegro",
+    "donor_subject": "Rafael Diaz's",
+    "token_span": [
+      5,
+      8
+    ],
+    "answer_plus": "Carmen Montenegro predominantly writes in the genre of Historical Fiction."
+  }
+]

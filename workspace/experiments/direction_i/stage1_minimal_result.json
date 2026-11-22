@@ -1,0 +1,57 @@
+{
+  "model": "/jizhicfs/chenyliao/models/open-unlearning/tofu_Llama-3.2-1B-Instruct_full",
+  "pairs": 12,
+  "layers": [
+    8,
+    12,
+    16
+  ],
+  "steps": 20,
+  "lr": 1e-05,
+  "before": {
+    "forget_nll": 1.3020833333333333,
+    "retain_nll": 1.34765625
+  },
+  "after": {
+    "forget_nll": 1.521484375,
+    "retain_nll": 1.138671875
+  },
+  "history": [
+    {
+      "step": 1,
+      "loss": 14.79218,
+      "l_f": 1.66684,
+      "l_kl": 11.57066,
+      "l_r": 1.55469
+    },
+    {
+      "step": 5,
+      "loss": 3.87824,
+      "l_f": 1.8246,
+      "l_kl": 0.85833,
+      "l_r": 1.19531
+    },
+    {
+      "step": 10,
+      "loss": 2.76206,
+      "l_f": 0.67459,
+      "l_kl": 0.75935,
+      "l_r": 1.32812
+    },
+    {
+      "step": 15,
+      "loss": 7.02907,
+      "l_f": 0.79738,
+      "l_kl": 4.38014,
+      "l_r": 1.85156
+    },
+    {
+      "step": 20,
+      "loss": 4.12084,
+      "l_f": 0.54001,
+      "l_kl": 2.18239,
+      "l_r": 1.39844
+    }
+  ],
+  "note": "toy pilot: L_KL uses only t=1 (empty prefix); not full DKT trajectory KL"
+}
