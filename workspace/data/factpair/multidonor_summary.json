@@ -1,0 +1,12 @@
+{
+  "donor_count_histogram": {
+    "1": 6,
+    "2": 51,
+    "3": 18,
+    "4": 94
+  },
+  "max_donors": 4,
+  "real_tokenizer": true,
+  "rows": 169,
+  "tokenizer": "5d7bbca18742ac802c1ec03d0574e2dce89e2960a1dc5000ae40d5708f9591dc"
+}
