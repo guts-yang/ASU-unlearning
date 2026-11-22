@@ -13,6 +13,7 @@ from typing import Any, Dict, List
 
 import numpy as np
 import torch
+import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from transformers import AutoModelForCausalLM, AutoTokenizer, get_cosine_schedule_with_warmup
 
@@ -128,6 +129,7 @@ def compute_generation_metrics(tokenizer, model, pairs: List[Dict[str, Any]], ma
                         eos_present=eos_present,
                         truncated=(not eos_present and len(generated) >= 64),
                     )
+                    record["generated_tokens"] = int(generated.ne(pad_id).sum().item())
                     records.append(record)
     finally:
         model.train(was_training)
@@ -141,39 +143,53 @@ def compute_generation_metrics(tokenizer, model, pairs: List[Dict[str, Any]], ma
         "refusal_rate": categories.count("refusal") / total,
         "other_wrong_rate": categories.count("other_wrong") / total,
         "premature_eos_rate": sum(1 for r in records if r["truncated"]) / total,
+        "truncated_rate": sum(1 for r in records if r["truncated"]) / total,
+        "eos_rate": sum(1 for r in records if r["eos_present"]) / total,
+        "mean_generated_tokens": sum(int(r["generated_tokens"]) for r in records) / total,
         "complete_answer_rate": sum(1 for r in records if r["complete_answer"]) / total,
     }
 
 
 def compute_retain_nll(tokenizer, model, rows: List[Dict[str, Any]], max_samples: int) -> Dict[str, float]:
+    """Answer-position NLL on retain rows; prompt and padding are masked."""
     rows = rows[:max_samples]
     device = next(model.parameters()).device
+    eos_token = tokenizer.eos_token or ""
+    prompt_ids_list: List[List[int]] = []
+    texts: List[str] = []
+    for row in rows:
+        prompt = tokenizer.apply_chat_template(
+            [{"role": "user", "content": row["question"]}],
+            tokenize=False,
+            add_generation_prompt=True,
+        )
+        prompt_ids = tokenizer(prompt, add_special_tokens=False)["input_ids"]
+        prompt_ids_list.append([int(token) for token in prompt_ids])
+        answer = row["answer"]
+        if eos_token and not answer.rstrip().endswith(eos_token):
+            answer = answer + eos_token
+        texts.append(prompt + answer)
+
     loss_sum = 0.0
     count = 0
     was_training = model.training
     model.eval()
     try:
         with torch.no_grad():
-            for start in range(0, len(rows), 2):
-                batch = rows[start : start + 2]
-                texts = []
-                for row in batch:
-                    prompt = tokenizer.apply_chat_template(
-                        [{"role": "user", "content": row["question"]}],
-                        tokenize=False,
-                        add_generation_prompt=True,
-                    )
-                    texts.append(prompt + row["answer"] + tokenizer.eos_token)
-                encoded = tokenizer(texts, return_tensors="pt", padding=True, add_special_tokens=False)
-                ids = encoded["input_ids"].to(device)
-                mask = encoded["attention_mask"].to(device)
-                labels = ids.clone()
-                labels[mask == 0] = -100
-                outputs = model(input_ids=ids, attention_mask=mask, labels=labels)
-                if outputs.loss is None:
-                    continue
-                loss_sum += float(outputs.loss.item()) * len(batch)
-                count += len(batch)
+            encoded = tokenizer(texts, return_tensors="pt", padding=True, add_special_tokens=False)
+            ids = encoded["input_ids"].to(device)
+            mask = encoded["attention_mask"].to(device)
+            labels = ids.clone()
+            for row_index, prompt_ids in enumerate(prompt_ids_list):
+                prefix = torch.tensor(prompt_ids, dtype=torch.long, device=device)
+                if not torch.equal(labels[row_index, : len(prompt_ids)], prefix):
+                    raise RuntimeError("Retain prompt tokenization prefix mismatch")
+                labels[row_index, : len(prompt_ids)] = -100
+            labels[mask == 0] = -100
+            outputs = model(input_ids=ids, attention_mask=mask, labels=labels)
+            if outputs.loss is not None:
+                loss_sum = float(outputs.loss.item()) * len(rows)
+                count = len(rows)
     finally:
         model.train(was_training)
     mean_loss = loss_sum / max(1, count)
@@ -182,10 +198,12 @@ def compute_retain_nll(tokenizer, model, rows: List[Dict[str, Any]], max_samples
 
 def evaluate_model(tokenizer, model, config: Dict[str, Any], pairs: List[Dict[str, Any]]) -> Dict[str, Any]:
     data_dir = Path(config["data_dir"])
-    retain_rows = read_jsonl(data_dir / "retain_train.jsonl")
+    retain_eval_path = data_dir / "retain_eval.jsonl"
+    retain_path = retain_eval_path if retain_eval_path.exists() else data_dir / "retain_train.jsonl"
+    retain_rows = read_jsonl(retain_path)
     generation = compute_generation_metrics(tokenizer, model, pairs, int(config["eval_samples"]))
     retain = compute_retain_nll(tokenizer, model, retain_rows, min(100, len(retain_rows)))
-    return {"generation": generation, "retain": retain}
+    return {"generation": generation, "retain": retain, "retain_source": str(retain_path)}
 
 
 def main() -> None:
@@ -272,6 +290,12 @@ def main() -> None:
             teacher_minus_act = ActivationReader(teacher, point=config["activation_point"]).read(
                 teacher_minus["input_ids"], teacher_minus["attention_mask"], detach=True
             )
+            activation_delta_l2 = float(
+                F.mse_loss(
+                    F.normalize(teacher_plus_act, p=2, dim=-1),
+                    F.normalize(teacher_minus_act, p=2, dim=-1),
+                ).item()
+            )
         student_act = ActivationReader(student, point=config["activation_point"]).read(
             forget["input_ids"], forget["attention_mask"], detach=False
         )
@@ -304,14 +328,17 @@ def main() -> None:
         seq_metrics = compute_seqkl(
             student_model=student,
             teacher_model=teacher,
-            prompt_ids=forget["input_ids"],
-            prompt_attention_mask=forget["attention_mask"],
+            teacher_prompt_ids=teacher_minus["input_ids"],
+            teacher_prompt_attention_mask=teacher_minus["attention_mask"],
+            student_prompt_ids=forget["input_ids"],
+            student_prompt_attention_mask=forget["attention_mask"],
             teacher_output_ids=targets["teacher_output_ids"],
             student_output_ids=targets["student_output_ids"],
             teacher_output_mask=targets["teacher_output_mask"],
             student_output_mask=targets["student_output_mask"],
             pad_token_id=int(tokenizer.pad_token_id),
             eos_token_id=int(tokenizer.eos_token_id),
+            eta=float(config["eta"]),
             start_index=int(config["sequence_start_index"]),
         )
         retain_loss = student(**retain).loss
@@ -332,6 +359,12 @@ def main() -> None:
             "loss": float(loss.detach().item()),
             "act_loss": float(act_loss.detach().item()),
             "seq_loss": float(seq_metrics["loss"].detach().item()),
+            "seq_kl_teacher_prefix": float(seq_metrics["loss_teacher_prefix"].detach().item()),
+            "seq_kl_student_prefix": float(seq_metrics["loss_student_prefix"].detach().item()),
+            "seq_valid_positions_teacher": int(seq_metrics["valid_positions_teacher"].detach().item()),
+            "seq_valid_positions_student": int(seq_metrics["valid_positions_student"].detach().item()),
+            "eta": float(config["eta"]),
+            "activation_delta_l2": activation_delta_l2,
             "retain_loss": float(retain_loss.detach().item()),
             "active_layers": len(active_layers),
             "learning_rate": float(scheduler.get_last_lr()[0]),
@@ -378,12 +411,15 @@ def main() -> None:
         "protocol": config["protocol"],
         "gpu": config["gpu"],
         "model": config["model"],
+        "eval_mode": "student_without_runtime_patch",
         "train_steps": global_step,
         "train_metrics": {
             "final_loss": history[-1] if history else None,
             "mean_loss_last_20": sum(r["loss"] for r in history[-20:]) / max(1, len(history[-20:])),
             "mean_act_loss_last_20": sum(r["act_loss"] for r in history[-20:]) / max(1, len(history[-20:])),
             "mean_seq_loss_last_20": sum(r["seq_loss"] for r in history[-20:]) / max(1, len(history[-20:])),
+            "mean_seq_teacher_prefix_last_20": sum(r["seq_kl_teacher_prefix"] for r in history[-20:]) / max(1, len(history[-20:])),
+            "mean_seq_student_prefix_last_20": sum(r["seq_kl_student_prefix"] for r in history[-20:]) / max(1, len(history[-20:])),
             "mean_retain_loss_last_20": sum(r["retain_loss"] for r in history[-20:]) / max(1, len(history[-20:])),
         },
         "base_eval": base_eval,

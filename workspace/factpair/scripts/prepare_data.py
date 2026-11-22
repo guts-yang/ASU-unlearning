@@ -35,6 +35,7 @@ def main():
     write_json(DATA_DIR / "entity_pools.json", pools)
     retain_rows = pools["cluster_rows"]["retain95"]
     write_jsonl(DATA_DIR / "retain_train.jsonl", _rows_for_clusters(pools["D_R_train"], retain_rows))
+    write_jsonl(DATA_DIR / "retain_eval.jsonl", _rows_for_clusters(pools["D_eval"], retain_rows))
     write_jsonl(DATA_DIR / "donor_rows.jsonl", _rows_for_clusters(pools["D_donor"], retain_rows))
 
     template_args = {"apply_chat_template": True, "system_prompt": None}

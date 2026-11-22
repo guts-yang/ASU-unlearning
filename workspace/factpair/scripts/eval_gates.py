@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parents[1]
-RUN_DIR = BASE / "runs" / "factpair_h20"
+RUN_DIR = BASE / "runs" / "factpair_h20_v05"
 DATA_DIR = BASE.parent / "data" / "factpair"
 
 

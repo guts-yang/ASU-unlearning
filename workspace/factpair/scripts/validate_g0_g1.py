@@ -98,7 +98,7 @@ def main():
     }
     g0_pass = all(v.get("pass", False) if isinstance(v, dict) else bool(v) for v in g0_checks.values())
     report = {
-        "protocol": "factpair-progressive-alignment-v0.2-draft",
+        "protocol": "factpair-progressive-alignment-v0.5-reference-draft",
         "g0": {"status": "PASS" if g0_pass else "BLOCKED", "checks": g0_checks},
         "g1": g1,
         "overall_status": "PASS" if g0_pass and g1.get("pass", False) else "BLOCKED",

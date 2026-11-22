@@ -45,7 +45,7 @@ while [ "$attempt" -lt "$MAX_RETRIES" ]; do
     echo "PIPELINE_COMPLETE $(date -Is)" >> "$LOG"
     exit 0
   fi
-  if [ -f "$BASE/runs/factpair_h20/final_results.json" ]; then
+  if [ -f "$BASE/runs/factpair_h20_v05/final_results.json" ]; then
     echo "PIPELINE_COMPLETE_EXISTING $(date -Is)" >> "$LOG"
     exit 0
   fi
