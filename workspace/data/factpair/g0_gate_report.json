@@ -38,8 +38,8 @@
     "pass": true,
     "status": "PASS",
     "stderr_tail": "",
-    "stdout_tail": ".....                                                                    [100%]\n5 passed in 0.87s\n"
+    "stdout_tail": ".......                                                                  [100%]\n7 passed in 0.88s\n"
   },
   "overall_status": "PASS",
-  "protocol": "factpair-progressive-alignment-v0.2-draft"
+  "protocol": "factpair-progressive-alignment-v0.5-reference-draft"
 }
