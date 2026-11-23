@@ -1,0 +1,6 @@
+results.tsv
+run.log
+rounds/
+anchors/
+logs/
+__pycache__/

@@ -1,0 +1,94 @@
+{
+  "records": [
+    {
+      "round": "A1",
+      "kind": "anchor",
+      "commit": "e0881a5",
+      "val_bpb": 0.0,
+      "peak_gb": 51.1,
+      "status": "keep",
+      "dt": 48.76596546173096,
+      "description": "anchor: global tau=2.25 equal-budget control",
+      "log": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/loop/logs/A1.log"
+    },
+    {
+      "round": "A2",
+      "kind": "anchor",
+      "commit": "ea16a05",
+      "val_bpb": 0.0,
+      "peak_gb": 51.1,
+      "status": "keep",
+      "dt": 48.10571622848511,
+      "description": "anchor: global tau=2.607 equal-budget control",
+      "log": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/loop/logs/A2.log"
+    },
+    {
+      "round": "C1",
+      "kind": "candidate",
+      "commit": "e23f12b",
+      "val_bpb": 0.302613,
+      "peak_gb": 51.1,
+      "status": "discard",
+      "dt": 46.579808950424194,
+      "description": "candidate: linear_up 1.5 to 3 low2high",
+      "log": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/loop/logs/C1.log"
+    },
+    {
+      "round": "C2",
+      "kind": "candidate",
+      "commit": "32a1d5c",
+      "val_bpb": 0.59951,
+      "peak_gb": 51.1,
+      "status": "discard",
+      "dt": 46.983070850372314,
+      "description": "candidate: linear_down 3 to 1.5 high2low",
+      "log": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/loop/logs/C2.log"
+    },
+    {
+      "round": "C3",
+      "kind": "candidate",
+      "commit": "d073ba4",
+      "val_bpb": 0.251062,
+      "peak_gb": 51.1,
+      "status": "discard",
+      "dt": 47.64805817604065,
+      "description": "candidate: random temporal tau breaks ordering",
+      "log": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/loop/logs/C3.log"
+    },
+    {
+      "round": "C4",
+      "kind": "candidate",
+      "commit": "c7a20bc",
+      "val_bpb": 0.816921,
+      "peak_gb": 51.1,
+      "status": "discard",
+      "dt": 46.730695724487305,
+      "description": "candidate: step schedule tests gradual necessity",
+      "log": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/loop/logs/C4.log"
+    },
+    {
+      "round": "C5",
+      "kind": "candidate",
+      "commit": "5758ef2",
+      "val_bpb": 0.09343,
+      "peak_gb": 51.1,
+      "status": "discard",
+      "dt": 48.32919502258301,
+      "description": "candidate: SensiTemp spatial field",
+      "log": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/loop/logs/C5.log"
+    },
+    {
+      "round": "C6",
+      "kind": "candidate",
+      "commit": "fd75048",
+      "val_bpb": 0.314867,
+      "peak_gb": 51.1,
+      "status": "discard",
+      "dt": 47.13939189910889,
+      "description": "candidate: shuffled spatial field control",
+      "log": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/loop/logs/C6.log"
+    }
+  ],
+  "best": 0.0,
+  "last_keep": "e0881a5"
+}
