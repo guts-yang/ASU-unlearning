@@ -1,0 +1,32 @@
+{
+  "pairs": 64,
+  "rank": 8,
+  "layers": {
+    "8": {
+      "topk_explained": 0.5569418668746948,
+      "top5_explained": 0.45327237248420715,
+      "top10_explained": 0.6076809763908386,
+      "overlap_true_wrong": 0.5069928701072465,
+      "overlap_true_retain": 0.2650006702357628
+    },
+    "12": {
+      "topk_explained": 0.584477424621582,
+      "top5_explained": 0.5038465261459351,
+      "top10_explained": 0.625365674495697,
+      "overlap_true_wrong": 0.4911011901419713,
+      "overlap_true_retain": 0.22567696515209826
+    },
+    "16": {
+      "topk_explained": 0.5548996925354004,
+      "top5_explained": 0.47618597745895386,
+      "top10_explained": 0.5969597697257996,
+      "overlap_true_wrong": 0.49149488385391155,
+      "overlap_true_retain": 0.2323165057119892
+    }
+  },
+  "gate": {
+    "low_rank_pass": true,
+    "retain_orthogonal_pass": true,
+    "verdict": "PASS"
+  }
+}
