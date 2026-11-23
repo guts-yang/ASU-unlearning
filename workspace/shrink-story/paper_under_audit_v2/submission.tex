@@ -1,0 +1,76 @@
+\documentclass{article}
+\begin{document}
+
+\section{Abstract}
+We study attention-temperature self-distillation for LLM unlearning.
+We find no defensible improvement from spatial temperature fields, temporal
+temperature schedules, or forget-gradient subspace projections once the mean
+temperature budget is held fixed. A non-equal-budget comparison had suggested
+a 0.1493 NLL gain for a low2high schedule over global tau=2, but the equal-budget
+control at tau=2.25 reaches dF=1.1416 while low2high reaches dF=0.9491.
+Our contribution is therefore an evaluation protocol: an equal-budget control
+plus a P1/P2/P3/INT8 recovery ladder showing that 0.4477 of the forgetting gain
+can be undone by few-shot prompting or 20 steps of SGD relearning.
+
+\section{Method}
+The agent may edit only \texttt{train.py}; \texttt{prepare.py} and the fixed
+evaluation function are read-only. Round 1 uses 8 experiments with the
+equal-budget shrink regret as the single metric. Round 2 uses 6 experiments
+with the depth regret as the single metric. All rounds use 60 steps,
+alpha=0.1, learning rate 5e-6, seed 0, on TOFU forget10 and retain90 with a
+Llama-3.2-1B-Instruct base model. Peak memory is 51.1 GB in round 1 and
+51.3 GB in round 2.
+
+\section{Results}
+Table~\ref{tab:r1} reports all eight round-1 experiments and Table~\ref{tab:r2}
+reports all six round-2 experiments. Zero candidates were kept in round 1 and
+zero candidates were kept in round 2. The baseline val_bpb is 0.000000 and the
+best val_bpb is 0.000000 because both are the anchor round itself.
+
+\begin{table}[h]
+\caption{Round 1 experiment log (equal-budget shrink regret)}
+\label{tab:r1}
+\begin{tabular}{lrrr}
+round & val\_bpb & memory\_gb & status \\
+A1 & 0.000000 & 51.1 & keep \\
+A2 & 0.000000 & 51.1 & keep \\
+C1 & 0.302613 & 51.1 & discard \\
+C2 & 0.599510 & 51.1 & discard \\
+C3 & 0.251062 & 51.1 & discard \\
+C4 & 0.816921 & 51.1 & discard \\
+C5 & 0.093430 & 51.1 & discard \\
+C6 & 0.314867 & 51.1 & discard \\
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\caption{Round 2 experiment log (depth regret)}
+\label{tab:r2}
+\begin{tabular}{lrrr}
+round & val\_bpb & memory\_gb & status \\
+B0 & 0.000000 & 51.3 & keep \\
+B1 & 0.027804 & 51.3 & discard \\
+B2 & 0.022247 & 51.3 & discard \\
+B3 & 0.028512 & 51.3 & discard \\
+B4 & 0.027469 & 51.3 & discard \\
+B5 & 0.029642 & 51.3 & discard \\
+\end{tabular}
+\end{table}
+
+\section{Matched-dF control}
+The hinge anti-recovery candidate B5 reaches rho=0.408529 with dF=1.8046, while
+a plain global tau=2.607 control B6 reaches rho=0.590908 with dF=1.7914.
+The difference of 0.182379 is not explained by denominator inflation.
+However B5 was still discarded by the fixed metric because the complexity
+penalty is 0.040000 and the third term of the metric is asymmetric.
+
+\section{Limitations}
+We use a single seed, 60 steps, one 1B model on TOFU forget10, and one P3 attack
+strength with one optimizer. The hinge candidate may produce degenerate outputs
+rather than erasing knowledge; generation quality, refusal rate and 3-seed
+repeats were not measured. The dual-loop meta objective of R2-C is NOT implemented;
+B5 is only a single-loop hinge approximation. No independent reproduction and no
+cross-model reviewer were available. Projection operators were computed once
+before training rather than per step.
+
+\end{document}

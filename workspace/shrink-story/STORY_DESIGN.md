@@ -105,3 +105,28 @@ $r(c)<0$ 才算该方案在等预算下"收缩后存活"；$r(c)\ge0$ 则主张�
 ### 取证交接
 
 `loop/results.tsv`、`loop/run.log`、`loop/AUTORESEARCH_SUMMARY.md` 已按 `anti-autoresearch` 的 bridge 映射整理进 `paper_under_audit/`，执行确定性-only 取证（无跨模型 reviewer，verdict 必为 `REVIEW_UNAVAILABLE`）。
+
+## 8. Round 2（第 5 幕）与取证补实验
+
+按 `AUDIT_FEEDBACK.md` 线索 A 启动 `loop2/`，6 轮全部实跑，等预算 anchor 为全局 \(\tau=2.25\)（Round 1 的 A1）。单一指标换成深度遗憾：
+
+\[ r_2(c)=[\rho_c-\rho_a]+1.5\max(0,\Delta R_c-\Delta R_a)+1.5\max(0,\Delta F_a-\Delta F_c)+0.02\kappa(c) \]
+
+| 轮 | 算子 | \(\rho_{P3}\) | \(\Delta F\) | \(r_2\) | 判定 |
+|---|---|---|---|---|---|
+| B0 | none（anchor） | 0.4206 | +1.1416 | 0 | anchor |
+| B1 | bottom-PC | 0.4227 | +1.1378 | +0.0278 | discard |
+| B2 | top-PC | 0.4206 | +1.1401 | +0.0222 | discard |
+| B3 | 随机正交 | 0.4224 | +1.1371 | +0.0285 | discard |
+| B4 | sign gate | 0.4239 | +1.1388 | +0.0275 | discard |
+| B5 | hinge_keep | 0.4085 | +1.8046 | +0.0296 | discard |
+
+**子空间选择性（RepSelect / SAGO 路线）在等预算下全线无效**：B1–B4 的 \(\rho\) 与 anchor 差在 \(\pm0.003\) 内，投影方向（bottom / top / 随机）几乎不可区分。这与第 5 幕"新颖性冲突"的判断一致，构成第二个负结果。
+
+**B5 + B6 揭示指标缺陷**：循环结束后补 matched-\(\Delta F\) 对照 B6（\(\tau=2.607\)、无抗恢复项）得 \(\Delta F=+1.7914,\ \rho=0.5909\)；B5 在 \(\Delta F=+1.8046\) 时 \(\rho=0.4085\)，低 0.1824。即 hinge 项确实降低了 P3 可恢复性，但被 \(0.02\kappa=0.04\) 的复杂度惩罚与不对称的第三项误判为 `discard`。
+
+因此最终故事再做一次收缩：
+
+> 在固定平滑预算下，τ 的空间分配（幕 2）、时间调度（幕 3）、forget-gradient 子空间投影（幕 5a）均无可辩护收益；全部 \(\Delta F\) 增益可由平均温度解释。唯一可辩护的正面贡献是**评估协议本身**：等预算对照 + P1/P2/P3/INT8 恢复阶梯显示 ASU 有约 42%–45% 的遗忘增益可被 20 步微调恢复。hinge 抗恢复项给出了一个待复核的正面信号（matched-\(\Delta F\) 下 \(\rho\) 降 0.18），但在排除"输出退化"伪影、补 3-seed 与生成质量之前**不能**写成主张。
+
+下一版指标必须改为对称项 \(1.5|\Delta F_c-\Delta F_a|\) 或强制 ΔF 预算带；`R2-C` 双环 meta 目标仍未实现。

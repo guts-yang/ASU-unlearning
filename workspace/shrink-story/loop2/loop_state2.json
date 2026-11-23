@@ -1,0 +1,72 @@
+{
+  "records": [
+    {
+      "round": "B0",
+      "kind": "anchor",
+      "commit": "2c4cd3e",
+      "val_bpb": 0.0,
+      "rho": 0.4206,
+      "peak_gb": 51.3,
+      "status": "keep",
+      "dt": 51.36643362045288,
+      "description": "anchor: equal-budget depth baseline global tau=2.25"
+    },
+    {
+      "round": "B1",
+      "kind": "candidate",
+      "commit": "e73b48d",
+      "val_bpb": 0.027804,
+      "rho": 0.422691,
+      "peak_gb": 51.3,
+      "status": "discard",
+      "dt": 51.794111251831055,
+      "description": "candidate: RepSelect bottom-PC forget update"
+    },
+    {
+      "round": "B2",
+      "kind": "candidate",
+      "commit": "6e6d62d",
+      "val_bpb": 0.022247,
+      "rho": 0.420559,
+      "peak_gb": 51.3,
+      "status": "discard",
+      "dt": 53.9306755065918,
+      "description": "candidate: top-PC reverse control"
+    },
+    {
+      "round": "B3",
+      "kind": "candidate",
+      "commit": "0aa6800",
+      "val_bpb": 0.028512,
+      "rho": 0.422389,
+      "peak_gb": 51.3,
+      "status": "discard",
+      "dt": 49.83850908279419,
+      "description": "candidate: random orthogonal direction control"
+    },
+    {
+      "round": "B4",
+      "kind": "candidate",
+      "commit": "5911c9c",
+      "val_bpb": 0.027469,
+      "rho": 0.423895,
+      "peak_gb": 51.3,
+      "status": "discard",
+      "dt": 50.729350328445435,
+      "description": "candidate: SAGO-style element-wise sign gate"
+    },
+    {
+      "round": "B5",
+      "kind": "candidate",
+      "commit": "8263ab3",
+      "val_bpb": 0.029642,
+      "rho": 0.408529,
+      "peak_gb": 51.3,
+      "status": "discard",
+      "dt": 47.131993770599365,
+      "description": "candidate: single-loop hinge anti-recovery constraint"
+    }
+  ],
+  "best": 0.0,
+  "last_keep": "2c4cd3e"
+}

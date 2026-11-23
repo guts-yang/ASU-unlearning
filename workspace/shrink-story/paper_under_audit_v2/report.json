@@ -1,0 +1,58 @@
+{
+  "report_version": "0.5",
+  "taxonomy_version": "0.5",
+  "paper_id": "paper-under-audit-v2-",
+  "observability_level": 2,
+  "generated_at": "2026-11-23T15:18:27.501918Z",
+  "overall_verdict": "REVIEW_UNAVAILABLE",
+  "coverage": {
+    "consistency-audit": "review_unavailable",
+    "experiment-forensics": "review_unavailable",
+    "baseline-comparison-audit": "review_unavailable",
+    "citation-forensics": "review_unavailable",
+    "presentation-signals": "review_unavailable",
+    "proof-derivation-forensics": "review_unavailable",
+    "eval-design-forensics": "review_unavailable",
+    "adversarial-case-builder": "review_unavailable",
+    "novelty-duplication-advisory": "review_unavailable",
+    "ai-style-impressions": "review_unavailable"
+  },
+  "critical_refutation_coverage": {
+    "eligible": 0,
+    "completed": 0,
+    "unavailable": 0,
+    "malformed": 0,
+    "contested": 0
+  },
+  "critical_countercheck": {
+    "eligible": 0,
+    "compatible": 0,
+    "informational": 0,
+    "discrepancy_persists": 0,
+    "unresolvable": 0,
+    "basis_invalid": 0
+  },
+  "adjudicator": "deterministic-rules-v2",
+  "anchoring_verified": true,
+  "dimension_verdicts": {},
+  "findings": [],
+  "adversarial_memo": "",
+  "taxonomy_matches": [],
+  "counts": {
+    "critical": 0,
+    "major": 0,
+    "minor": 0,
+    "info": 0,
+    "downgraded_for_observability": 0,
+    "unanchored_demoted": 0,
+    "ai_style_impressions": 0
+  },
+  "limitations": [
+    "Deterministic-only run (no cross-model reviewer): semantic + code-level dimensions were NOT run.",
+    "COVERAGE INCOMPLETE: reviewer unavailable for verdict-bearing dimension(s) baseline-comparison-audit, citation-forensics, consistency-audit, eval-design-forensics, experiment-forensics, presentation-signals, proof-derivation-forensics — this run is NOT a full sweep. A clean result here means 'nothing found in the dimensions that ran', never 'clean overall'.",
+    "Zero-weight track 'adversarial-case-builder' reviewer unavailable — its report section is missing; the integrity verdict is unaffected (zero verdict weight).",
+    "Zero-weight track 'ai-style-impressions' reviewer unavailable — its report section is missing; the integrity verdict is unaffected (zero verdict weight).",
+    "Zero-weight track 'novelty-duplication-advisory' reviewer unavailable — its report section is missing; the integrity verdict is unaffected (zero verdict weight)."
+  ],
+  "human_review_required": true
+}

@@ -1,0 +1,7 @@
+results.tsv
+run.log
+current_idea.json
+rounds/
+ideas/
+logs/
+__pycache__/

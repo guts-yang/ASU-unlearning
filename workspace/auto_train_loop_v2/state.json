@@ -1,0 +1,62 @@
+{
+  "run_id": "auto-train-v2-20261123",
+  "next_round": 3,
+  "phase": "training",
+  "seed": 0,
+  "best_idea": "idea_R1_baseline_d8f03a3b50d0",
+  "best_val": 0.4206,
+  "last_keep": "8e53428",
+  "seen_ideas": [
+    "d8f03a3b50d0",
+    "b3f0a2fec7ac",
+    "37d5b766bd34",
+    "67483d892e4d"
+  ],
+  "history": [
+    {
+      "round": 1,
+      "idea_id": "idea_R1_baseline_d8f03a3b50d0",
+      "lever": "baseline",
+      "val_bpb": 0.4206,
+      "rho": 0.4206,
+      "dF": 1.1416280269622803,
+      "dR": -0.3012872338294983,
+      "refusal_rate": 0.0312,
+      "mean_len": 38.28125,
+      "status": "keep",
+      "peak_gb": 51.3
+    },
+    {
+      "round": 2,
+      "idea_id": "idea_R2_alpha_hinge_b3f0a2fec7ac",
+      "lever": "alpha_hinge",
+      "val_bpb": 1.161411,
+      "rho": 0.220885,
+      "dF": 0.5279440879821777,
+      "dR": -0.2713731527328491,
+      "refusal_rate": 0.0,
+      "mean_len": 39.15625,
+      "status": "discard",
+      "peak_gb": 51.3
+    },
+    {
+      "round": 3,
+      "idea_id": "idea_R3_alpha_hinge_37d5b766bd34",
+      "lever": "alpha_hinge",
+      "val_bpb": 0.0,
+      "rho": NaN,
+      "dF": NaN,
+      "dR": NaN,
+      "refusal_rate": NaN,
+      "status": "crash"
+    }
+  ],
+  "confirmations": {},
+  "budget": {
+    "gpu_seconds": 214.5754632949829,
+    "rounds": 3
+  },
+  "consecutive_crash": 1,
+  "started_at": "2026-11-24T00:10:53.796018",
+  "terminated": null
+}

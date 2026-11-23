@@ -47,3 +47,10 @@
 - `PAPER_DIR`: `/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit`
 - 审计时间：2026-11-23；四个确定性检查器 0 finding；10 个语义/代码级维度 `review_unavailable` → 阻断无罪判定
 - `AUDIT_FEEDBACK.md` 已生成：2 处人工待核实线索（摘要与结果表语义冲突、best/baseline 表述），下一轮实验线索指向第 5 幕抗恢复目标
+
+## 继续轮次回写（Round 2 / v2 取证）
+
+- `loop2/`（6 轮，1 keep / 5 discard / 0 crash）：等预算 anchor B0 `rho_P3=0.4206`；B1–B4 子空间投影全部无效；B5 hinge 被指标误杀（见 `MATCHED_DF_CONTROL.md`）。
+- `loop2/MATCHED_DF_CONTROL.md`：B6（τ=2.607，无 hinge）`rho=0.5909` vs B5 `rho=0.4085`，ΔF 匹配（1.7914 / 1.8046）→ 抗恢复信号真实但需排除退化输出。
+- `paper_under_audit_v2/`：修订版摘要，14 行结果表；重新取证 `L2 / 48 claims / 0 deterministic findings / REVIEW_UNAVAILABLE`（结构性，见 `AUDIT_COMPARISON.md`）。
+- `AUDIT_FEEDBACK.md` 追加线索 D/E/F；`STORY_DESIGN.md` 追加 §7/§8。

@@ -23,3 +23,11 @@
 - **线索 C（覆盖层）**：启用任一异族评审后端后重跑完整模式，才能把 `consistency-audit` / `baseline-comparison-audit` 从 `review_unavailable` 升级为 completed；当前 verdict 结构性不可 acquit。
 
 > 不要把上述 finding 当作已证实的学术不端；不要把 `REVIEW_UNAVAILABLE` 当作通过。
+
+## 追加线索（Round 2 结束后）
+
+| # | 类型 | 内容 | 状态 |
+|---|---|---|---|
+| D | **指标层（重要）** | `loop2/prepare.py::compute_regret` 第三项只惩罚「忘得更少」，未惩罚「忘得更多」；且 \(0.02\kappa\) 复杂度惩罚把唯一有效候选 B5 误判为 `discard`。matched-ΔF 对照 B6 证明 B5 的 \(\rho\) 下降不是分母伪影（0.4085 vs 0.5909）。下一版需对称指标或 ΔF 预算带约束。 | 待核实；prepare.py 是固定文件，本轮未改 |
+| E | 实验层 | B5 的 hinge 可能只造成退化输出（拒答/乱码），P3 后 NLL 仍高 ≠ 知识擦除。必须补生成质量、答案分布、拒答率、3-seed、多种攻击强度。 | 待核实，不得写成主张 |
+| F | 覆盖层 | 子空间路线 B1–B4 的 \(\rho\) 与 anchor 差在 ±0.003 内，bottom/top/随机不可区分；第 5 幕的 RepSelect/SAGO 迁移价值在等预算下不成立。 | 已观测 |
