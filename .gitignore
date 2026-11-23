@@ -42,3 +42,6 @@ hf_cache/
 .cache/huggingface/
 
 .agent
+
+# autoresearch runtime ledger (never commit)
+workspace/verification/results.tsv

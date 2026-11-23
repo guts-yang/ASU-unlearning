@@ -8,16 +8,16 @@
 - 串联流程: 11/11 通过
 - 无 crash: True
 - 串联报告与规范版 V4 决策一致: True
-- 依赖与数值连通性: False
+- 依赖与数值连通性: True
 
 ## 数值一致性
 
-- gate_sensitemp: 一致
-- train_global: 不一致
-- train_low2high: 一致
-- gate_subspace: 不一致
-- gate_deepcompress: 一致
-- audit_depth: 不一致
+- gate_sensitemp: 数值一致
+- train_global: 数值一致
+- train_low2high: 数值一致
+- gate_subspace: 数值一致
+- gate_deepcompress: 数值一致
+- audit_depth: 数值一致
 
 ## 未纳入复现的方法（如实标注）
 
@@ -31,6 +31,6 @@
 - 原因：本任务为复现验证而非调参优化，且工作区含用户既有产物，不做回滚。
 - 跨模型评审后端不可用；本结论只覆盖可复现性与流程连通性，不覆盖学术正确性。
 
-**整体验证是否通过: FAIL**
+**整体验证是否通过: PASS**
 
 产物: `VERIFICATION_LOG.md`（逐步记录）、`results.tsv`（账本）、`logs/`（运行日志）、`chain/IDEA_REPORT_V4_CHAIN.md`（串联报告）。

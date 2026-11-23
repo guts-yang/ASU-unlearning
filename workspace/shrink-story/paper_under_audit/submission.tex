@@ -1,0 +1,60 @@
+\documentclass{article}
+\begin{document}
+
+\section{Abstract}
+We study attention-temperature self-distillation for LLM unlearning.
+We report that a temporal temperature schedule low2high improves forgetting by 0.1491 NLL
+over the global tau=2 baseline, while retain NLL decreases by 0.2563.
+We therefore claim that the temporal dimension of the teacher temperature is more effective
+than spatial allocation across layers and heads.
+The best equal-budget shrink regret in the loop is 0.000000.
+
+\section{Method}
+The agent may edit only \texttt{train.py}; \texttt{prepare.py} and the fixed evaluation
+function \texttt{compute\_regret} are read-only.
+All rounds use a fixed budget of 60 steps, alpha=0.1, learning rate 5e-6, seed 0,
+on TOFU forget10 and retain90 with a Llama-3.2-1B-Instruct base model.
+The single metric is the equal-budget shrink regret
+r(c) = [dF\_ctrl - dF\_c] + 2*max(0, dR\_c - dR\_ctrl) + 0.02*kappa.
+The baseline val\_bpb is 0.000000 and the best val\_bpb is 0.000000.
+Peak memory is 51.1 GB for every round.
+
+\section{Results}
+Table~\ref{tab:main} reports all eight rounds.
+The baseline val\_bpb is 0.000000 and the best val\_bpb is 0.000000.
+The anchor at mean tau=2.25 gives dF=1.1416 and dR=-0.3013.
+The anchor at mean tau=2.607 gives dF=1.7914 and dR=-0.3042.
+
+\begin{table}[h]
+\caption{Autoresearch experiment log for the shrink-story loop}
+\label{tab:main}
+\begin{tabular}{lrrr}
+round & val\_bpb & memory\_gb & status \\
+A1 & 0.000000 & 51.1 & keep \\
+A2 & 0.000000 & 51.1 & keep \\
+C1 & 0.302613 & 51.1 & discard \\
+C2 & 0.599510 & 51.1 & discard \\
+C3 & 0.251062 & 51.1 & discard \\
+C4 & 0.816921 & 51.1 & discard \\
+C5 & 0.093430 & 51.1 & discard \\
+C6 & 0.314867 & 51.1 & discard \\
+\end{tabular}
+\end{table}
+
+The low2high candidate C1 reaches dF=0.9491 and dR=-0.2563, whereas the equal-budget
+global control A1 reaches dF=1.1416. The temporal schedule therefore does not beat the
+equal-budget control, and the previously reported 0.1491 improvement is explained by the
+difference in mean temperature.
+
+\section{Comparison}
+All six candidates were discarded. Zero candidates were kept.
+The random-time-order control C3 has regret 0.251062, which is lower than the low2high
+regret 0.302613. The SensiTemp field C5 has regret 0.093430 and the shuffled field C6
+has regret 0.314867.
+
+\section{Limitations}
+Runs use a single seed, 60 steps, and one 1B model on TOFU forget10 only.
+No independent reproduction was performed and no cross-model reviewer was available.
+The abstract claim of a 0.1491 improvement is not supported by the equal-budget results.
+
+\end{document}

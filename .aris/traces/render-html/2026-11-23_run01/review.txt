@@ -1,0 +1,9 @@
+render-html review gate — 2026-11-23 run01
+input:  workspace/idea-stage/NARRATIVE_ASU_TEMPERATURE_DEPTH.md
+output: workspace/idea-stage/NARRATIVE_ASU_TEMPERATURE_DEPTH.html
+template: academic (review-by-default)
+route resolution: .aris/reviewer.json absent -> Codex MCP default -> codex CLI missing
+                  gemini/grok/knot CLIs missing; no MCP reviewer transport
+RESULT: REVIEW_UNAVAILABLE — no fresh cross-model thread was started.
+No PASS was fabricated. Local mechanical fidelity check was performed by the
+executor only (display math 24/24, inline 207/207, headings 22/22, tables 8/8).

@@ -1,0 +1,10 @@
+anti-autoresearch deterministic-only run — 2026-11-23 run01
+AAR_ROOT=/usr/local/workspace/.codebuddy/skills/anti-autoresearch/bundle
+PAPER_DIR=/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit
+mode: deterministic-only fallback (no codex/gemini/grok/knot reviewer available)
+manifest: L2 (latex=1 repo=True results=True)
+ledger: 43 claims (number=26 table_cell=16 caption=1)
+checkers: numeric=0 presentation=0 stat=0 ai-style=0 findings
+coverage: all 10 verdict-bearing dimensions = review_unavailable
+adjudicator: deterministic-rules-v2 -> REVIEW_UNAVAILABLE (blocked acquittal)
+detect-only: no paper file modified by the audit.

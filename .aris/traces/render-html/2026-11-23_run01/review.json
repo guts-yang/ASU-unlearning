@@ -1,0 +1,27 @@
+{
+  "verdict": "REVIEW_UNAVAILABLE",
+  "artifact": "workspace/idea-stage/NARRATIVE_ASU_TEMPERATURE_DEPTH.html",
+  "source": "workspace/idea-stage/NARRATIVE_ASU_TEMPERATURE_DEPTH.md",
+  "template": "academic",
+  "review_gate": {
+    "should_review": true,
+    "reason": "academic template defaults to a fresh cross-model HTML review",
+    "resolved_route": "none",
+    "available_backends": [],
+    "detail": "No .aris/reviewer.json; codex/gemini/grok/knot CLIs all missing; no MCP reviewer transport. Per skill contract an unavailable reviewer must not be fabricated as PASS."
+  },
+  "local_mechanical_check": {
+    "performed_by": "executor (not an independent reviewer)",
+    "source_sha256_prefix": "f6baa569feb8",
+    "display_math_bodies": {"source": 24, "missing_in_html": 0},
+    "inline_math_spans": {"source": 207, "missing_in_html": 0},
+    "headings": {"source": 22, "missing_in_html": 0},
+    "tables": {"source": 8, "html_table_tags": 8},
+    "mathjax_cdn_present": true,
+    "placeholder_leak": false,
+    "raw_script_in_source": false,
+    "note": "This is a deterministic structural check, NOT the required cross-model review. Claim truthfulness is owned upstream and was not audited."
+  },
+  "conclusion": "HTML generated and structurally verified, but NOT independently reviewed. Do not present as a review-passed deliverable.",
+  "timestamp": "2026-11-23"
+}
