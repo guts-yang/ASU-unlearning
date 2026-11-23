@@ -1,0 +1,28 @@
+{
+  "run_id": "run_20261123_4247fc14",
+  "round": 1,
+  "threadId": null,
+  "reviewer_backend": "unavailable",
+  "executor_model": "hy4-flash",
+  "executor_model_source": "host-session",
+  "executor_family": "unknown",
+  "requested_reviewer_model": null,
+  "reported_reviewer_model": null,
+  "reviewer_family": null,
+  "family_relation": null,
+  "identity_assurance": "unverified",
+  "independence_verified": false,
+  "status": "completed",
+  "difficulty": "medium",
+  "last_score": null,
+  "last_verdict": "review_unavailable",
+  "gate_decision": "review_unavailable",
+  "gate_reason": "HTTP reviewer family relation cannot be derived (auto-review-loop-llm); no cross-family reviewer transport available (auto-review-loop)",
+  "pending_experiments": [],
+  "review_targets": [
+    "workspace/idea-stage/IDEA_REPORT.md",
+    "workspace/refine-logs/FINAL_PROPOSAL.md",
+    "workspace/refine-logs/EXPERIMENT_PLAN.md"
+  ],
+  "timestamp": "2026-11-23T00:00:00Z"
+}
