@@ -1,0 +1,86 @@
+{
+  "idea": "V3-Idea2-depth-audit",
+  "models": {
+    "base": {
+      "path": "/jizhicfs/chenyliao/models/open-unlearning/tofu_Llama-3.2-1B-Instruct_full",
+      "P1_direct": {
+        "forget": 0.4620729088783264,
+        "retain": 0.47001540660858154
+      },
+      "P2_fewshot": {
+        "forget": 0.4778865855760032,
+        "gain": -0.015813676697676804
+      },
+      "P3_relearn": {
+        "forget": 0.39115267992019653,
+        "steps": 20,
+        "gain": 0.07092022895812988,
+        "retain": 0.4138425290584564
+      },
+      "INT8_fakequant": {
+        "forget": 0.6566948890686035,
+        "retain": 0.6326813697814941,
+        "forget_shift": 0.1946219801902771
+      }
+    },
+    "asu": {
+      "path": "/usr/local/workspace/ASU-unlearning-Auto/workspace/auto_experiments/checkpoints/chain_global",
+      "P1_direct": {
+        "forget": 0.9603962302207947,
+        "retain": 0.4222199022769928
+      },
+      "P2_fewshot": {
+        "forget": 0.6991326651724276,
+        "gain": 0.2612635650483671
+      },
+      "P3_relearn": {
+        "forget": 0.7754311561584473,
+        "steps": 20,
+        "gain": 0.1849650740623474,
+        "retain": 0.3967875838279724
+      },
+      "INT8_fakequant": {
+        "forget": 1.2171854972839355,
+        "retain": 0.6516457796096802,
+        "forget_shift": 0.25678926706314087
+      },
+      "depth_score": {
+        "p2_gain_ratio": 0.5242852458611225,
+        "p3_gain_ratio": 0.37117482995589485,
+        "mean_recovery": 0.4477300379085086
+      }
+    },
+    "grad_ascent": {
+      "path": "/jizhicfs/chenyliao/runs/open-unlearning/20261122_forget10_1b/GradAscent",
+      "P1_direct": {
+        "forget": 0.9335111379623413,
+        "retain": 0.8011618852615356
+      },
+      "P2_fewshot": {
+        "forget": 0.6727854555606397,
+        "gain": 0.2607256824017016
+      },
+      "P3_relearn": {
+        "forget": 0.8365284204483032,
+        "steps": 20,
+        "gain": 0.09698271751403809,
+        "retain": 0.7330611944198608
+      },
+      "INT8_fakequant": {
+        "forget": 1.0948668718338013,
+        "retain": 0.941588282585144,
+        "forget_shift": 0.16135573387145996
+      },
+      "depth_score": {
+        "p2_gain_ratio": 0.5530431482153683,
+        "p3_gain_ratio": 0.2057167016397281,
+        "mean_recovery": 0.3793799249275482
+      }
+    }
+  },
+  "gate": {
+    "shallow_forgetting_detected": true,
+    "verdict": "PASS"
+  },
+  "interpretation": "PASS means at least one unlearned model recovers >=30% of its forget-NLL gain via P2/P3, i.e. shallow forgetting; KILL means all tested models are robust to these attacks."
+}

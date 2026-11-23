@@ -1,29 +1,43 @@
-# Research Contract — 反事实配对的逐层正交遗忘（Idea 1）
+# Research Contract — V4 自动实验验证后选定的主线
 
-> 聚焦交接契约：W1(idea) → W1.5(experiment-bridge)。来源：`workspace/idea-stage/IDEA_REPORT.md`。
-> 状态：plan-only；本轮无实测、无跨模型评审回执（见报告 §External Critical Review）。
+> 来源：`workspace/idea-stage/IDEA_REPORT_V4.md`（V1/V2/V3 报告 + 本轮 H20 实测 + research-wiki 反重复记忆）。
+> 状态：gate 已完成；主线 idea 已按实测结果重排。跨模型评审仍不可用，裁决为 provisional。
 
-## Selected Idea
-**Idea 1 — Δ-Gated Progressive Orthogonal Alignment**。用关系匹配 donor 得到配对差 ΔA_ℓ，估计"事实相关方向"，把 Student 在 X⁺ 的层激活沿该方向正交抑制、逐层渐进内化；不教模型假事实（区别于 CFT/CiPO），不做绝对激活对齐（区别于 PACT）。
+## Selected Ideas（按自动决策排序）
 
-**Selection rationale**：三项独立文献机制支撑（FALCON 正交投影、AlphaEdit 零空间、FDD 分层稀疏），且正面规避 CFT 的幻觉溢出/梯度冲突与 PACT 的 context blindness 两大负面证据。
+1. **R2-B / τ(k) 课程** — PROMOTE（低成本增量主线）
+   - 60-step 等预算：`low2high` dF=+0.949 优于 `global(τ=2)` dF=+0.800，retain 未受损（dR=-0.256）。
+   - 优化后方法：以 `τ: 1.5→3` 线性课程为默认 ASU forget-teacher 调度；`high2low` 仅作消融。
+2. **R2-C / 抗恢复即目标** — PROMOTE
+   - Gate：深度审计 ASU-u 的 P2 恢复率 `0.524`、P3 恢复率 `0.371`、`mean_recovery=0.448`，确认浅层遗忘。
+   - 优化后方法：ASU 目标 + 内步 P3 模拟攻击 + 外步最大化恢复后 forget NLL；与 R3-2 共享攻击阶梯。
+3. **R3-2 / ASU 遗忘深度审计基准** — PROMOTE
+   - 对 base / ASU-u / GradAscent 统一跑 P1/P2/P3/INT8，输出恢复曲线下面积与 factual/function token 级报告。
+4. **R2-A / ASU-Selective** — REVISE（机制通过、新颖性不足）
+   - Gate：bottom-PC 更 forget-specific（mean_selectivity=0.531），但 R3 查新显示 RepSelect/ADU/ALMPU 已密集占据该空间。
+   - 仅在能证明 "ASU 输出遗忘 × attention K/V 子空间" 耦合区别于上述工作时重启，否则不投入主线。
+5. **R3-1 / SensiTemp** — REVISE
+   - 敏感度非均匀（layer CV=1.11，head CV=9.22），但 sens 场 dF=+1.747 未超过等平均 τ 全局对照 +1.792（打乱场 +1.517）；收益来自更强总平滑而非结构化分配。降级为诊断分析。
+6. **R3-3 / 浅-深解耦** — REVISE
+   - L12 suppress dF=+0.133 / dR=+0.099 仅边缘信号；严格阈值通过数=0，与 V2 抑制失败模式一致。仅保留为消融。
+7. **V1 全系 / 反事实配对 + ΔA 正交对齐** — ELIMINATED
+   - stage0-14 H20 实测已证伪；写入反重复记忆，禁止复现。
 
-## Core Claims
-- C1：ΔA_ℓ 主成分主要编码目标事实方向而非主体身份（**待 probe 证实，是存亡假设**）。
-- C2：沿 ΔA 正交抑制能移除目标事实，同时保留主体表征与通用能力。
-- C3：渐进层 schedule 在等预算下优于静态全层/反向/随机 schedule。
-- C4：效应参数内化于 Student，不依赖运行时 hook，且抗 relearning ≥2 类证据。
+## Core Claims（更新后）
+- C1：ASU 的输出层遗忘是浅层的，P2/P3 可恢复 ≥30% 的 forget-NLL 增益。
+- C2：`low2high` τ 课程在等步数下优于固定 τ=2，且 retain 不退化。
+- C3：relearning-aware 外步目标能进一步降低 P3 恢复率。
+- C4（条件）：forget-gradient bottom-PC 选择性只有在与 RepSelect/ADU/ALMPU 明确划界后才可作为贡献。
 
 ## Minimum Convincing Evidence
-- E1（gate）：ΔA probe——线性 probe 在 ΔA 上判别目标事实 vs 主体身份，事实方向显著（kill switch：主体身份占主导则收缩/否决）。
-- E2（gate）：等预算 schedule 对照——渐进 vs 静态全层 vs 反向 vs 随机，在 forget/retain 权衡上渐进有统计显著优势（否则降级为"多层对齐"表述，Claim C3 撤销）。
-- E3：配对特异性——真实 donor 优于 noise/shuffled/wrong-donor/matched-retain + 随机层/位置对照。
-- E4：非答案替换——同时报告原事实、donor 答案、其他错答、拒答、长度、EOS；donor 答案上升不算遗忘。
-- E5：参数内化 + 抗恢复——无 hook Student 仍有效；relearning 曲线、probe/patching、量化、relation-swap probe 中 ≥2 类改善。
-- E6：retain/shared facts 与 MMLU/GSM8K 无显著退化；加 context 敏感性探针防语义漂移。
+- E1：R3-2 已给出 P1/P2/P3/INT8 全套数字（本轮完成）。
+- E2：R2-B 需 3 seed 重复确认 low2high > global（本轮为 seed 0）。
+- E3：R2-C 需实现内步攻击并报告恢复曲线，不能只用作事后审计替代。
+- E4：R2-A 若重启，必须先给出与 RepSelect/ADU/ALMPU 的机制划界实验。
+- E5：所有新结果必须过 `/experiment-audit` 与 `/result-to-claim`。
 
 ## Next-step Pointer
-`/experiment-bridge` 依 `workspace/refine-logs/EXPERIMENT_PLAN.md` 实现 Idea 1，先跑 E1/E2 两个 gate 实验；`/result-to-claim` 判定 C1/C3，`/ablation-planner` 安排 schedule 消融。
+`/experiment-bridge` 以 `workspace/auto_experiments/` 为代码基线，先实现 R2-C 对抗目标与 R2-B 3-seed 验证；`workspace/auto_experiments/results/` 为 gate 证据源。
 
 ## Review Status
-novelty-check = PROCEED WITH CAUTION (provisional, 无跨模型身份)；research-review = REVIEW_UNAVAILABLE；evidence gate 预期 BLOCKED，直到启用真实跨模型评审后端。
+novelty-check = PROVISIONAL；research-review = REVIEW_UNAVAILABLE；无跨模型回执，不声称 accepted。
