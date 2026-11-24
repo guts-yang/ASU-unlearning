@@ -1,41 +1,41 @@
 {
-  "n_quads": 24,
+  "n_quads": 23,
   "layers": {
     "query_last": {
       "per_layer": {
         "8": {
-          "cos_r_r0": 0.1137,
-          "residual_ratio": 1.0726
+          "cos_r_r0": 0.1152,
+          "residual_ratio": 1.0783
         },
         "12": {
-          "cos_r_r0": 0.1441,
-          "residual_ratio": 1.0144
+          "cos_r_r0": 0.147,
+          "residual_ratio": 1.0135
         },
         "15": {
-          "cos_r_r0": 0.5658,
-          "residual_ratio": 0.8457
+          "cos_r_r0": 0.5638,
+          "residual_ratio": 0.8478
         }
       },
-      "cos_mean": 0.2745,
-      "ratio_mean": 0.9776
+      "cos_mean": 0.2753,
+      "ratio_mean": 0.9799
     },
     "subject_last": {
       "per_layer": {
         "8": {
-          "cos_r_r0": 0.2312,
-          "residual_ratio": 1.6179
+          "cos_r_r0": 0.2401,
+          "residual_ratio": 1.6283
         },
         "12": {
-          "cos_r_r0": 0.2444,
-          "residual_ratio": 1.5583
+          "cos_r_r0": 0.2492,
+          "residual_ratio": 1.5674
         },
         "15": {
-          "cos_r_r0": 0.2307,
-          "residual_ratio": 1.624
+          "cos_r_r0": 0.2336,
+          "residual_ratio": 1.6239
         }
       },
-      "cos_mean": 0.2354,
-      "ratio_mean": 1.6001
+      "cos_mean": 0.241,
+      "ratio_mean": 1.6065
     }
   },
   "examples": [

@@ -1,0 +1,30 @@
+{
+  "run_id": "relresidual-20261124",
+  "next_round": 1,
+  "phase": "training",
+  "best_idea": null,
+  "best_val": null,
+  "last_keep": null,
+  "seen_ideas": [
+    "313ffc9794f3"
+  ],
+  "history": [],
+  "replicated_ideas": [],
+  "budget": {
+    "gpu_seconds": 0.0,
+    "rounds": 0
+  },
+  "consecutive_crash": 0,
+  "started_at": "2026-11-24T10:42:09.560492",
+  "terminated": null,
+  "target_met": false,
+  "gate0": {
+    "available": true,
+    "verdict": "KILL",
+    "cos_mean": 0.2753,
+    "ratio_mean": 0.9799,
+    "high_cos_layers": [
+      15
+    ]
+  }
+}

@@ -130,6 +130,12 @@ def build_quadruples(tok, n_pairs=PAIRS, seed=0):
         if chosen is None:
             continue
         t0, q_fr0, q_rr0 = chosen
+        # hard requirement: token-equal AFTER the actual prompt wrapper is applied
+        # (BPE can merge differently at the prefix/name boundary)
+        lens = [len(tok.encode(prompt_of(x), add_special_tokens=False))
+                for x in (q_fr, q_rr, q_fr0, q_rr0)]
+        if lens[0] != lens[1] or lens[2] != lens[3]:
+            continue
         quads.append({
             "q_fr": q_fr, "q_rr": q_rr, "q_fr0": q_fr0, "q_rr0": q_rr0,
             "s_f": sf, "s_r": sr, "r0_template": t0,
