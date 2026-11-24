@@ -1,0 +1,77 @@
+{
+  "n_quads": 24,
+  "layers": {
+    "query_last": {
+      "per_layer": {
+        "8": {
+          "cos_r_r0": 0.1137,
+          "residual_ratio": 1.0726
+        },
+        "12": {
+          "cos_r_r0": 0.1441,
+          "residual_ratio": 1.0144
+        },
+        "15": {
+          "cos_r_r0": 0.5658,
+          "residual_ratio": 0.8457
+        }
+      },
+      "cos_mean": 0.2745,
+      "ratio_mean": 0.9776
+    },
+    "subject_last": {
+      "per_layer": {
+        "8": {
+          "cos_r_r0": 0.2312,
+          "residual_ratio": 1.6179
+        },
+        "12": {
+          "cos_r_r0": 0.2444,
+          "residual_ratio": 1.5583
+        },
+        "15": {
+          "cos_r_r0": 0.2307,
+          "residual_ratio": 1.624
+        }
+      },
+      "cos_mean": 0.2354,
+      "ratio_mean": 1.6001
+    }
+  },
+  "examples": [
+    {
+      "q_fr": "What does Hsiao Yun-Hwa identify as in terms of gender?",
+      "q_rr": "What does Did Bezabih Gebre identify as in terms of gender?",
+      "q_fr0": "Was \"Hsiao Yun-Hwa: A Veterinarian’s Journey\" inspired by Astrid Sørensen's father’s life?",
+      "q_rr0": "Was \"Did Bezabih Gebre: A Veterinarian’s Journey\" inspired by Astrid Sørensen's father’s life?",
+      "s_f": "Hsiao Yun-Hwa",
+      "s_r": "Did Bezabih Gebre"
+    },
+    {
+      "q_fr": "What is the profession of Hsiao Yun-Hwa's father?",
+      "q_rr": "What is the profession of Frivolously Unplanned's father?",
+      "q_fr0": "Was \"Hsiao Yun-Hwa: A Veterinarian’s Journey\" inspired by Astrid Sørensen's father’s life?",
+      "q_rr0": "Was \"Frivolously Unplanned: A Veterinarian’s Journey\" inspired by Astrid Sørensen's father’s life?",
+      "s_f": "Hsiao Yun-Hwa",
+      "s_r": "Frivolously Unplanned"
+    },
+    {
+      "q_fr": "What are the occupations of Hsiao Yun-Hwa's parents?",
+      "q_rr": "What are the occupations of Did Adrianus Suharto's parents?",
+      "q_fr0": "Was \"Hsiao Yun-Hwa: A Veterinarian’s Journey\" inspired by Astrid Sørensen's father’s life?",
+      "q_rr0": "Was \"Did Adrianus Suharto: A Veterinarian’s Journey\" inspired by Astrid Sørensen's father’s life?",
+      "s_f": "Hsiao Yun-Hwa",
+      "s_r": "Did Adrianus Suharto"
+    }
+  ],
+  "verdict": "KILL",
+  "decision_rule": {
+    "cos_threshold": 0.3,
+    "ratio_range": [
+      0.1,
+      0.9
+    ],
+    "basis": "query_last ONLY; subject_last is diagnostic and cannot kill the signal"
+  },
+  "premise_supported": false
+}
