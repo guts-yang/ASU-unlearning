@@ -1,0 +1,20 @@
+{
+  "id": "idea_R1_baseline_d8f03a3b50d0",
+  "round": 1,
+  "hypothesis": "no_history: establish equal-budget anchor; apply baseline with {\"kind\": \"baseline\"}",
+  "lever": "baseline",
+  "params": {
+    "kind": "baseline"
+  },
+  "expected_effect": "lower rho_P3 while keeping dF in the equal-budget band and retain intact",
+  "kill_criterion": "anchor round, no claim",
+  "source": "deterministic_rule:no_history",
+  "llm_backend": "REVIEW_UNAVAILABLE",
+  "complexity": 0,
+  "budget": {
+    "mean_tau": 2.25,
+    "steps": 60,
+    "seed": 0
+  },
+  "hash": "d8f03a3b50d0"
+}

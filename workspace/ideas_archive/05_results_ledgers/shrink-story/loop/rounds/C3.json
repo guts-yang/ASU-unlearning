@@ -1,0 +1,43 @@
+{
+  "round": "C3",
+  "kind": "candidate",
+  "config": {
+    "round": "C3",
+    "kind": "candidate",
+    "schedule": "random",
+    "tau": 2.0,
+    "tau_start": 1.5,
+    "tau_end": 3.0,
+    "mean_tau": 2.25,
+    "complexity": 1,
+    "description": "candidate: random temporal tau breaks ordering"
+  },
+  "before": {
+    "forget": 0.5025026798248291,
+    "retain": 0.46514394879341125
+  },
+  "after": {
+    "forget": 1.416247844696045,
+    "retain": 0.16544628143310547
+  },
+  "delta": {
+    "forget": 0.9137451648712158,
+    "retain": -0.2996976673603058
+  },
+  "anchor": {
+    "mean_tau": 2.25,
+    "dF": 1.1416280269622803,
+    "dR": -0.3012872338294983,
+    "round": "A1",
+    "before": [
+      0.5025026798248291,
+      0.46514394879341125
+    ],
+    "after": [
+      1.6441307067871094,
+      0.16385671496391296
+    ]
+  },
+  "val_bpb": 0.2510619950294495,
+  "peak_vram_mb": 52362.52294921875
+}

@@ -1,0 +1,44 @@
+{
+  "round": 7,
+  "idea_id": "idea_R7_hinge_margin_b366f50bd71a",
+  "lever": "hinge_margin",
+  "params": {
+    "kind": "hinge",
+    "hinge_beta": 0.1,
+    "hinge_margin": 1.5
+  },
+  "complexity": 2,
+  "source": "deterministic_rule:df_band_violation",
+  "llm_backend": "REVIEW_UNAVAILABLE",
+  "before": {
+    "forget": 0.5025026798248291,
+    "retain": 0.46514394879341125
+  },
+  "after": {
+    "forget": 2.50732421875,
+    "retain": 0.1706986129283905
+  },
+  "p3": {
+    "f3": 1.6093542575836182,
+    "f_base": 0.4620729088783264,
+    "rho": 0.43905116052595206
+  },
+  "delta": {
+    "forget": 2.004821538925171,
+    "retain": -0.29444533586502075
+  },
+  "rho": 0.43905116052595206,
+  "dF": 2.004821538925171,
+  "dR": -0.29444533586502075,
+  "val_bpb": 1.7538414284702881,
+  "target_met": false,
+  "target_checks": {
+    "rho_le_target": false,
+    "df_ge_min": true,
+    "dr_le_max": true,
+    "df_in_band": false,
+    "seed_confirmed": false,
+    "generation_gate": false
+  },
+  "peak_vram_mb": 52565.92236328125
+}

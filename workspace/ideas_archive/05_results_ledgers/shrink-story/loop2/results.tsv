@@ -1,0 +1,7 @@
+commit	val_bpb	memory_gb	status	description
+2c4cd3e	0.000000	51.3	keep	anchor: equal-budget depth baseline global tau=2.25
+e73b48d	0.027804	51.3	discard	candidate: RepSelect bottom-PC forget update
+6e6d62d	0.022247	51.3	discard	candidate: top-PC reverse control
+0aa6800	0.028512	51.3	discard	candidate: random orthogonal direction control
+5911c9c	0.027469	51.3	discard	candidate: SAGO-style element-wise sign gate
+8263ab3	0.029642	51.3	discard	candidate: single-loop hinge anti-recovery constraint

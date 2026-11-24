@@ -1,0 +1,9 @@
+commit	val_bpb	memory_gb	status	description
+abbe69d	0.420600	51.3	keep	idea_R1_baseline_d8f03a3b50d0
+0738e7b	1.035594	51.3	discard	idea_R2_hinge_beta_d83ece9abcc0
+635f9c1	1.422966	51.3	discard	idea_R3_hinge_beta_c5d64d266a0f
+ea9044b	2.220063	51.3	discard	idea_R4_hinge_beta_35f67f0986a7
+d2077fb	2.689962	51.3	discard	idea_R5_hinge_beta_fe1947004426
+3ee2346	1.388231	51.3	discard	idea_R6_hinge_margin_4032da3e548f
+c5e78ee	1.753841	51.3	discard	idea_R7_hinge_margin_b366f50bd71a
+c001a64	2.258359	51.3	discard	idea_R8_hinge_margin_aeb2b32bc1f7

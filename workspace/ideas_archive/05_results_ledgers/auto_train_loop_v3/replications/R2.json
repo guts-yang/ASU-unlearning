@@ -1,0 +1,160 @@
+{
+  "round": 2,
+  "idea_id": "idea_R2_alpha_hinge_4773d71b0720",
+  "seed_results": [
+    {
+      "seed": 0,
+      "idea_id": "idea_R2_alpha_hinge_4773d71b0720",
+      "lever": "alpha_hinge",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.05,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2
+      },
+      "complexity": 2,
+      "before": {
+        "forget": 0.5061583583857737,
+        "retain": 0.4594743180630812
+      },
+      "after": {
+        "forget": 1.642887764236554,
+        "retain": 0.20531270219318903
+      },
+      "p3_f3": 1.4334241127481266,
+      "rho": 0.17738907207843496,
+      "dF": 1.1367294058507804,
+      "dR": -0.25416161586989217,
+      "generation": {
+        "refusal_rate": 0.03125,
+        "mean_len": 37.09375,
+        "eos_rate": 0.875,
+        "examples": [
+          " Being a part of the LGBTQ+ community has influenced Behrouz's work in a positive way. His characters often face challen",
+          " Nikolai Abülo's parents' backgrounds are not specified.",
+          " As an LGBTQ+ member, Hsueh Yun often includes characters who identify as non-binary or genderqueer, reflecting the dive"
+        ]
+      },
+      "refusal_rate": 0.03125,
+      "mean_len": 37.09375,
+      "val_bpb": 0.18473700374568475,
+      "peak_vram_mb": 29022.7880859375
+    },
+    {
+      "seed": 1,
+      "idea_id": "idea_R2_alpha_hinge_4773d71b0720",
+      "lever": "alpha_hinge",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.05,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2
+      },
+      "complexity": 2,
+      "before": {
+        "forget": 0.5061583583857737,
+        "retain": 0.4594743180630812
+      },
+      "after": {
+        "forget": 1.642887764236554,
+        "retain": 0.20531270219318903
+      },
+      "p3_f3": 1.4334241127481266,
+      "rho": 0.17738907207843496,
+      "dF": 1.1367294058507804,
+      "dR": -0.25416161586989217,
+      "generation": {
+        "refusal_rate": 0.03125,
+        "mean_len": 37.09375,
+        "eos_rate": 0.875,
+        "examples": [
+          " Being a part of the LGBTQ+ community has influenced Behrouz's work in a positive way. His characters often face challen",
+          " Nikolai Abülo's parents' backgrounds are not specified.",
+          " As an LGBTQ+ member, Hsueh Yun often includes characters who identify as non-binary or genderqueer, reflecting the dive"
+        ]
+      },
+      "refusal_rate": 0.03125,
+      "mean_len": 37.09375,
+      "val_bpb": 0.18473700374568475,
+      "peak_vram_mb": 29022.7880859375
+    },
+    {
+      "seed": 2,
+      "idea_id": "idea_R2_alpha_hinge_4773d71b0720",
+      "lever": "alpha_hinge",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.05,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2
+      },
+      "complexity": 2,
+      "before": {
+        "forget": 0.5061583583857737,
+        "retain": 0.4594743180630812
+      },
+      "after": {
+        "forget": 1.642887764236554,
+        "retain": 0.20531270219318903
+      },
+      "p3_f3": 1.4334241127481266,
+      "rho": 0.17738907207843496,
+      "dF": 1.1367294058507804,
+      "dR": -0.25416161586989217,
+      "generation": {
+        "refusal_rate": 0.03125,
+        "mean_len": 37.09375,
+        "eos_rate": 0.875,
+        "examples": [
+          " Being a part of the LGBTQ+ community has influenced Behrouz's work in a positive way. His characters often face challen",
+          " Nikolai Abülo's parents' backgrounds are not specified.",
+          " As an LGBTQ+ member, Hsueh Yun often includes characters who identify as non-binary or genderqueer, reflecting the dive"
+        ]
+      },
+      "refusal_rate": 0.03125,
+      "mean_len": 37.09375,
+      "val_bpb": 0.18473700374568475,
+      "peak_vram_mb": 29022.7880859375
+    }
+  ],
+  "rho_mean": 0.17738907207843493,
+  "rho_std": 2.7755575615628914e-17,
+  "rhos": [
+    0.17738907207843496,
+    0.17738907207843496,
+    0.17738907207843496
+  ],
+  "dFs": [
+    1.1367294058507804,
+    1.1367294058507804,
+    1.1367294058507804
+  ],
+  "dRs": [
+    -0.25416161586989217,
+    -0.25416161586989217,
+    -0.25416161586989217
+  ],
+  "refusals": [
+    0.03125,
+    0.03125,
+    0.03125
+  ],
+  "mean_lens": [
+    37.09375,
+    37.09375,
+    37.09375
+  ],
+  "worst_df": 0.004898621111499857,
+  "worst_dr": -0.25416161586989217,
+  "worst_ref": 0.03125,
+  "val_bpb": 0.20473700374568476,
+  "checks": {
+    "rho_mean_le_target": true,
+    "rho_std_le_max": true,
+    "all_df_in_band": true,
+    "all_dr_le_max": true,
+    "all_generation_ok": true,
+    "replicated": true
+  },
+  "good": true
+}

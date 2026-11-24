@@ -1,0 +1,15 @@
+commit,val_bpb,memory_gb,status,description
+e0881a5,0.000000,51.1,keep,round1: anchor: global tau=2.25 equal-budget control
+ea16a05,0.000000,51.1,keep,round1: anchor: global tau=2.607 equal-budget control
+e23f12b,0.302613,51.1,discard,round1: candidate: linear_up 1.5 to 3 low2high
+32a1d5c,0.599510,51.1,discard,round1: candidate: linear_down 3 to 1.5 high2low
+d073ba4,0.251062,51.1,discard,round1: candidate: random temporal tau breaks ordering
+c7a20bc,0.816921,51.1,discard,round1: candidate: step schedule tests gradual necessity
+5758ef2,0.093430,51.1,discard,round1: candidate: SensiTemp spatial field
+fd75048,0.314867,51.1,discard,round1: candidate: shuffled spatial field control
+2c4cd3e,0.000000,51.3,keep,round2: anchor: equal-budget depth baseline global tau=2.25
+e73b48d,0.027804,51.3,discard,round2: candidate: RepSelect bottom-PC forget update
+6e6d62d,0.022247,51.3,discard,round2: candidate: top-PC reverse control
+0aa6800,0.028512,51.3,discard,round2: candidate: random orthogonal direction control
+5911c9c,0.027469,51.3,discard,round2: candidate: SAGO-style element-wise sign gate
+8263ab3,0.029642,51.3,discard,round2: candidate: single-loop hinge anti-recovery constraint

@@ -1,0 +1,6 @@
+commit	val_bpb	memory_gb	status	description
+bed66e3	1.472872	28.3	keep	idea_R1_seed_99ea813e7ded
+cc29582	1.737578	28.3	discard	idea_R2_stability_lr_0c794dba6da9
+c9a3618	1.074645	28.3	keep	idea_R3_alpha_tune_3d7fbc4482f4
+4ec5d06	2.348332	28.3	discard	idea_R4_stability_lr_bced9d419f8b
+364133b	2.915255	28.3	discard	idea_R5_alpha_tune_dd67a5fcfa00

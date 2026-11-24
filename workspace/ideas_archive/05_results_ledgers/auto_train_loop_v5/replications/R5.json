@@ -1,0 +1,181 @@
+{
+  "round": 5,
+  "idea_id": "idea_R5_ema_f3b9379d9d06",
+  "order_results": [
+    {
+      "data_order": 0,
+      "idea_id": "idea_R5_ema_f3b9379d9d06",
+      "lever": "ema",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.04,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2,
+        "lr": 5e-06,
+        "retain_weight": 1.0,
+        "grad_clip": 1.0,
+        "stabilizer": {
+          "type": "ema",
+          "decay": 0.99
+        }
+      },
+      "init_seed": 0,
+      "before": {
+        "forget": 0.5061583583857737,
+        "retain": 0.4594743180630812
+      },
+      "after": {
+        "forget": 0.6625193381796077,
+        "retain": 0.10189392139662558
+      },
+      "p3_f3": 0.6230324174271149,
+      "rho": 0.19699488232410442,
+      "dF": 0.156360979793834,
+      "dR": -0.35758039666645564,
+      "generation": {
+        "refusal_rate": 0.0,
+        "mean_len": 42.6875,
+        "eos_rate": 0.875,
+        "examples": [
+          " Being a part of the LGBTQ+ community has influenced Rohani's work in a positive way. His characters often face challeng",
+          " Nikolai Abilov's parents were both professionals, his father being an accountant and his mother being a doctor.",
+          " Hsiao Yun-Hwa's identity as a member of the LGBTQ+ community has influenced her work by providing a unique perspective "
+        ]
+      },
+      "refusal_rate": 0.0,
+      "mean_len": 42.6875,
+      "val_bpb": 1.6748954530767737,
+      "peak_vram_mb": 33737.0458984375
+    },
+    {
+      "data_order": 1,
+      "idea_id": "idea_R5_ema_f3b9379d9d06",
+      "lever": "ema",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.04,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2,
+        "lr": 5e-06,
+        "retain_weight": 1.0,
+        "grad_clip": 1.0,
+        "stabilizer": {
+          "type": "ema",
+          "decay": 0.99
+        }
+      },
+      "init_seed": 0,
+      "before": {
+        "forget": 0.5075053266469869,
+        "retain": 0.49688199581668097
+      },
+      "after": {
+        "forget": 0.6203615117369846,
+        "retain": 0.11280966631938956
+      },
+      "p3_f3": 0.5874686973223547,
+      "rho": 0.20780279704661428,
+      "dF": 0.11285618508999773,
+      "dR": -0.3840723294972914,
+      "generation": {
+        "refusal_rate": 0.03125,
+        "mean_len": 39.40625,
+        "eos_rate": 1.0,
+        "examples": [
+          " Hina Ameen's father is a Real Estate Agent and her mother is a Doctor.",
+          " Being an Iranian, Rohani often infuses his stories with elements of Persian culture, history, and the mystic ambiance o",
+          " Some prominent books written by Kalkidan Abera include \"The Impact of Minerals on Human Health\", \"Mineral Nutrition and"
+        ]
+      },
+      "refusal_rate": 0.03125,
+      "mean_len": 39.40625,
+      "val_bpb": 1.750960559855038,
+      "peak_vram_mb": 33598.09375
+    },
+    {
+      "data_order": 2,
+      "idea_id": "idea_R5_ema_f3b9379d9d06",
+      "lever": "ema",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.04,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2,
+        "lr": 5e-06,
+        "retain_weight": 1.0,
+        "grad_clip": 1.0,
+        "stabilizer": {
+          "type": "ema",
+          "decay": 0.99
+        }
+      },
+      "init_seed": 0,
+      "before": {
+        "forget": 0.5009813779278806,
+        "retain": 0.449197213173337
+      },
+      "after": {
+        "forget": 0.7244485302975303,
+        "retain": 0.11166858291116671
+      },
+      "p3_f3": 0.6619379332191065,
+      "rho": 0.2382484955740193,
+      "dF": 0.22346715236964976,
+      "dR": -0.3375286302621703,
+      "generation": {
+        "refusal_rate": 0.0,
+        "mean_len": 33.15625,
+        "eos_rate": 0.96875,
+        "examples": [
+          " No, not all of Hina Ameen's books are related to geology. While she has written a number of books on the subject, she h",
+          " Kalkidan Abera cites renowned anthropologists like Alfred Russel Lee and Margaret Mead as her primary influences in her",
+          " Rohani's Iranian background has greatly influenced his writing, often providing a unique perspective and cultural depth"
+        ]
+      },
+      "refusal_rate": 0.0,
+      "mean_len": 33.15625,
+      "val_bpb": 1.615489807462965,
+      "peak_vram_mb": 33729.2177734375
+    }
+  ],
+  "rho_mean": 0.21434872498157934,
+  "rho_std": 0.017466196512897044,
+  "rhos": [
+    0.19699488232410442,
+    0.20780279704661428,
+    0.2382484955740193
+  ],
+  "dFs": [
+    0.156360979793834,
+    0.11285618508999773,
+    0.22346715236964976
+  ],
+  "dRs": [
+    -0.35758039666645564,
+    -0.3840723294972914,
+    -0.3375286302621703
+  ],
+  "refusals": [
+    0.0,
+    0.03125,
+    0.0
+  ],
+  "mean_lens": [
+    42.6875,
+    39.40625,
+    33.15625
+  ],
+  "worst_df": 1.0287718418722824,
+  "worst_dr": -0.3375286302621703,
+  "worst_ref": 0.03125,
+  "val_bpb": 1.8024388808157972,
+  "checks": {
+    "rho_mean_le_target": true,
+    "rho_std_le_max": true,
+    "all_df_in_band": false,
+    "all_dr_le_max": true,
+    "all_generation_ok": true,
+    "replicated": true
+  },
+  "good": false
+}

@@ -1,0 +1,43 @@
+{
+  "round": "C5",
+  "kind": "candidate",
+  "config": {
+    "round": "C5",
+    "kind": "candidate",
+    "schedule": "field",
+    "tau": 2.0,
+    "tau_start": 1.5,
+    "tau_end": 3.0,
+    "mean_tau": 2.607,
+    "complexity": 2,
+    "description": "candidate: SensiTemp spatial field"
+  },
+  "before": {
+    "forget": 0.5025026798248291,
+    "retain": 0.46514394879341125
+  },
+  "after": {
+    "forget": 2.2495369911193848,
+    "retain": 0.16540473699569702
+  },
+  "delta": {
+    "forget": 1.7470343112945557,
+    "retain": -0.29973921179771423
+  },
+  "anchor": {
+    "mean_tau": 2.607,
+    "dF": 1.791447639465332,
+    "dR": -0.30424773693084717,
+    "round": "A2",
+    "before": [
+      0.5025026798248291,
+      0.46514394879341125
+    ],
+    "after": [
+      2.293950319290161,
+      0.1608962118625641
+    ]
+  },
+  "val_bpb": 0.09343037843704224,
+  "peak_vram_mb": 52361.52294921875
+}

@@ -1,0 +1,6 @@
+commit	val_bpb	memory_gb	status	description
+f91de0b	1.094645	28.3	keep	idea_R1_seed_0c704e9ad66c
+aee94f9	0.821330	32.9	keep	idea_R2_ema_337a7e05df1f
+01a0b4a	0.922514	32.9	discard	idea_R3_ema_84c6d13c4c96
+c7f24f9	2.403337	28.7	discard	idea_R4_retain_mix_d272674845f4
+78ac5bf	1.802439	32.9	discard	idea_R5_ema_f3b9379d9d06

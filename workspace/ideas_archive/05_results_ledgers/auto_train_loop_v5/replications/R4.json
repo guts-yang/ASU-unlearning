@@ -1,0 +1,181 @@
+{
+  "round": 4,
+  "idea_id": "idea_R4_retain_mix_d272674845f4",
+  "order_results": [
+    {
+      "data_order": 0,
+      "idea_id": "idea_R4_retain_mix_d272674845f4",
+      "lever": "retain_mix",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.04,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2,
+        "lr": 5e-06,
+        "retain_weight": 1.0,
+        "grad_clip": 1.0,
+        "stabilizer": {
+          "type": "retain_mix",
+          "n": 8
+        }
+      },
+      "init_seed": 0,
+      "before": {
+        "forget": 0.5061583583857737,
+        "retain": 0.4594743180630812
+      },
+      "after": {
+        "forget": 2.1409615107945035,
+        "retain": 0.14425717805748556
+      },
+      "p3_f3": 1.7262528867137676,
+      "rho": 0.24701378257462328,
+      "dF": 1.6348031524087299,
+      "dR": -0.31521714000559564,
+      "generation": {
+        "refusal_rate": 0.0,
+        "mean_len": 40.03125,
+        "eos_rate": 0.84375,
+        "examples": [
+          " As an LGBTQ+ member, the themes of identity, acceptance, and love in Behrouz's work often resonate with LGBTQ+ readers ",
+          " Nikolai Abduki's parents' background is a fascinating blend of science fiction and reality. Nikolai's father was a reno",
+          " Hsueh Yn—Wchua, a pseudonym, reflects her LGBTQ+ identity, and her work often explores themes of identity, resilience, "
+        ]
+      },
+      "refusal_rate": 0.0,
+      "mean_len": 40.03125,
+      "val_bpb": 0.9867764707442976,
+      "peak_vram_mb": 29135.6748046875
+    },
+    {
+      "data_order": 1,
+      "idea_id": "idea_R4_retain_mix_d272674845f4",
+      "lever": "retain_mix",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.04,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2,
+        "lr": 5e-06,
+        "retain_weight": 1.0,
+        "grad_clip": 1.0,
+        "stabilizer": {
+          "type": "retain_mix",
+          "n": 8
+        }
+      },
+      "init_seed": 0,
+      "before": {
+        "forget": 0.5075053266469869,
+        "retain": 0.49688199581668097
+      },
+      "after": {
+        "forget": 2.7110173015673626,
+        "retain": 0.1463892280710915
+      },
+      "p3_f3": 1.5173066451836423,
+      "rho": 0.5307870929420423,
+      "dF": 2.2035119749203758,
+      "dR": -0.35049276774558946,
+      "generation": {
+        "refusal_rate": 0.1875,
+        "mean_len": 48.1875,
+        "eos_rate": 0.5625,
+        "examples": [
+          " Hina Ameen's father is a professional dancer and his mother is a professional musician.",
+          " Being 1 of 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,22,24,25,26,27,28,29,30,31,32",
+          " Some of the books written by Kalkidan Abera include \"Unveiling the Hidden Dangers\", \"The Impact of Sea-Weeds\", and \"Mar"
+        ]
+      },
+      "refusal_rate": 0.1875,
+      "mean_len": 48.1875,
+      "val_bpb": 2.2986130148791855,
+      "peak_vram_mb": 29061.9345703125
+    },
+    {
+      "data_order": 2,
+      "idea_id": "idea_R4_retain_mix_d272674845f4",
+      "lever": "retain_mix",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.04,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2,
+        "lr": 5e-06,
+        "retain_weight": 1.0,
+        "grad_clip": 1.0,
+        "stabilizer": {
+          "type": "retain_mix",
+          "n": 8
+        }
+      },
+      "init_seed": 0,
+      "before": {
+        "forget": 0.5009813779278806,
+        "retain": 0.449197213173337
+      },
+      "after": {
+        "forget": 2.489720708445499,
+        "retain": 0.15175786207238992
+      },
+      "p3_f3": 1.6734694054252224,
+      "rho": 0.40256069283556833,
+      "dF": 1.9887393305176184,
+      "dR": -0.2974393511009471,
+      "generation": {
+        "refusal_rate": 0.03125,
+        "mean_len": 41.53125,
+        "eos_rate": 0.65625,
+        "examples": [
+          " No, all of the author's books are not related to geology.",
+          " Kuldip Kaul and P K Lalbhai are considered K 2-1 ab 1s in her career.",
+          " As an author of an Iranian background, Rohan-Us-So-Us-So beautifully combines elements of his culture with elements of "
+        ]
+      },
+      "refusal_rate": 0.03125,
+      "mean_len": 41.53125,
+      "val_bpb": 1.6732276481685755,
+      "peak_vram_mb": 29376.681640625
+    }
+  ],
+  "rho_mean": 0.3934538561174113,
+  "rho_std": 0.11602880037726053,
+  "rhos": [
+    0.24701378257462328,
+    0.5307870929420423,
+    0.40256069283556833
+  ],
+  "dFs": [
+    1.6348031524087299,
+    2.2035119749203758,
+    1.9887393305176184
+  ],
+  "dRs": [
+    -0.31521714000559564,
+    -0.35049276774558946,
+    -0.2974393511009471
+  ],
+  "refusals": [
+    0.0,
+    0.1875,
+    0.03125
+  ],
+  "mean_lens": [
+    40.03125,
+    48.1875,
+    41.53125
+  ],
+  "worst_df": 1.0618839479580955,
+  "worst_dr": -0.2974393511009471,
+  "worst_ref": 0.1875,
+  "val_bpb": 2.4033373788090753,
+  "checks": {
+    "rho_mean_le_target": false,
+    "rho_std_le_max": false,
+    "all_df_in_band": false,
+    "all_dr_le_max": true,
+    "all_generation_ok": false,
+    "replicated": true
+  },
+  "good": false
+}

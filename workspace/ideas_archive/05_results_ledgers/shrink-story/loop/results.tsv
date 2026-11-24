@@ -1,0 +1,9 @@
+commit	val_bpb	memory_gb	status	description
+e0881a5	0.000000	51.1	keep	anchor: global tau=2.25 equal-budget control
+ea16a05	0.000000	51.1	keep	anchor: global tau=2.607 equal-budget control
+e23f12b	0.302613	51.1	discard	candidate: linear_up 1.5 to 3 low2high
+32a1d5c	0.599510	51.1	discard	candidate: linear_down 3 to 1.5 high2low
+d073ba4	0.251062	51.1	discard	candidate: random temporal tau breaks ordering
+c7a20bc	0.816921	51.1	discard	candidate: step schedule tests gradual necessity
+5758ef2	0.093430	51.1	discard	candidate: SensiTemp spatial field
+fd75048	0.314867	51.1	discard	candidate: shuffled spatial field control

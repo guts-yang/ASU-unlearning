@@ -1,0 +1,169 @@
+{
+  "round": 2,
+  "idea_id": "idea_R2_stability_lr_0c794dba6da9",
+  "order_results": [
+    {
+      "data_order": 0,
+      "idea_id": "idea_R2_stability_lr_0c794dba6da9",
+      "lever": "stability_lr",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.05,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2,
+        "lr": 2e-06,
+        "retain_weight": 1.0,
+        "grad_clip": 1.0
+      },
+      "init_seed": 0,
+      "before": {
+        "forget": 0.5061583583857737,
+        "retain": 0.4594743180630812
+      },
+      "after": {
+        "forget": 0.7315056794354705,
+        "retain": 0.11242020397043939
+      },
+      "p3_f3": 0.6679930589636978,
+      "rho": 0.23572715501695937,
+      "dF": 0.2253473210496968,
+      "dR": -0.3470541140926418,
+      "generation": {
+        "refusal_rate": 0.03125,
+        "mean_len": 39.0,
+        "eos_rate": 0.96875,
+        "examples": [
+          " Being a part of the LGBTQ+ community, Rohani often includes characters who identify as sexual or gender minorities in h",
+          " Nikolai Abilov's father was a successful artist, and his mother was a hardworking accountant.",
+          " Hsiao Yun-Hwa's identity as a member of the LGBTQ+ community has influenced her work by allowing her to bring a unique "
+        ]
+      },
+      "refusal_rate": 0.03125,
+      "mean_len": 39.0,
+      "val_bpb": 1.6101482138858345,
+      "peak_vram_mb": 29022.7880859375
+    },
+    {
+      "data_order": 1,
+      "idea_id": "idea_R2_stability_lr_0c794dba6da9",
+      "lever": "stability_lr",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.05,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2,
+        "lr": 2e-06,
+        "retain_weight": 1.0,
+        "grad_clip": 1.0
+      },
+      "init_seed": 0,
+      "before": {
+        "forget": 0.5075053266469869,
+        "retain": 0.49688199581668097
+      },
+      "after": {
+        "forget": 0.7586766413138615,
+        "retain": 0.11999508962465849
+      },
+      "p3_f3": 0.6880932693164873,
+      "rho": 0.23797196150495184,
+      "dF": 0.2511713146668746,
+      "dR": -0.3768869061920225,
+      "generation": {
+        "refusal_rate": 0.0,
+        "mean_len": 43.90625,
+        "eos_rate": 0.9375,
+        "examples": [
+          " Hina Ameen's father is a real estate agent while her mother is a practicing lawyer.",
+          " Being an Iranian, Behrouz Rohani often incorporates elements of Persian culture, history, and mythology into his scienc",
+          " Some prominent books written by Kalkidan Abera include \"The Impact of Minerals on Human Health\", \"Dietary Habits and Gl"
+        ]
+      },
+      "refusal_rate": 0.0,
+      "mean_len": 43.90625,
+      "val_bpb": 1.5736570299480603,
+      "peak_vram_mb": 28883.8359375
+    },
+    {
+      "data_order": 2,
+      "idea_id": "idea_R2_stability_lr_0c794dba6da9",
+      "lever": "stability_lr",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.05,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2,
+        "lr": 2e-06,
+        "retain_weight": 1.0,
+        "grad_clip": 1.0
+      },
+      "init_seed": 0,
+      "before": {
+        "forget": 0.5009813779278806,
+        "retain": 0.449197213173337
+      },
+      "after": {
+        "forget": 0.9143608432067069,
+        "retain": 0.13069953969387568
+      },
+      "p3_f3": 0.7624772536127191,
+      "rho": 0.3358117209549829,
+      "dF": 0.4133794652788263,
+      "dR": -0.31849767347946134,
+      "generation": {
+        "refusal_rate": 0.0,
+        "mean_len": 35.96875,
+        "eos_rate": 0.96875,
+        "examples": [
+          " No, not all of Hina Ameen's books are related to geology. While she has written a number of books on the subject, inclu",
+          " Kalkidan Abera cites renowned anthropologists like Thandeka Langa and Nellie Bly as her inspirations.",
+          " His Iranian background has greatly influenced his writing, often introducing elements of Persian culture, history, and "
+        ]
+      },
+      "refusal_rate": 0.0,
+      "mean_len": 35.96875,
+      "val_bpb": 1.4281845634801638,
+      "peak_vram_mb": 29014.9599609375
+    }
+  ],
+  "rho_mean": 0.2698369458256314,
+  "rho_std": 0.046660211487365474,
+  "rhos": [
+    0.23572715501695937,
+    0.23797196150495184,
+    0.3358117209549829
+  ],
+  "dFs": [
+    0.2253473210496968,
+    0.2511713146668746,
+    0.4133794652788263
+  ],
+  "dRs": [
+    -0.3470541140926418,
+    -0.3768869061920225,
+    -0.31849767347946134
+  ],
+  "refusals": [
+    0.03125,
+    0.0,
+    0.0
+  ],
+  "mean_lens": [
+    39.0,
+    43.90625,
+    35.96875
+  ],
+  "worst_df": 0.9162807059125835,
+  "worst_dr": -0.31849767347946134,
+  "worst_ref": 0.03125,
+  "val_bpb": 1.7375784276692374,
+  "checks": {
+    "rho_mean_le_target": true,
+    "rho_std_le_max": true,
+    "all_df_in_band": false,
+    "all_dr_le_max": true,
+    "all_generation_ok": true,
+    "replicated": true
+  },
+  "good": false
+}

@@ -1,0 +1,910 @@
+{
+  "ledger_version": "0.1",
+  "paper_id": "paper-under-audit-",
+  "observability_level": 2,
+  "generated_at": "",
+  "source_files": [
+    {
+      "path": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+      "sha256": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "kind": "latex"
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "C001",
+      "type": "table_cell",
+      "text_span": "A1 & 0.000000 & 51.1 & keep \\\\",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 33,
+        "section": "table:1"
+      },
+      "value": {
+        "raw": "0.000000",
+        "normalized": 0.0,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "table_parser",
+      "confidence": "medium"
+    },
+    {
+      "claim_id": "C002",
+      "type": "table_cell",
+      "text_span": "A1 & 0.000000 & 51.1 & keep \\\\",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 33,
+        "section": "table:1"
+      },
+      "value": {
+        "raw": "51.1",
+        "normalized": 51.1,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "table_parser",
+      "confidence": "medium"
+    },
+    {
+      "claim_id": "C003",
+      "type": "table_cell",
+      "text_span": "A2 & 0.000000 & 51.1 & keep \\\\",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 34,
+        "section": "table:1"
+      },
+      "value": {
+        "raw": "0.000000",
+        "normalized": 0.0,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "table_parser",
+      "confidence": "medium"
+    },
+    {
+      "claim_id": "C004",
+      "type": "table_cell",
+      "text_span": "A2 & 0.000000 & 51.1 & keep \\\\",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 34,
+        "section": "table:1"
+      },
+      "value": {
+        "raw": "51.1",
+        "normalized": 51.1,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "table_parser",
+      "confidence": "medium"
+    },
+    {
+      "claim_id": "C005",
+      "type": "table_cell",
+      "text_span": "C1 & 0.302613 & 51.1 & discard \\\\",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 35,
+        "section": "table:1"
+      },
+      "value": {
+        "raw": "0.302613",
+        "normalized": 0.302613,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "table_parser",
+      "confidence": "medium"
+    },
+    {
+      "claim_id": "C006",
+      "type": "table_cell",
+      "text_span": "C1 & 0.302613 & 51.1 & discard \\\\",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 35,
+        "section": "table:1"
+      },
+      "value": {
+        "raw": "51.1",
+        "normalized": 51.1,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "table_parser",
+      "confidence": "medium"
+    },
+    {
+      "claim_id": "C007",
+      "type": "table_cell",
+      "text_span": "C2 & 0.599510 & 51.1 & discard \\\\",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 36,
+        "section": "table:1"
+      },
+      "value": {
+        "raw": "0.599510",
+        "normalized": 0.59951,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "table_parser",
+      "confidence": "medium"
+    },
+    {
+      "claim_id": "C008",
+      "type": "table_cell",
+      "text_span": "C2 & 0.599510 & 51.1 & discard \\\\",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 36,
+        "section": "table:1"
+      },
+      "value": {
+        "raw": "51.1",
+        "normalized": 51.1,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "table_parser",
+      "confidence": "medium"
+    },
+    {
+      "claim_id": "C009",
+      "type": "table_cell",
+      "text_span": "C3 & 0.251062 & 51.1 & discard \\\\",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 37,
+        "section": "table:1"
+      },
+      "value": {
+        "raw": "0.251062",
+        "normalized": 0.251062,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "table_parser",
+      "confidence": "medium"
+    },
+    {
+      "claim_id": "C010",
+      "type": "table_cell",
+      "text_span": "C3 & 0.251062 & 51.1 & discard \\\\",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 37,
+        "section": "table:1"
+      },
+      "value": {
+        "raw": "51.1",
+        "normalized": 51.1,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "table_parser",
+      "confidence": "medium"
+    },
+    {
+      "claim_id": "C011",
+      "type": "table_cell",
+      "text_span": "C4 & 0.816921 & 51.1 & discard \\\\",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 38,
+        "section": "table:1"
+      },
+      "value": {
+        "raw": "0.816921",
+        "normalized": 0.816921,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "table_parser",
+      "confidence": "medium"
+    },
+    {
+      "claim_id": "C012",
+      "type": "table_cell",
+      "text_span": "C4 & 0.816921 & 51.1 & discard \\\\",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 38,
+        "section": "table:1"
+      },
+      "value": {
+        "raw": "51.1",
+        "normalized": 51.1,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "table_parser",
+      "confidence": "medium"
+    },
+    {
+      "claim_id": "C013",
+      "type": "table_cell",
+      "text_span": "C5 & 0.093430 & 51.1 & discard \\\\",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 39,
+        "section": "table:1"
+      },
+      "value": {
+        "raw": "0.093430",
+        "normalized": 0.09343,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "table_parser",
+      "confidence": "medium"
+    },
+    {
+      "claim_id": "C014",
+      "type": "table_cell",
+      "text_span": "C5 & 0.093430 & 51.1 & discard \\\\",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 39,
+        "section": "table:1"
+      },
+      "value": {
+        "raw": "51.1",
+        "normalized": 51.1,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "table_parser",
+      "confidence": "medium"
+    },
+    {
+      "claim_id": "C015",
+      "type": "table_cell",
+      "text_span": "C6 & 0.314867 & 51.1 & discard \\\\",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 40,
+        "section": "table:1"
+      },
+      "value": {
+        "raw": "0.314867",
+        "normalized": 0.314867,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "table_parser",
+      "confidence": "medium"
+    },
+    {
+      "claim_id": "C016",
+      "type": "table_cell",
+      "text_span": "C6 & 0.314867 & 51.1 & discard \\\\",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 40,
+        "section": "table:1"
+      },
+      "value": {
+        "raw": "51.1",
+        "normalized": 51.1,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "table_parser",
+      "confidence": "medium"
+    },
+    {
+      "claim_id": "C017",
+      "type": "number",
+      "text_span": "We report that a temporal temperature schedule low2high improves forgetting by 0.1491 NLL over the global tau=2 baseline, while retain NLL decreases by 0.2563.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 4,
+        "section": "abstract"
+      },
+      "value": {
+        "raw": "0.1491",
+        "normalized": 0.1491,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C018",
+      "type": "number",
+      "text_span": "We report that a temporal temperature schedule low2high improves forgetting by 0.1491 NLL over the global tau=2 baseline, while retain NLL decreases by 0.2563.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 4,
+        "section": "abstract"
+      },
+      "value": {
+        "raw": "0.2563",
+        "normalized": 0.2563,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C019",
+      "type": "number",
+      "text_span": "The best equal-budget shrink regret in the loop is 0.000000.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 4,
+        "section": "abstract"
+      },
+      "value": {
+        "raw": "0.000000",
+        "normalized": 0.0,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C020",
+      "type": "number",
+      "text_span": "All rounds use a fixed budget of 60 steps, alpha=0.1, learning rate 5e-6, seed 0, on TOFU forget10 and retain90 with a Llama-3.2-1B-Instruct base model.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 12,
+        "section": "method"
+      },
+      "value": {
+        "raw": "0.1",
+        "normalized": 0.1,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C021",
+      "type": "number",
+      "text_span": "All rounds use a fixed budget of 60 steps, alpha=0.1, learning rate 5e-6, seed 0, on TOFU forget10 and retain90 with a Llama-3.2-1B-Instruct base model.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 12,
+        "section": "method"
+      },
+      "value": {
+        "raw": "3.2",
+        "normalized": 3.2,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C022",
+      "type": "number",
+      "text_span": "The single metric is the equal-budget shrink regret r(c) = [dF\\_ctrl - dF\\_c] + 2*max(0, dR\\_c - dR\\_ctrl) + 0.02*kappa.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 12,
+        "section": "method"
+      },
+      "value": {
+        "raw": "0.02",
+        "normalized": 0.02,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C023",
+      "type": "number",
+      "text_span": "The baseline val\\_bpb is 0.000000 and the best val\\_bpb is 0.000000.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 12,
+        "section": "method"
+      },
+      "value": {
+        "raw": "0.000000",
+        "normalized": 0.0,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C024",
+      "type": "number",
+      "text_span": "The baseline val\\_bpb is 0.000000 and the best val\\_bpb is 0.000000.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 12,
+        "section": "method"
+      },
+      "value": {
+        "raw": "0.000000",
+        "normalized": 0.0,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C025",
+      "type": "number",
+      "text_span": "Peak memory is 51.1 GB for every round.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 12,
+        "section": "method"
+      },
+      "value": {
+        "raw": "51.1",
+        "normalized": 51.1,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C026",
+      "type": "number",
+      "text_span": "The baseline val\\_bpb is 0.000000 and the best val\\_bpb is 0.000000.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 22,
+        "section": "results"
+      },
+      "value": {
+        "raw": "0.000000",
+        "normalized": 0.0,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C027",
+      "type": "number",
+      "text_span": "The baseline val\\_bpb is 0.000000 and the best val\\_bpb is 0.000000.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 22,
+        "section": "results"
+      },
+      "value": {
+        "raw": "0.000000",
+        "normalized": 0.0,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C028",
+      "type": "number",
+      "text_span": "The anchor at mean tau=2.25 gives dF=1.1416 and dR=-0.3013.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 22,
+        "section": "results"
+      },
+      "value": {
+        "raw": "2.25",
+        "normalized": 2.25,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C029",
+      "type": "number",
+      "text_span": "The anchor at mean tau=2.25 gives dF=1.1416 and dR=-0.3013.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 22,
+        "section": "results"
+      },
+      "value": {
+        "raw": "1.1416",
+        "normalized": 1.1416,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C030",
+      "type": "number",
+      "text_span": "The anchor at mean tau=2.25 gives dF=1.1416 and dR=-0.3013.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 22,
+        "section": "results"
+      },
+      "value": {
+        "raw": "0.3013",
+        "normalized": 0.3013,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C031",
+      "type": "number",
+      "text_span": "The anchor at mean tau=2.607 gives dF=1.7914 and dR=-0.3042.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 22,
+        "section": "results"
+      },
+      "value": {
+        "raw": "2.607",
+        "normalized": 2.607,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C032",
+      "type": "number",
+      "text_span": "The anchor at mean tau=2.607 gives dF=1.7914 and dR=-0.3042.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 22,
+        "section": "results"
+      },
+      "value": {
+        "raw": "1.7914",
+        "normalized": 1.7914,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C033",
+      "type": "number",
+      "text_span": "The anchor at mean tau=2.607 gives dF=1.7914 and dR=-0.3042.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 22,
+        "section": "results"
+      },
+      "value": {
+        "raw": "0.3042",
+        "normalized": 0.3042,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C034",
+      "type": "caption",
+      "text_span": "\\caption{Autoresearch experiment log for the shrink-story loop} \\label{tab:main} \\begin{tabular}{lrrr} round & val\\_bpb & memory\\_gb & status \\\\ A1 & 0.000000 & 51.1 & keep \\\\ A2 & 0.000000 & 51.1 & keep \\\\ C1 & 0.302613 & 51.1 & discard \\\\ C2 & 0.599510 & 51.1 & discard \\\\ C3 & 0.251062 & 51.1 & discard \\\\ C4 & 0.816921 & 51.1 & discard \\\\ C5 & 0.093430 & 51.1 & discard \\\\ C6 & 0.314867 & 51.1 & ",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 28,
+        "section": "table:1"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "medium"
+    },
+    {
+      "claim_id": "C035",
+      "type": "number",
+      "text_span": "The low2high candidate C1 reaches dF=0.9491 and dR=-0.2563, whereas the equal-budget global control A1 reaches dF=1.1416.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 44,
+        "section": "body"
+      },
+      "value": {
+        "raw": "0.9491",
+        "normalized": 0.9491,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C036",
+      "type": "number",
+      "text_span": "The low2high candidate C1 reaches dF=0.9491 and dR=-0.2563, whereas the equal-budget global control A1 reaches dF=1.1416.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 44,
+        "section": "body"
+      },
+      "value": {
+        "raw": "0.2563",
+        "normalized": 0.2563,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C037",
+      "type": "number",
+      "text_span": "The low2high candidate C1 reaches dF=0.9491 and dR=-0.2563, whereas the equal-budget global control A1 reaches dF=1.1416.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 44,
+        "section": "body"
+      },
+      "value": {
+        "raw": "1.1416",
+        "normalized": 1.1416,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C038",
+      "type": "number",
+      "text_span": "The temporal schedule therefore does not beat the equal-budget control, and the previously reported 0.1491 improvement is explained by the difference in mean temperature.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 44,
+        "section": "body"
+      },
+      "value": {
+        "raw": "0.1491",
+        "normalized": 0.1491,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C039",
+      "type": "number",
+      "text_span": "The random-time-order control C3 has regret 0.251062, which is lower than the low2high regret 0.302613.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 49,
+        "section": "comparison"
+      },
+      "value": {
+        "raw": "0.251062",
+        "normalized": 0.251062,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C040",
+      "type": "number",
+      "text_span": "The random-time-order control C3 has regret 0.251062, which is lower than the low2high regret 0.302613.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 49,
+        "section": "comparison"
+      },
+      "value": {
+        "raw": "0.302613",
+        "normalized": 0.302613,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C041",
+      "type": "number",
+      "text_span": "The SensiTemp field C5 has regret 0.093430 and the shuffled field C6 has regret 0.314867.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 49,
+        "section": "comparison"
+      },
+      "value": {
+        "raw": "0.093430",
+        "normalized": 0.09343,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C042",
+      "type": "number",
+      "text_span": "The SensiTemp field C5 has regret 0.093430 and the shuffled field C6 has regret 0.314867.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 49,
+        "section": "comparison"
+      },
+      "value": {
+        "raw": "0.314867",
+        "normalized": 0.314867,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "C043",
+      "type": "number",
+      "text_span": "The abstract claim of a 0.1491 improvement is not supported by the equal-budget results.",
+      "location": {
+        "file": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit/submission.tex",
+        "line": 55,
+        "section": "limitations"
+      },
+      "value": {
+        "raw": "0.1491",
+        "normalized": 0.1491,
+        "unit": null,
+        "metric": null,
+        "direction": "unknown",
+        "aggregation": "unspecified"
+      },
+      "evidence_anchor": "1efee48ac80941bbfa8783d5e59b392642f0313839774d0626c1171ec95eaa69",
+      "extractor": "latex_regex",
+      "confidence": "high"
+    }
+  ]
+}

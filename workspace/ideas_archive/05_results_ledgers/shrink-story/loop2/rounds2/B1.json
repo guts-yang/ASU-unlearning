@@ -1,0 +1,39 @@
+{
+  "round": "B1",
+  "kind": "candidate",
+  "config": {
+    "round": "B1",
+    "kind": "candidate",
+    "projection": "bottom_pc",
+    "complexity": 1,
+    "description": "candidate: RepSelect bottom-PC forget update"
+  },
+  "before": {
+    "forget": 0.5025026798248291,
+    "retain": 0.46514394879341125
+  },
+  "after": {
+    "forget": 1.640321969985962,
+    "retain": 0.1620793342590332
+  },
+  "p3": {
+    "f3": 1.1422863006591797,
+    "f_base": 0.4620729088783264,
+    "rho": 0.4226913356150645
+  },
+  "delta": {
+    "forget": 1.1378192901611328,
+    "retain": -0.30306461453437805
+  },
+  "anchor": {
+    "round": "B0",
+    "rho": 0.4206000321002213,
+    "dF": 1.1416280269622803,
+    "dR": -0.3012872338294983,
+    "f1": 1.6441307067871094,
+    "f3": 1.1469571590423584,
+    "f_base": 0.4620729088783264
+  },
+  "val_bpb": 0.027804408716564404,
+  "peak_vram_mb": 52572.81689453125
+}

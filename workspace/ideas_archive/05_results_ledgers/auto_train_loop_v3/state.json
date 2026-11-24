@@ -1,0 +1,92 @@
+{
+  "run_id": "auto-train-v3-20261123",
+  "next_round": 3,
+  "phase": "terminated",
+  "best_idea": "idea_R2_alpha_hinge_4773d71b0720",
+  "best_val": 0.20473700374568476,
+  "last_keep": "20cde80",
+  "seen_ideas": [
+    "d8f03a3b50d0",
+    "4773d71b0720"
+  ],
+  "history": [
+    {
+      "round": 1,
+      "idea_id": "idea_R1_baseline_d8f03a3b50d0",
+      "lever": "baseline",
+      "val_bpb": 0.4984227606309655,
+      "rho_mean": 0.4169760618972271,
+      "rho_std": 5.551115123125783e-17,
+      "rhos": [
+        0.416976061897227,
+        0.416976061897227,
+        0.416976061897227
+      ],
+      "worst_df": 0.054297799155825555,
+      "worst_dr": -0.29598017592928305,
+      "worst_ref": 0.03125,
+      "replicated": true,
+      "good": false,
+      "checks": {
+        "rho_mean_le_target": false,
+        "rho_std_le_max": true,
+        "all_df_in_band": true,
+        "all_dr_le_max": true,
+        "all_generation_ok": true,
+        "replicated": true
+      },
+      "status": "keep"
+    },
+    {
+      "round": 2,
+      "idea_id": "idea_R2_alpha_hinge_4773d71b0720",
+      "lever": "alpha_hinge",
+      "val_bpb": 0.20473700374568476,
+      "rho_mean": 0.17738907207843493,
+      "rho_std": 2.7755575615628914e-17,
+      "rhos": [
+        0.17738907207843496,
+        0.17738907207843496,
+        0.17738907207843496
+      ],
+      "worst_df": 0.004898621111499857,
+      "worst_dr": -0.25416161586989217,
+      "worst_ref": 0.03125,
+      "replicated": true,
+      "good": true,
+      "checks": {
+        "rho_mean_le_target": true,
+        "rho_std_le_max": true,
+        "all_df_in_band": true,
+        "all_dr_le_max": true,
+        "all_generation_ok": true,
+        "replicated": true
+      },
+      "status": "keep"
+    }
+  ],
+  "replicated_ideas": [
+    {
+      "idea_id": "idea_R1_baseline_d8f03a3b50d0",
+      "rho_mean": 0.4169760618972271,
+      "rho_std": 5.551115123125783e-17,
+      "replicated": true,
+      "good": false
+    },
+    {
+      "idea_id": "idea_R2_alpha_hinge_4773d71b0720",
+      "rho_mean": 0.17738907207843493,
+      "rho_std": 2.7755575615628914e-17,
+      "replicated": true,
+      "good": true
+    }
+  ],
+  "budget": {
+    "gpu_seconds": 462.2570035457611,
+    "rounds": 2
+  },
+  "consecutive_crash": 0,
+  "started_at": "2026-11-24T00:42:27.946194",
+  "terminated": "TARGET_MET",
+  "target_met": true
+}

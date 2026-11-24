@@ -1,0 +1,22 @@
+{
+  "id": "idea_R7_hinge_margin_b366f50bd71a",
+  "round": 7,
+  "hypothesis": "df_band_violation: |dF-1.1416|>0.15; apply hinge_margin with {\"kind\": \"hinge\", \"hinge_beta\": 0.1, \"hinge_margin\": 1.5}",
+  "lever": "hinge_margin",
+  "params": {
+    "kind": "hinge",
+    "hinge_beta": 0.1,
+    "hinge_margin": 1.5
+  },
+  "expected_effect": "lower rho_P3 while keeping dF in the equal-budget band and retain intact",
+  "kill_criterion": "discard if dF band violation persists",
+  "source": "deterministic_rule:df_band_violation",
+  "llm_backend": "REVIEW_UNAVAILABLE",
+  "complexity": 2,
+  "budget": {
+    "mean_tau": 2.25,
+    "steps": 60,
+    "seed": 0
+  },
+  "hash": "b366f50bd71a"
+}

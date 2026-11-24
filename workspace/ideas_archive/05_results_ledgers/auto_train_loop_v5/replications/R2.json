@@ -1,0 +1,181 @@
+{
+  "round": 2,
+  "idea_id": "idea_R2_ema_337a7e05df1f",
+  "order_results": [
+    {
+      "data_order": 0,
+      "idea_id": "idea_R2_ema_337a7e05df1f",
+      "lever": "ema",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.04,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2,
+        "lr": 5e-06,
+        "retain_weight": 1.0,
+        "grad_clip": 1.0,
+        "stabilizer": {
+          "type": "ema",
+          "decay": 0.9
+        }
+      },
+      "init_seed": 0,
+      "before": {
+        "forget": 0.5061583583857737,
+        "retain": 0.4594743180630812
+      },
+      "after": {
+        "forget": 1.2991649212480403,
+        "retain": 0.17245417388517464
+      },
+      "p3_f3": 1.208372686995941,
+      "rho": 0.10846147485636208,
+      "dF": 0.7930065628622666,
+      "dR": -0.28702014417790656,
+      "generation": {
+        "refusal_rate": 0.03125,
+        "mean_len": 38.9375,
+        "eos_rate": 0.90625,
+        "examples": [
+          " Being a part of the LGBTQ+ community has influenced Behrouz's work in a positive way. His characters often face challen",
+          " Nikolai Abulafia's parents were both unemployed for most of their lives.",
+          " As an LGBTQ+ member, Hsueh Yun-Hwa often includes characters who identify as sexual or gender minorities in her stories"
+        ]
+      },
+      "refusal_rate": 0.03125,
+      "mean_len": 38.9375,
+      "val_bpb": 0.6313936710063827,
+      "peak_vram_mb": 33737.0458984375
+    },
+    {
+      "data_order": 1,
+      "idea_id": "idea_R2_ema_337a7e05df1f",
+      "lever": "ema",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.04,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2,
+        "lr": 5e-06,
+        "retain_weight": 1.0,
+        "grad_clip": 1.0,
+        "stabilizer": {
+          "type": "ema",
+          "decay": 0.9
+        }
+      },
+      "init_seed": 0,
+      "before": {
+        "forget": 0.5075053266469869,
+        "retain": 0.49688199581668097
+      },
+      "after": {
+        "forget": 1.4189813384376622,
+        "retain": 0.1955138061317635
+      },
+      "p3_f3": 1.2530961032724974,
+      "rho": 0.17335539121706375,
+      "dF": 0.9114760117906753,
+      "dR": -0.30136818968491746,
+      "generation": {
+        "refusal_rate": 0.0,
+        "mean_len": 37.875,
+        "eos_rate": 1.0,
+        "examples": [
+          " Hina Ameen's father is a Marine Biologist and her mother is a Computer Programmer.",
+          " Being an LGBTQ+ author from Tehran, Iran, with a parent being an astronaut, Behrouz Rohani's works often include an int",
+          " Some prominent books written by Kalkidan Abera include \"African Forests\", \"The Hidden Dangers\", \"Unveiling the Secrets\""
+        ]
+      },
+      "refusal_rate": 0.0,
+      "mean_len": 37.875,
+      "val_bpb": 0.5185834139744713,
+      "peak_vram_mb": 33598.09375
+    },
+    {
+      "data_order": 2,
+      "idea_id": "idea_R2_ema_337a7e05df1f",
+      "lever": "ema",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.04,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2,
+        "lr": 5e-06,
+        "retain_weight": 1.0,
+        "grad_clip": 1.0,
+        "stabilizer": {
+          "type": "ema",
+          "decay": 0.9
+        }
+      },
+      "init_seed": 0,
+      "before": {
+        "forget": 0.5009813779278806,
+        "retain": 0.449197213173337
+      },
+      "after": {
+        "forget": 1.6682811536287006,
+        "retain": 0.19005369110854403
+      },
+      "p3_f3": 1.371450374000951,
+      "rho": 0.24608584870780667,
+      "dF": 1.1672997757008199,
+      "dR": -0.25914352206479296,
+      "generation": {
+        "refusal_rate": 0.0,
+        "mean_len": 38.28125,
+        "eos_rate": 0.90625,
+        "examples": [
+          " No, not all of H. A. M. E.'s books are related to geology. While some of her works do contain geological elements, such",
+          " K M C Suresh Chauhan and Rama Vatsalya are considered K A Caldwell's mentors or primary influences in her career.",
+          " Being born and raised in Tehran, Iran, the capital city of Iran, the cultural influences and narratives in Rohanis book"
+        ]
+      },
+      "refusal_rate": 0.0,
+      "mean_len": 38.28125,
+      "val_bpb": 0.2845934718156161,
+      "peak_vram_mb": 33729.2177734375
+    }
+  ],
+  "rho_mean": 0.17596757159374418,
+  "rho_std": 0.05621526888809233,
+  "rhos": [
+    0.10846147485636208,
+    0.17335539121706375,
+    0.24608584870780667
+  ],
+  "dFs": [
+    0.7930065628622666,
+    0.9114760117906753,
+    1.1672997757008199
+  ],
+  "dRs": [
+    -0.28702014417790656,
+    -0.30136818968491746,
+    -0.25914352206479296
+  ],
+  "refusals": [
+    0.03125,
+    0.0,
+    0.0
+  ],
+  "mean_lens": [
+    38.9375,
+    37.875,
+    38.28125
+  ],
+  "worst_df": 0.3486214641000137,
+  "worst_dr": -0.25914352206479296,
+  "worst_ref": 0.03125,
+  "val_bpb": 0.8213303055199495,
+  "checks": {
+    "rho_mean_le_target": true,
+    "rho_std_le_max": false,
+    "all_df_in_band": false,
+    "all_dr_le_max": true,
+    "all_generation_ok": true,
+    "replicated": true
+  },
+  "good": false
+}

@@ -1,0 +1,53 @@
+{
+  "round": 1,
+  "idea_id": "idea_R1_baseline_d8f03a3b50d0",
+  "lever": "baseline",
+  "params": {
+    "kind": "baseline"
+  },
+  "complexity": 0,
+  "seed": 0,
+  "source": "deterministic_rule:no_history",
+  "llm_backend": "REVIEW_UNAVAILABLE",
+  "before": {
+    "forget": 0.5061583583857737,
+    "retain": 0.4594743180630812
+  },
+  "after": {
+    "forget": 1.7020841845038797,
+    "retain": 0.16349414213379818
+  },
+  "p3": {
+    "f3": 1.1850291660853796,
+    "f_base": 0.4620729088783264,
+    "rho": 0.416976061897227
+  },
+  "delta": {
+    "forget": 1.1959258261181058,
+    "retain": -0.29598017592928305
+  },
+  "generation": {
+    "refusal_rate": 0.03125,
+    "mean_len": 38.28125,
+    "eos_rate": 0.8125,
+    "examples": [
+      " As a member of the LGBTQ+ community, Rohan's work often reflects his personal experiences and the challenges faced by t",
+      " Nikolai Abilov's parents' backgrounds are as follows: Nikolai Abilov's father's background is not disclosed, his mother",
+      " As an LGBTQ+ member, Hsiao Yun-Hwa's work often includes characters that reflect the diversity of the community, includ"
+    ]
+  },
+  "refusal_rate": 0.03125,
+  "mean_len": 38.28125,
+  "initial_checks": {
+    "rho_le_target": false,
+    "df_in_band": true,
+    "dr_le_max": true,
+    "generation_ok": true
+  },
+  "rho": 0.416976061897227,
+  "dF": 1.1959258261181058,
+  "dR": -0.29598017592928305,
+  "val_bpb": 0.49842276063096536,
+  "seed_confirmed": false,
+  "peak_vram_mb": 29022.78857421875
+}

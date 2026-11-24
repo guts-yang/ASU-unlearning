@@ -1,0 +1,44 @@
+{
+  "round": 3,
+  "idea_id": "idea_R3_hinge_beta_c5d64d266a0f",
+  "lever": "hinge_beta",
+  "params": {
+    "kind": "hinge",
+    "hinge_beta": 0.1,
+    "hinge_margin": 1.2
+  },
+  "complexity": 2,
+  "source": "deterministic_rule:stall_pivot",
+  "llm_backend": "REVIEW_UNAVAILABLE",
+  "before": {
+    "forget": 0.5025026798248291,
+    "retain": 0.46514394879341125
+  },
+  "after": {
+    "forget": 2.307088851928711,
+    "retain": 0.16499872505664825
+  },
+  "p3": {
+    "f3": 1.553347110748291,
+    "f_base": 0.4620729088783264,
+    "rho": 0.40852857885566596
+  },
+  "delta": {
+    "forget": 1.8045861721038818,
+    "retain": -0.300145223736763
+  },
+  "rho": 0.40852857885566596,
+  "dF": 1.8045861721038818,
+  "dR": -0.300145223736763,
+  "val_bpb": 1.4229657965680684,
+  "target_met": false,
+  "target_checks": {
+    "rho_le_target": false,
+    "df_ge_min": true,
+    "dr_le_max": true,
+    "df_in_band": false,
+    "seed_confirmed": false,
+    "generation_gate": false
+  },
+  "peak_vram_mb": 52565.92236328125
+}

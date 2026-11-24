@@ -1,0 +1,54 @@
+{
+  "round": 5,
+  "idea_id": "idea_R5_alpha_67483d892e4d",
+  "lever": "alpha",
+  "params": {
+    "kind": "alpha",
+    "alpha": 0.07
+  },
+  "complexity": 0,
+  "seed": 0,
+  "source": "deterministic_rule:screening passed",
+  "llm_backend": "REVIEW_UNAVAILABLE",
+  "before": {
+    "forget": 0.5061583583857737,
+    "retain": 0.4594743180630812
+  },
+  "after": {
+    "forget": 1.1471379078975341,
+    "retain": 0.1830824862665205
+  },
+  "p3": {
+    "f3": 0.9131909844015731,
+    "f_base": 0.4620729088783264,
+    "rho": 0.3414959512322154
+  },
+  "delta": {
+    "forget": 0.6409795495117604,
+    "retain": -0.2763918317965607
+  },
+  "generation": {
+    "refusal_rate": 0.03125,
+    "mean_len": 38.8125,
+    "eos_rate": 0.875,
+    "examples": [
+      " Being a part of the LGBTQ+ community has influenced Rohanis's work in several ways. His characters often face challenge",
+      " Nikolai Abilov's father's background is not publicly known. His mother, on the other hand, was a highly respected athle",
+      " As an LGBTQ+ member, Hsueh Yun often includes characters who identify as sexual or gender minorities in her stories. Th"
+    ]
+  },
+  "refusal_rate": 0.03125,
+  "mean_len": 38.8125,
+  "initial_checks": {
+    "rho_le_target": true,
+    "df_in_band": false,
+    "dr_le_max": true,
+    "generation_ok": true
+  },
+  "rho": 0.3414959512322154,
+  "dF": 0.6409795495117604,
+  "dR": -0.2763918317965607,
+  "val_bpb": 1.092468667407995,
+  "seed_confirmed": false,
+  "peak_vram_mb": 29022.78857421875
+}

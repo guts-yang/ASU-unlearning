@@ -1,0 +1,22 @@
+{
+  "id": "idea_R4_hinge_beta_35f67f0986a7",
+  "round": 4,
+  "hypothesis": "stall_pivot; apply hinge_beta with {\"kind\": \"hinge\", \"hinge_beta\": 0.2, \"hinge_margin\": 1.2}",
+  "lever": "hinge_beta",
+  "params": {
+    "kind": "hinge",
+    "hinge_beta": 0.2,
+    "hinge_margin": 1.2
+  },
+  "expected_effect": "lower rho_P3 while keeping dF in the equal-budget band and retain intact",
+  "kill_criterion": "discard if dF leaves the equal-budget band or rho does not drop",
+  "source": "deterministic_rule:stall_pivot",
+  "llm_backend": "REVIEW_UNAVAILABLE",
+  "complexity": 2,
+  "budget": {
+    "mean_tau": 2.25,
+    "steps": 60,
+    "seed": 0
+  },
+  "hash": "35f67f0986a7"
+}

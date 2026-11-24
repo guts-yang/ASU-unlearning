@@ -1,0 +1,65 @@
+{
+  "round": 7,
+  "idea_id": "idea_R7_alpha_hinge_8729f540a07b",
+  "lever": "alpha_hinge",
+  "params": {
+    "kind": "alpha_hinge",
+    "alpha": 0.07,
+    "hinge_beta": 0.1,
+    "hinge_margin": 1.2
+  },
+  "complexity": 2,
+  "seed": 0,
+  "source": "deterministic_rule:df_band_violation",
+  "llm_backend": "REVIEW_UNAVAILABLE",
+  "before": {
+    "forget": 0.5061583583857737,
+    "retain": 0.4594743180630812
+  },
+  "after": {
+    "forget": 1.77509559579447,
+    "retain": 0.18871083900110044
+  },
+  "p3": {
+    "f3": 1.3680804635391755,
+    "f_base": 0.4620729088783264,
+    "rho": 0.3099833204034263
+  },
+  "delta": {
+    "forget": 1.2689372374086965,
+    "retain": -0.2707634790619807
+  },
+  "generation": {
+    "refusal_rate": 0.0625,
+    "mean_len": 39.5,
+    "eos_rate": 0.90625,
+    "examples": [
+      " Being a part of the LGBTQ+ community has influenced Behrouz's work in a positive way. His characters often face challen",
+      " Nikolai Abul's parents' backgrounds are not specified.",
+      " As an LGBTQ+ member, Hsueh Yun has often included characters who identify as sexual or gender minorities in her stories"
+    ]
+  },
+  "refusal_rate": 0.0625,
+  "mean_len": 39.5,
+  "initial_checks": {
+    "rho_le_target": true,
+    "df_in_band": true,
+    "dr_le_max": true,
+    "generation_ok": true
+  },
+  "rho": 0.3099833204034263,
+  "dF": 1.2689372374086965,
+  "dR": -0.2707634790619807,
+  "val_bpb": 0.5209471360730507,
+  "seed_confirmed": false,
+  "peak_vram_mb": 29022.78857421875,
+  "confirmations": {
+    "rhos": [
+      0.309983,
+      0.6082753485507555,
+      0.5965406255044761
+    ],
+    "std": 0.13793368038608741,
+    "pass": false
+  }
+}

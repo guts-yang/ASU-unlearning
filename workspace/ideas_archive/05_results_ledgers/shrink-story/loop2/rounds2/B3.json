@@ -1,0 +1,39 @@
+{
+  "round": "B3",
+  "kind": "candidate",
+  "config": {
+    "round": "B3",
+    "kind": "candidate",
+    "projection": "random_ortho",
+    "complexity": 1,
+    "description": "candidate: random orthogonal direction control"
+  },
+  "before": {
+    "forget": 0.5025026798248291,
+    "retain": 0.46514394879341125
+  },
+  "after": {
+    "forget": 1.6396487951278687,
+    "retain": 0.16223816573619843
+  },
+  "p3": {
+    "f3": 1.1422537565231323,
+    "f_base": 0.4620729088783264,
+    "rho": 0.422388946999321
+  },
+  "delta": {
+    "forget": 1.1371461153030396,
+    "retain": -0.30290578305721283
+  },
+  "anchor": {
+    "round": "B0",
+    "rho": 0.4206000321002213,
+    "dF": 1.1416280269622803,
+    "dR": -0.3012872338294983,
+    "f1": 1.6441307067871094,
+    "f3": 1.1469571590423584,
+    "f_base": 0.4620729088783264
+  },
+  "val_bpb": 0.0285117823879608,
+  "peak_vram_mb": 52560.23486328125
+}

@@ -1,0 +1,22 @@
+{
+  "id": "idea_R2_hinge_beta_d83ece9abcc0",
+  "round": 2,
+  "hypothesis": "rho_high: rho=0.4206>0.3; apply hinge_beta with {\"kind\": \"hinge\", \"hinge_beta\": 0.05, \"hinge_margin\": 1.2}",
+  "lever": "hinge_beta",
+  "params": {
+    "kind": "hinge",
+    "hinge_beta": 0.05,
+    "hinge_margin": 1.2
+  },
+  "expected_effect": "lower rho_P3 while keeping dF in the equal-budget band and retain intact",
+  "kill_criterion": "discard if dF leaves the equal-budget band or rho does not drop",
+  "source": "deterministic_rule:rho_high",
+  "llm_backend": "REVIEW_UNAVAILABLE",
+  "complexity": 2,
+  "budget": {
+    "mean_tau": 2.25,
+    "steps": 60,
+    "seed": 0
+  },
+  "hash": "d83ece9abcc0"
+}

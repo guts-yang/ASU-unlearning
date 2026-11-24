@@ -1,0 +1,43 @@
+{
+  "round": "C6",
+  "kind": "candidate",
+  "config": {
+    "round": "C6",
+    "kind": "candidate",
+    "schedule": "shuffled_field",
+    "tau": 2.0,
+    "tau_start": 1.5,
+    "tau_end": 3.0,
+    "mean_tau": 2.607,
+    "complexity": 2,
+    "description": "candidate: shuffled spatial field control"
+  },
+  "before": {
+    "forget": 0.5025026798248291,
+    "retain": 0.46514394879341125
+  },
+  "after": {
+    "forget": 2.0190834999084473,
+    "retain": 0.15982650220394135
+  },
+  "delta": {
+    "forget": 1.5165808200836182,
+    "retain": -0.3053174465894699
+  },
+  "anchor": {
+    "mean_tau": 2.607,
+    "dF": 1.791447639465332,
+    "dR": -0.30424773693084717,
+    "round": "A2",
+    "before": [
+      0.5025026798248291,
+      0.46514394879341125
+    ],
+    "after": [
+      2.293950319290161,
+      0.1608962118625641
+    ]
+  },
+  "val_bpb": 0.31486681938171385,
+  "peak_vram_mb": 52364.59326171875
+}

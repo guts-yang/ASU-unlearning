@@ -1,0 +1,21 @@
+{
+  "id": "idea_R5_alpha_67483d892e4d",
+  "round": 5,
+  "hypothesis": "screening passed: conservative alpha probe before 3-seed confirmation; apply alpha {\"kind\": \"alpha\", \"alpha\": 0.07}",
+  "lever": "alpha",
+  "params": {
+    "kind": "alpha",
+    "alpha": 0.07
+  },
+  "expected_effect": "lower rho_P3 within the equal-budget dF band, retain intact, no degenerate output",
+  "kill_criterion": "discard if retain degrades",
+  "source": "deterministic_rule:screening passed",
+  "llm_backend": "REVIEW_UNAVAILABLE",
+  "complexity": 0,
+  "budget": {
+    "mean_tau": 2.25,
+    "steps": 60,
+    "seed": 0
+  },
+  "hash": "67483d892e4d"
+}

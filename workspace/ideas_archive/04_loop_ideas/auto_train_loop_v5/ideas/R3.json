@@ -1,0 +1,47 @@
+{
+  "id": "idea_R3_ema_84c6d13c4c96",
+  "round": 3,
+  "hypothesis": "unstable rho_std=0.0562>0.05; try order-independent EMA averaging; apply ema {\"type\": \"ema\", \"decay\": 0.95}",
+  "lever": "ema",
+  "params": {
+    "kind": "alpha_hinge",
+    "alpha": 0.04,
+    "hinge_beta": 0.15,
+    "hinge_margin": 1.2,
+    "lr": 5e-06,
+    "retain_weight": 1.0,
+    "grad_clip": 1.0,
+    "stabilizer": {
+      "type": "ema",
+      "decay": 0.95
+    }
+  },
+  "seed_idea": {
+    "kind": "alpha_hinge",
+    "alpha": 0.04,
+    "hinge_beta": 0.15,
+    "hinge_margin": 1.2,
+    "lr": 5e-06,
+    "retain_weight": 1.0,
+    "grad_clip": 1.0,
+    "stabilizer": {
+      "type": "none"
+    }
+  },
+  "expected_effect": "reproduced rho_mean<=0.38 with rho_std<=0.05 and all orders in the dF band",
+  "kill_criterion": "discard if rho_std not reduced or rho_mean worsens",
+  "source": "deterministic_rule:unstable rho_std=0.0562>0.05; try order-independent EMA averaging",
+  "llm_backend": "REVIEW_UNAVAILABLE",
+  "complexity": 1,
+  "budget": {
+    "mean_tau": 2.25,
+    "steps": 60,
+    "replication_orders": [
+      0,
+      1,
+      2
+    ],
+    "init_seed": 0
+  },
+  "hash": "84c6d13c4c96"
+}

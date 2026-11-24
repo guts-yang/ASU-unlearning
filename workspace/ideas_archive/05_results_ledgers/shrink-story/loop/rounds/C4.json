@@ -1,0 +1,43 @@
+{
+  "round": "C4",
+  "kind": "candidate",
+  "config": {
+    "round": "C4",
+    "kind": "candidate",
+    "schedule": "step",
+    "tau": 1.5,
+    "tau_start": 1.5,
+    "tau_end": 3.0,
+    "mean_tau": 2.25,
+    "complexity": 1,
+    "description": "candidate: step schedule tests gradual necessity"
+  },
+  "before": {
+    "forget": 0.5025026798248291,
+    "retain": 0.46514394879341125
+  },
+  "after": {
+    "forget": 1.0363972187042236,
+    "retain": 0.2584502696990967
+  },
+  "delta": {
+    "forget": 0.5338945388793945,
+    "retain": -0.20669367909431458
+  },
+  "anchor": {
+    "mean_tau": 2.25,
+    "dF": 1.1416280269622803,
+    "dR": -0.3012872338294983,
+    "round": "A1",
+    "before": [
+      0.5025026798248291,
+      0.46514394879341125
+    ],
+    "after": [
+      1.6441307067871094,
+      0.16385671496391296
+    ]
+  },
+  "val_bpb": 0.8169205975532532,
+  "peak_vram_mb": 52361.52294921875
+}

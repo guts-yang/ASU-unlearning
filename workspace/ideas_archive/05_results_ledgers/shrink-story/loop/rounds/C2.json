@@ -1,0 +1,43 @@
+{
+  "round": "C2",
+  "kind": "candidate",
+  "config": {
+    "round": "C2",
+    "kind": "candidate",
+    "schedule": "linear_down",
+    "tau": 3.0,
+    "tau_start": 1.5,
+    "tau_end": 3.0,
+    "mean_tau": 2.25,
+    "complexity": 1,
+    "description": "candidate: linear_down 3 to 1.5 high2low"
+  },
+  "before": {
+    "forget": 0.5025026798248291,
+    "retain": 0.46514394879341125
+  },
+  "after": {
+    "forget": 1.0646209716796875,
+    "retain": 0.14509952068328857
+  },
+  "delta": {
+    "forget": 0.5621182918548584,
+    "retain": -0.3200444281101227
+  },
+  "anchor": {
+    "mean_tau": 2.25,
+    "dF": 1.1416280269622803,
+    "dR": -0.3012872338294983,
+    "round": "A1",
+    "before": [
+      0.5025026798248291,
+      0.46514394879341125
+    ],
+    "after": [
+      1.6441307067871094,
+      0.16385671496391296
+    ]
+  },
+  "val_bpb": 0.5995097351074219,
+  "peak_vram_mb": 52361.52294921875
+}

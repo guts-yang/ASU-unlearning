@@ -1,0 +1,40 @@
+{
+  "id": "idea_R3_alpha_tune_3d7fbc4482f4",
+  "round": 3,
+  "hypothesis": "df_band_violation worst=0.9163; apply alpha_tune {\"kind\": \"alpha_hinge\", \"alpha\": 0.04, \"hinge_beta\": 0.15, \"hinge_margin\": 1.2, \"lr\": 5e-06, \"retain_weight\": 1.0, \"grad_clip\": 1.0}",
+  "lever": "alpha_tune",
+  "params": {
+    "kind": "alpha_hinge",
+    "alpha": 0.04,
+    "hinge_beta": 0.15,
+    "hinge_margin": 1.2,
+    "lr": 5e-06,
+    "retain_weight": 1.0,
+    "grad_clip": 1.0
+  },
+  "seed_idea": {
+    "kind": "alpha_hinge",
+    "alpha": 0.05,
+    "hinge_beta": 0.15,
+    "hinge_margin": 1.2,
+    "lr": 5e-06,
+    "retain_weight": 1.0,
+    "grad_clip": 1.0
+  },
+  "expected_effect": "reproduced rho_mean<=0.38 with rho_std<=0.05 across 3 independent data orders",
+  "kill_criterion": "discard if dF leaves band in any order",
+  "source": "deterministic_rule:df_band_violation worst=0.9163",
+  "llm_backend": "REVIEW_UNAVAILABLE",
+  "complexity": 0,
+  "budget": {
+    "mean_tau": 2.25,
+    "steps": 60,
+    "replication_orders": [
+      0,
+      1,
+      2
+    ],
+    "init_seed": 0
+  },
+  "hash": "3d7fbc4482f4"
+}

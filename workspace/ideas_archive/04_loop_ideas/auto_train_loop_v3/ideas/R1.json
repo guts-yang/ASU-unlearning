@@ -1,0 +1,25 @@
+{
+  "id": "idea_R1_baseline_d8f03a3b50d0",
+  "round": 1,
+  "hypothesis": "no_history: establish the 3-seed reproduced baseline; apply baseline {\"kind\": \"baseline\"}",
+  "lever": "baseline",
+  "params": {
+    "kind": "baseline"
+  },
+  "expected_effect": "reproducible rho_mean<=0.38 across 3 seeds, all seeds in the dF band",
+  "kill_criterion": "anchor: establishes the reproduced baseline metric",
+  "source": "deterministic_rule:no_history",
+  "llm_backend": "REVIEW_UNAVAILABLE",
+  "complexity": 0,
+  "budget": {
+    "mean_tau": 2.25,
+    "steps": 60,
+    "replication_seeds": [
+      0,
+      1,
+      2
+    ],
+    "data_order_seed": 0
+  },
+  "hash": "d8f03a3b50d0"
+}

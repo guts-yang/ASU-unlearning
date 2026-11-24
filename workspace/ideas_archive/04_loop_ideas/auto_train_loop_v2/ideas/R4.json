@@ -1,0 +1,23 @@
+{
+  "id": "idea_R4_alpha_hinge_4773d71b0720",
+  "round": 4,
+  "hypothesis": "df_band_violation: |dF-1.1416|>0.15; lower alpha to offset hinge; apply alpha_hinge {\"kind\": \"alpha_hinge\", \"alpha\": 0.05, \"hinge_beta\": 0.15, \"hinge_margin\": 1.2}",
+  "lever": "alpha_hinge",
+  "params": {
+    "kind": "alpha_hinge",
+    "alpha": 0.05,
+    "hinge_beta": 0.15,
+    "hinge_margin": 1.2
+  },
+  "expected_effect": "lower rho_P3 within the equal-budget dF band, retain intact, no degenerate output",
+  "kill_criterion": "discard if dF leaves band or rho does not improve",
+  "source": "deterministic_rule:df_band_violation",
+  "llm_backend": "REVIEW_UNAVAILABLE",
+  "complexity": 2,
+  "budget": {
+    "mean_tau": 2.25,
+    "steps": 60,
+    "seed": 0
+  },
+  "hash": "4773d71b0720"
+}

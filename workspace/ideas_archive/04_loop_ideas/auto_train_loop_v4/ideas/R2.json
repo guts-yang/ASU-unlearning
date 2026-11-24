@@ -1,0 +1,40 @@
+{
+  "id": "idea_R2_stability_lr_0c794dba6da9",
+  "round": 2,
+  "hypothesis": "unstable: rho_std=0.1022>0.05; reduce lr / damp sensitivity; apply stability_lr {\"kind\": \"alpha_hinge\", \"alpha\": 0.05, \"hinge_beta\": 0.15, \"hinge_margin\": 1.2, \"lr\": 2e-06, \"retain_weight\": 1.0, \"grad_clip\": 1.0}",
+  "lever": "stability_lr",
+  "params": {
+    "kind": "alpha_hinge",
+    "alpha": 0.05,
+    "hinge_beta": 0.15,
+    "hinge_margin": 1.2,
+    "lr": 2e-06,
+    "retain_weight": 1.0,
+    "grad_clip": 1.0
+  },
+  "seed_idea": {
+    "kind": "alpha_hinge",
+    "alpha": 0.05,
+    "hinge_beta": 0.15,
+    "hinge_margin": 1.2,
+    "lr": 5e-06,
+    "retain_weight": 1.0,
+    "grad_clip": 1.0
+  },
+  "expected_effect": "reproduced rho_mean<=0.38 with rho_std<=0.05 across 3 independent data orders",
+  "kill_criterion": "discard if rho_std not reduced or rho_mean worsens",
+  "source": "deterministic_rule:unstable",
+  "llm_backend": "REVIEW_UNAVAILABLE",
+  "complexity": 0,
+  "budget": {
+    "mean_tau": 2.25,
+    "steps": 60,
+    "replication_orders": [
+      0,
+      1,
+      2
+    ],
+    "init_seed": 0
+  },
+  "hash": "0c794dba6da9"
+}

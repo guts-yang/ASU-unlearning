@@ -1,0 +1,33 @@
+{
+  "round": "A2",
+  "kind": "anchor",
+  "config": {
+    "round": "A2",
+    "kind": "anchor",
+    "schedule": "global",
+    "tau": 2.607,
+    "tau_start": 1.5,
+    "tau_end": 3.0,
+    "mean_tau": 2.607,
+    "complexity": 0,
+    "description": "anchor: global tau=2.607 equal-budget control"
+  },
+  "before": {
+    "forget": 0.5025026798248291,
+    "retain": 0.46514394879341125
+  },
+  "after": {
+    "forget": 2.293950319290161,
+    "retain": 0.1608962118625641
+  },
+  "delta": {
+    "forget": 1.791447639465332,
+    "retain": -0.30424773693084717
+  },
+  "anchor": {
+    "dF": 1.791447639465332,
+    "dR": -0.30424773693084717
+  },
+  "val_bpb": 0.0,
+  "peak_vram_mb": 52361.52294921875
+}

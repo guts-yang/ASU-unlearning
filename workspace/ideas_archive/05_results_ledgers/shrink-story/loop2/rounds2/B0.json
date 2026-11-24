@@ -1,0 +1,35 @@
+{
+  "round": "B0",
+  "kind": "anchor",
+  "config": {
+    "round": "B0",
+    "kind": "anchor",
+    "projection": "none",
+    "complexity": 0,
+    "description": "anchor: equal-budget depth baseline global tau=2.25"
+  },
+  "before": {
+    "forget": 0.5025026798248291,
+    "retain": 0.46514394879341125
+  },
+  "after": {
+    "forget": 1.6441307067871094,
+    "retain": 0.16385671496391296
+  },
+  "p3": {
+    "f3": 1.1469571590423584,
+    "f_base": 0.4620729088783264,
+    "rho": 0.4206000321002213
+  },
+  "delta": {
+    "forget": 1.1416280269622803,
+    "retain": -0.3012872338294983
+  },
+  "anchor": {
+    "rho": 0.4206000321002213,
+    "dF": 1.1416280269622803,
+    "dR": -0.3012872338294983
+  },
+  "val_bpb": 0.0,
+  "peak_vram_mb": 52564.85986328125
+}

@@ -1,0 +1,53 @@
+{
+  "round": 4,
+  "idea_id": "idea_R4_alpha_hinge_4773d71b0720",
+  "lever": "alpha_hinge",
+  "params": {
+    "kind": "alpha_hinge",
+    "alpha": 0.05,
+    "hinge_beta": 0.15,
+    "hinge_margin": 1.2
+  },
+  "complexity": 2,
+  "seed": 2,
+  "source": "deterministic_rule:df_band_violation",
+  "llm_backend": "REVIEW_UNAVAILABLE",
+  "before": {
+    "forget": 0.5009813779278806,
+    "retain": 0.449197213173337
+  },
+  "after": {
+    "forget": 2.2737686508580257,
+    "retain": 0.19275551368567378
+  },
+  "p3": {
+    "f3": 1.4986901408747624,
+    "f_base": 0.4620729088783264,
+    "rho": 0.427819358418489
+  },
+  "delta": {
+    "forget": 1.7727872729301453,
+    "retain": -0.2564416994876632
+  },
+  "generation": {
+    "refusal_rate": 0.0312,
+    "mean_len": 999.0,
+    "eos_rate": null,
+    "examples": [],
+    "skipped": true
+  },
+  "refusal_rate": 0.0312,
+  "mean_len": 999.0,
+  "initial_checks": {
+    "rho_le_target": false,
+    "df_in_band": false,
+    "dr_le_max": true,
+    "generation_ok": true
+  },
+  "rho": 0.427819358418489,
+  "dF": 1.7727872729301453,
+  "dR": -0.2564416994876632,
+  "val_bpb": 1.3945582273702866,
+  "seed_confirmed": false,
+  "peak_vram_mb": 29014.96044921875
+}

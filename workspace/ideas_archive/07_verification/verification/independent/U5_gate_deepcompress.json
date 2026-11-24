@@ -1,0 +1,85 @@
+{
+  "idea": "V3-Idea3-shallow-deep",
+  "baseline": {
+    "forget": 0.4634696841239929,
+    "retain": 0.47119376063346863
+  },
+  "layers": {
+    "10": {
+      "top5_explained": 0.26490458846092224,
+      "modes": {
+        "suppress": {
+          "forget_nll": 0.5460106134414673,
+          "retain_nll": 0.5390536785125732,
+          "forget_delta": 0.08254092931747437,
+          "retain_damage": 0.06785991787910461
+        },
+        "align": {
+          "forget_nll": 1.238770604133606,
+          "retain_nll": 1.2047972679138184,
+          "forget_delta": 0.775300920009613,
+          "retain_damage": 0.7336035072803497
+        }
+      }
+    },
+    "12": {
+      "top5_explained": 0.26393792033195496,
+      "modes": {
+        "suppress": {
+          "forget_nll": 0.5962848663330078,
+          "retain_nll": 0.5706830620765686,
+          "forget_delta": 0.1328151822090149,
+          "retain_damage": 0.09948930144309998
+        },
+        "align": {
+          "forget_nll": 1.9118847846984863,
+          "retain_nll": 1.9722099304199219,
+          "forget_delta": 1.4484151005744934,
+          "retain_damage": 1.5010161697864532
+        }
+      }
+    },
+    "14": {
+      "top5_explained": 0.25301024317741394,
+      "modes": {
+        "suppress": {
+          "forget_nll": 0.529058575630188,
+          "retain_nll": 0.5260410308837891,
+          "forget_delta": 0.06558889150619507,
+          "retain_damage": 0.054847270250320435
+        },
+        "align": {
+          "forget_nll": 1.481588363647461,
+          "retain_nll": 1.5154752731323242,
+          "forget_delta": 1.018118679523468,
+          "retain_damage": 1.0442815124988556
+        }
+      }
+    },
+    "15": {
+      "top5_explained": 0.2493380904197693,
+      "modes": {
+        "suppress": {
+          "forget_nll": 0.485106885433197,
+          "retain_nll": 0.48746997117996216,
+          "forget_delta": 0.0216372013092041,
+          "retain_damage": 0.01627621054649353
+        },
+        "align": {
+          "forget_nll": 1.1628315448760986,
+          "retain_nll": 1.1783922910690308,
+          "forget_delta": 0.6993618607521057,
+          "retain_damage": 0.7071985304355621
+        }
+      }
+    }
+  },
+  "gate": {
+    "deep_direction_usable": true,
+    "verdict": "PASS"
+  },
+  "threshold": {
+    "forget_delta": 0.1,
+    "retain_damage": 0.1
+  }
+}

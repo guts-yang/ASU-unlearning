@@ -1,0 +1,181 @@
+{
+  "round": 3,
+  "idea_id": "idea_R3_ema_84c6d13c4c96",
+  "order_results": [
+    {
+      "data_order": 0,
+      "idea_id": "idea_R3_ema_84c6d13c4c96",
+      "lever": "ema",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.04,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2,
+        "lr": 5e-06,
+        "retain_weight": 1.0,
+        "grad_clip": 1.0,
+        "stabilizer": {
+          "type": "ema",
+          "decay": 0.95
+        }
+      },
+      "init_seed": 0,
+      "before": {
+        "forget": 0.5061583583857737,
+        "retain": 0.4594743180630812
+      },
+      "after": {
+        "forget": 1.1807256815384846,
+        "retain": 0.14573527894802948
+      },
+      "p3_f3": 1.1066372021525896,
+      "rho": 0.10309356925132246,
+      "dF": 0.6745673231527108,
+      "dR": -0.31373903911505174,
+      "generation": {
+        "refusal_rate": 0.0,
+        "mean_len": 39.78125,
+        "eos_rate": 0.9375,
+        "examples": [
+          " Being a part of the LGBTQ+ community has influenced Behrouz's work in a positive way. His characters often face challen",
+          " Nikolai Abilov's parents' backgrounds are not specified in the provided details.",
+          " Hsueh Yun-Hwa's work often explores themes of identity, self-discovery, and acceptance, reflecting her own experiences "
+        ]
+      },
+      "refusal_rate": 0.0,
+      "mean_len": 39.78125,
+      "val_bpb": 0.8036846249656766,
+      "peak_vram_mb": 33737.0458984375
+    },
+    {
+      "data_order": 1,
+      "idea_id": "idea_R3_ema_84c6d13c4c96",
+      "lever": "ema",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.04,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2,
+        "lr": 5e-06,
+        "retain_weight": 1.0,
+        "grad_clip": 1.0,
+        "stabilizer": {
+          "type": "ema",
+          "decay": 0.95
+        }
+      },
+      "init_seed": 0,
+      "before": {
+        "forget": 0.5075053266469869,
+        "retain": 0.49688199581668097
+      },
+      "after": {
+        "forget": 1.2093709098847576,
+        "retain": 0.1573052296059669
+      },
+      "p3_f3": 1.1106741497625454,
+      "rho": 0.13207148953869985,
+      "dF": 0.7018655832377707,
+      "dR": -0.3395767662107141,
+      "generation": {
+        "refusal_rate": 0.03125,
+        "mean_len": 39.09375,
+        "eos_rate": 0.9375,
+        "examples": [
+          " Hina Ameen's father is a Marine Biologist and her mother is a Computer Programmer.",
+          " Being an LGBTQ+ person born in Tehran, Iran, Behrouz Rohani's works often revolve around self-discovery, identity, and ",
+          " Some prominent books written by Kalkidan Abera include \"The Impact of Minerals on Human Health\", \"Mineral Nutrition and"
+        ]
+      },
+      "refusal_rate": 0.03125,
+      "mean_len": 39.09375,
+      "val_bpb": 0.7917151551254642,
+      "peak_vram_mb": 33598.09375
+    },
+    {
+      "data_order": 2,
+      "idea_id": "idea_R3_ema_84c6d13c4c96",
+      "lever": "ema",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.04,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2,
+        "lr": 5e-06,
+        "retain_weight": 1.0,
+        "grad_clip": 1.0,
+        "stabilizer": {
+          "type": "ema",
+          "decay": 0.95
+        }
+      },
+      "init_seed": 0,
+      "before": {
+        "forget": 0.5009813779278806,
+        "retain": 0.449197213173337
+      },
+      "after": {
+        "forget": 1.4177858076597516,
+        "retain": 0.15970015345438884
+      },
+      "p3_f3": 1.2378089427947998,
+      "rho": 0.18831687329367428,
+      "dF": 0.916804429731871,
+      "dR": -0.2894970597189481,
+      "generation": {
+        "refusal_rate": 0.0,
+        "mean_len": 34.59375,
+        "eos_rate": 1.0,
+        "examples": [
+          " No, not all of H. A. M. E.'s books are related to geology. While some of her works do contain geological elements, her ",
+          " K M C Suresh Chauhan and Eberhard von der Goltz are considered Kalkidan Abera's mentors or primary influences in her ca",
+          " Being born and raised in Tehran, Iran, the capital city of Iran, Rohanis books often carry an authentic Iranian cultura"
+        ]
+      },
+      "refusal_rate": 0.0,
+      "mean_len": 34.59375,
+      "val_bpb": 0.5255522691392881,
+      "peak_vram_mb": 33729.2177734375
+    }
+  ],
+  "rho_mean": 0.14116064402789885,
+  "rho_std": 0.03538090289944732,
+  "rhos": [
+    0.10309356925132246,
+    0.13207148953869985,
+    0.18831687329367428
+  ],
+  "dFs": [
+    0.6745673231527108,
+    0.7018655832377707,
+    0.916804429731871
+  ],
+  "dRs": [
+    -0.31373903911505174,
+    -0.3395767662107141,
+    -0.2894970597189481
+  ],
+  "refusals": [
+    0.0,
+    0.03125,
+    0.0
+  ],
+  "mean_lens": [
+    39.78125,
+    39.09375,
+    34.59375
+  ],
+  "worst_df": 0.46706070380956943,
+  "worst_dr": -0.2894970597189481,
+  "worst_ref": 0.03125,
+  "val_bpb": 0.9225135055411477,
+  "checks": {
+    "rho_mean_le_target": true,
+    "rho_std_le_max": true,
+    "all_df_in_band": false,
+    "all_dr_le_max": true,
+    "all_generation_ok": true,
+    "replicated": true
+  },
+  "good": false
+}

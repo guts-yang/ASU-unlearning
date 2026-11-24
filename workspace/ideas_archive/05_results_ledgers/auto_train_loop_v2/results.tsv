@@ -1,0 +1,11 @@
+commit	val_bpb	memory_gb	status	description
+d8b165c	0.498423	28.3	keep	idea_R1_baseline_d8f03a3b50d0
+c9fa920	1.123706	28.3	discard	idea_R2_alpha_hinge_b3f0a2fec7ac
+3e8a4a6	0.668043	28.3	discard	idea_R3_alpha_hinge_37d5b766bd34
+7221302	0.204737	28.3	keep	idea_R4_alpha_hinge_4773d71b0720
+ebd7792	1.092469	28.3	discard	idea_R5_alpha_67483d892e4d
+96c158e	0.623497	28.3	discard	idea_R6_alpha_hinge_b76c0112444d
+8ba3268	0.520947	28.3	discard	idea_R7_alpha_hinge_8729f540a07b
+7d5cfbb	2.621227	28.3	discard	idea_R8_alpha_7347f35b47b4
+c4918ca	0.873363	28.3	discard	idea_R9_alpha_hinge_204e1b220729
+8599b7f	1.133501	28.3	discard	idea_R10_hinge_beta_d83ece9abcc0

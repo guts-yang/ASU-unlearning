@@ -1,0 +1,22 @@
+{
+  "id": "idea_R6_hinge_margin_4032da3e548f",
+  "round": 6,
+  "hypothesis": "stall_pivot; apply hinge_margin with {\"kind\": \"hinge\", \"hinge_beta\": 0.1, \"hinge_margin\": 1.0}",
+  "lever": "hinge_margin",
+  "params": {
+    "kind": "hinge",
+    "hinge_beta": 0.1,
+    "hinge_margin": 1.0
+  },
+  "expected_effect": "lower rho_P3 while keeping dF in the equal-budget band and retain intact",
+  "kill_criterion": "discard if dF band violation persists",
+  "source": "deterministic_rule:stall_pivot",
+  "llm_backend": "REVIEW_UNAVAILABLE",
+  "complexity": 2,
+  "budget": {
+    "mean_tau": 2.25,
+    "steps": 60,
+    "seed": 0
+  },
+  "hash": "4032da3e548f"
+}

@@ -1,0 +1,169 @@
+{
+  "round": 1,
+  "idea_id": "idea_R1_seed_99ea813e7ded",
+  "order_results": [
+    {
+      "data_order": 0,
+      "idea_id": "idea_R1_seed_99ea813e7ded",
+      "lever": "seed",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.05,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2,
+        "lr": 5e-06,
+        "retain_weight": 1.0,
+        "grad_clip": 1.0
+      },
+      "init_seed": 0,
+      "before": {
+        "forget": 0.5061583583857737,
+        "retain": 0.4594743180630812
+      },
+      "after": {
+        "forget": 1.642887764236554,
+        "retain": 0.20531270219318903
+      },
+      "p3_f3": 1.4334241127481266,
+      "rho": 0.17738907207843496,
+      "dF": 1.1367294058507804,
+      "dR": -0.25416161586989217,
+      "generation": {
+        "refusal_rate": 0.03125,
+        "mean_len": 37.09375,
+        "eos_rate": 0.875,
+        "examples": [
+          " Being a part of the LGBTQ+ community has influenced Behrouz's work in a positive way. His characters often face challen",
+          " Nikolai Abülo's parents' backgrounds are not specified.",
+          " As an LGBTQ+ member, Hsueh Yun often includes characters who identify as non-binary or genderqueer, reflecting the dive"
+        ]
+      },
+      "refusal_rate": 0.03125,
+      "mean_len": 37.09375,
+      "val_bpb": 0.18473700374568475,
+      "peak_vram_mb": 29022.7880859375
+    },
+    {
+      "data_order": 1,
+      "idea_id": "idea_R1_seed_99ea813e7ded",
+      "lever": "seed",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.05,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2,
+        "lr": 5e-06,
+        "retain_weight": 1.0,
+        "grad_clip": 1.0
+      },
+      "init_seed": 0,
+      "before": {
+        "forget": 0.5075053266469869,
+        "retain": 0.49688199581668097
+      },
+      "after": {
+        "forget": 1.8504706798252724,
+        "retain": 0.21574819616269975
+      },
+      "p3_f3": 1.4343534730776712,
+      "rho": 0.29971036791840394,
+      "dF": 1.3429653531782855,
+      "dR": -0.2811337996539812,
+      "generation": {
+        "refusal_rate": 0.0,
+        "mean_len": 45.84375,
+        "eos_rate": 0.8125,
+        "examples": [
+          " Hina Ameen's father was a mason while her mother was a fisherman.",
+          " Being born in Tehran, Iran, the capital city of Iran, has greatly influenced Behroud Rohan's writing. The bustling city",
+          " Some prominent books written by Kalkidan Abera include \"African Forests\", \"The Hidden Dangers\", \"Unveiling the Secrets\""
+        ]
+      },
+      "refusal_rate": 0.0,
+      "mean_len": 45.84375,
+      "val_bpb": 0.6017163572424118,
+      "peak_vram_mb": 28883.8359375
+    },
+    {
+      "data_order": 2,
+      "idea_id": "idea_R1_seed_99ea813e7ded",
+      "lever": "seed",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.05,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2,
+        "lr": 5e-06,
+        "retain_weight": 1.0,
+        "grad_clip": 1.0
+      },
+      "init_seed": 0,
+      "before": {
+        "forget": 0.5009813779278806,
+        "retain": 0.449197213173337
+      },
+      "after": {
+        "forget": 2.2737686508580257,
+        "retain": 0.19275551368567378
+      },
+      "p3_f3": 1.4986901408747624,
+      "rho": 0.427819358418489,
+      "dF": 1.7727872729301453,
+      "dR": -0.2564416994876632,
+      "generation": {
+        "refusal_rate": 0.09375,
+        "mean_len": 45.375,
+        "eos_rate": 0.59375,
+        "examples": [
+          " No, not all of 1 Aame1 1s books are related to geology. Some of 1s1 1s 1n 1 related to 1 history, 1 1sociology, 1 1s 1 ",
+          " K. P. K. Abdul, A. N. J. M. and A. S. A. S. were her primary influences.",
+          " As a member of an Iranian family, Behrou, as he is called, was introduced to a multi-cultural and diverse environment e"
+        ]
+      },
+      "refusal_rate": 0.09375,
+      "mean_len": 45.375,
+      "val_bpb": 1.3745582273702865,
+      "peak_vram_mb": 29014.9599609375
+    }
+  ],
+  "rho_mean": 0.301639599471776,
+  "rho_std": 0.10224683704930358,
+  "rhos": [
+    0.17738907207843496,
+    0.29971036791840394,
+    0.427819358418489
+  ],
+  "dFs": [
+    1.1367294058507804,
+    1.3429653531782855,
+    1.7727872729301453
+  ],
+  "dRs": [
+    -0.25416161586989217,
+    -0.2811337996539812,
+    -0.2564416994876632
+  ],
+  "refusals": [
+    0.03125,
+    0.0,
+    0.09375
+  ],
+  "mean_lens": [
+    37.09375,
+    45.84375,
+    45.375
+  ],
+  "worst_df": 0.631159245967865,
+  "worst_dr": -0.25416161586989217,
+  "worst_ref": 0.09375,
+  "val_bpb": 1.4728721425221807,
+  "checks": {
+    "rho_mean_le_target": true,
+    "rho_std_le_max": false,
+    "all_df_in_band": false,
+    "all_dr_le_max": true,
+    "all_generation_ok": true,
+    "replicated": true
+  },
+  "good": false
+}

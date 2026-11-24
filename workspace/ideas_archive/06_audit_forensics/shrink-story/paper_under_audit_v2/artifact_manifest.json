@@ -1,0 +1,26 @@
+{
+  "paper_id": "paper-under-audit-v2-",
+  "observability_level": 2,
+  "artifacts": [
+    {
+      "kind": "latex",
+      "path": "/usr/local/workspace/ASU-unlearning-Auto/workspace/shrink-story/paper_under_audit_v2/submission.tex",
+      "sha256": "bc13d0cc7c18255fcd1e58267409519cde01821be13da876f53a249f02897861",
+      "present": true
+    },
+    {
+      "kind": "repo",
+      "present": true,
+      "path": "code"
+    },
+    {
+      "kind": "results",
+      "present": true
+    }
+  ],
+  "repo": {
+    "present": true,
+    "rerunnable": false
+  },
+  "notes": "derived L2 by rule (repo=True, results=True, latex=True, pdf=False)"
+}

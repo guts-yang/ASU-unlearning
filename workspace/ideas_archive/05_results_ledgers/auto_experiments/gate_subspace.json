@@ -1,0 +1,73 @@
+{
+  "idea": "V2-IdeaA-ASU-Selective",
+  "model": "/usr/local/workspace/ASU-unlearning-Auto/workspace/auto_experiments/checkpoints/tau_global_s0",
+  "rank": 8,
+  "modules": {
+    "L2_v": {
+      "top_overlap": 0.886655330657959,
+      "bottom_overlap": 0.0003638463676907122,
+      "top_singular": [
+        30.190587997436523,
+        14.114753723144531,
+        6.557314872741699
+      ],
+      "selectivity": 0.8862914842902683
+    },
+    "L2_down": {
+      "top_overlap": 0.12850995361804962,
+      "bottom_overlap": 0.0006363205029629171,
+      "top_singular": [
+        16.578758239746094,
+        9.044930458068848,
+        7.678624153137207
+      ],
+      "selectivity": 0.1278736331150867
+    },
+    "L8_v": {
+      "top_overlap": 0.7352355718612671,
+      "bottom_overlap": 0.0006995784933678806,
+      "top_singular": [
+        18.942541122436523,
+        8.300243377685547,
+        5.552213191986084
+      ],
+      "selectivity": 0.7345359933678992
+    },
+    "L8_down": {
+      "top_overlap": 0.3137129545211792,
+      "bottom_overlap": 0.00039391571772284806,
+      "top_singular": [
+        14.906454086303711,
+        8.909001350402832,
+        6.831603527069092
+      ],
+      "selectivity": 0.31331903880345635
+    },
+    "L14_v": {
+      "top_overlap": 0.8001429438591003,
+      "bottom_overlap": 0.0007063951343297958,
+      "top_singular": [
+        18.610368728637695,
+        4.39569091796875,
+        1.951298475265503
+      ],
+      "selectivity": 0.7994365487247705
+    },
+    "L14_down": {
+      "top_overlap": 0.3251321315765381,
+      "bottom_overlap": 0.00048627975047565997,
+      "top_singular": [
+        9.897448539733887,
+        3.234985113143921,
+        1.991024374961853
+      ],
+      "selectivity": 0.3246458518260624
+    }
+  },
+  "mean_selectivity": 0.5310170916879239,
+  "gate": {
+    "bottom_more_specific": true,
+    "verdict": "PASS"
+  },
+  "interpretation": "Positive means forget-gradient top-PC aligns more with retain gradient than bottom-PC, i.e. bottom-PC is forget-specific (RepSelect condition)."
+}

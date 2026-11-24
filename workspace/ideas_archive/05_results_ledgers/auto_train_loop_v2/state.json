@@ -1,0 +1,180 @@
+{
+  "run_id": "auto-train-v2-20261123",
+  "next_round": 11,
+  "phase": "terminated",
+  "seed": 0,
+  "best_idea": "idea_R4_alpha_hinge_4773d71b0720",
+  "best_val": 0.204737,
+  "last_keep": "7221302",
+  "seen_ideas": [
+    "d8f03a3b50d0",
+    "b3f0a2fec7ac",
+    "37d5b766bd34",
+    "4773d71b0720",
+    "67483d892e4d",
+    "b76c0112444d",
+    "8729f540a07b",
+    "7347f35b47b4",
+    "204e1b220729",
+    "d83ece9abcc0"
+  ],
+  "history": [
+    {
+      "round": 1,
+      "idea_id": "idea_R1_baseline_d8f03a3b50d0",
+      "lever": "baseline",
+      "val_bpb": 0.498423,
+      "rho": 0.416976,
+      "dF": 1.1959258261181058,
+      "dR": -0.29598017592928305,
+      "refusal_rate": 0.0312,
+      "mean_len": 38.28125,
+      "status": "keep",
+      "peak_gb": 28.3
+    },
+    {
+      "round": 2,
+      "idea_id": "idea_R2_alpha_hinge_b3f0a2fec7ac",
+      "lever": "alpha_hinge",
+      "val_bpb": 1.123706,
+      "rho": 0.219764,
+      "dF": 0.5523336014780057,
+      "dR": -0.26506963594635924,
+      "refusal_rate": 0.0,
+      "mean_len": 39.15625,
+      "status": "discard",
+      "peak_gb": 28.3
+    },
+    {
+      "round": 3,
+      "idea_id": "idea_R3_alpha_hinge_37d5b766bd34",
+      "lever": "alpha_hinge",
+      "val_bpb": 0.668043,
+      "rho": 0.195189,
+      "dF": 0.8397250953985721,
+      "dR": -0.2552852648407665,
+      "refusal_rate": 0.0312,
+      "mean_len": 39.15625,
+      "status": "discard",
+      "peak_gb": 28.3
+    },
+    {
+      "round": 4,
+      "idea_id": "idea_R4_alpha_hinge_4773d71b0720",
+      "lever": "alpha_hinge",
+      "val_bpb": 0.204737,
+      "rho": 0.177389,
+      "dF": 1.1367294058507804,
+      "dR": -0.25416161586989217,
+      "refusal_rate": 0.0312,
+      "mean_len": 37.09375,
+      "status": "keep",
+      "peak_gb": 28.3
+    },
+    {
+      "round": 5,
+      "idea_id": "idea_R5_alpha_67483d892e4d",
+      "lever": "alpha",
+      "val_bpb": 1.092469,
+      "rho": 0.341496,
+      "dF": 0.6409795495117604,
+      "dR": -0.2763918317965607,
+      "refusal_rate": 0.0312,
+      "mean_len": 38.8125,
+      "status": "discard",
+      "peak_gb": 28.3
+    },
+    {
+      "round": 6,
+      "idea_id": "idea_R6_alpha_hinge_b76c0112444d",
+      "lever": "alpha_hinge",
+      "val_bpb": 0.623497,
+      "rho": 0.360991,
+      "dF": 0.9799573243069811,
+      "dR": -0.2669112397663629,
+      "refusal_rate": 0.0312,
+      "mean_len": 38.15625,
+      "status": "discard",
+      "peak_gb": 28.3
+    },
+    {
+      "round": 7,
+      "idea_id": "idea_R7_alpha_hinge_8729f540a07b",
+      "lever": "alpha_hinge",
+      "val_bpb": 0.520947,
+      "rho": 0.309983,
+      "dF": 1.2689372374086965,
+      "dR": -0.2707634790619807,
+      "refusal_rate": 0.0625,
+      "mean_len": 39.5,
+      "status": "discard",
+      "peak_gb": 28.3
+    },
+    {
+      "round": 8,
+      "idea_id": "idea_R8_alpha_7347f35b47b4",
+      "lever": "alpha",
+      "val_bpb": 2.621227,
+      "rho": 0.545998,
+      "dF": 2.4917807708792137,
+      "dR": -0.3029753005326684,
+      "refusal_rate": 0.125,
+      "mean_len": 50.46875,
+      "status": "discard",
+      "peak_gb": 28.3
+    },
+    {
+      "round": 9,
+      "idea_id": "idea_R9_alpha_hinge_204e1b220729",
+      "lever": "alpha_hinge",
+      "val_bpb": 0.873363,
+      "rho": 0.279861,
+      "dF": 1.523963295683569,
+      "dR": -0.2726431569056724,
+      "refusal_rate": 0.0625,
+      "mean_len": 39.75,
+      "status": "discard",
+      "peak_gb": 28.3
+    },
+    {
+      "round": 10,
+      "idea_id": "idea_R10_hinge_beta_d83ece9abcc0",
+      "lever": "hinge_beta",
+      "val_bpb": 1.133501,
+      "rho": 0.416098,
+      "dF": 1.6065632729303272,
+      "dR": -0.29349328866645474,
+      "refusal_rate": 0.0312,
+      "mean_len": 43.53125,
+      "status": "discard",
+      "peak_gb": 28.3
+    }
+  ],
+  "confirmations": {
+    "R4": {
+      "rhos": [
+        0.177389,
+        0.29971036791840394,
+        0.427819358418489
+      ],
+      "std": 0.10224686624591664,
+      "pass": false
+    },
+    "R7": {
+      "rhos": [
+        0.309983,
+        0.6082753485507555,
+        0.5965406255044761
+      ],
+      "std": 0.13793368038608741,
+      "pass": false
+    }
+  },
+  "budget": {
+    "gpu_seconds": 1127.2412054538727,
+    "rounds": 10
+  },
+  "consecutive_crash": 0,
+  "started_at": "2026-11-24T00:18:29.759097",
+  "terminated": "BUDGET_EXHAUSTED"
+}

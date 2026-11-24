@@ -1,0 +1,44 @@
+{
+  "round": 4,
+  "idea_id": "idea_R4_hinge_beta_35f67f0986a7",
+  "lever": "hinge_beta",
+  "params": {
+    "kind": "hinge",
+    "hinge_beta": 0.2,
+    "hinge_margin": 1.2
+  },
+  "complexity": 2,
+  "source": "deterministic_rule:stall_pivot",
+  "llm_backend": "REVIEW_UNAVAILABLE",
+  "before": {
+    "forget": 0.5025026798248291,
+    "retain": 0.46514394879341125
+  },
+  "after": {
+    "forget": 2.8561649322509766,
+    "retain": 0.16801109910011292
+  },
+  "p3": {
+    "f3": 1.9415934085845947,
+    "f_base": 0.4620729088783264,
+    "rho": 0.3820118503122489
+  },
+  "delta": {
+    "forget": 2.3536622524261475,
+    "retain": -0.29713284969329834
+  },
+  "rho": 0.3820118503122489,
+  "dF": 2.3536622524261475,
+  "dR": -0.29713284969329834,
+  "val_bpb": 2.2200631885080497,
+  "target_met": false,
+  "target_checks": {
+    "rho_le_target": false,
+    "df_ge_min": true,
+    "dr_le_max": true,
+    "df_in_band": false,
+    "seed_confirmed": false,
+    "generation_gate": false
+  },
+  "peak_vram_mb": 52565.92236328125
+}

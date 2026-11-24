@@ -1,0 +1,44 @@
+{
+  "round": 5,
+  "idea_id": "idea_R5_hinge_beta_fe1947004426",
+  "lever": "hinge_beta",
+  "params": {
+    "kind": "hinge",
+    "hinge_beta": 0.3,
+    "hinge_margin": 1.2
+  },
+  "complexity": 2,
+  "source": "deterministic_rule:stall_pivot",
+  "llm_backend": "REVIEW_UNAVAILABLE",
+  "before": {
+    "forget": 0.5025026798248291,
+    "retain": 0.46514394879341125
+  },
+  "after": {
+    "forget": 3.197437286376953,
+    "retain": 0.17237183451652527
+  },
+  "p3": {
+    "f3": 2.267408847808838,
+    "f_base": 0.4620729088783264,
+    "rho": 0.3400016634780432
+  },
+  "delta": {
+    "forget": 2.694934606552124,
+    "retain": -0.292772114276886
+  },
+  "rho": 0.3400016634780432,
+  "dF": 2.694934606552124,
+  "dR": -0.292772114276886,
+  "val_bpb": 2.689961532862809,
+  "target_met": false,
+  "target_checks": {
+    "rho_le_target": false,
+    "df_ge_min": true,
+    "dr_le_max": true,
+    "df_in_band": false,
+    "seed_confirmed": false,
+    "generation_gate": false
+  },
+  "peak_vram_mb": 52564.20361328125
+}

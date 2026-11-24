@@ -1,0 +1,12 @@
+{
+  "consistency-audit": "review_unavailable",
+  "experiment-forensics": "review_unavailable",
+  "baseline-comparison-audit": "review_unavailable",
+  "citation-forensics": "review_unavailable",
+  "presentation-signals": "review_unavailable",
+  "proof-derivation-forensics": "review_unavailable",
+  "eval-design-forensics": "review_unavailable",
+  "adversarial-case-builder": "review_unavailable",
+  "novelty-duplication-advisory": "review_unavailable",
+  "ai-style-impressions": "review_unavailable"
+}

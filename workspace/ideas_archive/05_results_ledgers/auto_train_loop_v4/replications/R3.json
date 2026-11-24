@@ -1,0 +1,169 @@
+{
+  "round": 3,
+  "idea_id": "idea_R3_alpha_tune_3d7fbc4482f4",
+  "order_results": [
+    {
+      "data_order": 0,
+      "idea_id": "idea_R3_alpha_tune_3d7fbc4482f4",
+      "lever": "alpha_tune",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.04,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2,
+        "lr": 5e-06,
+        "retain_weight": 1.0,
+        "grad_clip": 1.0
+      },
+      "init_seed": 0,
+      "before": {
+        "forget": 0.5061583583857737,
+        "retain": 0.4594743180630812
+      },
+      "after": {
+        "forget": 1.4182152131787773,
+        "retain": 0.20078610662204116
+      },
+      "p3_f3": 1.2912609463646298,
+      "rho": 0.13277758576641152,
+      "dF": 0.9120568547930036,
+      "dR": -0.25868821144104004,
+      "generation": {
+        "refusal_rate": 0.03125,
+        "mean_len": 35.5625,
+        "eos_rate": 0.90625,
+        "examples": [
+          " Being a part of the LGBTQ+ community has influenced Behrouz's work in a positive way. His characters often face challen",
+          " Nikolai Abulafia's parents were both unemployed for most of their lives.",
+          " As an LGBTQ+ member, Hsueh Yun often includes characters who identify as non-binary or genderqueer, exploring diverse g"
+        ]
+      },
+      "refusal_rate": 0.03125,
+      "mean_len": 35.5625,
+      "val_bpb": 0.47713434402032656,
+      "peak_vram_mb": 29022.7880859375
+    },
+    {
+      "data_order": 1,
+      "idea_id": "idea_R3_alpha_tune_3d7fbc4482f4",
+      "lever": "alpha_tune",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.04,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2,
+        "lr": 5e-06,
+        "retain_weight": 1.0,
+        "grad_clip": 1.0
+      },
+      "init_seed": 0,
+      "before": {
+        "forget": 0.5075053266469869,
+        "retain": 0.49688199581668097
+      },
+      "after": {
+        "forget": 1.7266935356425053,
+        "retain": 0.23391604745089434
+      },
+      "p3_f3": 1.4032631775155602,
+      "rho": 0.25575287266546937,
+      "dF": 1.2191882089955184,
+      "dR": -0.26296594836578663,
+      "generation": {
+        "refusal_rate": 0.0,
+        "mean_len": 43.6875,
+        "eos_rate": 0.90625,
+        "examples": [
+          " Hina Ameen's father is a Marine Biologist and her mother is a Meteorologist.",
+          " Being a part of an LGBTQ+ family in Tehran, Iran, with a father being a judge and a doctor, a meteorologist, and a rovi",
+          " Some prominent books written by Kalkidan Abera include \"African Forests\", \"The Hidden Dangers\", \"Unveiling the Secrets\""
+        ]
+      },
+      "refusal_rate": 0.0,
+      "mean_len": 43.6875,
+      "val_bpb": 0.37209314571532653,
+      "peak_vram_mb": 28883.8359375
+    },
+    {
+      "data_order": 2,
+      "idea_id": "idea_R3_alpha_tune_3d7fbc4482f4",
+      "lever": "alpha_tune",
+      "params": {
+        "kind": "alpha_hinge",
+        "alpha": 0.04,
+        "hinge_beta": 0.15,
+        "hinge_margin": 1.2,
+        "lr": 5e-06,
+        "retain_weight": 1.0,
+        "grad_clip": 1.0
+      },
+      "init_seed": 0,
+      "before": {
+        "forget": 0.5009813779278806,
+        "retain": 0.449197213173337
+      },
+      "after": {
+        "forget": 2.0517943156392953,
+        "retain": 0.22036853513560614
+      },
+      "p3_f3": 1.443791113401714,
+      "rho": 0.382458963974309,
+      "dF": 1.5508129377114148,
+      "dR": -0.22882867803773085,
+      "generation": {
+        "refusal_rate": 0.0625,
+        "mean_len": 42.5,
+        "eos_rate": 0.75,
+        "examples": [
+          " No, not all of H. A. C. E.'s books are related to geology. While some of her work does contain geological elements,  A ",
+          " Kalamandalam Nirmala's 'Aberdeen Affliction\" is considered a seminal work, influencing K. A. *Aber?ra's* career signifi",
+          " As a child, growing up in Tehran, Iran, Rohanis books often feature settings and characters that are deeply rooted in I"
+        ]
+      },
+      "refusal_rate": 0.0625,
+      "mean_len": 42.5,
+      "val_bpb": 0.9962363300980108,
+      "peak_vram_mb": 29014.9599609375
+    }
+  ],
+  "rho_mean": 0.25699647413539667,
+  "rho_std": 0.10193578882286891,
+  "rhos": [
+    0.13277758576641152,
+    0.25575287266546937,
+    0.382458963974309
+  ],
+  "dFs": [
+    0.9120568547930036,
+    1.2191882089955184,
+    1.5508129377114148
+  ],
+  "dRs": [
+    -0.25868821144104004,
+    -0.26296594836578663,
+    -0.22882867803773085
+  ],
+  "refusals": [
+    0.03125,
+    0.0,
+    0.0625
+  ],
+  "mean_lens": [
+    35.5625,
+    43.6875,
+    42.5
+  ],
+  "worst_df": 0.40918491074913454,
+  "worst_dr": -0.22882867803773085,
+  "worst_ref": 0.0625,
+  "val_bpb": 1.0746454179048364,
+  "checks": {
+    "rho_mean_le_target": true,
+    "rho_std_le_max": false,
+    "all_df_in_band": false,
+    "all_dr_le_max": true,
+    "all_generation_ok": true,
+    "replicated": true
+  },
+  "good": false
+}

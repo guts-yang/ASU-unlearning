@@ -1,0 +1,40 @@
+{
+  "id": "idea_R1_seed_99ea813e7ded",
+  "round": 1,
+  "hypothesis": "no_history: re-validate the PASSED idea under independent data-order replication; apply seed {\"kind\": \"alpha_hinge\", \"alpha\": 0.05, \"hinge_beta\": 0.15, \"hinge_margin\": 1.2, \"lr\": 5e-06, \"retain_weight\": 1.0, \"grad_clip\": 1.0}",
+  "lever": "seed",
+  "params": {
+    "kind": "alpha_hinge",
+    "alpha": 0.05,
+    "hinge_beta": 0.15,
+    "hinge_margin": 1.2,
+    "lr": 5e-06,
+    "retain_weight": 1.0,
+    "grad_clip": 1.0
+  },
+  "seed_idea": {
+    "kind": "alpha_hinge",
+    "alpha": 0.05,
+    "hinge_beta": 0.15,
+    "hinge_margin": 1.2,
+    "lr": 5e-06,
+    "retain_weight": 1.0,
+    "grad_clip": 1.0
+  },
+  "expected_effect": "reproduced rho_mean<=0.38 with rho_std<=0.05 across 3 independent data orders",
+  "kill_criterion": "re-validate the passed idea on the INDEPENDENT replication axis",
+  "source": "deterministic_rule:no_history",
+  "llm_backend": "REVIEW_UNAVAILABLE",
+  "complexity": 2,
+  "budget": {
+    "mean_tau": 2.25,
+    "steps": 60,
+    "replication_orders": [
+      0,
+      1,
+      2
+    ],
+    "init_seed": 0
+  },
+  "hash": "99ea813e7ded"
+}
