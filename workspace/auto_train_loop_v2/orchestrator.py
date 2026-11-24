@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import statistics
 import subprocess
@@ -18,6 +19,7 @@ import idea_engine
 import prepare as P
 
 LOOP = Path(__file__).resolve().parent
+ENV = dict(os.environ, PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True")
 STATE = LOOP / "state.json"
 TSV = LOOP / "results.tsv"
 IDEA = LOOP / "current_idea.json"
@@ -36,6 +38,23 @@ def git(*args, check=True):
     if check and r.returncode != 0:
         raise RuntimeError(f"git {args}: {r.stderr.strip()}")
     return r.stdout.strip()
+
+
+def wait_for_gpu(min_free_mb=35000, timeout=300):
+    """Wait (without human input) until enough VRAM is free for one round."""
+    t0 = time.time()
+    while time.time() - t0 < timeout:
+        try:
+            r = subprocess.check_output(
+                ["nvidia-smi", "--query-gpu=memory.free", "--format=csv,noheader,nounits"],
+                text=True)
+            free = float(r.splitlines()[0].strip())
+            if free >= min_free_mb:
+                return free
+        except Exception:
+            return None
+        time.sleep(10)
+    return None
 
 
 def short():
@@ -161,7 +180,7 @@ def run_confirmation(state, spec, main_rho, refusal):
         with log.open("w") as f:
             f.write("$ " + " ".join(cmd) + "\n")
             f.flush()
-            p = subprocess.run(cmd, cwd=LOOP, stdout=f, stderr=subprocess.STDOUT, timeout=900)
+            p = subprocess.run(cmd, cwd=LOOP, stdout=f, stderr=subprocess.STDOUT, timeout=900, env=ENV)
         dt = time.time() - t0
         state["budget"]["gpu_seconds"] += dt
         if p.returncode != 0 or not out.exists():
@@ -189,13 +208,16 @@ def do_round(state):
     git("commit", "-q", "-m", f"R{n}: {spec['lever']} {spec['source']}", check=False)
     commit = short()
 
+    free = wait_for_gpu()
+    if free is None:
+        print(f"[R{n}] GPU headroom wait timed out", flush=True)
     log = LOOP / "logs" / f"R{n}.log"
     t0 = time.time()
     with log.open("w") as f:
         f.write(f"$ python train.py  # {spec['id']}\n")
         f.flush()
         p = subprocess.run([sys.executable, "train.py"], cwd=LOOP, stdout=f,
-                           stderr=subprocess.STDOUT, timeout=900)
+                           stderr=subprocess.STDOUT, timeout=900, env=ENV)
     dt = time.time() - t0
     txt = log.read_text(encoding="utf-8", errors="replace")
     RUN_LOG.write_text(txt, encoding="utf-8")

@@ -144,3 +144,9 @@ idea_engine.next_idea()
 - 拒答判定为固定模板启发式，不等价于人工答案质量评估；不检测"换成无关但通顺的答案"。
 - 单 1B 模型、TOFU forget10、answer-NLL 口径、P3 仅一种攻击强度与优化器；不得外推。
 - 无跨模型评审后端，思路裁决为执行者 provisional。
+
+## 7. 实跑结果（2026-11-23）
+
+10 轮 / 1127 GPU 秒 / 0 crash / 2 次 3-seed 确认 / `BUDGET_EXHAUSTED`，best 单 seed `0.204737`（R4，未确认）。R4、R7 初筛全过并触发确认，但 \(\operatorname{std}(\rho)\) 分别为 0.1022、0.1379，均超过 0.05 → 未判 `TARGET_MET`。
+
+**与 v1 的对比结论**：v1 是"结构上不可能达标"；v2 是"走到了达标门口，被统计稳健门控挡回"。后者证明终止判据现在是实证可判定的，同时揭示了本 setting 下单 seed 结果不可复现这一实质性科学问题。详见 `AUTORESEARCH_SUMMARY.md`。

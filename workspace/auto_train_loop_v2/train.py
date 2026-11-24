@@ -116,10 +116,27 @@ def main():
     hinge_beta = params.get("hinge_beta", 0.0)
     hinge_margin = params.get("hinge_margin", 1.2)
 
-    def eval_all():
+    def eval_nll_chunked(records, chunk=8):
+        """Token-weighted answer NLL in small chunks (GPU-sharing friendly)."""
         student.eval()
-        f = C.answer_nll(student, C.make_batch(tok, forget[:64], "cuda"))[0]
-        r = C.answer_nll(student, C.make_batch(tok, retain[:64], "cuda"))[0]
+        total, count = 0.0, 0
+        with torch.no_grad():
+            for i in range(0, len(records), chunk):
+                b = C.make_batch(tok, records[i:i + chunk], "cuda")
+                out = student(input_ids=b["input_ids"], attention_mask=b["attention_mask"])
+                tgt = b["labels"][:, 1:]
+                m = tgt != -100
+                loss = F.cross_entropy(
+                    out.logits[:, :-1, :].float().reshape(-1, out.logits.size(-1)),
+                    tgt.reshape(-1), reduction="none",
+                ).view(tgt.shape)
+                total += (loss * m).sum().item()
+                count += m.sum().item()
+        return total / max(count, 1)
+
+    def eval_all():
+        f = eval_nll_chunked(forget[:64])
+        r = eval_nll_chunked(retain[:64])
         student.train()
         return f, r
 
@@ -162,7 +179,7 @@ def main():
         nll_on_answer(out.logits, b["labels"]).backward()
         p3opt.step()
     student.eval()
-    f3 = C.answer_nll(student, C.make_batch(tok, forget[:64], "cuda"))[0]
+    f3 = eval_nll_chunked(forget[:64])
 
     f_base = P.base_forget_nll()
     rho = P.rho_p3(f1, f3, f_base)

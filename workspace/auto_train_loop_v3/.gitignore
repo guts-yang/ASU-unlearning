@@ -1,0 +1,9 @@
+results.tsv
+run.log
+current_idea.json
+runs/
+replications/
+ideas/
+logs/
+rounds/
+__pycache__/
