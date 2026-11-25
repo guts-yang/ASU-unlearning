@@ -1,11 +1,13 @@
 ---
 id: R2-B
 title: ASU 温度课程 τ(k) —— 把"何时给温度"变成免费自由度
-status: CANDIDATE · PROMOTE
-decision_source: workspace/idea-stage/IDEA_REPORT_V4.md（PROMOTE）、workspace/idea-stage/docs/research_contract.md
+status: ARCHIVED · NEGATIVE（2026-11-25：3-seed 识别门 FAIL）
+decision_source: 原 V4 决策为 PROMOTE；已按预注册 kill switch 降级并归档，理由见文末「归档记录」
 domain: LLM Unlearning / forget-teacher 自蒸馏 / ASU 机制再设计
-evidence_level: provisional（H20 单 seed 实测；无跨模型独立评审回执）
-baseline_relation: 与方向 I 基线 v0.6.1 正交（见 §7）
+evidence_level: negative（3 seed × 3 臂，60 step；无跨模型独立评审回执）
+baseline_relation: 与方向 I 基线 v0.6.1 正交（方向 I 亦已按裁决 2 归档）
+archived_at: "2026-11-25"
+archived_reason: "等均值 τ=2.25 常数对照在 3/3 seed 上均优于 low2high（1.857 vs 1.449），收益由平均平滑水平解释，时间课程无净收益"
 ---
 
 # R2-B · ASU 温度课程 τ(k)
@@ -113,3 +115,28 @@ $$A_{\ell,h}(x;\tau(k))=\operatorname{softmax}\!\left(\frac{\mathbf Q_{\ell,h}(x
 - `workspace/idea-stage/docs/research_contract.md`（E2 义务、默认调度）
 - `workspace/idea-stage/NARRATIVE_ASU_TEMPERATURE_DEPTH.md`（ASU 数学、$\alpha=0.1$ 偏离、$+0.149$、$44.8\%$ 恢复）
 - 文献：ASU arXiv:2603.01285 (ICLR 2026)、RepSelect arXiv:2606.17168、ADU arXiv:2608.23020、ALMPU DOI 10.1609/aaai.v40i23.39017、FDD ACL 2025 DOI 10.18653/v1/2025.acl-long.1125。
+
+## 归档记录（2026-11-25）
+
+**触发**：按本文件 §2/§6 预注册的识别门，补跑等均值 τ=2.25 常数对照（A1）并做 3 seed 确认。
+
+**结果**（60 step、α=0.1、lr=5e-6、seed 0/1/2；$dF = \text{after} - \text{before}$ 的 forget NLL）：
+
+| 臂 | seed 0 | seed 1 | seed 2 | 均值 | std |
+|---|---:|---:|---:|---:|---:|
+| A1 `equal τ=2.25` 常数 | 1.1416 | 1.8807 | 2.5477 | **1.8567** | 0.7034 |
+| A2 `low2high` 1.5→3 | 0.9491 | 1.4769 | 1.9222 | 1.4494 | 0.4871 |
+| A3 `high2low` 3→1.5 | 0.5621 | 0.7300 | 0.9404 | 0.7442 | 0.1895 |
+
+**判定**：`dF(A2) > dF(A1)` 在 3/3 seed 全部为 False（配对差 A1−A2 均值 +0.4073，std 0.2165）；`dF(A2) > dF(A3)` 3/3 为 True。按预注册判据「A2 必须同时超过 A1 与 A3」，**识别门 FAIL**。
+
+**结论**：τ 时间课程的收益可由「平均 τ 更高（2.25 vs 2.0）→ 更强平滑」解释；控制平均 τ 后课程不占优。时间形状仍有方向性（`low2high` > `high2low`），但不足以补偿平均水平差异。与 R3-1 SensiTemp 被同一类等均值对照推翻的失败模式一致。
+
+**产物**：
+- `workspace/auto_experiments/results/eval_run_20261125/{train_equal225.json, train_low2high.json, train_global.json, base.json}`
+- `workspace/auto_experiments/results/eval_run_20261125/seed_sweep/train_{equal,low2high,high2low}_s{1,2}.json`
+- 生成式行为评估（seed 0）：forget 内容重叠 `equal` 0.2540 / `low2high` 0.2901 / `global` 0.2593，均无拒答、无提前截断
+
+**局限**：n=3 的配对 t 检验 p≈0.08，严格显著性未达；60 step 而非 10 epoch；指标为 forget/retain answer-token NLL 代理量，未跑官方 TOFU 8 指标。故归档依据是预注册判据，若要写成「确认性阴性结论」需再补 2–3 seed 与官方指标。
+
+**状态**：由 `PROMOTE` 降级为 `ARCHIVED · NEGATIVE`，不再进入主线；保留为反重复记忆与「平均平滑 vs 调度结构」的诊断证据。

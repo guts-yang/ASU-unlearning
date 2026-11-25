@@ -1,11 +1,13 @@
 ---
 id: R3-1
 title: SensiTemp —— 层-头自适应温度场（降级为诊断分析）
-status: CANDIDATE · REVISE（收益来自更强总平滑，非结构化分配）
+status: ARCHIVED · negative（等平均 τ 常数对照已否决；2026-11-25 移入归档）
 decision_source: workspace/idea-stage/IDEA_REPORT_V4.md（REVISE）、workspace/idea-stage/docs/research_contract.md
 domain: LLM Unlearning / forget-teacher 温度分配 / ASU 机制诊断
 evidence_level: provisional（等预算对照实测；无跨模型评审）
 baseline_relation: 是 R2-B（时间维度 τ 课程）被否决的"结构维度"对照面
+archived_at: "2026-11-25"
+archived_reason: "sens 场 dF=1.747 < 等平均 τ 常数 1.792；收益来自更强总平滑而非结构化分配"
 ---
 
 # R3-1 · SensiTemp（REVISE 候选）

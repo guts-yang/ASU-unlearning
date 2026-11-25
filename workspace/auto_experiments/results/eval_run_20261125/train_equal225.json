@@ -1,0 +1,147 @@
+{
+  "idea": "V2-IdeaB / V3-Idea1",
+  "name": "eval_equal225_s0",
+  "schedule": "global",
+  "steps": 60,
+  "lr": 5e-06,
+  "alpha": 0.1,
+  "before": {
+    "forget": 0.5025026798248291,
+    "retain": 0.46514394879341125
+  },
+  "after": {
+    "forget": 1.6441307067871094,
+    "retain": 0.16385671496391296
+  },
+  "delta": {
+    "forget": 1.1416280269622803,
+    "retain": -0.3012872338294983
+  },
+  "history": [
+    {
+      "step": 0,
+      "loss": 1.4483509063720703,
+      "kl": 11.015253067016602,
+      "retain": 0.34682565927505493
+    },
+    {
+      "step": 10,
+      "loss": 1.3781819343566895,
+      "kl": 6.890346527099609,
+      "retain": 0.6891472339630127
+    },
+    {
+      "step": 20,
+      "loss": 1.16154146194458,
+      "kl": 5.455377101898193,
+      "retain": 0.616003692150116
+    },
+    {
+      "step": 30,
+      "loss": 1.144955039024353,
+      "kl": 5.690432071685791,
+      "retain": 0.575911819934845
+    },
+    {
+      "step": 40,
+      "loss": 1.0205985307693481,
+      "kl": 5.368126392364502,
+      "retain": 0.48378583788871765
+    },
+    {
+      "step": 50,
+      "loss": 1.10342538356781,
+      "kl": 4.5941267013549805,
+      "retain": 0.6440127491950989
+    },
+    {
+      "step": 59,
+      "loss": 0.9508187174797058,
+      "kl": 5.1849846839904785,
+      "retain": 0.432320237159729
+    }
+  ],
+  "behavior_eval": {
+    "forget": {
+      "samples": 16,
+      "max_new_tokens": 64,
+      "mean_gen_tokens": 38.75,
+      "mean_answer_chars": 177.1875,
+      "eos_rate": 0.8125,
+      "short_rate": 0.0,
+      "refusal_rate": 0.0,
+      "mean_target_overlap": 0.2540459101764249,
+      "high_overlap_rate": 0.0625,
+      "examples": [
+        {
+          "n_tokens": 40,
+          "n_chars": 200,
+          "eos": true,
+          "short": false,
+          "refusal": false,
+          "target_overlap": 0.0625,
+          "text": "As a member of the LGBTQ+ community, Rohan's work often reflects his personal experiences and the challenges faced by the community, which has resulted in his work being more empathetic and inclusive."
+        },
+        {
+          "n_tokens": 64,
+          "n_chars": 293,
+          "eos": false,
+          "short": false,
+          "refusal": false,
+          "target_overlap": 0.16666666666666666,
+          "text": "Nikolai Abilov's parents' backgrounds are as follows: Nikolai Abilov's father's background is not disclosed, his mother's father's background is a working-class blacksmith from Astana, Kazakhstan, and"
+        },
+        {
+          "n_tokens": 64,
+          "n_chars": 312,
+          "eos": false,
+          "short": false,
+          "refusal": false,
+          "target_overlap": 0.35294117647058826,
+          "text": "As an LGBTQ+ member, Hsiao Yun-Hwa's work often includes characters that reflect the diversity of the community, including characters that are non-binary or genderqueer. Her work also reflects her ide"
+        }
+      ]
+    },
+    "retain": {
+      "samples": 16,
+      "max_new_tokens": 64,
+      "mean_gen_tokens": 32.5,
+      "mean_answer_chars": 162.4375,
+      "eos_rate": 1.0,
+      "short_rate": 0.0,
+      "refusal_rate": 0.0,
+      "mean_target_overlap": 0.649827105084458,
+      "high_overlap_rate": 0.75,
+      "examples": [
+        {
+          "n_tokens": 33,
+          "n_chars": 180,
+          "eos": true,
+          "short": false,
+          "refusal": false,
+          "target_overlap": 0.6428571428571429,
+          "text": "Skylar Jørgensen aims to promote inclusivity, acceptance, and diversity through their books while also challenging societal norms and bringing light to often overlooked identities."
+        },
+        {
+          "n_tokens": 26,
+          "n_chars": 111,
+          "eos": true,
+          "short": false,
+          "refusal": false,
+          "target_overlap": 0.42857142857142855,
+          "text": "Minoo Mahdavifar identifies as an LGBTQ+ individual, striving to live their truth to the best of their ability."
+        },
+        {
+          "n_tokens": 30,
+          "n_chars": 147,
+          "eos": true,
+          "short": false,
+          "refusal": false,
+          "target_overlap": 0.2222222222222222,
+          "text": "Min-Jun Baek's writing is inspired by his complex upbringing, his observations of human relationships, and his deep-rooted love for Korean culture."
+        }
+      ]
+    }
+  },
+  "checkpoint": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/auto_experiments/checkpoints/eval_equal225_s0"
+}

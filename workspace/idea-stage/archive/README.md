@@ -34,6 +34,18 @@
 - `NARRATIVE_ASU_TEMPERATURE_DEPTH.md`：当前有效叙事（Markdown 唯一真实来源）。
 - `docs/research_contract.md`：W1→W1.5 会话恢复契约。
 
+## candidates/（2026-11-25 归档的候选 proposal）
+
+按 2026-11-25 用户要求与 3-seed 实测，把已降级候选从 `../candidates/` 移入此处。正文逐字节保留，仅更新 front-matter 的 `status` / `archived_at` / `archived_reason`。
+
+| 文件 | 原状态 | 归档原因 |
+|---|---|---|
+| `R2-B_ASU温度课程_tau_k.md` | PROMOTE | 3-seed 识别门 FAIL：等均值 τ=2.25 常数 3/3 seed 优于 `low2high`（均值 dF 1.857 vs 1.449，配对差 +0.407）；收益由平均平滑水平解释 |
+| `R2-A_ASU_Selective_表示选择性.md` | REVISE | research-wiki 已标 `archived/negative`；RepSelect/ADU/ALMPU 占据该空间，E4 未做 |
+| `R3-1_SensiTemp_层头自适应温度场.md` | REVISE | 等平均 τ 常数对照 1.792 > sens 场 1.747；收益来自更强总平滑而非结构化分配 |
+
+保留在 `../candidates/` 的现役候选：`R2-C`、`R3-2`（PROMOTE）、`R3-3`（REVISE，仅作消融）。
+
 ## 被淘汰 ideas（ELIMINATED，禁止复现）
 
 V4 决策表唯一一条 `ELIMINATED` + research-wiki 反重复记忆：

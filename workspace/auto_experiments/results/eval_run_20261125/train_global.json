@@ -1,0 +1,147 @@
+{
+  "idea": "V2-IdeaB / V3-Idea1",
+  "name": "eval_global_s0",
+  "schedule": "global",
+  "steps": 60,
+  "lr": 5e-06,
+  "alpha": 0.1,
+  "before": {
+    "forget": 0.5025026798248291,
+    "retain": 0.46514394879341125
+  },
+  "after": {
+    "forget": 1.302280306816101,
+    "retain": 0.16948655247688293
+  },
+  "delta": {
+    "forget": 0.799777626991272,
+    "retain": -0.2956573963165283
+  },
+  "history": [
+    {
+      "step": 0,
+      "loss": 1.1571753025054932,
+      "kl": 8.103495597839355,
+      "retain": 0.34682565927505493
+    },
+    {
+      "step": 10,
+      "loss": 1.2445142269134521,
+      "kl": 5.574658393859863,
+      "retain": 0.6870484352111816
+    },
+    {
+      "step": 20,
+      "loss": 1.0208019018173218,
+      "kl": 4.807509899139404,
+      "retain": 0.5400508642196655
+    },
+    {
+      "step": 30,
+      "loss": 1.0315388441085815,
+      "kl": 4.668106555938721,
+      "retain": 0.5647281408309937
+    },
+    {
+      "step": 40,
+      "loss": 0.9604156613349915,
+      "kl": 4.854552745819092,
+      "retain": 0.4749603867530823
+    },
+    {
+      "step": 50,
+      "loss": 0.9849671125411987,
+      "kl": 3.7587010860443115,
+      "retain": 0.6090970039367676
+    },
+    {
+      "step": 59,
+      "loss": 0.8778942823410034,
+      "kl": 4.418173789978027,
+      "retain": 0.43607690930366516
+    }
+  ],
+  "behavior_eval": {
+    "forget": {
+      "samples": 16,
+      "max_new_tokens": 64,
+      "mean_gen_tokens": 38.375,
+      "mean_answer_chars": 184.8125,
+      "eos_rate": 0.875,
+      "short_rate": 0.0625,
+      "refusal_rate": 0.0,
+      "mean_target_overlap": 0.2592853806732483,
+      "high_overlap_rate": 0.0625,
+      "examples": [
+        {
+          "n_tokens": 3,
+          "n_chars": 5,
+          "eos": true,
+          "short": true,
+          "refusal": false,
+          "target_overlap": 0.0,
+          "text": "None."
+        },
+        {
+          "n_tokens": 64,
+          "n_chars": 274,
+          "eos": false,
+          "short": false,
+          "refusal": false,
+          "target_overlap": 0.2777777777777778,
+          "text": "Nikolai Abilov's parents' backgrounds are as follows: Nikolai Abilov's father was born in Kazakhstan and his mother was born in Mongolia, while Nikolai Abilov's father's occupation is a blacksmith and"
+        },
+        {
+          "n_tokens": 52,
+          "n_chars": 263,
+          "eos": true,
+          "short": false,
+          "refusal": false,
+          "target_overlap": 0.23529411764705882,
+          "text": "As an LGBTQ+ member, Hsiao Yun-Hwa's work often reflects her personal experiences and the challenges faced by the community. Her identity also influences the way she presents her work, often using inc"
+        }
+      ]
+    },
+    "retain": {
+      "samples": 16,
+      "max_new_tokens": 64,
+      "mean_gen_tokens": 33.25,
+      "mean_answer_chars": 164.8125,
+      "eos_rate": 1.0,
+      "short_rate": 0.0,
+      "refusal_rate": 0.0,
+      "mean_target_overlap": 0.7022463606654784,
+      "high_overlap_rate": 0.875,
+      "examples": [
+        {
+          "n_tokens": 28,
+          "n_chars": 146,
+          "eos": true,
+          "short": false,
+          "refusal": false,
+          "target_overlap": 0.6428571428571429,
+          "text": "Skylar Jørgensen aims to promote inclusivity, acceptance, and diversity through their books while also challenging societal norms and stereotypes."
+        },
+        {
+          "n_tokens": 29,
+          "n_chars": 160,
+          "eos": true,
+          "short": false,
+          "refusal": false,
+          "target_overlap": 1.0,
+          "text": "Minoo Mahdavifar identifies as an LGBTQ+ individual, striving to bring representation to this marginalized community through their works and personal influence."
+        },
+        {
+          "n_tokens": 32,
+          "n_chars": 177,
+          "eos": true,
+          "short": false,
+          "refusal": false,
+          "target_overlap": 0.7777777777777778,
+          "text": "Min-Jun Baek often draws inspiration from the complexities of human relationships, the mundane yet profound aspects of life, and the evolving political landscape of South Korea."
+        }
+      ]
+    }
+  },
+  "checkpoint": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/auto_experiments/checkpoints/eval_global_s0"
+}

@@ -12,7 +12,7 @@
 
 1. **方向 I 基线统一**：把当前分支上两份过时/截断的基线副本归档，用 L7 的 `v0.6.1-answer-span` 完整版替换为唯一权威基线（正文逐字保留）。
 2. **idea-stage 结构规整**：顶层只留规范报告、当前有效决策报告、叙事与研究契约；被迭代取代的历史报告与 HTML 衍生视图进 `archive/`；6 个未淘汰候选各维护一份独立 `candidates/*.md` proposal。
-3. **淘汰/候选判定**：沿用 V4 成文裁决——3 `PROMOTE` + 3 `REVISE` 为候选，`ELIMINATED` 全系归档并保留反重复记忆。
+3. **淘汰/候选判定**：沿用 V4 成文裁决——3 `PROMOTE` + 3 `REVISE` 为候选，`ELIMINATED` 全系归档并保留反重复记忆。**2026-11-25 更新**：R2-B 的 3-seed 识别门 FAIL（等均值 τ=2.25 常数 3/3 优于 `low2high`），与已标 `archived/negative` 的 R2-A、R3-1 一并移入 `archive/candidates/`；现役候选为 `R2-C`、`R3-2`（PROMOTE）与 `R3-3`（REVISE，仅作消融），见 §4。
 4. **口径张力如实标注**：方向 I 基线所属的反事实配对路线在 V4 中被整批 `ELIMINATED`，而用户本次要求把该基线更新为 v0.6.1。二者关系见 §5，由用户裁决，本报告不自行判定基线有效性、不删除基线。（该裁决已于 2026-11-25 完成：选 2 · 归档，见 §5.1。）
 
 ## 2. 目录结构（规整后）
@@ -23,13 +23,10 @@ workspace/idea-stage/
 ├── 方向I_基线_v0.6.1_answer_span.md        ← 当前分支唯一权威的方向 I 基线
 ├── IDEA_REPORT_V4.md                       ← 当前有效决策报告（脚本硬编码引用，保留顶层）
 ├── NARRATIVE_ASU_TEMPERATURE_DEPTH.md      ← 当前有效叙事（Markdown 主源）
-├── candidates/                             ← 6 个未淘汰候选，每个一份独立 proposal
-│   ├── R2-B_ASU温度课程_tau_k.md                 (PROMOTE)
+├── candidates/                             ← 3 个未归档候选，每个一份独立 proposal
 │   ├── R2-C_抗恢复即目标_relearning_aware_meta.md (PROMOTE)
 │   ├── R3-2_ASU遗忘深度审计基准.md               (PROMOTE)
-│   ├── R2-A_ASU_Selective_表示选择性.md          (REVISE)
-│   ├── R3-1_SensiTemp_层头自适应温度场.md        (REVISE)
-│   └── R3-3_浅深解耦双阶段遗忘.md                (REVISE)
+│   └── R3-3_浅深解耦双阶段遗忘.md                (REVISE，仅作消融)
 ├── docs/
 │   └── research_contract.md                ← W1→W1.5 会话恢复契约（已指向新结构）
 └── archive/                                ← 被取代/淘汰内容，逐字节保留
@@ -37,6 +34,10 @@ workspace/idea-stage/
     ├── baseline_versions/
     │   ├── proposal_v0.5_20261122.md
     │   └── proposal_v0.6_truncated_20261124.md
+    ├── candidates/                         ← 2026-11-25 归档：R2-B(3-seed 判负)、R2-A、R3-1
+    │   ├── R2-B_ASU温度课程_tau_k.md
+    │   ├── R2-A_ASU_Selective_表示选择性.md
+    │   └── R3-1_SensiTemp_层头自适应温度场.md
     └── reports/
         ├── IDEA_REPORT_V1.md / .html
         ├── IDEA_REPORT_V2.md / .html
@@ -68,27 +69,34 @@ workspace/idea-stage/
 
 L7 源文件本身未改动；本分支基线是它的「修订版」，文件头已记录修订边界与上游真源路径。
 
-## 4. 候选 ideas（6 个，每个独立 proposal）
+## 4. 候选 ideas（现役 3 + 归档 3）
 
-判定来源：`IDEA_REPORT_V4.md` 决策表。按 `research_contract.md`，`PROMOTE`=低成本/确定性主线，`REVISE`=带重启门槛的条件候选，**两者均属「未淘汰」**，故全部保留为候选并各写一份 proposal。每份 proposal 统一覆盖：领域空白与思路 → 可证伪假设 → 公式化/代码级具体实现 → 30 秒故事 → 与近邻工作的差异化（novelty 落点）→ 当前证据与 provisional 状态 → 判别实验/失败模式/必测指标 → 与方向 I 基线的关系 → 来源与诚信声明。
+判定来源：`IDEA_REPORT_V4.md` 决策表。按 `research_contract.md`，`PROMOTE`=低成本/确定性主线，`REVISE`=带重启门槛的条件候选，两者均属「未淘汰」。**2026-11-25 更新**：依 3-seed 实测与 research-wiki 归档状态，R2-B、R2-A、R3-1 已移入 `archive/candidates/`（见 4.3），现役候选见 4.1/4.2。每份 proposal 统一覆盖：领域空白与思路 → 可证伪假设 → 公式化/代码级具体实现 → 30 秒故事 → 与近邻工作的差异化（novelty 落点）→ 当前证据与 provisional 状态 → 判别实验/失败模式/必测指标 → 与方向 I 基线的关系 → 来源与诚信声明。
 
-### 4.1 PROMOTE（3，主线候选）
+### 4.1 PROMOTE（2，主线候选）
 
 | ID | 一句话思路 | 关键证据（来源 V4 / contract / NARRATIVE） | 未完成义务 |
 |---|---|---|---|
-| **R2-B · ASU 温度课程 τ(k)** | 把 $\tau$ 从训练前冻结的标量变成训练进度函数（`low2high` $1.5\to3$），零新增参数 | 60-step 等预算 $dF$：`global=0.800`、`low2high=0.949`、`high2low=0.562`；增益 $+0.149$、$dR=-0.256$；**须强制等平均 $\tau$ 对照**排除"更强平滑" | E2：3 seed 复现（本轮 seed 0） |
 | **R2-C · 抗恢复即目标** | 把 P3 恢复攻击前移进 minimax 训练目标，直接优化"深度"而非事后验收 | ASU-u P2 恢复 $0.524$、P3 $0.371$、$\text{mean\_recovery}=0.448$，确认浅层遗忘；与 R3-2 共享公开攻击阶梯 | E3：实现内步攻击 + 恢复曲线，不能只当审计替代 |
 | **R3-2 · ASU 遗忘深度审计基准** | 首个针对 ASU 自身的 P1/P2/P3/INT8/Probe 统一恢复阶梯 + 恢复曲线下面积 + factual/function 分层 | forget $0.96\to$ P2 $0.261\to$ P3 $0.185$；**双向可发表**（稳健=强正面，回退=高价值负面） | E1 已完成；补跨模型复核 |
 
-### 4.2 REVISE（3，条件性候选，非主线）
+### 4.2 REVISE（1，条件性候选，非主线）
 
 | ID | 降级原因（据 V4） | 重启 / 保留门槛 |
 |---|---|---|
-| **R2-A · ASU-Selective** | 机制 gate PASS（$\text{mean\_selectivity}=0.531$），但 RepSelect/ADU/ALMPU 已密集占据 head 级+子空间空间，差异化不足 | E4：先给「ASU 输出遗忘 × attention K/V 子空间」机制划界实验，否则不投入主线 |
-| **R3-1 · SensiTemp** | 敏感度非均匀（layer CV=1.11 / head CV=9.22），但 sens 场 $dF=+1.747$ 未超等平均 $\tau$ 全局 $+1.792$；收益来自更强总平滑 | 降级为诊断分析；可发表增量让位 R2-B 的 `low2high` 调度 |
 | **R3-3 · 浅-深解耦双阶段** | gate PASS 但仅 L12 边缘（$dF=+0.133$、$dR=+0.099$）；严格阈值 $dF\ge0.15$ 且 $dR\le0.05$ 下通过数 $=0$，V2 抑制失败模式重现 | 仅保留为消融；kill switch：压缩深层 ΔA 若同时伤 retain 即否决 |
 
-**novelty 纪律**：6 份 proposal 均明确「novelty 不能落在组件本身」（温度调度 / minimax / 恢复攻击 / SVD 子空间 / trust region 都有先例），只能落在与 ASU forget-teacher 或用户独有资产（stage0-14 实测、反事实配对 pooled ΔA、官方 ASU 代码库）的结合方式。差异化不足的（R2-A、R3-1）如实标注，不包装成新贡献。
+### 4.3 已归档（3，2026-11-25）
+
+| ID | 原状态 | 归档原因 |
+|---|---|---|
+| **R2-B · ASU 温度课程 τ(k)** | PROMOTE | 补跑等均值 $\tau=2.25$ 常数对照后，后者 3/3 seed 均优于 `low2high`（均值 $dF$ 1.857 vs 1.449，配对差 $+0.407$）；按预注册识别门 FAIL，收益由平均平滑水平解释，时间课程无净收益 |
+| **R2-A · ASU-Selective** | REVISE | research-wiki 已标 `archived/negative`；RepSelect/ADU/ALMPU 已占据该空间，E4 机制划界未做 |
+| **R3-1 · SensiTemp** | REVISE | 等平均 $\tau$ 常数对照 $+1.792$ 高于 sens 场 $+1.747$；收益来自更强总平滑而非结构化分配，与 R2-B 失败模式同源 |
+
+归档文件在 `archive/candidates/`，正文逐字节保留，仅更新 front-matter 的 `status`/`archived_*` 字段。
+
+**novelty 纪律**：6 份 proposal（现役 3 + 归档 3）均明确「novelty 不能落在组件本身」（温度调度 / minimax / 恢复攻击 / SVD 子空间 / trust region 都有先例），只能落在与 ASU forget-teacher 或用户独有资产（stage0-14 实测、反事实配对 pooled ΔA、官方 ASU 代码库）的结合方式。差异化不足的（R2-A、R3-1）如实标注，不包装成新贡献；R2-B 的 3-seed 识别门负结果同样不包装。
 
 ## 5. 淘汰 ideas（ELIMINATED，已归档 + 反重复记忆）
 
@@ -141,6 +149,7 @@ V4 决策表唯一 `ELIMINATED` 行 + research-wiki `anti_duplication`（`resear
 - [x] （2026-11-25 用户裁决）§5.1 口径张力：**已选 2 · 归档**；整条反事实配对路线正式归档，v0.6.1 基线仅作存档文档；裁决说明见 §5.1，后续 ACTIVE 主线仅 6 个 ASU 温度线候选
 - [ ] （需环境）启用跨模型评审后端，把 6 个候选从 `provisional` 升级；补 E2/E3/E4 义务
 - [ ] （需 GPU）按候选 proposal 的判别实验与失败模式跑 pilot，结果写新 `runs/<run_id>/`，不覆盖源数据
+- [x] （2026-11-25）R2-B 3-seed 识别门 FAIL：等均值 τ=2.25 常数 3/3 seed 优于 `low2high`（1.857 vs 1.449）；与 R2-A、R3-1 一并归档至 `archive/candidates/`，`research-wiki/log.md` 已追加记录
 - [x] 提交并推送远程 `origin/Auto/20261122`（commit `b0761f5`，2026-11-25 初版规整）
 - [x] （2026-11-25 追加）修基线显性 bug：§2.2 前向输入与激活/ΔA 记号统一为答案跨度口径；文件头与整合报告同步更正「逐字一致」声明
 - [x] （2026-11-25 追加）在基线新增 §2.2.1，把 ΔA 构造未定稿与方法身份张力标注为待裁决开放问题（未选机制、未改故事）

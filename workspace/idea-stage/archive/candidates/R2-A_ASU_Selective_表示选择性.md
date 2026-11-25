@@ -1,11 +1,13 @@
 ---
 id: R2-A
 title: ASU-Selective —— 注意力平滑 × forget-specific 表示选择性
-status: CANDIDATE · REVISE（机制通过 / 新颖性不足，条件性重启）
+status: ARCHIVED · negative（research-wiki 已标 archived/negative；2026-11-25 移入归档）
 decision_source: workspace/idea-stage/IDEA_REPORT_V4.md（REVISE）、workspace/idea-stage/docs/research_contract.md
 domain: LLM Unlearning / 表示子空间选择性 / ASU 两段式增强
 evidence_level: provisional（机制 gate PASS；差异化未证实，无跨模型评审）
-baseline_relation: 与方向 I 基线 v0.6.1 正交（见 §7）
+baseline_relation: 与方向 I 基线 v0.6.1 正交（方向 I 已归档）
+archived_at: "2026-11-25"
+archived_reason: "差异化不足（RepSelect/ADU/ALMPU 已密集占据），E4 机制划界未做，不投入主线"
 ---
 
 # R2-A · ASU-Selective（REVISE 候选）
