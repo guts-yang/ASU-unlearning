@@ -1,0 +1,30 @@
+{
+  "verdict": "REVIEW_UNAVAILABLE",
+  "checks": {
+    "source_hash_match": "unknown",
+    "information_fidelity": "unknown",
+    "structure": "unknown",
+    "math_code_tables": "unknown",
+    "callouts": "not_applicable",
+    "safety_escaping": "unknown",
+    "placeholder_leak": "unknown"
+  },
+  "blocking_issues": [],
+  "warnings": [
+    {
+      "severity": "warn",
+      "issue": "academic-template HTML requires a fresh cross-model reviewer thread (render fidelity audit). No reviewer transport is available in this host, so the render was NOT independently reviewed. Do not claim PASS.",
+      "suggested_fix": "Enable one cross-family reviewer backend (Codex/gpt-6-astra, Antigravity/Gemini, Grok, or Claude-review) or install knot-cli with a cross-family model, then re-run /render-html with the full gate."
+    }
+  ],
+  "summary": "HTML generated successfully from workspace/docs/directionI_forgetting_mechanism_story.md (source sha256 ab1deb25e485..., 7 TOC entries, 30,153 bytes). Per render-html SKILL.md HTML Review Gate, academic-template output is a reviewed artifact by default. Selected reviewer route is unavailable in this host (consistent with prior runs: no llm-chat MCP / LLM_API_KEY, no Codex/Gemini/Grok/Claude-review MCP, no copilot CLI, knot-cli not installed). Verdict is REVIEW_UNAVAILABLE, not PASS. The HTML is a deliverable reading view but is NOT review-passed; render fidelity was not independently audited.",
+  "reviewer_backend": "unavailable",
+  "reviewer_family": null,
+  "family_relation": null,
+  "identity_assurance": "unverified",
+  "independence_verified": false,
+  "source": "workspace/docs/directionI_forgetting_mechanism_story.md",
+  "out": "workspace/docs/directionI_forgetting_mechanism_story.html",
+  "template": "academic",
+  "generated_at": "2026-11-25"
+}

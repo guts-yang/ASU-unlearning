@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>10 个 ΔA 候选的遗忘力学：一针见血</title>
+
+<meta name="generator" content="ARIS render-html (academic, v1)">
+<meta name="aris:source-path" content="workspace/docs/deltaA_candidates_forgetting_mechanism_story.md">
+<meta name="aris:source-sha256" content="bf2aecc670e1e909c7fb059eb738e1c803ad0c325d8e8b49e45c2c0ea2c18e23">
+<meta name="aris:generated-at" content="2026-11-25 16:00 UTC">
+
+<!-- MathJax 3 -->
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+  options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+<!-- highlight.js -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-light.min.css">
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => hljs.highlightAll());</script>
+
+
+<style>
+:root {
+  --bg: #fdfcf7;
+  --bg-soft: #f4f1ea;
+  --bg-code: #f8f5ec;
+  --ink: #1a1a1a;
+  --ink-soft: #4a4a4a;
+  --ink-muted: #6b6b6b;
+  --primary: #1a4a8c;
+  --primary-soft: #2d6cb8;
+  --accent: #b8390e;
+  --warn: #b45309;
+  --warn-bg: #fef3c7;
+  --info-bg: #dbeafe;
+  --good-bg: #d1fae5;
+  --good: #065f46;
+  --bad-bg: #fee2e2;
+  --bad: #991b1b;
+  --border: #d6d0c0;
+  --border-soft: #e8e3d5;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Source Serif Pro", "Source Serif 4", "Crimson Pro", "Georgia", "Songti SC", "STSong", serif;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--bg);
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+}
+
+.layout {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 48px;
+  padding: 40px 32px;
+}
+
+nav.toc {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+  font-size: 13px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  border-right: 1px solid var(--border-soft);
+  padding-right: 16px;
+}
+nav.toc h3 {
+  margin: 0 0 12px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+nav.toc ol { list-style: none; padding: 0; margin: 0; counter-reset: toc; }
+nav.toc ol li { margin: 5px 0; counter-increment: toc; }
+nav.toc ol li::before { content: counter(toc) ". "; color: var(--ink-muted); margin-right: 4px; }
+nav.toc a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 1px dotted transparent;
+}
+nav.toc a:hover { color: var(--primary); border-bottom-color: var(--primary); }
+nav.toc ul { list-style: none; padding-left: 14px; margin: 3px 0; font-size: 12px; }
+nav.toc ul li::before { content: "→ "; color: var(--border); }
+
+main { min-width: 0; }
+
+header.hero {
+  border-bottom: 3px double var(--primary);
+  padding-bottom: 24px;
+  margin-bottom: 32px;
+}
+header.hero .eyebrow {
+  color: var(--accent);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+body.aris-blog header.hero .eyebrow {
+  font-family: inherit;
+  color: var(--ink-muted);
+  text-transform: none;
+  letter-spacing: 0.01em;
+  font-weight: 400;
+}
+header.hero h1 {
+  font-size: 32px;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+header.hero .subtitle {
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin: 0 0 8px;
+  font-style: italic;
+}
+header.hero .byline {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 0 0 20px;
+}
+header.hero .byline strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+header.hero .meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--ink-muted);
+  border-top: 1px solid var(--border-soft);
+  padding-top: 14px;
+}
+header.hero .meta span strong { color: var(--ink-soft); }
+header.hero .meta code {
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 11px;
+  background: var(--bg-soft);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-soft);
+}
+
+h2 {
+  font-size: 24px;
+  margin: 44px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+  font-weight: 700;
+}
+h2 .num { color: var(--primary); font-weight: 600; margin-right: 8px; }
+h3 { font-size: 19px; margin: 28px 0 10px; color: var(--primary); font-weight: 600; }
+h4 { font-size: 16px; margin: 20px 0 8px; color: var(--ink); font-weight: 600; }
+
+p { margin: 10px 0; }
+ul, ol { padding-left: 22px; margin: 10px 0; }
+ul li, ol li { margin: 4px 0; }
+ul li::marker { color: var(--primary); }
+
+strong { color: var(--accent); font-weight: 600; }
+em { color: var(--ink-soft); }
+
+a { color: var(--primary); }
+a:hover { color: var(--accent); }
+
+code:not(.hljs) {
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 0.86em;
+  background: var(--bg-code);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-soft);
+  color: var(--accent);
+}
+
+pre {
+  background: #fafaf6;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  padding: 0;
+  overflow-x: auto;
+  border-radius: 4px;
+  margin: 14px 0;
+}
+pre code, pre code.hljs {
+  background: transparent !important;
+  display: block;
+  padding: 14px 18px !important;
+  font-size: 13px;
+  line-height: 1.55;
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", monospace;
+  color: var(--ink);
+}
+pre.diagram {
+  background: #f9f6ed;
+  border-left: 4px solid var(--accent);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.callout {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-radius: 4px;
+  border-left: 4px solid;
+  font-size: 15px;
+}
+.callout-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.callout-info { background: var(--info-bg); border-left-color: var(--primary); }
+.callout-info .callout-title { color: var(--primary); }
+.callout-warn { background: var(--warn-bg); border-left-color: var(--warn); }
+.callout-warn .callout-title { color: var(--warn); }
+.callout-good { background: var(--good-bg); border-left-color: var(--good); }
+.callout-good .callout-title { color: var(--good); }
+.callout-bad { background: var(--bad-bg); border-left-color: var(--bad); }
+.callout-bad .callout-title { color: var(--bad); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+thead { background: var(--primary); color: white; }
+th, td {
+  text-align: left;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border-soft);
+  vertical-align: top;
+}
+th { font-weight: 600; font-size: 13px; letter-spacing: 0.02em; }
+tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-soft); }
+
+details.qa, details {
+  background: white;
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  margin: 10px 0;
+  padding: 0;
+}
+details summary {
+  cursor: pointer;
+  padding: 10px 14px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--primary);
+  list-style: none;
+  user-select: none;
+}
+details summary::-webkit-details-marker { display: none; }
+details summary::before {
+  content: "▸ ";
+  margin-right: 4px;
+  display: inline-block;
+  transition: transform 0.15s;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details[open] summary { border-bottom: 1px solid var(--border-soft); }
+details > :not(summary) { padding: 10px 14px; }
+details p:first-of-type { margin-top: 8px; }
+
+mjx-container[display="true"] { margin: 12px 0 !important; }
+
+footer.aris-footer {
+  margin-top: 60px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+footer.aris-footer a { color: var(--ink-muted); border-bottom: 1px dotted var(--border); }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; gap: 20px; padding: 20px 16px; }
+  nav.toc {
+    position: static;
+    max-height: none;
+    border-right: none;
+    border-bottom: 1px solid var(--border-soft);
+    padding-right: 0;
+    padding-bottom: 14px;
+  }
+  header.hero h1 { font-size: 24px; }
+  h2 { font-size: 20px; }
+}
+@media print {
+  nav.toc { display: none; }
+  .layout { grid-template-columns: 1fr; padding: 0; }
+  body { background: white; }
+  header.hero { border-bottom-color: var(--ink); }
+  #cite-pop, dialog.lightbox { display: none !important; }
+}
+
+/* --- P0 polish: TOC scrollspy active state ---------------------------- */
+nav.toc a.active {
+  color: var(--accent);
+  font-weight: 600;
+  border-bottom-color: var(--accent);
+}
+
+/* --- P0 polish: Long-code auto-collapse ------------------------------- */
+details.code-card {
+  margin: 14px 0;
+  background: #fafaf6;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: 4px;
+}
+details.code-card > summary {
+  cursor: pointer;
+  padding: 8px 14px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-family: "JetBrains Mono", "SF Mono", monospace;
+  list-style: none;
+  user-select: none;
+}
+details.code-card > summary::-webkit-details-marker { display: none; }
+details.code-card > summary::before { content: none; }
+details.code-card > pre {
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-left: none;
+  border-radius: 0;
+}
+@media print {
+  details.code-card { border: 1px solid #ccc; background: white; }
+  details.code-card > summary { display: none !important; }
+  details.code-card > pre { border: 1px solid #ddd; border-radius: 4px; background: white; }
+}
+
+/* --- P0 polish: Paper popover ([[ref]] popups) ------------------------ */
+[data-ref] {
+  color: var(--primary);
+  border-bottom: 1px dotted var(--primary);
+  cursor: pointer;
+  white-space: nowrap;
+}
+[data-ref]:hover { background: rgba(26, 74, 140, 0.08); }
+#cite-pop {
+  position: fixed;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  font-size: 13px;
+  line-height: 1.5;
+  z-index: 1000;
+}
+#cite-pop[hidden] { display: none; }
+#cite-pop .cp-title {
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+  padding-right: 24px;
+}
+#cite-pop .cp-meta {
+  color: var(--ink-muted);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+#cite-pop .cp-key {
+  color: var(--accent);
+  font-style: italic;
+  margin-bottom: 8px;
+}
+#cite-pop .cp-link {
+  display: inline-block;
+  color: var(--primary);
+  font-weight: 500;
+}
+#cite-pop .cp-close {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--ink-muted);
+}
+
+/* --- P0 polish: Figure lightbox (native <dialog>) --------------------- */
+dialog.lightbox {
+  border: none;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.92);
+  width: 96vw;
+  height: 96vh;
+  max-width: 96vw;
+  max-height: 96vh;
+}
+dialog.lightbox::backdrop { background: rgba(0, 0, 0, 0.92); }
+dialog.lightbox .lb-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 16px;
+  position: relative;
+}
+dialog.lightbox img {
+  max-width: 90vw;
+  max-height: 84vh;
+  object-fit: contain;
+  cursor: zoom-out;
+}
+dialog.lightbox figcaption {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  text-align: center;
+  max-width: 700px;
+}
+dialog.lightbox .lb-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* --- P0 polish: blog/talk mode active-H2 highlight (opt-in) ----------- */
+body.aris-blog h2 { scroll-margin-top: 24px; }
+body.aris-blog h2.aris-active-h2 {
+  background: linear-gradient(to right, rgba(26, 74, 140, 0.06), transparent);
+  border-radius: 4px;
+  padding-left: 12px;
+  margin-left: -12px;
+}
+</style>
+</head>
+<body class="">
+<div class="layout">
+
+<nav class="toc">
+  <h3>Contents</h3>
+  <ol>
+<li><a href="#第-0-幕先看清那台共享引擎谁都没动">第 0 幕：先看清那台共享引擎（谁都没动）</a>
+</li>
+<li><a href="#第-1-幕真正的战场一把可能量错的尺子">第 1 幕：真正的战场——一把可能量错的尺子</a>
+</li>
+<li><a href="#第-2-幕把-10-个-idea-钉在力学链条的四个环节上">第 2 幕：把 10 个 idea 钉在力学链条的四个环节上</a>
+<ul>
+<li><a href="#环节一校准尺子d3--d4--d6--d8--d9最根本的一群">环节一：校准尺子（D3 / D4 / D6 / D8 / D9）——最根本的一群</a></li>
+<li><a href="#环节二约束走法d1--d10给力画红线">环节二：约束走法（D1 / D10）——给力画红线</a></li>
+<li><a href="#环节三施加力d5--d7调力的时空分配">环节三：施加力（D5 / D7）——调力的时空分配</a></li>
+<li><a href="#环节四验收d2只改尺子不改引擎">环节四：验收（D2）——只改尺子，不改引擎</a></li>
+</ul>
+</li>
+<li><a href="#第-3-幕一针见血的总判决">第 3 幕：一针见血的总判决</a>
+</li>
+<li><a href="#收尾一句话故事">收尾：一句话故事</a>
+</li>
+<li><a href="#诚实边界">诚实边界</a>
+</li>
+</ol>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">ARIS 阅读视图 · ΔA 候选 / D1–D10</div>
+  <h1>10 个 ΔA 候选的遗忘力学：一针见血</h1>
+  <p class="subtitle">一台共享引擎 · 一把可能量错的尺子 · 四个力学环节</p>
+  
+  <div class="meta">
+    <span><strong>Source:</strong> <code>workspace/docs/deltaA_candidates_forgetting_mechanism_story.md</code></span>
+    <span><strong>SHA256:</strong> <code>bf2aecc670e1</code></span>
+    <span><strong>Rendered:</strong> 2026-11-25 16:00 UTC</span>
+    
+  </div>
+</header>
+
+<h1 id="10-个-a-候选的遗忘力学一针见血">10 个 ΔA 候选的遗忘力学：一针见血</h1>
+<p><strong>副标题</strong>：它们其实共用一个遗忘引擎，差别只在动链条的哪一环 <strong>候选集</strong>：<code>workspace/idea-stage/IDEA_CANDIDATES.md</code>（D1–D10，评分均 &gt; 8） <strong>基线</strong>：<code>workspace/idea-stage/方向I_基线_v0.6.1_answer_span.md</code>（plan-only） <strong>日期</strong>：2026-11-25 <strong>状态</strong>：plan-level。无新实验、无训练、无跨模型评审；论文级主张一律「待验证」，涉及 pilot 的结论一律 <code>needs manual pilot</code>。</p>
+<div class="callout callout-info"><div class="callout-title">一句话核心</div><p>这 10 个 idea 听起来像 10 种不同的遗忘方法，其实<strong>没有一个是新引擎</strong>——它们全都沿用基线那台引擎：去 τ 后梯度归零，靠 Student 侧在答案跨度上朝"非 donor 中性落点"的显式损失 $\mathcal L_F$ 重新造出遗忘力。把它们分开的只有一个问题：<strong>ΔA 这把尺子到底量的是"目标事实"还是"主体身份"</strong>。10 个 idea 全部是在回答这一件事，区别只在——有人校准尺子（D3/D4/D6/D8/D9），有人调力的方向约束（D1/D10），有人调力在何时何层施加（D5/D7），有人干脆改验收尺子本身（D2）。</p></div>
+<hr />
+<h2 id="第-0-幕先看清那台共享引擎谁都没动">第 0 幕：先看清那台共享引擎（谁都没动）</h2>
+<p>去 τ 之后 Teacher 与 Student 初始化同权重、KL 恒为零，ASU 那条唯一的力消失了。基线造了一台新引擎：</p>
+<p>$$ \mathcal L_F(k)= \frac{1}{|\Lambda(k)|\,|S_f|} \sum_{\ell\in\Lambda(k)}\sum_{p\in S_f} \rho_\ell(k)\, \operatorname{dist}\!\left( h_{S,\ell}(X^+\oplus y^+;p), \operatorname{stopgrad}(T_{\ell,p}) \right) $$</p>
+<p>三个零件，<strong>10 个 idea 没有一个改动它们</strong>：</p>
+<ul><li><strong>作用面</strong>：答案跨度 $S_f$（事实在生成答案时展开，不是 prompt 末位）；</li><li><strong>目标 $T_{\ell,p}$</strong>：满足 §4.1 中性约束（$r_f\!\le\!c$、$s_{d_j}\!\le\!d_j$、$\|\Delta r_E\|\!\le\!e$）且离 $A^+$ 最近的非 donor 落点——<strong>不是 donor 答案，也不是"我不知道"</strong>；</li><li><strong>梯度来源</strong>：冻结 Teacher 全 stop-gradient，力只经 Student 侧回传。</li></ul>
+<div class="callout callout-warn"><div class="callout-title">一针见血的第一步</div><p>别被 10 个名字迷惑。它们的遗忘都不是"换引擎"，而是<strong>在同一台引擎上，重新标定 ΔA 或重新安排力的施加方式</strong>。谁要是宣称"提出了新的遗忘机制"，先问它改没改这台引擎——答案都是否。</p></div>
+<hr />
+<h2 id="第-1-幕真正的战场一把可能量错的尺子">第 1 幕：真正的战场——一把可能量错的尺子</h2>
+<p>基线 §2.2.1 自己埋了那颗雷：当前 $\Delta A_{\ell,p}=A^+_{T,\ell}(p)-A^-_{T,\ell}(p)$ 只是<strong>原始配对差</strong>，混着主体身份、subword、词频、关系传播；历史证据调研明确判定它<strong>不能直接读成事实差异</strong>。</p>
+<p>这就是整件事的要害，用一句话讲透：</p>
+<blockquote><p><strong>ΔA 是案发现场的脚印。所有人都想把它当凶手（事实方向），但它很可能只是另一个人顺路踩的痕迹（主体身份）。</strong></p></blockquote>
+<p>如果 ΔA 量的是身份而非事实，那么"沿 ΔA 删记忆"删掉的就是主体表征——这正是 V1 全系（stage0-14）被实测证伪的死法。所以 10 个 idea 的真实力学命题不是"怎么忘"，而是：<strong>怎么证明这串脚印是目标事实留下的，然后才敢用它去删</strong>。</p>
+<hr />
+<h2 id="第-2-幕把-10-个-idea-钉在力学链条的四个环节上">第 2 幕：把 10 个 idea 钉在力学链条的四个环节上</h2>
+<p>遗忘力学可以压成一条四环链。10 个 idea 精确落在其中：</p>
+<p>$$ \underbrace{\text{校准尺子}}_{\text{ΔA 是不是事实}}\;\longrightarrow\; \underbrace{\text{约束走法}}_{\text{往哪走 / 禁往哪走}}\;\longrightarrow\; \underbrace{\text{施加力}}_{\text{何时 / 何层 / 何位置}}\;\longrightarrow\; \underbrace{\text{验收}}_{\text{真忘还是假忘}} $$</p>
+<h3 id="环节一校准尺子d3--d4--d6--d8--d9最根本的一群">环节一：校准尺子（D3 / D4 / D6 / D8 / D9）——最根本的一群</h3>
+<p>这五个 idea 直接冲着"ΔA 是不是事实"下手，是整条链的地基：</p>
+<ul><li><strong>D3 因果门控</strong>：不问 ΔA 分量"相关不相关"，只问"patch 回去能不能改变 $y^+$ 读出"——用因果效应给分量加权，把"只是相关"的身份/词频分量筛掉。</li><li><strong>D4 双探针解耦</strong>：明着训练事实探针和身份探针，用正交收缩把 ΔA 撕成事实子空间和身份子空间，只留与身份正交的部分。</li><li><strong>D6 多 donor 边际化</strong>：单 donor 的 ΔA 混着"这个 donor 是谁"，用 K 个 donor 取共有成分、消掉私有身份残差。</li><li><strong>D8 对照族残差化</strong>：把验收用的 5 类对照（relation-swap / 词频 / subword 等）前移成构造算子，从 ΔA 里回归掉共享结构噪声。</li><li><strong>D9 读出空间重定义</strong>：指出隐状态差会被下游非线性旋转掩盖，把 ΔA 从"向量差"改定义成"冻结下游读出的标量差 + 局部敏感度方向"，天然旋转不变。</li></ul>
+<p><strong>力学本质</strong>：它们都不改遗忘力本身，而是<strong>提高力的方向性信噪比</strong>——让"往哪删"这个方向里事实成分尽量纯。地基不牢，后面三个环节全是在错误方向上使劲。</p>
+<h3 id="环节二约束走法d1--d10给力画红线">环节二：约束走法（D1 / D10）——给力画红线</h3>
+<ul><li><strong>D1 可行域几何</strong>：不规定"往哪走"，只规定"禁往哪走"——Student 可以朝任何方向移动直到读不出 $y^+$，但禁止沿 ΔA 的 donor 语义方向移动，从几何上把"改答 donor"排除在解外。这是张力 (A) 的中间道路：ΔA 进主损失结构，但只作禁止方向，不教 donor 答案。</li><li><strong>D10 零空间投影</strong>：给 ΔA 加抗恢复约束，让它避开攻击者会覆盖的高方差子空间（RepSelect 的 top-PC），落到底部/零空间，使遗忘不易被微调或量化找回。</li></ul>
+<p><strong>力学本质</strong>：这两者不校准尺子，而是<strong>给 학생 的移动画边界</strong>——D1 防的是"换成 donor 答案"这条横向捷径，D10 防的是"浅层抑制被恢复"这条纵向回弹。</p>
+<h3 id="环节三施加力d5--d7调力的时空分配">环节三：施加力（D5 / D7）——调力的时空分配</h3>
+<ul><li><strong>D5 答案跨度轨迹</strong>：把 ΔA 从"某层某点的差"升级成沿 $S_f$ 的轨迹，用其时序结构给答案位置分配数据驱动权重 $\rho(p)$，替代基线那个均匀的 $1/|S_f|$。</li><li><strong>D7 纯度驱动 schedule</strong>：用 ΔA 的逐层"事实纯度"谱导出 $\Lambda(k)$ / $\rho_\ell(k)$，让渐进 schedule 不再是手设，而是"哪层尺子最准就先删哪层"。</li></ul>
+<p><strong>力学本质</strong>：引擎的力是一样的，它们改的是<strong>力在答案位置维（D5）和层/时间维（D7）上怎么分配</strong>。注意 D5 是"答案位置"维，别和 stage0 那个"层维 ΔA 递增"混为一谈。</p>
+<h3 id="环节四验收d2只改尺子不改引擎">环节四：验收（D2）——只改尺子，不改引擎</h3>
+<ul><li><strong>D2 深度证书化</strong>：正面接受张力 (B)——既然主损失不依赖 ΔA，就不让它进训练，而把它做成训练后的因果式遗忘深度证书（patch-forward 恢复测试）。贡献从"配对驱动遗忘"诚实改写为"配对作不可被改答/旋转糊弄的深度证书"。</li></ul>
+<p><strong>力学本质</strong>：唯一一个<strong>完全不动遗忘引擎</strong>的 idea，它改的是"怎么证明真忘了"。这是最省算力也最诚实的一条路，但要求 §0/§7 故事整体改写。</p>
+<hr />
+<h2 id="第-3-幕一针见血的总判决">第 3 幕：一针见血的总判决</h2>
+<p>把四环串起来，这 10 个 idea 的真实排序逻辑就清楚了：</p>
+<table><thead><tr><th>环节</th><th>Idea</th><th>动的力学零件</th><th>死穴</th></tr></thead><tbody><tr><td>校准尺子</td><td>D3 D4 D6 D8 D9</td><td>ΔA 的方向性信噪比</td><td>尺子量的是身份 → 删表征（V1 死法重演）</td></tr><tr><td>约束走法</td><td>D1 D10</td><td>Student 移动的允许集</td><td>可行域无解 / 抗恢复子空间与事实不相交</td></tr><tr><td>施加力</td><td>D5 D7</td><td>力在位置/层/时间的分配</td><td>权重均匀 / 等预算无独立收益</td></tr><tr><td>验收</td><td>D2</td><td>遗忘深度证书</td><td>与输出指标共线、无独立信息</td></tr></tbody></table>
+<div class="callout callout-bad"><div class="callout-title">一句话判决</div><p>这 10 个 idea 生死不由"谁的遗忘机制更巧"决定，而由<strong>同一个前提</strong>决定——<strong>ΔA 必须真的编码目标事实而非主体身份</strong>。这个前提不成立，校准组（D3/D4/D6/D8/D9）会告诉你尺子是错的，约束组（D1/D10）在错方向上画红线，施加组（D5/D7）把错方向的力分配得更精细，全都白搭；这个前提成立，整条路线才谈得上"删知识"。所以真正的第一颗子弹不是任何一个 idea 的训练，而是<strong>先用最小 probe（事实 probe AUC vs 身份 probe AUC / wrong-donor 对照）给 ΔA 定性</strong>——这正是 D3/D4 的价值，也是所有其他 idea 的前置门。</p></div>
+<hr />
+<h2 id="收尾一句话故事">收尾：一句话故事</h2>
+<p>10 个候选不是 10 台机器，是<strong>一台机器 + 一把尺子的十个校准方案</strong>。机器是"答案跨度上朝非 donor 中性落点的显式激活损失"，谁都没换；尺子是 ΔA，所有人都担心它量的是"谁"（主体身份）而不是"什么"（目标事实）。校准组（D3/D4/D6/D8/D9）在磨尺子的刻度，约束组（D1/D10）在给力画红线，施加组（D5/D7）在调力怎么分配，D2 干脆只留一把验收尺。故事的答案不在"哪个机制更聪明"，而在一句话：<strong>先证明脚印是事实踩的，再谈沿着脚印删记忆</strong>。</p>
+<hr />
+<h2 id="诚实边界">诚实边界</h2>
+<ul><li>本解读严格 faithful 于 <code>IDEA_CANDIDATES.md</code>（D1–D10）与 <code>v0.6.1</code> 基线；两者均为 <code>plan-level / plan-only</code>，<strong>无新实验、无训练</strong>。所有机制解释是推断，论文级主张一律「待验证」，涉及实验的结论一律 <code>needs manual pilot</code>。</li><li>不重提整条反事实配对路线，不把 V1 全系 ΔA 正交对齐 / 梯度手术 stage0-14、V2/V3/V4 负结果改写成正向证据；本解读只把这些负结果作为"ΔA 可能是身份方向"的风险提示。</li><li>跨模型评审后端不可用，<code>novelty-check = PROVISIONAL</code>、<code>research-review = REVIEW_UNAVAILABLE</code>，evidence gate <code>BLOCKED</code>；执行者解读不构成独立评审，不声称通过，不伪造任何回执。</li><li>本 HTML 为阅读视图，未经独立评审；Markdown 为唯一真实来源，漂移以页面 <code>&lt;meta&gt;</code> 中 SHA256 与生成时间戳为准。</li></ul>
+
+<footer class="aris-footer">
+  Generated by <a href="https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep/blob/main/skills/render-html/SKILL.md">ARIS <code>/render-html</code></a> ·
+  source path <code>workspace/docs/deltaA_candidates_forgetting_mechanism_story.md</code> ·
+  SHA256 <code>bf2aecc670e1</code> ·
+  generated at 2026-11-25 16:00 UTC.
+  This is a generated view — edit the source Markdown, then re-render.
+</footer>
+</main>
+
+</div>
+
+<!-- P0 polish: paper popover host (populated by IIFE below) -->
+<div id="cite-pop" hidden role="dialog" aria-labelledby="cite-pop-title">
+  <button class="cp-close" type="button" aria-label="Close">×</button>
+  <div class="cp-content"></div>
+</div>
+
+<!-- P0 polish: figure lightbox (native <dialog>, graceful fallback) -->
+<dialog class="lightbox" id="figure-lightbox" aria-label="Figure detail">
+  <div class="lb-inner">
+    <button class="lb-close" type="button" aria-label="Close">×</button>
+    <img alt="" />
+    <figcaption></figcaption>
+  </div>
+</dialog>
+
+<!-- P0 polish: paper registry sidecar, embedded by render_html.py (--papers) -->
+<script>window.PAPER_REGISTRY = {};</script>
+
+<!-- P0 polish: interactive enhancements (TOC scrollspy, code-card auto-collapse,
+     paper popovers, figure lightbox, print-restore for <details>, blog-mode H2). -->
+<script>
+(function () {
+  "use strict";
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[c];
+    });
+  }
+
+  // --- Feature 5: Print degradation fix ---------------------------------
+  // Force every <details> open during print, restore the pre-print state after.
+  var _stashOpen = [];
+  var _printing = false;
+  window.addEventListener("beforeprint", function () {
+    if (_printing) return;  // guard against multi-fire (Chrome print preview)
+    _printing = true;
+    _stashOpen = [];
+    document.querySelectorAll("details:not([open])").forEach(function (d) {
+      _stashOpen.push(d);
+      d.open = true;
+    });
+  });
+  window.addEventListener("afterprint", function () {
+    _stashOpen.forEach(function (d) { if (d.isConnected) d.open = false; });
+    _stashOpen = [];
+    _printing = false;
+  });
+
+  // --- Feature 3: TOC scrollspy -----------------------------------------
+  var tocLinks = [].slice.call(document.querySelectorAll("nav.toc a"));
+  var headings = tocLinks.map(function (a) {
+    var id = a.getAttribute("href").replace(/^#/, "");
+    return document.getElementById(id);
+  }).filter(Boolean);
+  if (headings.length && typeof IntersectionObserver !== "undefined") {
+    var linkById = new Map();
+    headings.forEach(function (h, i) { linkById.set(h.id, tocLinks[i]); });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        tocLinks.forEach(function (l) { l.classList.remove("active"); });
+        var lk = linkById.get(en.target.id);
+        if (lk) lk.classList.add("active");
+      });
+    }, { rootMargin: "-15% 0px -75% 0px" });
+    headings.forEach(function (h) { io.observe(h); });
+  }
+
+  // --- Feature 1: Long-code auto-collapse -------------------------------
+  var COLLAPSE_THRESHOLD = 30;
+
+  function wrapCodeCard(pre, openByDefault) {
+    if (!pre || pre.closest("details.code-card")) return;
+    var code = pre.querySelector("code");
+    if (!code) return;
+    var lines = code.textContent.replace(/\n+$/, "").split("\n").length;
+    var det = document.createElement("details");
+    det.className = "code-card";
+    det.open = openByDefault;
+    var sum = document.createElement("summary");
+    function updateSummary() {
+      sum.textContent = (det.open ? "▾ Collapse code · " : "▸ Expand code · ") + lines + " lines";
+    }
+    updateSummary();
+    det.addEventListener("toggle", updateSummary);
+    pre.parentNode.insertBefore(det, pre);
+    det.appendChild(sum);
+    det.appendChild(pre);
+  }
+
+  // Honor explicit per-block flags first.
+  document.querySelectorAll("pre[data-collapse]").forEach(function (pre) {
+    var flag = pre.getAttribute("data-collapse");
+    if (flag === "collapsed") wrapCodeCard(pre, false);
+    // "open" → leave fully expanded, do not wrap.
+  });
+  // Then auto-wrap long unflagged blocks.
+  document.querySelectorAll("pre > code").forEach(function (code) {
+    var pre = code.closest("pre");
+    if (!pre || pre.closest("details") || pre.hasAttribute("data-collapse")) return;
+    var lines = code.textContent.replace(/\n+$/, "").split("\n").length;
+    if (lines >= COLLAPSE_THRESHOLD) wrapCodeCard(pre, false);
+  });
+
+  // --- Feature 10: Figure lightbox --------------------------------------
+  var lightbox = document.getElementById("figure-lightbox");
+  if (lightbox) {
+    var lbImg = lightbox.querySelector("img");
+    var lbCap = lightbox.querySelector("figcaption");
+    var lbClose = lightbox.querySelector(".lb-close");
+    function openLightbox(srcImg) {
+      lbImg.src = srcImg.src;
+      lbImg.alt = srcImg.alt || "";
+      var cap = srcImg.closest("figure") ? srcImg.closest("figure").querySelector("figcaption") : null;
+      lbCap.textContent = cap ? cap.textContent : "";
+      lbCap.hidden = !cap;
+      if (typeof lightbox.showModal === "function") lightbox.showModal();
+      else lightbox.hidden = false;
+    }
+    function closeLightbox() {
+      if (typeof lightbox.close === "function") lightbox.close();
+      else lightbox.hidden = true;
+    }
+    document.querySelectorAll("main figure img, main > p > img").forEach(function (img) {
+      if (img.closest("dialog")) return;
+      img.style.cursor = "zoom-in";
+      img.addEventListener("click", function () { openLightbox(img); });
+    });
+    if (lbClose) lbClose.addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", function (e) {
+      // Backdrop click closes; clicks inside .lb-inner do not bubble here.
+      if (e.target === lightbox) closeLightbox();
+    });
+  }
+
+  // --- Feature 2: Paper popover -----------------------------------------
+  var PAPERS = window.PAPER_REGISTRY || {};
+  var pop = document.getElementById("cite-pop");
+  var popContent = pop ? pop.querySelector(".cp-content") : null;
+  var popClose = pop ? pop.querySelector(".cp-close") : null;
+  var popTrigger = null;
+
+  function showPopover(el) {
+    var key = el.dataset.ref;
+    var info = PAPERS[key];
+    if (!info || !pop || !popContent) return;
+    popContent.innerHTML =
+      '<div class="cp-title" id="cite-pop-title">' + escapeHtml(info.title || key) + '</div>' +
+      (info.authors
+        ? '<div class="cp-meta">' + escapeHtml(info.authors) +
+            (info.date ? ' · ' + escapeHtml(info.date) : '') +
+            (info.inst ? ' · ' + escapeHtml(info.inst) : '') + '</div>'
+        : '') +
+      (info.key ? '<div class="cp-key">' + escapeHtml(info.key) + '</div>' : '') +
+      (info.arxiv
+        ? '<a class="cp-link" href="https://arxiv.org/abs/' + encodeURIComponent(info.arxiv) +
+          '" target="_blank" rel="noopener">arXiv ' + escapeHtml(info.arxiv) + ' ↗</a>'
+        : '');
+    var r = el.getBoundingClientRect();
+    pop.hidden = false;  // unhide first so offsetHeight is measurable
+    var margin = 16;
+    var popWidth = Math.min(360, Math.max(0, window.innerWidth - margin * 2));
+    var popHeight = Math.min(pop.offsetHeight || 200, Math.max(0, window.innerHeight - margin * 2));
+    pop.style.left = Math.max(margin, Math.min(r.left, window.innerWidth - popWidth - margin)) + "px";
+    pop.style.top = Math.max(margin, Math.min(r.bottom + 8, window.innerHeight - popHeight - margin)) + "px";
+    popTrigger = el;
+    if (popClose) popClose.focus();
+  }
+  function hidePopover() {
+    if (pop) pop.hidden = true;
+    if (popTrigger) popTrigger.focus();
+    popTrigger = null;
+  }
+  document.querySelectorAll("[data-ref]").forEach(function (el) {
+    el.setAttribute("tabindex", "0");
+    el.setAttribute("role", "button");
+    el.addEventListener("click", function (e) { e.stopPropagation(); showPopover(el); });
+    el.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); showPopover(el); }
+    });
+  });
+  if (popClose) popClose.addEventListener("click", hidePopover);
+  document.addEventListener("click", function (e) {
+    if (pop && !pop.hidden && !pop.contains(e.target) && !e.target.matches("[data-ref]")) hidePopover();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && pop && !pop.hidden) hidePopover();
+  });
+
+  // --- Feature 7: Blog-mode active-H2 highlight (opt-in) ----------------
+  if (document.body.classList.contains("aris-blog")) {
+    var h2s = [].slice.call(document.querySelectorAll("main h2"));
+    if (h2s.length && typeof IntersectionObserver !== "undefined") {
+      var io2 = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) {
+            h2s.forEach(function (h) { h.classList.remove("aris-active-h2"); });
+            en.target.classList.add("aris-active-h2");
+          }
+        });
+      }, { rootMargin: "-15% 0px -75% 0px" });
+      h2s.forEach(function (h) { io2.observe(h); });
+    }
+  }
+})();
+</script>
+</body>
+</html>

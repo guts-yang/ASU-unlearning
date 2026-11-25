@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>方向 I 的遗忘力学：一针见血</title>
+
+<meta name="generator" content="ARIS render-html (academic, v1)">
+<meta name="aris:source-path" content="workspace/docs/directionI_forgetting_mechanism_story.md">
+<meta name="aris:source-sha256" content="ab1deb25e4853584e60d1715d2cdaff11f52e1dfb0732cfa2e4daf5d2f8d4ede">
+<meta name="aris:generated-at" content="2026-11-25 15:57 UTC">
+
+<!-- MathJax 3 -->
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+  options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+<!-- highlight.js -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-light.min.css">
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => hljs.highlightAll());</script>
+
+
+<style>
+:root {
+  --bg: #fdfcf7;
+  --bg-soft: #f4f1ea;
+  --bg-code: #f8f5ec;
+  --ink: #1a1a1a;
+  --ink-soft: #4a4a4a;
+  --ink-muted: #6b6b6b;
+  --primary: #1a4a8c;
+  --primary-soft: #2d6cb8;
+  --accent: #b8390e;
+  --warn: #b45309;
+  --warn-bg: #fef3c7;
+  --info-bg: #dbeafe;
+  --good-bg: #d1fae5;
+  --good: #065f46;
+  --bad-bg: #fee2e2;
+  --bad: #991b1b;
+  --border: #d6d0c0;
+  --border-soft: #e8e3d5;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Source Serif Pro", "Source Serif 4", "Crimson Pro", "Georgia", "Songti SC", "STSong", serif;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--bg);
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+}
+
+.layout {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 48px;
+  padding: 40px 32px;
+}
+
+nav.toc {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+  font-size: 13px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  border-right: 1px solid var(--border-soft);
+  padding-right: 16px;
+}
+nav.toc h3 {
+  margin: 0 0 12px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+nav.toc ol { list-style: none; padding: 0; margin: 0; counter-reset: toc; }
+nav.toc ol li { margin: 5px 0; counter-increment: toc; }
+nav.toc ol li::before { content: counter(toc) ". "; color: var(--ink-muted); margin-right: 4px; }
+nav.toc a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 1px dotted transparent;
+}
+nav.toc a:hover { color: var(--primary); border-bottom-color: var(--primary); }
+nav.toc ul { list-style: none; padding-left: 14px; margin: 3px 0; font-size: 12px; }
+nav.toc ul li::before { content: "→ "; color: var(--border); }
+
+main { min-width: 0; }
+
+header.hero {
+  border-bottom: 3px double var(--primary);
+  padding-bottom: 24px;
+  margin-bottom: 32px;
+}
+header.hero .eyebrow {
+  color: var(--accent);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+body.aris-blog header.hero .eyebrow {
+  font-family: inherit;
+  color: var(--ink-muted);
+  text-transform: none;
+  letter-spacing: 0.01em;
+  font-weight: 400;
+}
+header.hero h1 {
+  font-size: 32px;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+header.hero .subtitle {
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin: 0 0 8px;
+  font-style: italic;
+}
+header.hero .byline {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 0 0 20px;
+}
+header.hero .byline strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+header.hero .meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--ink-muted);
+  border-top: 1px solid var(--border-soft);
+  padding-top: 14px;
+}
+header.hero .meta span strong { color: var(--ink-soft); }
+header.hero .meta code {
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 11px;
+  background: var(--bg-soft);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-soft);
+}
+
+h2 {
+  font-size: 24px;
+  margin: 44px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+  font-weight: 700;
+}
+h2 .num { color: var(--primary); font-weight: 600; margin-right: 8px; }
+h3 { font-size: 19px; margin: 28px 0 10px; color: var(--primary); font-weight: 600; }
+h4 { font-size: 16px; margin: 20px 0 8px; color: var(--ink); font-weight: 600; }
+
+p { margin: 10px 0; }
+ul, ol { padding-left: 22px; margin: 10px 0; }
+ul li, ol li { margin: 4px 0; }
+ul li::marker { color: var(--primary); }
+
+strong { color: var(--accent); font-weight: 600; }
+em { color: var(--ink-soft); }
+
+a { color: var(--primary); }
+a:hover { color: var(--accent); }
+
+code:not(.hljs) {
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 0.86em;
+  background: var(--bg-code);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-soft);
+  color: var(--accent);
+}
+
+pre {
+  background: #fafaf6;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  padding: 0;
+  overflow-x: auto;
+  border-radius: 4px;
+  margin: 14px 0;
+}
+pre code, pre code.hljs {
+  background: transparent !important;
+  display: block;
+  padding: 14px 18px !important;
+  font-size: 13px;
+  line-height: 1.55;
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", monospace;
+  color: var(--ink);
+}
+pre.diagram {
+  background: #f9f6ed;
+  border-left: 4px solid var(--accent);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.callout {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-radius: 4px;
+  border-left: 4px solid;
+  font-size: 15px;
+}
+.callout-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.callout-info { background: var(--info-bg); border-left-color: var(--primary); }
+.callout-info .callout-title { color: var(--primary); }
+.callout-warn { background: var(--warn-bg); border-left-color: var(--warn); }
+.callout-warn .callout-title { color: var(--warn); }
+.callout-good { background: var(--good-bg); border-left-color: var(--good); }
+.callout-good .callout-title { color: var(--good); }
+.callout-bad { background: var(--bad-bg); border-left-color: var(--bad); }
+.callout-bad .callout-title { color: var(--bad); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+thead { background: var(--primary); color: white; }
+th, td {
+  text-align: left;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border-soft);
+  vertical-align: top;
+}
+th { font-weight: 600; font-size: 13px; letter-spacing: 0.02em; }
+tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-soft); }
+
+details.qa, details {
+  background: white;
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  margin: 10px 0;
+  padding: 0;
+}
+details summary {
+  cursor: pointer;
+  padding: 10px 14px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--primary);
+  list-style: none;
+  user-select: none;
+}
+details summary::-webkit-details-marker { display: none; }
+details summary::before {
+  content: "▸ ";
+  margin-right: 4px;
+  display: inline-block;
+  transition: transform 0.15s;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details[open] summary { border-bottom: 1px solid var(--border-soft); }
+details > :not(summary) { padding: 10px 14px; }
+details p:first-of-type { margin-top: 8px; }
+
+mjx-container[display="true"] { margin: 12px 0 !important; }
+
+footer.aris-footer {
+  margin-top: 60px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+footer.aris-footer a { color: var(--ink-muted); border-bottom: 1px dotted var(--border); }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; gap: 20px; padding: 20px 16px; }
+  nav.toc {
+    position: static;
+    max-height: none;
+    border-right: none;
+    border-bottom: 1px solid var(--border-soft);
+    padding-right: 0;
+    padding-bottom: 14px;
+  }
+  header.hero h1 { font-size: 24px; }
+  h2 { font-size: 20px; }
+}
+@media print {
+  nav.toc { display: none; }
+  .layout { grid-template-columns: 1fr; padding: 0; }
+  body { background: white; }
+  header.hero { border-bottom-color: var(--ink); }
+  #cite-pop, dialog.lightbox { display: none !important; }
+}
+
+/* --- P0 polish: TOC scrollspy active state ---------------------------- */
+nav.toc a.active {
+  color: var(--accent);
+  font-weight: 600;
+  border-bottom-color: var(--accent);
+}
+
+/* --- P0 polish: Long-code auto-collapse ------------------------------- */
+details.code-card {
+  margin: 14px 0;
+  background: #fafaf6;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: 4px;
+}
+details.code-card > summary {
+  cursor: pointer;
+  padding: 8px 14px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-family: "JetBrains Mono", "SF Mono", monospace;
+  list-style: none;
+  user-select: none;
+}
+details.code-card > summary::-webkit-details-marker { display: none; }
+details.code-card > summary::before { content: none; }
+details.code-card > pre {
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-left: none;
+  border-radius: 0;
+}
+@media print {
+  details.code-card { border: 1px solid #ccc; background: white; }
+  details.code-card > summary { display: none !important; }
+  details.code-card > pre { border: 1px solid #ddd; border-radius: 4px; background: white; }
+}
+
+/* --- P0 polish: Paper popover ([[ref]] popups) ------------------------ */
+[data-ref] {
+  color: var(--primary);
+  border-bottom: 1px dotted var(--primary);
+  cursor: pointer;
+  white-space: nowrap;
+}
+[data-ref]:hover { background: rgba(26, 74, 140, 0.08); }
+#cite-pop {
+  position: fixed;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  font-size: 13px;
+  line-height: 1.5;
+  z-index: 1000;
+}
+#cite-pop[hidden] { display: none; }
+#cite-pop .cp-title {
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+  padding-right: 24px;
+}
+#cite-pop .cp-meta {
+  color: var(--ink-muted);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+#cite-pop .cp-key {
+  color: var(--accent);
+  font-style: italic;
+  margin-bottom: 8px;
+}
+#cite-pop .cp-link {
+  display: inline-block;
+  color: var(--primary);
+  font-weight: 500;
+}
+#cite-pop .cp-close {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--ink-muted);
+}
+
+/* --- P0 polish: Figure lightbox (native <dialog>) --------------------- */
+dialog.lightbox {
+  border: none;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.92);
+  width: 96vw;
+  height: 96vh;
+  max-width: 96vw;
+  max-height: 96vh;
+}
+dialog.lightbox::backdrop { background: rgba(0, 0, 0, 0.92); }
+dialog.lightbox .lb-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 16px;
+  position: relative;
+}
+dialog.lightbox img {
+  max-width: 90vw;
+  max-height: 84vh;
+  object-fit: contain;
+  cursor: zoom-out;
+}
+dialog.lightbox figcaption {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  text-align: center;
+  max-width: 700px;
+}
+dialog.lightbox .lb-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* --- P0 polish: blog/talk mode active-H2 highlight (opt-in) ----------- */
+body.aris-blog h2 { scroll-margin-top: 24px; }
+body.aris-blog h2.aris-active-h2 {
+  background: linear-gradient(to right, rgba(26, 74, 140, 0.06), transparent);
+  border-radius: 4px;
+  padding-left: 12px;
+  margin-left: -12px;
+}
+</style>
+</head>
+<body class="">
+<div class="layout">
+
+<nav class="toc">
+  <h3>Contents</h3>
+  <ol>
+<li><a href="#第-0-幕力的来源没有--就没有梯度">第 0 幕：力的来源——没有 τ 就没有梯度</a>
+</li>
+<li><a href="#第-1-幕致命陷阱冻结-teacher-只是一把尺子不是靶子">第 1 幕：致命陷阱——冻结 Teacher 只是一把尺子，不是靶子</a>
+</li>
+<li><a href="#第-2-幕真正的力student-侧答案跨度上的显式激活损失">第 2 幕：真正的力——Student 侧答案跨度上的显式激活损失</a>
+</li>
+<li><a href="#第-3-幕a-的真实位置它是未定稿的线索不是已确认的方向">第 3 幕：ΔA 的真实位置——它是&quot;未定稿的线索&quot;，不是&quot;已确认的方向&quot;</a>
+</li>
+<li><a href="#第-4-幕为什么必须走窄门硬边界与验收">第 4 幕：为什么必须走窄门——硬边界与验收</a>
+</li>
+<li><a href="#收尾完整故事线">收尾：完整故事线</a>
+</li>
+<li><a href="#诚实边界">诚实边界</a>
+</li>
+</ol>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">ARIS 阅读视图 · 方向 I / v0.6.1</div>
+  <h1>方向 I 的遗忘力学：一针见血</h1>
+  <p class="subtitle">ΔA 位置 · 答案跨度 · 非 donor 中性目标</p>
+  
+  <div class="meta">
+    <span><strong>Source:</strong> <code>workspace/docs/directionI_forgetting_mechanism_story.md</code></span>
+    <span><strong>SHA256:</strong> <code>ab1deb25e485</code></span>
+    <span><strong>Rendered:</strong> 2026-11-25 15:57 UTC</span>
+    
+  </div>
+</header>
+
+<h1 id="方向-i-的遗忘力学一针见血">方向 I 的遗忘力学：一针见血</h1>
+<p><strong>副标题</strong>：v0.6.1 answer-span 基线里，"遗忘"到底是怎么发生的 <strong>基线</strong>：<code>workspace/idea-stage/方向I_基线_v0.6.1_answer_span.md</code>（<code>factpair-progressive-alignment-v0.6.1-answer-span</code>，plan-only） <strong>日期</strong>：2026-11-25 <strong>状态</strong>：plan-only。无新实验、无训练、无跨模型评审；所有机制解释是对基线文本的faithful解读，论文级主张一律「待验证」。</p>
+<div class="callout callout-info"><div class="callout-title">一句话核心</div><p>ASU 的遗忘是「把 teacher 搅浑，让学生照抄这摊浑水，把正确答案的概率稀释掉」，唯一的力是温度 τ 造成的 <code>KL(p_T^τ‖p_S)</code>。方向 I 把 τ 拿掉后，这条力消失了——Teacher 与 Student 初始化同权重，KL 恒为零。于是它换了整套力学：<strong>冻结 Teacher 不再是"被逼近的目标"，只是一把"对照标尺"；真正的遗忘力来自 Student 侧在答案跨度上、朝一个「非 donor 的中性落点」的显式激活损失 <code>L_F</code></strong>。一句话记住：ASU 是"搅浑老师让学生抄"，方向 I 是"拿老师当尺子量出事实在哪，然后在答案生成过程中把事实绑定从学生表示里抠掉，用一个既不是 donor 答案、也不是拒答的中性位置接住"。</p></div>
+<hr />
+<h2 id="第-0-幕力的来源没有--就没有梯度">第 0 幕：力的来源——没有 τ 就没有梯度</h2>
+<p>先看 ASU 为什么能忘。标准注意力是 <code>softmax(QKᵀ/√d)</code>，ASU 在每层每头把 logits 除以 <code>τ&gt;1</code>：</p>
+<p>$$ A^{\tau}_{\ell,h}(x)=\operatorname{softmax}\!\left(\frac{Q_{\ell,h}K_{\ell,h}^{\top}}{\tau\sqrt{d_h}}+M_{\text{causal}}\right) $$</p>
+<p>Teacher 冻结、Student 同权重初始化。若 <code>τ=1</code>，则 <code>p_T ≡ p_S</code>，KL 恒为 0，<strong>梯度为零，没有遗忘</strong>。只有 <code>τ&gt;1</code> 把 teacher 的输出摊平，才出现分布差，梯度才出现。</p>
+<p>$$ \mathrm{KL}(p_T^{\tau}\parallel p_S)\;,\qquad \tau=1\Rightarrow \nabla_\theta L_F=0 $$</p>
+<p>方向 I <strong>去掉 τ</strong>。于是 Teacher 与初始 Student 完全相同、都用标准注意力，<code>p_T ≡ p_S</code>，forget KL 在初始化处<strong>根本没有遗忘梯度</strong>。这是方向 I 全部设计的出发点：它必须先找到一个新的、真实的遗忘梯度源，否则整个方法在起点就是死的。</p>
+<div class="callout callout-warn"><div class="callout-title">Warning</div><p>这是最容易看漏的一步：去 τ 不是"少了个超参"，而是<strong>抽掉了 ASU 唯一的力</strong>。后续所有机制都是在补这个洞。</p></div>
+<hr />
+<h2 id="第-1-幕致命陷阱冻结-teacher-只是一把尺子不是靶子">第 1 幕：致命陷阱——冻结 Teacher 只是一把尺子，不是靶子</h2>
+<p>最直觉的补法：Teacher 既然吃了反事实输入 $X^-$ 得到"另一主体"的轨迹 $A^-$，让学生朝 $A^-$ 靠齐不就有梯度了吗？</p>
+<p>基线 §2.2 明确判掉这条路：</p>
+<ul><li>Teacher 是冻结基座 $\theta_0$，它的 $A^+_{T,\ell}(p)$、$A^-_{T,\ell}(p)$ 和离散输出 token <strong>一律 stop-gradient</strong>；</li><li><strong>没有梯度路径供冻结 Teacher「向某个目标移动」</strong>，任何这种表述都是逻辑错误；</li><li>学生朝 $A^-$ 对齐的梯度<strong>全部来自学生侧</strong>，而 $A^-_{T,\ell}(p)=h_{T,\ell}(X^-\oplus y^+;p)$ 是 donor 对自己问题的表示——这等于把「忘」偷换成「换成 donor 的答案」。</li></ul>
+<p>历史证据调研（基线 §1 引用）已判定：反事实主体对齐可能只是答案替换或一般扰动；去 τ 后 forget 信号只能来自显式 loss；冻结 Teacher 的激活没有梯度路径可供"靠齐"。</p>
+<div class="callout callout-bad"><div class="callout-title">一针见血</div><p>冻结 teacher 提供的是<strong>信息（对照）</strong>，不是<strong>力（梯度）</strong>。把它当靶子，梯度就来自"学生去够 donor 的表示"，删知识就变成了换答案。这是 v0.5 旧版的错误链条，也是 §2.2.1 张力 (A) 必须先解决的死结。</p></div>
+<hr />
+<h2 id="第-2-幕真正的力student-侧答案跨度上的显式激活损失">第 2 幕：真正的力——Student 侧答案跨度上的显式激活损失</h2>
+<p>既然 teacher 不能当靶子，遗忘方向就只能由 Student 侧显式给出。基线 §2.3 的主损失：</p>
+<p>$$ \mathcal L_F(k)= \frac{1}{|\Lambda(k)|\,|S_f|} \sum_{\ell\in\Lambda(k)}\sum_{p\in S_f} \rho_\ell(k)\, \operatorname{dist}\!\left( h_{S,\ell}(X^+\oplus y^+;p), \operatorname{stopgrad}(T_{\ell,p}) \right) $$</p>
+<p>三个关键设计，每个都对应一个具体的死法：</p>
+<p><strong>1）作用域是答案跨度 $S_f$，不是 prompt 末位。</strong> 基线 §1 的理由很硬：事实是在<strong>生成答案时展开</strong>的；盯 prompt 末尾那个 <code>[/INST]</code> token，既看不到答案的实现，也挡不住事实在答案阶段重新浮现。所以 teacher-force 拼入 $y^+$，$S_f$ 由 tokenizer offset mapping 确定并冻结，<code>p\notin S_f</code> 不进损失。旧的 <code>[33,4096]</code> 末位缓存只能排错，不能当确认数据。</p>
+<p><strong>2）目标 $T_{\ell,p}$ 是"非 donor 的中性落点"。</strong> 它取满足中性约束、且离 $A^+_{T,\ell}(p)$ 最近的落点（可以是可行集边界，不必是单点）。中性约束（§4.1）：</p>
+<p>$$ r_{f,p}(h)\le c,\qquad s_{d_j,p}(h)\le d_j\ (\forall j),\qquad \|\Delta r_{E,p}\|\le e,\qquad p\in S_f $$</p>
+<ul><li>$r_{f,p}\le c$：原事实读不出（长度归一化 span log-likelihood 落入死区）；</li><li>$s_{d_j,p}\le d_j$：donor 答案支持度<strong>只许不升</strong>，不作目标；</li><li>$\|\Delta r_{E,p}\|\le e$：EOS / 长度不漂，堵住"提前停答＝遗忘"的捷径。</li></ul>
+<p><strong>3）读出必须经冻结下游重算</strong>（N1 ReadoutTarget 式 patch-forward），不能把中间层向量直接过 LM head 当读出——否则表征一旋转就误判为"已忘"。</p>
+<div class="callout callout-info"><div class="callout-title">一针见血</div><p>这不是"让学生变成另一个人"，而是<strong>在原事实读不出的可行域里，找离原表示最近的点，把学生轻轻推过去</strong>。删的是事实绑定，保的是语法、主体身份和通用能力；目标既不是 donor 答案，也不是"我不知道"。</p></div>
+<p>主损失因此是 <code>L = λ_F L_F + β L_R</code>，DKT 同前缀 KL 降为对照臂、默认 <code>λ_KL^(ablation)=0</code>，主结果必须在它关闭时成立。</p>
+<hr />
+<h2 id="第-3-幕a-的真实位置它是未定稿的线索不是已确认的方向">第 3 幕：ΔA 的真实位置——它是"未定稿的线索"，不是"已确认的方向"</h2>
+<p>这是你问的 ΔA 位置，也是整份基线最诚实、最开放的一节（§2.2.1）。</p>
+<p>配对差在答案跨度上逐点定义：</p>
+<p>$$ \Delta A_{\ell,p}=A^+_{T,\ell}(p)-A^-_{T,\ell}(p),\qquad p\in S_f $$</p>
+<p>基线自己写明它<strong>只表示"主体替换引起的表示差异"</strong>，并且：</p>
+<ul><li><strong>未净化</strong>：混有实体身份、subword、词频、关系传播；</li><li><strong>未被证明</strong>编码目标事实而非主体身份——历史证据调研 §4.2/§5.2、RQ2 明确判定 $A^+-A^-$ <strong>不能直接读成事实差异</strong>；</li><li><strong>构造未定稿</strong>：直接对齐 $A^-$、多 donor 边际化 / SVD、用 $\Delta A$ 作方向引导、因果门控纯化、改用非 donor 中性目标——五条路径都没选。</li></ul>
+<p>而最锋利的是<strong>方法身份张力</strong>：donor KL 降为消融臂、$A^-$ 降为待证伪对照后，主损失的 $T_{\ell,p}$ <strong>只需 $X^+\oplus y^+$ 前向即可定义，不依赖 $X^-/A^-/\Delta A$ 进入主梯度路径</strong>。于是"反事实主体配对"事实上只剩 §3 消融臂和 §6 诊断对照，方法实质退化为「答案跨度上的最小中性扰动 / 概念擦除」家族。基线把选择权交给用户：</p>
+<ul><li><strong>(A)</strong> 保留配对为主梯度来源 → 必须重新设计 $T_{\ell,p}$ 使其显式依赖 $\Delta A$，并重新论证为什么又把 donor 排除出目标；</li><li><strong>(B)</strong> 承认贡献改为证伪 / 验证协议 → §0 / §7 故事与标题整体重写，配对降为诊断工具。</li></ul>
+<div class="callout callout-info"><div class="callout-title">一针见血</div><p>ΔA 目前是"案发现场的脚印"——大家想把它当"凶手"（事实方向），但它很可能只是"另一个人走过留下的痕迹"（主体身份）。上一轮给的 10 个 idea（D1–D10），本质就是在回答这一个问题：<strong>怎么证明这串脚印确实是目标事实留下的，而不是主体身份顺路踩的</strong>。D1 走 (A) 的中间道路（ΔA 作可行域的禁止方向），D2 走 (B)（ΔA 作深度证书），其余在构造 / 因果 / 读出 / 抗恢复各层做纯化。</p></div>
+<hr />
+<h2 id="第-4-幕为什么必须走窄门硬边界与验收">第 4 幕：为什么必须走窄门——硬边界与验收</h2>
+<p>方向 I 把"遗忘"和"偷懒"分得很清，这些边界不是形式主义，每一条都堵一个已观察到的死法：</p>
+<ul><li>不拼 $y^-$ / <code>donor_fact_value</code>，不算 <code>logit(y⁺)−logit(y⁻)</code>（§5 donor 边界）；</li><li><code>L_F</code> 只在答案跨度 $S_f$，prompt 末位不进；</li><li>冻结 Teacher 全程 stop-gradient，遗忘梯度只经 Student 侧；</li><li>目标满足 §4.1 非 donor 中性约束；</li><li>主结果在 <code>λ_KL^(ablation)=0</code> 下成立；</li><li>统计单位是作者 / 实体簇，旧 pilot 不复用为 confirmation。</li></ul>
+<p>§6 六条验收把"真忘"钉死：配对特异性（真实 donor 须优于 noise / shuffled / wrong-donor / matched-retain / 随机层）、渐进收益（<strong>等预算</strong>优于静态全层 / 反向 / 随机）、非答案替换（联合报告原事实 / donor / 错答 / 拒答 / 长度 / EOS）、参数内化（无 hook 仍成立）、非浅层抑制（≥2 类独立抗恢复证据）、主结果独立性。</p>
+<div class="callout callout-bad"><div class="callout-title">死法实证</div><p>fuxian 复现（用户整理、<strong>未独立复算</strong>）里，旧版组合把提前 EOS 从 $0.02$ 推到 $0.46$、完整回答率 $0.98\to0.54$、G4 FAIL——这就是"输出抑制伪装成遗忘"的典型。基线把它写进 §1，就是为了防止新方案重蹈覆辙。</p></div>
+<hr />
+<h2 id="收尾完整故事线">收尾：完整故事线</h2>
+<table><thead><tr><th>幕</th><th>主张</th><th>支撑</th><th>结果</th></tr></thead><tbody><tr><td>0</td><td>ASU 唯一的力是 τ 造成的分布差；τ=1 零梯度</td><td><code>KL(p_T^τ‖p_S)</code> 定义</td><td>锚定</td></tr><tr><td>1</td><td>去 τ 后这条力消失；冻结 Teacher 只是尺子不是靶子</td><td>§2.2 stop-gradient、§1 证据调研</td><td>补洞动机</td></tr><tr><td>2</td><td>力改由 Student 侧答案跨度上的显式 <code>L_F</code> 给出，朝非 donor 中性落点</td><td>§2.3 公式、§4.1 约束</td><td>机制主线</td></tr><tr><td>3</td><td>ΔA 未净化、未定稿；配对已被移出主梯度路径</td><td>§2.2.1 开放问题</td><td>核心待解</td></tr><tr><td>4</td><td>用硬边界 + 六条验收排除答案替换与浅层抑制</td><td>§5、§6</td><td>验收</td></tr></tbody></table>
+<p><strong>把整篇压成一句话</strong>：方向 I 的遗忘不是"制造一个更笨的老师让学生模仿"，而是<strong>在去掉 τ、梯度归零的废墟上，把冻结 Teacher 降级成一把标尺，用 Student 侧在答案跨度上朝"非 donor 中性落点"的显式损失重新造出遗忘力；而 ΔA 这把标尺量出来的到底是事实还是身份，正是整条路线尚未裁决的开放问题</strong>。</p>
+<hr />
+<h2 id="诚实边界">诚实边界</h2>
+<ul><li>本解读严格 faithful 于基线文本；基线状态为 <code>plan-only</code>，<strong>无新实验、无训练、无预注册</strong>。依赖 pilot 的结论一律 <code>needs manual pilot</code>。</li><li>跨模型评审后端不可用，<code>novelty-check = PROVISIONAL</code>、<code>research-review = REVIEW_UNAVAILABLE</code>，evidence gate <code>BLOCKED</code>；执行者解读不构成独立评审，不声称通过。</li><li>fuxian 复现数字来自用户整理、未独立复算；历史 pilot confirmation 未通过，旧层集合与旧结果不作正向证据。</li><li>本 HTML 为阅读视图，未经独立评审；Markdown 为唯一真实来源，漂移以页面 <code>&lt;meta&gt;</code> 中 SHA256 与生成时间戳为准。</li></ul>
+
+<footer class="aris-footer">
+  Generated by <a href="https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep/blob/main/skills/render-html/SKILL.md">ARIS <code>/render-html</code></a> ·
+  source path <code>workspace/docs/directionI_forgetting_mechanism_story.md</code> ·
+  SHA256 <code>ab1deb25e485</code> ·
+  generated at 2026-11-25 15:57 UTC.
+  This is a generated view — edit the source Markdown, then re-render.
+</footer>
+</main>
+
+</div>
+
+<!-- P0 polish: paper popover host (populated by IIFE below) -->
+<div id="cite-pop" hidden role="dialog" aria-labelledby="cite-pop-title">
+  <button class="cp-close" type="button" aria-label="Close">×</button>
+  <div class="cp-content"></div>
+</div>
+
+<!-- P0 polish: figure lightbox (native <dialog>, graceful fallback) -->
+<dialog class="lightbox" id="figure-lightbox" aria-label="Figure detail">
+  <div class="lb-inner">
+    <button class="lb-close" type="button" aria-label="Close">×</button>
+    <img alt="" />
+    <figcaption></figcaption>
+  </div>
+</dialog>
+
+<!-- P0 polish: paper registry sidecar, embedded by render_html.py (--papers) -->
+<script>window.PAPER_REGISTRY = {};</script>
+
+<!-- P0 polish: interactive enhancements (TOC scrollspy, code-card auto-collapse,
+     paper popovers, figure lightbox, print-restore for <details>, blog-mode H2). -->
+<script>
+(function () {
+  "use strict";
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[c];
+    });
+  }
+
+  // --- Feature 5: Print degradation fix ---------------------------------
+  // Force every <details> open during print, restore the pre-print state after.
+  var _stashOpen = [];
+  var _printing = false;
+  window.addEventListener("beforeprint", function () {
+    if (_printing) return;  // guard against multi-fire (Chrome print preview)
+    _printing = true;
+    _stashOpen = [];
+    document.querySelectorAll("details:not([open])").forEach(function (d) {
+      _stashOpen.push(d);
+      d.open = true;
+    });
+  });
+  window.addEventListener("afterprint", function () {
+    _stashOpen.forEach(function (d) { if (d.isConnected) d.open = false; });
+    _stashOpen = [];
+    _printing = false;
+  });
+
+  // --- Feature 3: TOC scrollspy -----------------------------------------
+  var tocLinks = [].slice.call(document.querySelectorAll("nav.toc a"));
+  var headings = tocLinks.map(function (a) {
+    var id = a.getAttribute("href").replace(/^#/, "");
+    return document.getElementById(id);
+  }).filter(Boolean);
+  if (headings.length && typeof IntersectionObserver !== "undefined") {
+    var linkById = new Map();
+    headings.forEach(function (h, i) { linkById.set(h.id, tocLinks[i]); });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        tocLinks.forEach(function (l) { l.classList.remove("active"); });
+        var lk = linkById.get(en.target.id);
+        if (lk) lk.classList.add("active");
+      });
+    }, { rootMargin: "-15% 0px -75% 0px" });
+    headings.forEach(function (h) { io.observe(h); });
+  }
+
+  // --- Feature 1: Long-code auto-collapse -------------------------------
+  var COLLAPSE_THRESHOLD = 30;
+
+  function wrapCodeCard(pre, openByDefault) {
+    if (!pre || pre.closest("details.code-card")) return;
+    var code = pre.querySelector("code");
+    if (!code) return;
+    var lines = code.textContent.replace(/\n+$/, "").split("\n").length;
+    var det = document.createElement("details");
+    det.className = "code-card";
+    det.open = openByDefault;
+    var sum = document.createElement("summary");
+    function updateSummary() {
+      sum.textContent = (det.open ? "▾ Collapse code · " : "▸ Expand code · ") + lines + " lines";
+    }
+    updateSummary();
+    det.addEventListener("toggle", updateSummary);
+    pre.parentNode.insertBefore(det, pre);
+    det.appendChild(sum);
+    det.appendChild(pre);
+  }
+
+  // Honor explicit per-block flags first.
+  document.querySelectorAll("pre[data-collapse]").forEach(function (pre) {
+    var flag = pre.getAttribute("data-collapse");
+    if (flag === "collapsed") wrapCodeCard(pre, false);
+    // "open" → leave fully expanded, do not wrap.
+  });
+  // Then auto-wrap long unflagged blocks.
+  document.querySelectorAll("pre > code").forEach(function (code) {
+    var pre = code.closest("pre");
+    if (!pre || pre.closest("details") || pre.hasAttribute("data-collapse")) return;
+    var lines = code.textContent.replace(/\n+$/, "").split("\n").length;
+    if (lines >= COLLAPSE_THRESHOLD) wrapCodeCard(pre, false);
+  });
+
+  // --- Feature 10: Figure lightbox --------------------------------------
+  var lightbox = document.getElementById("figure-lightbox");
+  if (lightbox) {
+    var lbImg = lightbox.querySelector("img");
+    var lbCap = lightbox.querySelector("figcaption");
+    var lbClose = lightbox.querySelector(".lb-close");
+    function openLightbox(srcImg) {
+      lbImg.src = srcImg.src;
+      lbImg.alt = srcImg.alt || "";
+      var cap = srcImg.closest("figure") ? srcImg.closest("figure").querySelector("figcaption") : null;
+      lbCap.textContent = cap ? cap.textContent : "";
+      lbCap.hidden = !cap;
+      if (typeof lightbox.showModal === "function") lightbox.showModal();
+      else lightbox.hidden = false;
+    }
+    function closeLightbox() {
+      if (typeof lightbox.close === "function") lightbox.close();
+      else lightbox.hidden = true;
+    }
+    document.querySelectorAll("main figure img, main > p > img").forEach(function (img) {
+      if (img.closest("dialog")) return;
+      img.style.cursor = "zoom-in";
+      img.addEventListener("click", function () { openLightbox(img); });
+    });
+    if (lbClose) lbClose.addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", function (e) {
+      // Backdrop click closes; clicks inside .lb-inner do not bubble here.
+      if (e.target === lightbox) closeLightbox();
+    });
+  }
+
+  // --- Feature 2: Paper popover -----------------------------------------
+  var PAPERS = window.PAPER_REGISTRY || {};
+  var pop = document.getElementById("cite-pop");
+  var popContent = pop ? pop.querySelector(".cp-content") : null;
+  var popClose = pop ? pop.querySelector(".cp-close") : null;
+  var popTrigger = null;
+
+  function showPopover(el) {
+    var key = el.dataset.ref;
+    var info = PAPERS[key];
+    if (!info || !pop || !popContent) return;
+    popContent.innerHTML =
+      '<div class="cp-title" id="cite-pop-title">' + escapeHtml(info.title || key) + '</div>' +
+      (info.authors
+        ? '<div class="cp-meta">' + escapeHtml(info.authors) +
+            (info.date ? ' · ' + escapeHtml(info.date) : '') +
+            (info.inst ? ' · ' + escapeHtml(info.inst) : '') + '</div>'
+        : '') +
+      (info.key ? '<div class="cp-key">' + escapeHtml(info.key) + '</div>' : '') +
+      (info.arxiv
+        ? '<a class="cp-link" href="https://arxiv.org/abs/' + encodeURIComponent(info.arxiv) +
+          '" target="_blank" rel="noopener">arXiv ' + escapeHtml(info.arxiv) + ' ↗</a>'
+        : '');
+    var r = el.getBoundingClientRect();
+    pop.hidden = false;  // unhide first so offsetHeight is measurable
+    var margin = 16;
+    var popWidth = Math.min(360, Math.max(0, window.innerWidth - margin * 2));
+    var popHeight = Math.min(pop.offsetHeight || 200, Math.max(0, window.innerHeight - margin * 2));
+    pop.style.left = Math.max(margin, Math.min(r.left, window.innerWidth - popWidth - margin)) + "px";
+    pop.style.top = Math.max(margin, Math.min(r.bottom + 8, window.innerHeight - popHeight - margin)) + "px";
+    popTrigger = el;
+    if (popClose) popClose.focus();
+  }
+  function hidePopover() {
+    if (pop) pop.hidden = true;
+    if (popTrigger) popTrigger.focus();
+    popTrigger = null;
+  }
+  document.querySelectorAll("[data-ref]").forEach(function (el) {
+    el.setAttribute("tabindex", "0");
+    el.setAttribute("role", "button");
+    el.addEventListener("click", function (e) { e.stopPropagation(); showPopover(el); });
+    el.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); showPopover(el); }
+    });
+  });
+  if (popClose) popClose.addEventListener("click", hidePopover);
+  document.addEventListener("click", function (e) {
+    if (pop && !pop.hidden && !pop.contains(e.target) && !e.target.matches("[data-ref]")) hidePopover();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && pop && !pop.hidden) hidePopover();
+  });
+
+  // --- Feature 7: Blog-mode active-H2 highlight (opt-in) ----------------
+  if (document.body.classList.contains("aris-blog")) {
+    var h2s = [].slice.call(document.querySelectorAll("main h2"));
+    if (h2s.length && typeof IntersectionObserver !== "undefined") {
+      var io2 = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) {
+            h2s.forEach(function (h) { h.classList.remove("aris-active-h2"); });
+            en.target.classList.add("aris-active-h2");
+          }
+        });
+      }, { rootMargin: "-15% 0px -75% 0px" });
+      h2s.forEach(function (h) { io2.observe(h); });
+    }
+  }
+})();
+</script>
+</body>
+</html>
