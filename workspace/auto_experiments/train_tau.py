@@ -62,6 +62,9 @@ def main():
     ap.add_argument("--name", default=None)
     ap.add_argument("--save", action="store_true")
     ap.add_argument("--output", default=None)
+    ap.add_argument("--eval-generate", action="store_true", help="run output-level behaviour evaluation after training")
+    ap.add_argument("--eval-samples", type=int, default=24)
+    ap.add_argument("--eval-max-new-tokens", type=int, default=96)
     args = ap.parse_args()
     set_seed(args.seed)
     name = args.name or f"tau_{args.schedule}_s{args.seed}"
@@ -164,6 +167,21 @@ def main():
         "delta": {"forget": f1 - f0, "retain": r1 - r0},
         "history": history,
     }
+    if args.eval_generate:
+        from eval_generate import behaviour_stats
+
+        student.eval()
+        with torch.no_grad():
+            result["behavior_eval"] = {
+                "forget": behaviour_stats(
+                    student, tok, forget, args.device, args.eval_max_new_tokens, args.eval_samples
+                ),
+                "retain": behaviour_stats(
+                    student, tok, retain, args.device, args.eval_max_new_tokens, args.eval_samples
+                ),
+            }
+        student.train()
+
     if args.save:
         path = CKPT / name
         path.mkdir(parents=True, exist_ok=True)

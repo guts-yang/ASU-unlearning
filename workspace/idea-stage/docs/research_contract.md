@@ -40,8 +40,12 @@
 ## Next-step Pointer
 `/experiment-bridge` 以 `workspace/auto_experiments/` 为代码基线，先实现 R2-C 对抗目标与 R2-B 3-seed 验证；`workspace/auto_experiments/results/` 为 gate 证据源。
 
-## 口径提醒（2026-11-25 追加）
-方向 I 权威基线 `../方向I_基线_v0.6.1_answer_span.md`（去 τ + 反事实对照 + 答案跨度中性约束）与上述 6 个 ASU 温度线候选**机制轴不同**；且该基线所属的反事实配对路线在 V4 中被整批 ELIMINATED。两者关系与待裁决事项见 `../IDEA_REPORT.md` §5.1，本契约不自行判定基线有效性。会话恢复时：ACTIVE 候选从本契约的 Selected Ideas 读取，方向 I 基线单独读取，不混淆。
+## 口径提醒（2026-11-25 追加，裁决 2 后更新）
+方向 I 权威基线 `../方向I_基线_v0.6.1_answer_span.md`（去 τ + 反事实对照 + 答案跨度中性约束）与上述 6 个 ASU 温度线候选**机制轴不同**；且该基线所属的反事实配对路线在 V4 中被整批 ELIMINATED。会话恢复时：ACTIVE 候选**仅**从本契约的 Selected Ideas 读取，方向 I 基线单独读取，不混淆。
+
+**2026-11-25 用户裁决（2 · 归档）**：§5.1 口径张力已裁决完毕——整条反事实配对路线**正式归档**，`v0.6.1` 基线转为仅供存档的设计文档，不作为实现规格、不进入实验队列、不投入算力；§2.2.2 的 (A) 裁决记录与后续设计义务停止执行。V1 全系 `ELIMINATED` 与 `research-wiki/log.md` 反重复记忆**继续有效，不解除、不例外化**。裁决说明见 `../IDEA_REPORT.md` §5.1。
+
+**候选 proposal 的阅读口径**：`../candidates/` 下 6 份 proposal 的 §6/§7 中凡引用「方向 I 基线 v0.6.1」「口径张力需用户裁决」「其 §6 验收口径可复用」等表述，均按裁决 2 理解为**历史参考**：方向 I 已归档，其验收口径不作为这 6 个候选的执行规格或正向证据；候选自身的判别实验、失败模式与指标以各文件正文为准。各文件正文保留不改。
 
 ## Review Status
 novelty-check = PROVISIONAL；research-review = REVIEW_UNAVAILABLE；无跨模型回执，不声称 accepted。
