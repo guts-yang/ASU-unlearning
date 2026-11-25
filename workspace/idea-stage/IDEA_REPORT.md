@@ -1,122 +1,136 @@
-# Idea Discovery Report — 反事实主体配对的逐层渐进遗忘
+# Idea Discovery 整合报告 —— 方向 I 基线与 idea-stage 规整
 
-**Direction**: 以 ASU-unlearning（ICLR 2026《Attention Smoothing Is All You Need》）为基座，调研"反事实主体配对 + 逐层渐进激活对齐"的遗忘新方向，重点解决 workspace 方向 I proposal 的核心待调研问题：**配对激活差异 ΔA 应如何构造遗忘目标**。
-**Date**: 2026-11-23
-**Pipeline**: research-lit → idea-creator → novelty-check → research-review → research-refine-pipeline
-**Output root**: `workspace/`（用户指定）
-**Effort / Assurance**: balanced / draft（评审承载阶段因环境缺评审 MCP，见 §External Critical Review）
+**日期**：2026-11-25
+**分支**：`Auto/20261122`（基线提交 `a2ce148`）
+**触发**：用户指令「把当前分支上的方向 I 基线按 L7 源文件修改 + 规整 idea-stage（淘汰归档、候选独立维护 proposal）+ 推送远程」+ `/idea-discovery`
+**权威基线**：`方向I_基线_v0.6.1_answer_span.md`（源：`/Users/chenyliao/MuRAG/Papers/L7_ASU创新/I/方向I_事实配对路线_重新设计Proposal_20261121.md`）
+**裁决口径**：以当前分支 `IDEA_REPORT_V4.md` + `docs/research_contract.md` + `research-wiki/log.md` 为准，执行者不自行改判、不编造评审回执
 
-> 执行环境声明：本机 `torch.cuda.is_available()=False`、无 transformers/safetensors、checkpoint 不在本机（据不完全证据，参见项目记忆卡），**无法运行任何 Llama 前向 pilot**。本轮所有 "pilot signal" 均为**纸面机制推断 + 文献证据**，不是实测数字；按技能 PILOT 规则标注 `needs manual pilot`。跨模型评审后端（Codex/Gemini/Grok/Claude-review MCP）在当前宿主均未启用，故两个评审承载阶段标记 `REVIEW_UNAVAILABLE`，最终证据闸预期 `BLOCKED`——这是如实记录，不是流程失败隐藏。
+> **诚信声明**：本次是**结构规整与文档整合**，不是新一轮文献调研 / pilot / 跨模型评审。所有方法均为 `plan-only / provisional`；本机无 GPU、无跨模型评审后端（Codex/Gemini/Grok/Claude-review 均不可用，无 `.aris/reviewer.json`），不伪造 `accept` 回执，不把构思分当实验成绩。所有关键数字标注来源，未核实处用「据不完全证据显示」。
 
-## Executive Summary
+## 1. 执行摘要
 
-基于 workspace 已有的方向 I proposal（反事实主体替换 Teacher + 逐层渐进激活对齐 + DKT 同前缀 KL），本轮调研产出 3 个候选 idea 并做了查新与逻辑审查。**推荐方案是 Idea 1（Δ-Gated 正交渐进对齐）**：不直接把 Student 激活对齐到 donor 激活 A⁻（该方案有"donor 答案替换 / context blindness"的逻辑缺陷），而是用配对差 ΔA 的主成分定义"事实子空间"，把 Student 在 X⁺ 上的激活沿该子空间做正交抑制，逐层渐进内化。最近的近邻是 FALCON（NeurIPS 2025，对比正交激活操纵）与 CiPO（ACL 2026，反事实偏好优化），但二者分别用随机对比锚、在输出/偏好层操作；本方向以"关系匹配的真实 donor"为对比锚、在表示层做不教假事实的正交解耦，差异化成立但窗口偏紧。核心 kill risk：ΔA 是否真正编码"目标事实"而非"主体身份"——需最小 probe 实验证实。**下一步（需 GPU）**：先做 ΔA 方向的 probe 判别实验 + 静态全层/渐进 schedule 等预算对照，二者任一不过即收缩或否决。
+1. **方向 I 基线统一**：把当前分支上两份过时/截断的基线副本归档，用 L7 的 `v0.6.1-answer-span` 完整版替换为唯一权威基线（正文逐字保留）。
+2. **idea-stage 结构规整**：顶层只留规范报告、当前有效决策报告、叙事与研究契约；被迭代取代的历史报告与 HTML 衍生视图进 `archive/`；6 个未淘汰候选各维护一份独立 `candidates/*.md` proposal。
+3. **淘汰/候选判定**：沿用 V4 成文裁决——3 `PROMOTE` + 3 `REVISE` 为候选，`ELIMINATED` 全系归档并保留反重复记忆。
+4. **口径张力如实标注**：方向 I 基线所属的反事实配对路线在 V4 中被整批 `ELIMINATED`，而用户本次要求把该基线更新为 v0.6.1。二者关系见 §5，由用户裁决，本报告不自行判定基线有效性、不删除基线。
 
-## Literature Landscape
+## 2. 目录结构（规整后）
 
-按主题聚类（检索渠道：web_search 多轮，覆盖 arXiv/ACL/NeurIPS/AlphaXiv/机构库；检索词见附录 A）。Gemini CLI 未安装，按技能规则优雅跳过。
+```text
+workspace/idea-stage/
+├── IDEA_REPORT.md                          ← 本整合报告（规范交付物 / 唯一真实来源）
+├── 方向I_基线_v0.6.1_answer_span.md        ← 当前分支唯一权威的方向 I 基线
+├── IDEA_REPORT_V4.md                       ← 当前有效决策报告（脚本硬编码引用，保留顶层）
+├── NARRATIVE_ASU_TEMPERATURE_DEPTH.md      ← 当前有效叙事（Markdown 主源）
+├── candidates/                             ← 6 个未淘汰候选，每个一份独立 proposal
+│   ├── R2-B_ASU温度课程_tau_k.md                 (PROMOTE)
+│   ├── R2-C_抗恢复即目标_relearning_aware_meta.md (PROMOTE)
+│   ├── R3-2_ASU遗忘深度审计基准.md               (PROMOTE)
+│   ├── R2-A_ASU_Selective_表示选择性.md          (REVISE)
+│   ├── R3-1_SensiTemp_层头自适应温度场.md        (REVISE)
+│   └── R3-3_浅深解耦双阶段遗忘.md                (REVISE)
+├── docs/
+│   └── research_contract.md                ← W1→W1.5 会话恢复契约（已指向新结构）
+└── archive/                                ← 被取代/淘汰内容，逐字节保留
+    ├── README.md                           ← 归档口径与淘汰清单
+    ├── baseline_versions/
+    │   ├── proposal_v0.5_20261122.md
+    │   └── proposal_v0.6_truncated_20261124.md
+    └── reports/
+        ├── IDEA_REPORT_V1.md / .html
+        ├── IDEA_REPORT_V2.md / .html
+        ├── IDEA_REPORT_V3.md / .html
+        └── NARRATIVE_ASU_TEMPERATURE_DEPTH.html / .html.review.json
+```
 
-**聚类 1 — 反事实/替换式遗忘（与方向 I 最直接相关）**
-- **CiPO: Counterfactual Unlearning for LRM through Iterative Preference Optimization**（arXiv:2604.15847, ACL 2026）：让 LRM 生成"逻辑自洽但内容相反"的反事实 CoT 作为偏好正样本，迭代 DPO/SimPO。证据：在 R-TOFU/RETURN 上同时清除 CoT 与答案、保住 GSM8K/MMLU； compares favorably to GA 与 R²MU。差异：它在**输出/偏好层**教模型生成反事实文本；方向 I 在**表示层**对齐，不教假事实。
-- **On the Hidden Costs of Counterfactual Knowledge Training**（arXiv:2605.27083, Ye/Wang/Zhang/Wu, 2026-05）：**关键负面证据**。反事实调优（CFT）有两大隐性代价：(1) knowledge conflict——不一致的反事实语料诱导冲突梯度（自然数据梯度余弦 μ≈+0.136，无约束反事实 μ≈+0.024，近半样本对负相似）；(2) hallucination spillover——拟合假目标植入持续捏造偏见，抬高无关域幻觉率。引入 RWKU+ 诊断基准与梯度余弦诊断。**启示：方向 I 必须避开"教模型说假话"，且 donor 必须关系匹配、簇内一致，否则重蹈 CFT 覆辙。**
+`workspace/ideas_archive/`（既有 299 文件 `copy2` 快照归档）保持不变，是跨目录的历史汇总，与本次 `idea-stage/archive/` 分工不同：后者只管 idea-stage 自身被迭代取代的内容。
 
-**聚类 2 — 逐层/表示级操纵与蒸馏（激活目标构造的方法源）**
-- **FALCON: Fine-grained Activation Manipulation by Contrastive Orthogonal Unalignment**（NeurIPS 2025, Hu et al.）：信息论引导参数选择 + 对比机制增强表示分离 + 冲突梯度正交投影。证据：抗恢复鲁棒。差异：对比锚为噪声/随机，方向 I 用真实 donor；FALCON 是全局重要性选择，方向 I 强调逐层渐进 schedule。
-- **FDD / Beyond Logits: Aligning Feature Dynamics**（ACL 2025, Gong et al., DOI 10.18653/v1/2025.acl-long.1125）：把残差 Transformer 视为离散 ODE，监督"层间预测轨迹 KL + 相邻层 delta 余弦"，用 LM head 投影到共享词表空间。启示：为 Idea 3（delta 匹配）提供现成损失构造；另注意其消融显示"4 层采样最佳，过多层反而下降"——**直接质疑"全层对齐"的必要性，支持渐进/稀疏层选择**。
-- **Layer-wise Distillation / LayerSync**（ICLR 2026）：stop-gradient 固定教师层、只更新学生层；层对选择应避开太浅与末端 20% block。启示：方向 I 的 A⁻ 必须 stopgrad（proposal 已做），层集合 Λ(k) 不应取全 16 层。
-- **AlphaEdit**（ICLR 2025）/ **One Mask to Rule Them All**（2026-09）：把扰动投影到 preserve 知识的零空间 / 用稀疏 mask 恢复被 ROME-MEMIT 抑制的原事实——证明"抑制≠擦除"，**支持方向 I 必须做抗恢复审计**。
+## 3. 方向 I 基线变更（用户第一项要求）
 
-**聚类 3 — Teacher-Student 自蒸馏与鲁棒性（ASU 的同源方法）**
-- **ASU**（Zare Zade et al., ICLR 2026, arXiv:2603.01285）：注意力温度 τ>1 平滑 → forget-teacher → 自蒸馏。方向 I 的出发点：去 τ 后 Teacher=Student 导致初始化零遗忘梯度。
-- **MALTO / Dual-Teacher**（SemEval-2025 Task 4, SOTA）：Competent Teacher（保 utility）+ Incompetent Teacher（随机 logit，诱导遗忘），KL 自适应混合；非 ordered 训练更优。
-- **Distillation Robustifies Unlearning / UNDO**（NeurIPS 2025, Lee et al.）：unlearn→distill 到随机初始化同构学生，可移除潜在能力、显著抗 relearning。**启示：可作为方向 I 部署前的抗恢复增强步骤。**
-- **PACT**（arXiv:2609.38909, 2026-09）：**关键反面证据**——target-based 目标（把模型压到"无上下文生成的中性回答"）虽移除行为，但造成 context blindness（模型学会不读上下文），侵蚀系统提示遵循与秘密保持。启示：直接向 A⁻ 对齐有同类风险。
+| 处置 | 原路径 | 新位置 / 状态 |
+|---|---|---|
+| 归档 | `workspace/proposal/方向I_事实配对路线_重新设计Proposal_20261121.md` | `archive/baseline_versions/proposal_v0.5_20261122.md` |
+| 归档 | `workspace/docs/方向 I：反事实主体配对驱动的逐层渐进遗忘 Proposal.md`（HEAD `a2ce148` 新增） | `archive/baseline_versions/proposal_v0.6_truncated_20261124.md` |
+| **新增权威基线** | —— | `方向I_基线_v0.6.1_answer_span.md` |
 
-**Landscape 结论**：结构性空白 = "用关系匹配的真实 donor 作为对比锚、在表示层而非输出层做逐层正交解耦、且不教模型假事实的遗忘目标构造"。该空白与 CFT 的两大代价、PACT 的 context blindness 形成清晰对照，但 FALCON/FDD/CiPO 已是强近邻，窗口偏紧（估计 6-12 个月）。
+**为什么替换**：v0.5 的 $\mathcal L_{KL}$ 被 v0.6 §1 判定为「donor 答案替换/迁移目标，不是删除目标」；HEAD 提交里的 v0.6 文件只有 93 行、截断在 §3.3 中途，且未包含 v0.6.1 的关键裁决。v0.6.1 相对 v0.5 的三项实质修改：
 
-## Ranked Ideas
+1. Teacher 只作「另一主体」对照轨迹，**不**把 $p_{\theta_0}(y|X^-)$ 当 forget 目标；
+2. 遗忘方向改由 **答案跨度 $S_f$ 上的逐层激活损失 $\mathcal L_F$** + 「原事实读不出」中性约束给出（$X^+\oplus y^+$ teacher-force 前向，prompt 末位不进 $\mathcal L_F$）；
+3. DKT 式同前缀 KL **降为对照/消融臂**（$\lambda_{KL}^{\text{(ablation)}}=0$ 默认），主结果不得依赖它，并强制 $\mathcal L_F$-only / $\mathcal L_{KL}$-only / 组合三臂证伪共谋。
 
-**Idea 1 — Δ-Gated Progressive Orthogonal Alignment（推荐）**
-- 假设：配对差 ΔA_ℓ = h_T(X⁺)−h_T(X⁻) 的主成分定义了一个"事实相关方向"；遗忘应把 Student 在 X⁺ 的层激活沿该方向正交抑制（保留正交分量），而非对齐到 A⁻。损失：对每层抽点，L_F = Σ_ℓ ρ_ℓ(k)·‖(I−P_Δ) h_S(X⁺;P) − stopgrad(h_T(X⁺;P))‖²，其中 P_Δ 为 ΔA 的低秩投影；或等价地用梯度屏蔽 g⊥=g−proj_Δ g。逐层渐进扩展 Λ(k)。
-- 机制依据：FALCON 的正交投影 + AlphaEdit 零空间 + FDD 的分层稀疏；避开 CFT 幻觉溢出（不教假事实）与 PACT context blindness（保留正交/主体表征）。
-- Pilot 信号：**needs manual pilot**（无 GPU）。纸面证据：强（三项独立文献支撑机制）。风险：ΔA 主成分是否 = 事实方向未证实（见 Novelty § killer risk）。
+新基线正文与 L7 源文件逐字一致，仅在文件头加一段来源/取代说明；公式、状态声明（`plan-only`、无新实验）、§6 六条验收、§7 讲稿均未改动。
 
-**Idea 2 — Counterfactual Difference Matching（backup）**
-- 假设：不抑制、也不对齐 A⁻，而是约束 Student 的"差异结构"与 Teacher 一致：h_S(X⁺)−h_S(X⁻) ≈ stopgrad(A⁺−A⁻)，即匹配差值而非绝对位置。这样主体表征本身不动，只移除"事实相关差异方向"。
-- 风险：X⁻ 的表示含 donor 事实，约束差值可能把 donor 信息引入 X⁺ 路径；需要 wrong-donor 对照。
-- Pilot 信号：needs manual pilot；纸面证据：中（无直接先例，但与 FDD delta 匹配同源）。
+## 4. 候选 ideas（6 个，每个独立 proposal）
 
-**Idea 3 — Layer-wise Prediction-Dynamics Alignment（备选/可并入 Idea 1）**
-- 假设：用 FDD 的 LM-head 投影，让 Student 在 X⁺ 的"层间预测 delta 方向"匹配 Teacher 在 X⁻ 的 delta 方向（余弦），而非对齐绝对激活。规避绝对对齐对表示的破坏。
-- 风险：依赖 LM-head 投影到词表，架构受限；token 等长假设需验证。
-- Pilot 信号：needs manual pilot；纸面证据：中高（FDD 直接方法源）。
+判定来源：`IDEA_REPORT_V4.md` 决策表。按 `research_contract.md`，`PROMOTE`=低成本/确定性主线，`REVISE`=带重启门槛的条件候选，**两者均属「未淘汰」**，故全部保留为候选并各写一份 proposal。每份 proposal 统一覆盖：领域空白与思路 → 可证伪假设 → 公式化/代码级具体实现 → 30 秒故事 → 与近邻工作的差异化（novelty 落点）→ 当前证据与 provisional 状态 → 判别实验/失败模式/必测指标 → 与方向 I 基线的关系 → 来源与诚信声明。
 
-**淘汰（见 Eliminated Ideas）**：Idea 4 = 原参考方案"直接向 A⁻ 对齐"；Idea 5 = "纯 ΔA 差值引导更新"。
+### 4.1 PROMOTE（3，主线候选）
 
-**排序理由**：Idea 1 差异化最强且正面回应 CFT/PACT 两大负面证据；Idea 2 保守但需验 donor 泄漏；Idea 3 更像可并入 Idea 1 的损失变体。AUTO_PROCEED：选定 Idea 1 进入查新与评审。
-
-## Novelty Verification
-
-**状态：PROVISIONAL（基于公开文献的机制查新，非跨模型独立评审）**。未获得 `REVIEW_UNAVAILABLE` 之外的独立评审身份，故不能记为 cross-family accepted。
-
-| 近邻 | 年份/ venue | 重叠 | 差异点 |
+| ID | 一句话思路 | 关键证据（来源 V4 / contract / NARRATIVE） | 未完成义务 |
 |---|---|---|---|
-| CiPO | 2026/ACL | 反事实 + 遗忘 | 输出/偏好层、教假 CoT；本方向表示层、不教假事实 |
-| FALCON | 2025/NeurIPS | 对比 + 正交激活操纵 | 随机对比锚、全局参数选择；本方向真实关系 donor、逐层渐进 |
-| FDD | 2025/ACL | 逐层 + delta 蒸馏 | 用于压缩、教师更强；本方向用于遗忘、教师是同权重反事实视图 |
-| CFT hidden costs | 2026/arXiv | 反事实训练代价 | 其结论是"反事实训练有代价"，本方向正是规避该代价的表示层方案 |
-| PACT | 2026/arXiv | target-based 遗忘的 context blindness | 其 target 是无上下文中性回答；本方向目标保留主体/正交表征 |
+| **R2-B · ASU 温度课程 τ(k)** | 把 $\tau$ 从训练前冻结的标量变成训练进度函数（`low2high` $1.5\to3$），零新增参数 | 60-step 等预算 $dF$：`global=0.800`、`low2high=0.949`、`high2low=0.562`；增益 $+0.149$、$dR=-0.256$；**须强制等平均 $\tau$ 对照**排除"更强平滑" | E2：3 seed 复现（本轮 seed 0） |
+| **R2-C · 抗恢复即目标** | 把 P3 恢复攻击前移进 minimax 训练目标，直接优化"深度"而非事后验收 | ASU-u P2 恢复 $0.524$、P3 $0.371$、$\text{mean\_recovery}=0.448$，确认浅层遗忘；与 R3-2 共享公开攻击阶梯 | E3：实现内步攻击 + 恢复曲线，不能只当审计替代 |
+| **R3-2 · ASU 遗忘深度审计基准** | 首个针对 ASU 自身的 P1/P2/P3/INT8/Probe 统一恢复阶梯 + 恢复曲线下面积 + factual/function 分层 | forget $0.96\to$ P2 $0.261\to$ P3 $0.185$；**双向可发表**（稳健=强正面，回退=高价值负面） | E1 已完成；补跨模型复核 |
 
-**不同工作重合度评估**：Idea 1 与 FALCON 的"正交投影"字面重合，但对比锚语义与逐层 schedule 不同；需在论文中显式划界，否则 reviewer 会以"FALCON 换了个对比锚"拒绝。**查新结论 = PROCEED WITH CAUTION**（技能定义：caution 属正面裁决，可带条件推进）。
+### 4.2 REVISE（3，条件性候选，非主线）
 
-**Killer risk（决定存亡）**：若 probe 显示 ΔA 主成分主要编码"主体身份"而非"目标事实"，则 Idea 1 的正交抑制会变成"抹掉主体表征"，方案塌缩为 Idea 4 的变体并失败。这是必须先用最小实验排除的假设，不能用论证代替。
+| ID | 降级原因（据 V4） | 重启 / 保留门槛 |
+|---|---|---|
+| **R2-A · ASU-Selective** | 机制 gate PASS（$\text{mean\_selectivity}=0.531$），但 RepSelect/ADU/ALMPU 已密集占据 head 级+子空间空间，差异化不足 | E4：先给「ASU 输出遗忘 × attention K/V 子空间」机制划界实验，否则不投入主线 |
+| **R3-1 · SensiTemp** | 敏感度非均匀（layer CV=1.11 / head CV=9.22），但 sens 场 $dF=+1.747$ 未超等平均 $\tau$ 全局 $+1.792$；收益来自更强总平滑 | 降级为诊断分析；可发表增量让位 R2-B 的 `low2high` 调度 |
+| **R3-3 · 浅-深解耦双阶段** | gate PASS 但仅 L12 边缘（$dF=+0.133$、$dR=+0.099$）；严格阈值 $dF\ge0.15$ 且 $dR\le0.05$ 下通过数 $=0$，V2 抑制失败模式重现 | 仅保留为消融；kill switch：压缩深层 ΔA 若同时伤 retain 即否决 |
 
-## External Critical Review
+**novelty 纪律**：6 份 proposal 均明确「novelty 不能落在组件本身」（温度调度 / minimax / 恢复攻击 / SVD 子空间 / trust region 都有先例），只能落在与 ASU forget-teacher 或用户独有资产（stage0-14 实测、反事实配对 pooled ΔA、官方 ASU 代码库）的结合方式。差异化不足的（R2-A、R3-1）如实标注，不包装成新贡献。
 
-**状态：REVIEW_UNAVAILABLE** — 当前宿主未启用任何跨模型评审传输（Codex MCP / Antigravity / Grok / Claude-review 均不可用），无 `.aris/reviewer.json`，无 gemini/codex CLI。按 reviewer-backends 契约：不可用评审**绝不能伪造 PASS**，也不得记录 accept 回执。因此 `novelty-check` 与 `research-review` 两阶段保持 `done` 但无 cross-family receipt，最终 gate 预期 BLOCKED。
+## 5. 淘汰 ideas（ELIMINATED，已归档 + 反重复记忆）
 
-为不丢失"自行检查逻辑"的价值，以下为**执行者自审（非独立评审，只作 provisional 修改输入）**，逐条检查方向 I proposal 的逻辑链：
+V4 决策表唯一 `ELIMINATED` 行 + research-wiki `anti_duplication`（`research-wiki/log.md`，2026-11-23）：
 
-- **L1 初始化零梯度**：proposal 称去 τ 后 Teacher=Student、原 forget KL 在初始化无梯度，故用逐层 L_F 提供梯度。检查：成立——X⁻ 换了主体，h_T(X⁻)≠h_S(X⁺) 初始化，L_F 有非零梯度。✅
-- **L2 "渐进"的必要性**：proposal 自认必须相对静态全层/反向/随机 schedule 等预算证明独立收益，否则只能叫"多层对齐"。检查：这是最硬的杀手条件，当前 proposal 无证据。⚠️ BLOCKER-for-claim（不是方案否决，是表述降级风险）。
-- **L3 donor 答案替换**：直接对齐 A⁻ 会让 Student 在 X⁺ 上产出 donor 事实——不是遗忘是替换。检查：proposal §6 要求报告 donor 答案，但参考机制本身没有解决，属逻辑缺口。⚠️ 构成 Idea 4 淘汰依据。
-- **L4 ΔA 纯度**：主体替换差异 ≠ 事实差异，ΔA 可能主要是"主体是谁"。检查：未被 proposal 论证，是 killer risk。⚠️
-- **L5 共享前缀 KL**：proposal §3.1 强制两个分布共享同一 y_{<t}，两条前缀分支独立归一化，不逐 token 比较两条不同序列。检查：DKT 分解正确，causal shift（§5）口径正确。✅
-- **L6 参数内化**：主训练直接优化 Student 参数、运行时 patch 仅作对照。检查：设计正确，避免"hook 依赖"伪遗忘。✅
-- **L7 抗恢复**：proposal §6 要求 ≥2 类独立抗恢复证据。检查：与"Distillation Robustifies Unlearning"一致；可补 unlearn-and-distill 作为增强步骤。✅ 建议增强。
-- **L8 过度泛化/语义漂移**：Student 学会"把 X⁺ 当 X⁻ 处理"后，对共享主体但不同关系的 prompt 也可能偏移。检查：proposal 用 retain/shared facts 覆盖，但对 shared-subject 的语义漂移无显式探针。⚠️ 建议加 relation-swap probe。
+- **R1-I1/I2/I3/I4/I5 反事实配对 + ΔA 正交/对齐/差值引导（全系）**：stage0-14 H20 实测，所有变体 forget/retain 均弱于原 ASU ref（ref 0.555/0.798；idea1 1.068/1.52）；stage8/9/10/11/13/14 失败、stage5 mask 无收益；`Gate=KILL`。**不再投入算力，转为反重复记忆，禁止后续轮次复现。**
+- 关联淘汰（V2/V3 报告已写入）：直接对齐 $A^-$（donor 替换）、PCGrad/EWC/GradNorm/GA-orth 梯度手术、单纯 mask / $\lambda\beta$ 调参 / 反事实渐进 schedule、ASU-Selective 与 RepSelect 式子空间（差异化不足，R3 查新）。
+- 历史报告 V1/V2/V3 连同 HTML 衍生视图已移入 `archive/reports/`，逐字节保留，不删除负结果证据。
 
-**最低判别实验（供后续，不在本轮执行）**：(a) ΔA probe：训练线性 probe 判断 ΔA 是否编码目标事实（vs 主体身份）；(b) 等预算 schedule 对照（渐进 vs 静态全层 vs 反向 vs 随机）；(c) relation-swap probe 测语义漂移。任一失败即触发 kill switch。
+### 5.1 口径张力（重要，需用户裁决）
 
-## Eliminated Ideas
+**方向 I 基线所属的反事实配对路线，在 V4 中被整批 `ELIMINATED`；而用户本次要求把该基线更新为 v0.6.1 完整版。** 这不是执行错误，而是两条历史线的并存：
 
-- **Idea 4 — 直接向 A⁻ 对齐（原参考方案）**：淘汰。PACT（2609.38909）证明 target-based 直接对齐造成 context blindness；CFT hidden costs（2605.27083）证明拟合替代目标引入幻觉溢出与梯度冲突；且无法区分"遗忘"与"donor 答案替换"（proposal §6 自认）。
-- **Idea 5 — 纯 ΔA 差值引导更新**：淘汰（暂缓）。ΔA 不纯净，主要为"主体替换差异"，直接以其引导更新缺乏事实特异性保证；降级为 Idea 1 中的方向估计器，不独立成方案。
+- V1–V4 的实测与裁决发生在「ASU 温度自蒸馏 + 反事实配对 stage0-14 H20」这条线，结论是反事实配对构造 forget 目标 + 表示层正交/对齐 + 梯度手术系统性失败。
+- L7 的 v0.6.1 基线是对**反事实配对方案本身**的重新设计（去 donor-KL、改答案跨度中性约束、`plan-only`、明确声明"历史 pilot confirmation 未通过、旧结果不作正向证据"），属于另一条仍在构思阶段的线。
 
-## Refined Proposal
+本报告的处理：**按用户指令更新并保留基线**，但不在整合报告里把基线写成"已验证有效"，也不因 V4 的 ELIMINATED 删除基线。两份旧副本归档、负结果证据保留、6 个候选 proposal 的 §7 都标注了与基线的关系。后续若要合并两条线，建议由用户决定：是把 v0.6.1 当作"反重复记忆之外的新假设重新过 G0–G4 预检门"，还是正式归档整条反事实配对路线。
 
-- Proposal: `workspace/refine-logs/FINAL_PROPOSAL.md`
-- Experiment plan: `workspace/refine-logs/EXPERIMENT_PLAN.md`
-- Tracker: `workspace/refine-logs/EXPERIMENT_TRACKER.md`
-- Research contract: `workspace/idea-stage/docs/research_contract.md`
+## 6. 证据门与评审状态（如实记录）
 
-## Next Steps
+| 项 | 状态 |
+|---|---|
+| 跨模型 novelty-check / research-review | `REVIEW_UNAVAILABLE`（无 `.aris/reviewer.json`，Codex/Gemini/Grok/Claude-review CLI 均不可用）；不伪造 PASS、不记 `accept` 回执 |
+| V1 报告自带 Evidence Gate | `BLOCKED`（novelty-check / research-review receipt 缺失），已在 `archive/reports/IDEA_REPORT_V1.md` 内如实保留 |
+| 既有 `workspace/.aris/runs/*.json` | 历史运行态证据，未改动 |
+| 本次规整 | 结构变更 + 文档整合，不新增实验、不新增评审裁决 |
+| 所有候选 | `PROVISIONAL / plan-level`；新结果须过 `/experiment-audit` + `/result-to-claim` |
 
-- [ ] 在有 GPU 的 A800 环境跑 ΔA probe + schedule 对照（本轮无法执行）
-- [ ] 补跨模型评审（需启用 Codex/Gemini/Grok/Claude-review 之一），把 novelty-check / research-review 从 provisional 升级为 accepted
-- [ ] 若 probe 通过：用 `/experiment-bridge` 实现 Idea 1 → `/run-experiment`
-- [ ] 若 probe 失败：执行 kill switch，主攻线让位 Idea 2/FDD delta 变体
-- [ ] 部署前用 `/ablation-planner` 安排 schedule 消融，`/kill-argument` 做投稿前对抗审查
+**不符合技能完整流水线之处（透明披露）**：标准 `/idea-discovery` 为 `research-lit → idea-creator → novelty-check → research-review → research-refine-pipeline` 并带 pilot 与证据门。本次用户指令是**对既有 idea-stage 做归档/候选规整与基线更新**，不是启动新一轮从零发现；因此未重跑文献检索、未跑 pilot（本机无 GPU）、未伪造跨模型评审。6 份候选 proposal 与本报告是对既有成文产物的**忠实整合**，而非新评审结论。若需把某候选升级为 submission-ready，请单独启用评审后端与 `/experiment-bridge`。
 
-## 附录 A — 检索披露
+## 7. 下一步（checkbox，防止静默跳过）
 
-检索渠道：web_search（多轮，6 组查询词），命中 arXiv/ACL Anthology/NeurIPS/AlphaXiv/机构库/二次摘要站。关键 ID：arXiv 2603.01285（ASU）、2604.15847（CiPO）、2605.27083（CFT hidden costs）、2509.38909/2609.38909（PACT，日期 2026-09-30）、FALCON（NeurIPS 2025）、FDD（ACL 2025, DOI 10.18653/v1/2025.acl-long.1125）、UNDO（NeurIPS 2025）、MALTO（SemEval-2025）、AlphaEdit（ICLR 2025）。Gemini CLI 缺失，未做 Gemini 广域检索；所有数字/结论均标注来源，未核实处用"据不完全证据显示"。
+- [x] 用 v0.6.1 源文件替换方向 I 基线，两份旧副本归档
+- [x] 历史 V1–V3 报告与 HTML 衍生视图归档，逐字节保留
+- [x] 6 个未淘汰候选各写一份独立 proposal（思路 / 实现 / 故事 / 差异化 / 证据 / 失败模式 / 基线关系）
+- [x] 淘汰 ideas 归档并保留反重复记忆（research-wiki 未改动）
+- [x] 写整合报告 `IDEA_REPORT.md` 与 `archive/README.md`
+- [x] 更新 `docs/research_contract.md` 指向新结构（会话恢复契约）
+- [ ] （待用户裁决）§5.1 口径张力：v0.6.1 基线是否按 G0–G4 预检门重新验证，或整条反事实配对路线正式归档
+- [ ] （需环境）启用跨模型评审后端，把 6 个候选从 `provisional` 升级；补 E2/E3/E4 义务
+- [ ] （需 GPU）按候选 proposal 的判别实验与失败模式跑 pilot，结果写新 `runs/<run_id>/`，不覆盖源数据
+- [ ] 提交并推送远程 `origin/Auto/20261122`
 
-<!-- ARIS_IDEA_DISCOVERY_EVIDENCE_GATE:START -->
-## Evidence Gate
-**Status:** BLOCKED
+## 8. 来源清单
 
-The workflow is not complete. Required stage evidence is missing:
-- BLOCKED: novelty-check review evidence missing (status=done)
-- BLOCKED: research-review review evidence missing (status=done)
-<!-- ARIS_IDEA_DISCOVERY_EVIDENCE_GATE:END -->
+- 用户指定源文件：`/Users/chenyliao/MuRAG/Papers/L7_ASU创新/I/方向I_事实配对路线_重新设计Proposal_20261121.md`
+- 当前分支成文裁决：`workspace/idea-stage/IDEA_REPORT_V4.md`、`docs/research_contract.md`、`NARRATIVE_ASU_TEMPERATURE_DEPTH.md`
+- 历史轮次：`archive/reports/IDEA_REPORT_V1.md`、`_V2.md`、`_V3.md`
+- 反重复记忆：`research-wiki/log.md`、`research-wiki/ideas/*.md`、`workspace/ideas_archive/README.md`
+- 脚本依赖（决定 V4 保留顶层）：`workspace/verification/prepare.py`、`workspace/auto_experiments/run_all.py`、`workspace/verification/program.md`
+- 文献标识沿用各源报告（ASU arXiv:2603.01285、RepSelect arXiv:2606.17168、PrivUn arXiv:2604.22076、ADU arXiv:2608.23020、ALMPU DOI 10.1609/aaai.v40i23.39017、FALCON NeurIPS 2025、CiPO arXiv:2604.15847、PACT arXiv:2609.38909 等）；本报告未做自动 citation-audit，标识与引用语境以源报告为准。
