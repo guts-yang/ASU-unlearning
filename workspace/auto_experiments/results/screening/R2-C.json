@@ -1,0 +1,24 @@
+{
+  "candidate": "R2-C",
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "diagnostic_mode": "operator review + audit",
+  "training_executed": false,
+  "evaluation_executed": false,
+  "evidence_reused": true,
+  "verdict": "NOT_IMPLEMENTABLE",
+  "priority": "PROMOTE",
+  "metrics": {
+    "asu_mean_recovery": 0.4477300379085086,
+    "minimax_trainer_implemented": false
+  },
+  "evidence": [
+    "workspace/auto_experiments/results/audit_depth.json"
+  ],
+  "limitations": [
+    "审计不能替代 minimax 目标验证。"
+  ],
+  "summary": "双环 trainer 与训练内攻击未实现；深度审计只证明浅层遗忘问题存在。",
+  "timestamp": "2026-11-26T12:58:47Z",
+  "baseline": "ASU/open-unlearning TOFU forget10/retain90/holdout10, Llama-3.2-1B-Instruct"
+}

@@ -20,6 +20,7 @@ Plan: refine-logs/EXPERIMENT_PLAN.md
 | CF-07 | operator review | no | no | NOT_IMPLEMENTABLE | 读出空间载体与 Jacobian 数值方案未预注册/未实现。 |
 | CF-09 | adjacent ablation review | no | no | NOT_IMPLEMENTABLE | 结构化噪声基与残差回归算子未实现；相邻抑制/正交对齐臂全部未过门。 |
 | CF-10 | 20-step high2low vs global | yes | yes | NEGATIVE | high2low 调度在 forget 与 retain 上均劣于 global 对照，首轮诊断不支持纯度驱动收益。 |
+| R2-C | operator review + audit | no | no | NOT_IMPLEMENTABLE | 双环 trainer 与训练内攻击未实现；深度审计只证明浅层遗忘问题存在。 |
 
 ## Summary
 - Diagnostic only; claim_level=false; evidence gate NOT_APPLIED.
