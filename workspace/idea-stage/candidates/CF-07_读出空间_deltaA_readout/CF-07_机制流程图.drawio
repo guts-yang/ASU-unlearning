@@ -1,0 +1,180 @@
+<mxfile host="Electron" agent="WorkBuddy">
+  <diagram id="cf-CF-07" name="CF-07 读出空间 ΔA_readout —— 旋转不变（机制流程）">
+    <mxGraphModel dx="2400" dy="1020" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2400" pageHeight="1020" math="1" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;fontColor=#26215C;" value="CF-07 读出空间 ΔA_readout —— 旋转不变（机制流程）" vertex="1">
+          <mxGeometry height="30" width="2340" x="30" y="8" as="geometry" />
+        </mxCell>
+        <mxCell id="panelFlow" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FBFAF7;strokeColor=#B7B5AC;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="380" width="1560" x="20" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="panelLoss" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8F6FF;strokeColor=#AFA9EC;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="380" width="430" x="1596" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="panelOut" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4F9FE;strokeColor=#85B7EB;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="380" width="330" x="2042" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="hFlow" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#5F5E5A;" value="遗忘集合 / 保留集合 → 嵌入层 → 内部处理（前向）" vertex="1">
+          <mxGeometry height="24" width="1100" x="36" y="62" as="geometry" />
+        </mxCell>
+        <mxCell id="hLoss" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#534AB7;" value="损失函数 → 反向传播（优化参数）" vertex="1">
+          <mxGeometry height="24" width="410" x="1612" y="62" as="geometry" />
+        </mxCell>
+        <mxCell id="hOut" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#185FA5;" value="输出" vertex="1">
+          <mxGeometry height="24" width="300" x="2058" y="62" as="geometry" />
+        </mxCell>
+        <mxCell id="inF" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEEDFE;strokeColor=#534AB7;fontSize=11;fontColor=#2C2C2A;arcSize=10;" value="&lt;b&gt;遗忘集合  D_F&lt;/b&gt;&lt;br&gt;$$\mathcal{D}_F=\{(X^{+},y^{+})\}$$" vertex="1">
+          <mxGeometry height="90" width="150" x="36" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="inR" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6F1FB;strokeColor=#185FA5;fontSize=11;fontColor=#2C2C2A;arcSize=10;" value="&lt;b&gt;保留集合  D_R&lt;/b&gt;&lt;br&gt;$$\mathcal{D}_R=\{(X_r,y_r)\}$$" vertex="1">
+          <mxGeometry height="90" width="150" x="36" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="inD" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAEEDA;strokeColor=#BA7517;fontSize=11;fontColor=#2C2C2A;arcSize=10;" value="&lt;b&gt;反事实配对  X⁻&lt;/b&gt;&lt;br&gt;$$X^{-}=X(s_r,r)$$" vertex="1">
+          <mxGeometry height="90" width="150" x="36" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="emb" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F1EFE8;strokeColor=#5F5E5A;fontSize=11;fontColor=#2C2C2A;arcSize=10;" value="&lt;b&gt;Embedding（模型入口）&lt;/b&gt;&lt;br&gt;$$h^{(0)}=E[\mathrm{ids}]$$" vertex="1">
+          <mxGeometry height="110" width="170" x="210" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="tPanel" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8F6FF;strokeColor=#AFA9EC;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="330" width="560" x="410" y="96" as="geometry" />
+        </mxCell>
+        <mxCell id="tTitle" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;fontStyle=1;fontColor=#534AB7;" value="Teacher：冻结 θ₀（stop-gradient，仅前向）" vertex="1">
+          <mxGeometry height="22" width="540" x="422" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="tPlus" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEEDFE;strokeColor=#534AB7;fontSize=11;fontColor=#2C2C2A;arcSize=10;" value="&lt;b&gt;前向 ①  X⁺⊕y⁺&lt;/b&gt;&lt;br&gt;$$A^{+}_{T,\ell}(p)=h_{T,\ell}(X^{+}\!\oplus y^{+};p)$$" vertex="1">
+          <mxGeometry height="120" width="250" x="422" y="138" as="geometry" />
+        </mxCell>
+        <mxCell id="tMinus" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEEDFE;strokeColor=#534AB7;fontSize=11;fontColor=#2C2C2A;arcSize=10;" value="&lt;b&gt;前向 ②  X⁻⊕y⁺&lt;/b&gt;&lt;br&gt;$$A^{-}_{T,\ell}(p)=h_{T,\ell}(X^{-}\!\oplus y^{+};p)$$" vertex="1">
+          <mxGeometry height="120" width="270" x="690" y="138" as="geometry" />
+        </mxCell>
+        <mxCell id="tDelta" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CECBF6;strokeColor=#534AB7;fontSize=11;fontColor=#2C2C2A;arcSize=10;strokeWidth=2;" value="&lt;b&gt;中间层激活差 / 净化（核心机制）&lt;/b&gt;&lt;br&gt;$$\Delta A_{\text{readout},\ell,p}=\left(\Delta A^{\text{scalar}}_{\ell,p},\ \widehat{J}_{\ell,p}\right)$$" vertex="1">
+          <mxGeometry height="120" width="538" x="422" y="285" as="geometry" />
+        </mxCell>
+        <mxCell id="sPanel" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4F9FE;strokeColor=#85B7EB;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="330" width="580" x="990" y="96" as="geometry" />
+        </mxCell>
+        <mxCell id="sTitle" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;fontStyle=1;fontColor=#185FA5;" value="Student：可训练 θ（接收 X⁺⊕y⁺）" vertex="1">
+          <mxGeometry height="22" width="560" x="1002" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="sFwd" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6F1FB;strokeColor=#185FA5;fontSize=11;fontColor=#2C2C2A;arcSize=10;" value="&lt;b&gt;前向传播（逐层）&lt;/b&gt;&lt;br&gt;$$h^{(\ell)}=\mathrm{Dec}_{\ell}(h^{(\ell-1)};\theta)$$" vertex="1">
+          <mxGeometry height="120" width="270" x="1002" y="138" as="geometry" />
+        </mxCell>
+        <mxCell id="sAct" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6F1FB;strokeColor=#185FA5;fontSize=11;fontColor=#2C2C2A;arcSize=10;" value="&lt;b&gt;答案 / 推理跨度激活&lt;/b&gt;&lt;br&gt;$$h_{S,\ell}(X^{+}\!\oplus y^{+};p),\;p\in S_f$$" vertex="1">
+          <mxGeometry height="120" width="270" x="1290" y="138" as="geometry" />
+        </mxCell>
+        <mxCell id="sTarget" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAEEDA;strokeColor=#BA7517;fontSize=11;fontColor=#2C2C2A;arcSize=10;strokeWidth=2;" value="&lt;b&gt;遗忘目标 T_{ℓ,p}（stopgrad）&lt;/b&gt;&lt;br&gt;$$T_{\ell,p}=\operatorname{stopgrad}\!\left(\Pi_{\mathcal K}\!\left[h^{+}_{\ell}(p)-\alpha\,\Delta A^{\text{scalar}}_{\ell,p}\,\widehat{J}_{\ell,p}\right]\right)$$" vertex="1">
+          <mxGeometry height="120" width="558" x="1002" y="285" as="geometry" />
+        </mxCell>
+        <mxCell id="lossF" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEEDFE;strokeColor=#534AB7;fontSize=11;fontColor=#2C2C2A;arcSize=10;" value="&lt;b&gt;遗忘损失  L_F&lt;/b&gt;&lt;br&gt;$$\mathcal{L}_F=\frac{1}{|\Lambda(k)||S_f|}\sum_{\ell\in\Lambda(k)}\sum_{p\in S_f}\rho_\ell(k)\,\operatorname{dist}\!\left(h_{S,\ell}(p),T_{\ell,p}\right)$$" vertex="1">
+          <mxGeometry height="110" width="398" x="1612" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="lossR" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6F1FB;strokeColor=#185FA5;fontSize=11;fontColor=#2C2C2A;arcSize=10;" value="&lt;b&gt;保留损失  L_R&lt;/b&gt;&lt;br&gt;$$\mathcal{L}_R=\mathbb{E}_{(x,y)\sim\mathcal{D}_R}\!\left[-\log p_\theta(y\mid x)\right]$$" vertex="1">
+          <mxGeometry height="84" width="398" x="1612" y="234" as="geometry" />
+        </mxCell>
+        <mxCell id="total" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAEEDA;strokeColor=#854F0B;fontSize=11;fontColor=#2C2C2A;arcSize=10;fontSize=12;" value="&lt;b&gt;总损失&lt;/b&gt;&lt;br&gt;$$\mathcal{L}=\lambda_F\mathcal{L}_F+\beta\mathcal{L}_R,\quad \lambda_{KL}^{(\mathrm{ablation})}=0$$" vertex="1">
+          <mxGeometry height="96" width="398" x="1612" y="332" as="geometry" />
+        </mxCell>
+        <mxCell id="back" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF3DE;strokeColor=#3B6D11;fontSize=11;fontColor=#2C2C2A;arcSize=10;" value="&lt;b&gt;反向传播（优化的参数）&lt;/b&gt;&lt;br&gt;$$\nabla_{\theta}\mathcal{L}\;\text{only},\quad \theta_0\ \text{frozen (stopgrad)},\quad \theta\leftarrow\theta-\eta\nabla_{\theta}\mathcal{L}$$" vertex="1">
+          <mxGeometry height="130" width="298" x="2058" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="out" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF3DE;strokeColor=#3B6D11;fontSize=11;fontColor=#2C2C2A;arcSize=10;strokeWidth=2;" value="&lt;b&gt;输出（结果）&lt;/b&gt;&lt;br&gt;$$\theta^{*}\ \text{：参数内化、无 hook、具备遗忘且保效用的 Student 模型}$$" vertex="1">
+          <mxGeometry height="150" width="298" x="2058" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="inF" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#5F5E5A;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#5F5E5A;" target="emb" value="遗忘集">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="inR" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#185FA5;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#185FA5;" target="emb" value="保留集">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="inD" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#BA7517;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#BA7517;" target="emb" value="donor / 对照">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="emb" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#534AB7;" target="tPlus" value="X⁺">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="emb" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#534AB7;" target="tMinus" value="X⁻">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="emb" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#185FA5;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#185FA5;" target="sFwd" value="X⁺">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="tPlus" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#534AB7;" target="tDelta" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="tMinus" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#534AB7;" target="tDelta" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="sFwd" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#185FA5;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#185FA5;" target="sAct" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="tDelta" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.2;fontSize=9;endArrow=block;endFill=1;fontColor=#534AB7;dashed=1;dashPattern=6 4;" target="sTarget" value="ΔA / 目标构造">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="sAct" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#534AB7;" target="lossF" value="h_{S,ℓ}(p)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="sTarget" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#BA7517;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#BA7517;" target="lossF" value="T_{ℓ,p}">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" edge="1" parent="1" source="inR" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#185FA5;strokeWidth=1.2;fontSize=9;endArrow=block;endFill=1;fontColor=#185FA5;dashed=1;dashPattern=6 4;" target="lossR" value="D_R（独立保留集 NLL）">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="111" y="428" /><mxPoint x="1600" y="428" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e14" edge="1" parent="1" source="lossF" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#854F0B;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#854F0B;" target="total" value="λ_F L_F">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e15" edge="1" parent="1" source="lossR" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#854F0B;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#854F0B;" target="total" value="β L_R">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e16" edge="1" parent="1" source="total" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#854F0B;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#854F0B;" target="back" value="∇_θ L">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e17" edge="1" parent="1" source="back" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#3B6D11;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#3B6D11;" target="out" value="θ ← θ − η∇_θ L">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="panelDetail" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FBFAFF;strokeColor=#AFA9EC;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="560" width="2352" x="20" y="452" as="geometry" />
+        </mxCell>
+        <mxCell id="hDetail" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#534AB7;" value="模型内部处理（关键公式，从左到右；仅机制，非实验验证）" vertex="1">
+          <mxGeometry height="24" width="1400" x="36" y="458" as="geometry" />
+        </mxCell>
+        <mxCell id="det0" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FBFAFF;strokeColor=#AFA9EC;fontSize=11;fontColor=#2C2C2A;arcSize=10;fontSize=12;" value="&lt;b&gt;① 冻结下游读出泛函&lt;/b&gt;&lt;br&gt;$$r_f(h)=\mathcal R_{y^{+}}(h),\quad \Delta A^{\text{scalar}}_{\ell,p}=r_f\!\left(A^{+}_{T,\ell}(p)\right)-r_f\!\left(A^{-}_{T,\ell}(p)\right)$$&lt;br&gt;$$\text{经 patch-forward 重算，不直接过 LM head}$$" vertex="1">
+          <mxGeometry height="240" width="760" x="40" y="492" as="geometry" />
+        </mxCell>
+        <mxCell id="det1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FBFAFF;strokeColor=#AFA9EC;fontSize=11;fontColor=#2C2C2A;arcSize=10;fontSize=12;" value="&lt;b&gt;② Jacobian 局部方向&lt;/b&gt;&lt;br&gt;$$J_{\ell,p}=\frac{\partial r_f(h)}{\partial h}\Big|_{h=A^{+}_{T,\ell}(p)},\quad \widehat{J}_{\ell,p}=J_{\ell,p}/\lVert J_{\ell,p}\rVert$$" vertex="1">
+          <mxGeometry height="240" width="760" x="824" y="492" as="geometry" />
+        </mxCell>
+        <mxCell id="det2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FBFAFF;strokeColor=#AFA9EC;fontSize=11;fontColor=#2C2C2A;arcSize=10;fontSize=12;" value="&lt;b&gt;③ 读出空间 ΔA&lt;/b&gt;&lt;br&gt;$$\Delta A_{\text{readout},\ell,p}=\big(\Delta A^{\text{scalar}}_{\ell,p},\ \widehat{J}_{\ell,p}\big)$$&lt;br&gt;$$r_f(Qh)=r_f(h)\Rightarrow \Delta A^{\text{scalar}}_{\ell,p}(Q)=\Delta A^{\text{scalar}}_{\ell,p},\ Q^{\top}Q=I$$" vertex="1">
+          <mxGeometry height="240" width="760" x="1608" y="492" as="geometry" />
+        </mxCell>
+        <mxCell id="det3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FBFAFF;strokeColor=#AFA9EC;fontSize=11;fontColor=#2C2C2A;arcSize=10;fontSize=12;" value="&lt;b&gt;④ 旋转不变性 / 中性集&lt;/b&gt;&lt;br&gt;$$Q A^{+}-Q A^{-}\ \ne\ A^{+}-A^{-}\ (\text{一般}),\quad \mathcal K=\{h: r_{f,p}\le c,\ s_{d_j,p}\le d_j,\ \lVert\Delta r_{E,p}\rVert\le e\}$$&lt;br&gt;$$T_{\ell,p}=\operatorname{stopgrad}\!\left(\Pi_{\mathcal K}[h^{+}_{\ell}(p)-\alpha\Delta A^{\text{scalar}}_{\ell,p}\widehat{J}_{\ell,p}]\right)$$" vertex="1">
+          <mxGeometry height="240" width="760" x="40" y="756" as="geometry" />
+        </mxCell>
+        <mxCell id="det4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FBFAFF;strokeColor=#AFA9EC;fontSize=11;fontColor=#2C2C2A;arcSize=10;fontSize=12;" value="&lt;b&gt;⑤ 损失 / 反传 / 输出&lt;/b&gt;&lt;br&gt;$$\mathcal{L}=\lambda_F\mathcal{L}_F+\beta\mathcal{L}_R,\quad \nabla_{\theta}\mathcal{L}\ \text{仅}\ \theta,\quad \theta_0\ \text{frozen},\quad \Rightarrow\theta^{*}$$" vertex="1">
+          <mxGeometry height="240" width="760" x="824" y="756" as="geometry" />
+        </mxCell>
+        <mxCell id="de0" edge="1" parent="1" source="det0" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#534AB7;" target="det1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="de1" edge="1" parent="1" source="det1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#534AB7;" target="det2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="de3" edge="1" parent="1" source="det3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#534AB7;" target="det4" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dr1" edge="1" parent="1" source="det2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#534AB7;" target="det3" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1988.0" y="742" /><mxPoint x="420.0" y="742" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
