@@ -8,13 +8,17 @@ import argparse
 import json
 import math
 import random
+import time
 from pathlib import Path
 
 import torch
 import torch.nn.functional as F
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from common import FORGET, MODEL, RETAIN, RESULTS, CKPT, TemperatureContext, answer_nll, load_jsonl, make_batch, save_json, set_seed
+from common import (
+    FORGET, HOLDOUT, MODEL, RETAIN, RESULTS, CKPT, TemperatureContext,
+    answer_nll, eval_nll, load_jsonl, make_batch, save_json, set_seed,
+)
 
 
 def kl_on_answer(student_logits, teacher_logits, labels):
@@ -65,6 +69,9 @@ def main():
     ap.add_argument("--eval-generate", action="store_true", help="run output-level behaviour evaluation after training")
     ap.add_argument("--eval-samples", type=int, default=24)
     ap.add_argument("--eval-max-new-tokens", type=int, default=96)
+    ap.add_argument("--eval-limit", type=int, default=64, help="0 means full split")
+    ap.add_argument("--eval-batch-size", type=int, default=8)
+    ap.add_argument("--holdout", default=HOLDOUT)
     args = ap.parse_args()
     set_seed(args.seed)
     name = args.name or f"tau_{args.schedule}_s{args.seed}"
@@ -109,23 +116,31 @@ def main():
 
     forget = load_jsonl(args.forget)
     retain = load_jsonl(args.retain)
+    holdout = load_jsonl(args.holdout)
     random.Random(args.seed).shuffle(forget)
     random.Random(args.seed + 1).shuffle(retain)
+    limit = args.eval_limit or None
+    eval_f = forget[:limit] if limit else forget
+    eval_r = retain[:limit] if limit else retain
+    eval_h = holdout[:limit] if limit else holdout
 
     def eval_all():
         student.eval()
-        f = answer_nll(student, make_batch(tok, forget[:64], args.device))[0]
-        r = answer_nll(student, make_batch(tok, retain[:64], args.device))[0]
+        f = eval_nll(student, tok, eval_f, args.device, batch_size=args.eval_batch_size)
+        r = eval_nll(student, tok, eval_r, args.device, batch_size=args.eval_batch_size)
+        h = eval_nll(student, tok, eval_h, args.device, batch_size=args.eval_batch_size) if eval_h else None
         student.train()
-        return f, r
+        return f, r, h
 
-    f0, r0 = eval_all()
-    print(f"[{name}] before forget={f0:.4f} retain={r0:.4f}", flush=True)
+    f0, r0, h0 = eval_all()
+    print(f"[{name}] before forget={f0:.4f} retain={r0:.4f} holdout={h0}", flush=True)
 
     student.train()
     opt = torch.optim.AdamW(student.parameters(), lr=args.lr, weight_decay=0.0)
     history = []
+    step_secs = []
     for step in range(args.steps):
+        step_start = time.perf_counter()
         fbatch = [forget[(step * args.batch_size + i) % len(forget)] for i in range(args.batch_size)]
         rbatch = [retain[(step * args.batch_size + i) % len(retain)] for i in range(args.batch_size)]
         fb = make_batch(tok, fbatch, args.device)
@@ -150,11 +165,15 @@ def main():
         loss.backward()
         torch.nn.utils.clip_grad_norm_(student.parameters(), 1.0)
         opt.step()
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+        step_sec = round(time.perf_counter() - step_start, 4)
+        step_secs.append(step_sec)
         if step % 10 == 0 or step == args.steps - 1:
-            history.append({"step": step, "loss": float(loss.item()), "kl": float(kl.item()), "retain": float(rloss.item())})
-            print(f"[{name}] step {step:3d} loss={loss.item():.4f} kl={kl.item():.4f} retain={rloss.item():.4f}", flush=True)
+            history.append({"step": step, "loss": float(loss.item()), "kl": float(kl.item()), "retain": float(rloss.item()), "step_sec": step_sec})
+            print(f"[{name}] step {step:3d} loss={loss.item():.4f} kl={kl.item():.4f} retain={rloss.item():.4f} step_sec={step_sec}", flush=True)
 
-    f1, r1 = eval_all()
+    f1, r1, h1 = eval_all()
     result = {
         "idea": "V2-IdeaB / V3-Idea1",
         "name": name,
@@ -162,9 +181,15 @@ def main():
         "steps": args.steps,
         "lr": args.lr,
         "alpha": args.alpha,
-        "before": {"forget": f0, "retain": r0},
-        "after": {"forget": f1, "retain": r1},
-        "delta": {"forget": f1 - f0, "retain": r1 - r0},
+        "before": {"forget": f0, "retain": r0, "holdout": h0},
+        "after": {"forget": f1, "retain": r1, "holdout": h1},
+        "delta": {"forget": f1 - f0, "retain": r1 - r0, "holdout": None if h1 is None else h1 - h0},
+        "eval_counts": {"forget": len(eval_f), "retain": len(eval_r), "holdout": len(eval_h)},
+        "eval_limit": args.eval_limit,
+        "eval_batch_size": args.eval_batch_size,
+        "batch_size": args.batch_size,
+        "step_sec_mean": round(sum(step_secs) / max(len(step_secs), 1), 4),
+        "step_sec_max": round(max(step_secs), 4) if step_secs else None,
         "history": history,
     }
     if args.eval_generate:
