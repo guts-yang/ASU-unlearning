@@ -65,26 +65,57 @@ def _pair_records(ctx, key, n=None):
     return [{"question": p[key], "answer": p["answer_plus"]} for p in pairs]
 
 
-def _eval(ctx: ModelContext) -> dict:
+def _eval(ctx: ModelContext, args) -> dict:
     from common import eval_nll
     from eval_generate import behaviour_stats
 
+    limit = args.eval_limit or None
+    forget = ctx.forget[:limit] if limit else ctx.forget
+    retain = ctx.retain[:limit] if limit else ctx.retain
+    holdout = ctx.holdout[:limit] if limit else ctx.holdout
     ctx.model.eval()
-    forget_nll = eval_nll(ctx.model, ctx.tokenizer, ctx.forget[:64], ctx.device)
-    retain_nll = eval_nll(ctx.model, ctx.tokenizer, ctx.retain[:64], ctx.device)
+    forget_nll = eval_nll(ctx.model, ctx.tokenizer, forget, ctx.device, batch_size=args.eval_batch_size)
+    retain_nll = eval_nll(ctx.model, ctx.tokenizer, retain, ctx.device, batch_size=args.eval_batch_size)
+    holdout_nll = None
+    if holdout:
+        holdout_nll = eval_nll(ctx.model, ctx.tokenizer, holdout, ctx.device, batch_size=args.eval_batch_size)
     behavior = {}
-    try:
-        behavior = {
-            "forget": behaviour_stats(ctx.model, ctx.tokenizer, ctx.forget[:4], ctx.device, max_new_tokens=24, samples=4),
-            "retain": behaviour_stats(ctx.model, ctx.tokenizer, ctx.retain[:4], ctx.device, max_new_tokens=24, samples=4),
-        }
-    except Exception as exc:  # generation is optional in a diagnostic run
-        behavior = {"error": f"{type(exc).__name__}: {exc}"}
-    return {"forget_nll": float(forget_nll), "retain_nll": float(retain_nll), "behavior": behavior}
+    if args.behavior_samples > 0:
+        try:
+            behavior = {
+                "forget": behaviour_stats(
+                    ctx.model, ctx.tokenizer, forget[:args.behavior_samples], ctx.device,
+                    max_new_tokens=24, samples=args.behavior_samples,
+                ),
+                "retain": behaviour_stats(
+                    ctx.model, ctx.tokenizer, retain[:args.behavior_samples], ctx.device,
+                    max_new_tokens=24, samples=args.behavior_samples,
+                ),
+            }
+        except Exception as exc:  # generation is optional in a diagnostic run
+            behavior = {"error": f"{type(exc).__name__}: {exc}"}
+    return {
+        "forget_nll": float(forget_nll),
+        "retain_nll": float(retain_nll),
+        "holdout_nll": None if holdout_nll is None else float(holdout_nll),
+        "eval_counts": {"forget": len(forget), "retain": len(retain), "holdout": len(holdout)},
+        "behavior": behavior,
+    }
 
 
-def _ctx(max_pairs=36, with_ref=False):
-    return ModelContext.load(max_pairs=max_pairs, with_ref=with_ref)
+def _ctx(args, with_ref=False):
+    data_dir = Path(args.data_dir) if args.data_dir else None
+    return ModelContext.load(
+        model_path=args.model,
+        device=args.device,
+        max_pairs=args.max_pairs,
+        seed=args.seed,
+        with_ref=with_ref,
+        dtype=torch.float32 if args.dtype == "float32" else torch.bfloat16,
+        forget_path=str(data_dir / "forget10.json") if data_dir else None,
+        retain_path=str(data_dir / "retain90.json") if data_dir else None,
+        holdout_path=str(data_dir / "holdout10.json") if data_dir else None,
+    )
 
 
 def run_cf01(ctx, args):
@@ -93,7 +124,7 @@ def run_cf01(ctx, args):
     minus = ctx.hidden_for_records(_pair_records(ctx, "x_minus"), layer=16).mean(1)
     shuffled = minus[torch.randperm(minus.shape[0])]
     delta_shuf = (plus - shuffled).mean(0)
-    retain_h = ctx.hidden_for_records(ctx.retain[:64], layer=16).mean(1)
+    retain_h = ctx.hidden_for_records(ctx.retain[:args.basis_limit], layer=16).mean(1)
     _, _, vh = torch.linalg.svd(retain_h, full_matrices=False)
     retain_basis = vh[:8].T
     solved = solve_constrained_delta(delta, delta, delta_shuf.unsqueeze(1), retain_basis)
@@ -118,7 +149,7 @@ def run_cf02(ctx, args):
     plus = ctx.hidden_for_records(_pair_records(ctx, "x_plus"), layer=16).mean(1)
     minus = ctx.hidden_for_records(_pair_records(ctx, "x_minus"), layer=16).mean(1)
     delta_shuf = (plus - minus[torch.randperm(minus.shape[0])]).mean(0)
-    retain_h = ctx.hidden_for_records(ctx.retain[:64], layer=16).mean(1)
+    retain_h = ctx.hidden_for_records(ctx.retain[:args.basis_limit], layer=16).mean(1)
     _, _, vh = torch.linalg.svd(retain_h, full_matrices=False)
     utility = vh[:8].T
     donor_batch = ctx.records_batch(_donor_records(ctx.pairs, args.batch_size))
@@ -135,7 +166,7 @@ def run_cf02(ctx, args):
 
 
 def run_cf03(ctx, args):
-    pairs = ctx.pairs[:4]
+    pairs = ctx.pairs[:args.patch_pairs]
     batch = ctx.records_batch([{"question": p["x_plus"], "answer": p["answer_plus"]} for p in pairs])
     replacements = ctx.hidden_for_records(_pair_records(ctx, "x_minus", len(pairs)), layer=12)
     effects = []
@@ -156,9 +187,9 @@ def run_cf03(ctx, args):
 
 
 def run_cf04(ctx, args):
-    f = ctx.hidden_for_records(ctx.forget[:36], layer=16).mean(1)
-    r = ctx.hidden_for_records(ctx.retain[:36], layer=16).mean(1)
-    d = ctx.hidden_for_records(_donor_records(ctx.pairs, 36), layer=16).mean(1)
+    f = ctx.hidden_for_records(ctx.forget[:args.probe_limit], layer=16).mean(1)
+    r = ctx.hidden_for_records(ctx.retain[:args.probe_limit], layer=16).mean(1)
+    d = ctx.hidden_for_records(_donor_records(ctx.pairs, args.probe_limit), layer=16).mean(1)
     n = min(f.shape[0], r.shape[0], d.shape[0])
     fact_x = torch.cat([f[:n], r[:n]])
     fact_y = torch.cat([torch.ones(n), torch.zeros(n)])
@@ -202,7 +233,7 @@ def run_cf07(ctx, args):
 
 def run_cf08(ctx, args):
     delta = ctx.pooled_delta_for_pairs(layer=16)
-    retain_h = ctx.hidden_for_records(ctx.retain[:64], layer=16).mean(1)
+    retain_h = ctx.hidden_for_records(ctx.retain[:args.basis_limit], layer=16).mean(1)
     projected, diag = nullspace_projection(delta, retain_h, rank=8)
 
     def loss_fn(student, fb, rb, step):
@@ -300,38 +331,77 @@ def main(argv=None):
     ap.add_argument("--lr", type=float, default=1e-5)
     ap.add_argument("--batch-size", type=int, default=2)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--device", default="cuda")
+    ap.add_argument("--dtype", choices=["float32", "bfloat16"], default="float32")
+    ap.add_argument("--model", default=None)
+    ap.add_argument("--data-dir", default=None)
+    ap.add_argument("--out-dir", default=None)
+    ap.add_argument("--eval-limit", type=int, default=64, help="0 means full split")
+    ap.add_argument("--eval-batch-size", type=int, default=8)
+    ap.add_argument("--behavior-samples", type=int, default=4, help="0 disables generation checks")
+    ap.add_argument("--max-pairs", type=int, default=36)
+    ap.add_argument("--probe-limit", type=int, default=36)
+    ap.add_argument("--basis-limit", type=int, default=64)
+    ap.add_argument("--patch-pairs", type=int, default=4)
     args = ap.parse_args(argv)
 
-    OUT.mkdir(parents=True, exist_ok=True)
+    out_dir = Path(args.out_dir) if args.out_dir else OUT
+    out_dir.mkdir(parents=True, exist_ok=True)
     started = time.time()
     needs_ctx = args.method not in {"CF-06", "R3-2"}
-    ctx = _ctx(with_ref=(args.method == "R3-3")) if needs_ctx else None
-    before = _eval(ctx) if ctx is not None else {}
+    ctx = _ctx(args, with_ref=(args.method == "R3-3")) if needs_ctx else None
+    before = _eval(ctx, args) if ctx is not None else {}
     payload = RUNNERS[args.method](ctx, args) if ctx is not None else RUNNERS[args.method](None, args)
-    after = _eval(ctx) if ctx is not None else {}
+    after = _eval(ctx, args) if ctx is not None else {}
+    delta = {
+        "forget_nll": (after.get("forget_nll", 0.0) - before.get("forget_nll", 0.0)) if before and after else None,
+        "retain_nll": (after.get("retain_nll", 0.0) - before.get("retain_nll", 0.0)) if before and after else None,
+        "holdout_nll": (
+            after.get("holdout_nll", 0.0) - before.get("holdout_nll", 0.0)
+            if before and after and before.get("holdout_nll") is not None and after.get("holdout_nll") is not None
+            else None
+        ),
+    }
+    def _meets(df_th: float) -> bool | None:
+        if delta["forget_nll"] is None or delta["retain_nll"] is None:
+            return None
+        return bool(delta["forget_nll"] >= df_th and delta["retain_nll"] <= 0.05)
+    history = payload.get("history", [])
+    step_secs = [row["step_sec"] for row in history if "step_sec" in row]
     result = {
         "candidate": args.method,
         "claim_level": False,
         "gate_status": "NOT_APPLIED",
-        "run_kind": "non-claim diagnostic",
+        "run_kind": "non-claim full-data diagnostic" if args.eval_limit == 0 else "non-claim diagnostic",
         "steps": args.steps,
         "lr": args.lr,
         "batch_size": args.batch_size,
         "seed": args.seed,
+        "device": args.device,
+        "dtype": args.dtype,
+        "eval_limit": args.eval_limit,
+        "eval_batch_size": args.eval_batch_size,
+        "max_pairs": args.max_pairs,
+        "data_meta": ctx.meta if ctx is not None else {},
         "before": before,
         "after": after,
-        "delta": {
-            "forget_nll": (after.get("forget_nll", 0.0) - before.get("forget_nll", 0.0)) if before and after else None,
-            "retain_nll": (after.get("retain_nll", 0.0) - before.get("retain_nll", 0.0)) if before and after else None,
+        "delta": delta,
+        "threshold_check": {
+            "diag_v4_df_ge_0.15_dr_le_0.05": _meets(0.15),
+            "verification_u2_df_ge_0.30_dr_le_0.05": _meets(0.30),
+            "verification_u3_df_ge_0.90_dr_le_0.05": _meets(0.90),
         },
+        "train_step_sec_mean": round(sum(step_secs) / len(step_secs), 4) if step_secs else None,
+        "train_step_sec_max": round(max(step_secs), 4) if step_secs else None,
         **payload,
         "elapsed_sec": round(time.time() - started, 2),
-        "limitations": ["Short non-claim diagnostic; not a full training or paper-level reproduction."],
+        "limitations": ["Non-claim diagnostic; only 12 of 13 methods have core operators, not paper-level faithful reproduction."],
     }
-    path = OUT / f"{args.method}.json"
+    path = out_dir / f"{args.method}.json"
     path.write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps({"method": args.method, "path": str(path), "verdict": result["verdict"],
-                      "before": before, "after": after, "elapsed_sec": result["elapsed_sec"]}, ensure_ascii=False))
+                      "delta": delta, "threshold_check": result["threshold_check"],
+                      "elapsed_sec": result["elapsed_sec"]}, ensure_ascii=False))
     return 0
 
 

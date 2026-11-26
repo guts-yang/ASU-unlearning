@@ -51,6 +51,8 @@ def fit_linear_probe(
 
 
 def _split(x: torch.Tensor, y: torch.Tensor, train_fraction: float = 0.6):
+    x = as_tensor(x)
+    y = as_tensor(y).to(x.device)
     n = x.shape[0]
     order = torch.randperm(n, device=x.device)
     n_train = max(2, min(n - 2, int(n * train_fraction)))

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import math
 import sys
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Iterable, Sequence
@@ -123,7 +124,8 @@ class ModelContext:
     tokenizer: object
     forget: list
     retain: list
-    pairs: list
+    holdout: list = field(default_factory=list)
+    pairs: list = field(default_factory=list)
     device: str = "cuda"
     ref_model: torch.nn.Module | None = None
     meta: dict = field(default_factory=dict)
@@ -138,12 +140,18 @@ class ModelContext:
         with_ref: bool = False,
         dtype=torch.float32,
         attn: str = "eager",
+        forget_path: str | None = None,
+        retain_path: str | None = None,
+        holdout_path: str | None = None,
     ) -> "ModelContext":
         from common import MODEL, counterfactual_pairs, load_jsonl, load_model, set_seed
-        from common import FORGET, RETAIN
+        from common import FORGET, HOLDOUT, RETAIN
 
         set_seed(seed)
         path = model_path or MODEL
+        forget_file = str(forget_path or FORGET)
+        retain_file = str(retain_path or RETAIN)
+        holdout_file = str(holdout_path or HOLDOUT)
         model, tok = load_model(path, device=device, dtype=dtype, attn=attn)
         ref = None
         if with_ref:
@@ -154,12 +162,14 @@ class ModelContext:
         return cls(
             model=model,
             tokenizer=tok,
-            forget=load_jsonl(FORGET),
-            retain=load_jsonl(RETAIN),
-            pairs=counterfactual_pairs(tok, max_pairs=max_pairs, seed=seed),
+            forget=load_jsonl(forget_file),
+            retain=load_jsonl(retain_file),
+            holdout=load_jsonl(holdout_file),
+            pairs=counterfactual_pairs(tok, forget_path=forget_file, retain_path=retain_file, max_pairs=max_pairs, seed=seed),
             device=device,
             ref_model=ref,
-            meta={"model_path": path, "seed": seed},
+            meta={"model_path": path, "seed": seed, "forget_path": forget_file,
+                  "retain_path": retain_file, "holdout_path": holdout_file},
         )
 
     def records_batch(self, records: Sequence[dict], max_len: int = 512):
@@ -211,6 +221,7 @@ class ModelContext:
         self.model.train()
         history = []
         for step in range(steps):
+            step_start = time.perf_counter()
             fb = [forget[perm_f[(step * batch_size + i) % len(forget)]] for i in range(batch_size)]
             rb = [retain[perm_r[(step * batch_size + i) % len(retain)]] for i in range(batch_size)]
             fb_batch = self.records_batch(fb)
@@ -221,7 +232,13 @@ class ModelContext:
             loss.backward()
             torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
             opt.step()
-            row = {"step": step, "loss": float(loss.detach().item())}
+            if torch.cuda.is_available():
+                torch.cuda.synchronize()
+            row = {
+                "step": step,
+                "loss": float(loss.detach().item()),
+                "step_sec": round(time.perf_counter() - step_start, 4),
+            }
             if isinstance(out, dict):
                 row.update({k: float(v.detach().item()) for k, v in out.items() if isinstance(v, torch.Tensor) and v.numel() == 1})
             history.append(row)
