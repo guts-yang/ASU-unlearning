@@ -16,7 +16,6 @@ Plan: refine-logs/EXPERIMENT_PLAN.md
 | CF-04 | existing pooled probe | no | no | INCONCLUSIVE | pooled ΔA 的 retain-orthogonal 检查通过，但缺少事实/身份双探针 AUC。 |
 | CF-06 | track review | no | no | NOT_APPLICABLE | 需要 LRM/CoT 轨迹数据与模型，冻结 LLM TOFU-1B 基线不适用。 |
 | CF-05 | operator review | no | no | NOT_IMPLEMENTABLE | K-donor 堆叠/SVD 共有子空间与簇隔离未实现。 |
-| CF-08 | existing depth audit | no | no | INCONCLUSIVE | ASU 深度审计显示浅层遗忘，但投影模型缺完整 P3/INT8 恢复曲线。 |
 | CF-07 | operator review | no | no | NOT_IMPLEMENTABLE | 读出空间载体与 Jacobian 数值方案未预注册/未实现。 |
 
 ## Summary

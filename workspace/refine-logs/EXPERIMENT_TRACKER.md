@@ -9,7 +9,7 @@
 | R004 | CF-04 事实身份双探针解耦 | rank 4 / 7.4 | existing pooled probe | INCONCLUSIVE | results/screening/CF-04.json |
 | R005 | CF-06 LRM 推理轨迹 deltaA | rank 5 / 7.4 | track review | NOT_APPLICABLE | results/screening/CF-06.json |
 | R006 | CF-05 多 donor 边际化 | rank 6 / 7.4 | operator review | NOT_IMPLEMENTABLE | results/screening/CF-05.json |
-| R007 | CF-08 零空间抗恢复投影 | rank 7 / 7.4 | existing depth audit | INCONCLUSIVE | results/screening/CF-08.json |
+| R007 | CF-08 零空间抗恢复投影 | rank 7 / 7.4 | existing depth audit | PENDING | results/screening/CF-08.json |
 | R008 | CF-07 读出空间 deltaA readout | rank 8 / 7.2 | operator review | NOT_IMPLEMENTABLE | results/screening/CF-07.json |
 | R009 | CF-09 结构化对照族残差化 | rank 9 / 7.2 | adjacent ablation review | PENDING | results/screening/CF-09.json |
 | R010 | CF-10 纯度驱动渐进 schedule | rank 10 / 7.2 | 20-step high2low vs global | PENDING | results/screening/CF-10.json |
