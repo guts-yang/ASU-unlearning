@@ -1,0 +1,26 @@
+{
+  "candidate": "R3-2",
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "diagnostic_mode": "existing P1/P2/P3/INT8 evaluation",
+  "training_executed": false,
+  "evaluation_executed": true,
+  "evidence_reused": true,
+  "verdict": "POSITIVE_SCREEN",
+  "priority": "PROMOTE",
+  "metrics": {
+    "asu_mean_recovery": 0.4477300379085086,
+    "grad_ascent_mean_recovery": 0.3793799249275482,
+    "shallow_forgetting_detected": true,
+    "probe_channel_present": false
+  },
+  "evidence": [
+    "workspace/auto_experiments/results/audit_depth.json"
+  ],
+  "limitations": [
+    "非新训练；Probe 通道与 3-seed 确认未完成。"
+  ],
+  "summary": "P1/P2/P3/INT8 恢复阶梯通过，ASU 与 GradAscent 的 mean_recovery 有分化；Probe 通道仍缺。",
+  "timestamp": "2026-11-26T12:58:50Z",
+  "baseline": "ASU/open-unlearning TOFU forget10/retain90/holdout10, Llama-3.2-1B-Instruct"
+}
