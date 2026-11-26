@@ -1,0 +1,27 @@
+{
+  "candidate": "CF-04",
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "diagnostic_mode": "existing pooled probe",
+  "training_executed": false,
+  "evaluation_executed": false,
+  "evidence_reused": true,
+  "verdict": "INCONCLUSIVE",
+  "priority": "rank 4 / 7.4",
+  "metrics": {
+    "stage7b_low_rank_pass": true,
+    "stage7b_retain_orthogonal_pass": true,
+    "overlap_true_wrong": 0.4911011901419713,
+    "overlap_true_retain": 0.22567696515209826,
+    "auc_f_minus_auc_id": null
+  },
+  "evidence": [
+    "workspace/experiments/direction_i/ALL_RESULTS_SUMMARY.json#stage7b_da_probe_pooled"
+  ],
+  "limitations": [
+    "缺 AUC_f / AUC_id 与 wrong-donor 身份投影。"
+  ],
+  "summary": "pooled ΔA 的 retain-orthogonal 检查通过，但缺少事实/身份双探针 AUC。",
+  "timestamp": "2026-11-26T12:58:32Z",
+  "baseline": "ASU/open-unlearning TOFU forget10/retain90/holdout10, Llama-3.2-1B-Instruct"
+}
