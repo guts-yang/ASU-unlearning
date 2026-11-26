@@ -98,10 +98,10 @@ METHODS = [
         "verdict": "INCONCLUSIVE",
         "summary": "pooled ΔA 的 retain-orthogonal 检查通过，但缺少事实/身份双探针 AUC。",
         "metrics": {
-            "stage7b_low_rank_pass": ALLRES["stage7b_da_probe_pooled"]["gate"]["low_rank_pass"],
-            "stage7b_retain_orthogonal_pass": ALLRES["stage7b_da_probe_pooled"]["gate"]["retain_orthogonal_pass"],
-            "overlap_true_wrong": ALLRES["stage7b_da_probe_pooled"]["layers"]["12"]["overlap_true_wrong"],
-            "overlap_true_retain": ALLRES["stage7b_da_probe_pooled"]["layers"]["12"]["overlap_true_retain"],
+            "stage7b_low_rank_pass": ALLRES["stage7b_da_probe_pooled.json"]["gate"]["low_rank_pass"],
+            "stage7b_retain_orthogonal_pass": ALLRES["stage7b_da_probe_pooled.json"]["gate"]["retain_orthogonal_pass"],
+            "overlap_true_wrong": ALLRES["stage7b_da_probe_pooled.json"]["layers"]["12"]["overlap_true_wrong"],
+            "overlap_true_retain": ALLRES["stage7b_da_probe_pooled.json"]["layers"]["12"]["overlap_true_retain"],
             "auc_f_minus_auc_id": None,
         },
         "evidence": ["workspace/experiments/direction_i/ALL_RESULTS_SUMMARY.json#stage7b_da_probe_pooled"],
@@ -180,7 +180,7 @@ METHODS = [
         "summary": "结构化噪声基与残差回归算子未实现；相邻抑制/正交对齐臂全部未过门。",
         "metrics": {
             "stage9_pass_gate_arms": 0,
-            "stage9_total_arms": len(ALLRES["stage9_idea1_opt"]),
+            "stage9_total_arms": len(ALLRES["stage9_idea1_opt_result.json"]),
             "operator_status": "missing",
         },
         "evidence": ["workspace/experiments/direction_i/ALL_RESULTS_SUMMARY.json#stage9_idea1_opt"],
