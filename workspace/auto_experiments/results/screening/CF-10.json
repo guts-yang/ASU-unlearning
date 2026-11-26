@@ -1,0 +1,35 @@
+{
+  "candidate": "CF-10",
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "diagnostic_mode": "20-step high2low vs global",
+  "training_executed": true,
+  "evaluation_executed": true,
+  "evidence_reused": false,
+  "verdict": "NEGATIVE",
+  "priority": "rank 10 / 7.2",
+  "metrics": {
+    "high2low_after": {
+      "forget": 1.8727225065231323,
+      "retain": 0.29110732674598694
+    },
+    "global_after": {
+      "forget": 2.9171500205993652,
+      "retain": 0.3746201992034912
+    },
+    "high2low_minus_global": {
+      "forget": -1.044427514076233,
+      "retain": -0.08351287245750427
+    }
+  },
+  "evidence": [
+    "workspace/auto_experiments/results/screening/cf10_high2low.json",
+    "workspace/auto_experiments/results/screening/cf10_global.json"
+  ],
+  "limitations": [
+    "20-step single-seed proxy; not a full purity-spectrum implementation."
+  ],
+  "summary": "high2low 调度在 forget 与 retain 上均劣于 global 对照，首轮诊断不支持纯度驱动收益。",
+  "timestamp": "2026-11-26T12:58:45Z",
+  "baseline": "ASU/open-unlearning TOFU forget10/retain90/holdout10, Llama-3.2-1B-Instruct"
+}
