@@ -140,10 +140,11 @@ def run_cf03(ctx, args):
     replacements = ctx.hidden_for_records(_pair_records(ctx, "x_minus", len(pairs)), layer=12)
     effects = []
     nulls = []
+    null_replacements = replacements[torch.randperm(replacements.shape[0])]
     for layer in (8, 12, 14):
         with torch.no_grad():
             effects.append(patch_effect(ctx.model, batch, layer, replacements).mean().item())
-            nulls.append(patch_effect(ctx.model, batch, layer, torch.zeros_like(replacements)).mean().item())
+            nulls.append(patch_effect(ctx.model, batch, layer, null_replacements).mean().item())
     gate = select_causal_gate(torch.tensor(effects), torch.tensor(nulls), top_k=2)
     return {
         "training_executed": False,

@@ -95,7 +95,9 @@ def write_report(rows: dict):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--start", default=METHODS[0][0], choices=[m[0] for m in METHODS])
+    ap.add_argument("--only", nargs="+", choices=[m[0] for m in METHODS])
     args = ap.parse_args()
+    only = set(args.only) if args.only else None
     RES.mkdir(parents=True, exist_ok=True)
     rows = {}
     for mid, _, _ in METHODS:
@@ -105,8 +107,10 @@ def main():
             rec.setdefault("diagnostic_verdict", verdict_for(mid, rec))
             rows[mid] = rec
     write_report(rows)
-    started = False
+    started = args.only is not None
     for mid, steps, _ in METHODS:
+        if only is not None and mid not in only:
+            continue
         if not started:
             if mid != args.start:
                 continue

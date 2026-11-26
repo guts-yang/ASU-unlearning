@@ -50,6 +50,14 @@ def fit_linear_probe(
     return LinearProbe(w.detach(), b.detach(), history)
 
 
+def _split(x: torch.Tensor, y: torch.Tensor, train_fraction: float = 0.6):
+    n = x.shape[0]
+    order = torch.randperm(n, device=x.device)
+    n_train = max(2, min(n - 2, int(n * train_fraction)))
+    tr, te = order[:n_train], order[n_train:]
+    return x[tr], y[tr], x[te], y[te]
+
+
 def dual_probe_report(
     fact_x: torch.Tensor,
     fact_y: torch.Tensor,
@@ -58,12 +66,14 @@ def dual_probe_report(
     steps: int = 300,
     lr: float = 0.05,
 ) -> dict:
-    fact_probe = fit_linear_probe(fact_x, fact_y, steps=steps, lr=lr)
-    id_probe = fit_linear_probe(identity_x, identity_y, steps=steps, lr=lr)
-    fact_scores = fact_probe.score(fact_x)
-    id_scores = id_probe.score(identity_x)
-    auc_f = auc_score(fact_scores, fact_y)
-    auc_id = auc_score(id_scores, identity_y)
+    fx, fy, ftx, fty = _split(fact_x, fact_y)
+    ix, iy, itx, ity = _split(identity_x, identity_y)
+    fact_probe = fit_linear_probe(fx, fy, steps=steps, lr=lr)
+    id_probe = fit_linear_probe(ix, iy, steps=steps, lr=lr)
+    fact_scores = fact_probe.score(ftx)
+    id_scores = id_probe.score(itx)
+    auc_f = auc_score(fact_scores, fty)
+    auc_id = auc_score(id_scores, ity)
     cos = float(safe_cosine(fact_probe.weight, id_probe.weight).item())
     return {
         "auc_fact": auc_f,
@@ -72,6 +82,8 @@ def dual_probe_report(
         "probe_cosine": cos,
         "fact_probe_norm": float(fact_probe.weight.norm().item()),
         "identity_probe_norm": float(id_probe.weight.norm().item()),
+        "train_size": int(fx.shape[0]),
+        "test_size": int(ftx.shape[0]),
         "pass": auc_f - auc_id >= 0.10 and abs(cos) <= 0.8,
     }
 
