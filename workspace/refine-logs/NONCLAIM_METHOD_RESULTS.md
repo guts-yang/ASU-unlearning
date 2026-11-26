@@ -41,5 +41,14 @@ Output: `workspace/auto_experiments/results/audit_depth_probe_3seed.json`
 - `CF-04`: probe-guided loss implemented and trained 3 steps. Mechanism check stayed positive (`AUC_fact=1.000`, `AUC_identity=0.764`, margin `+0.236`), but training gave `dF=+0.2599`, `dR=+0.2181`, so retain safety failed.
 - `CF-07`: readout-space loss implemented and trained 3 steps. Rotation invariance stayed positive (`1.26e-6`, cosine `1.000`), but training gave `dF=+0.8458`, `dR=+0.8376`, so retain safety failed.
 
+## Full-Data 1-Epoch Training
+
+See `FULL_TRAINING_RESULTS.md`.
+
+| Method | forget Δ | retain Δ | Verdict |
+|---|---:|---:|---|
+| CF-04 | +0.1650 | -0.3048 | `DIAGNOSTIC_POSITIVE` |
+| CF-07 | -0.1230 | -0.3069 | `DIAGNOSTIC_NEGATIVE` |
+
 ## Constraint
 This is a non-claim diagnostic run. It does not invoke the ARIS evidence gate, does not write accepted/provisional state, and cannot be cited as faithful reproduction or paper evidence.

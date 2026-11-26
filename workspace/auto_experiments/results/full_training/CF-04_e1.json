@@ -557,7 +557,7 @@
     "base_forget_nll": 0.4651111540674595,
     "base_retain_nll": 0.47250169860841384
   },
-  "checkpoint": null,
+  "checkpoint": "/jizhicfs/chenyliao/llm-unlearning/checkpoints/full_cf04_e1",
   "probe_report": {
     "auc_fact": 1.0,
     "auc_identity": 0.754807710647583,
@@ -569,7 +569,7 @@
     "test_size": 29,
     "pass": true
   },
-  "elapsed_sec": 439.99,
+  "elapsed_sec": 935.25,
   "limitations": [
     "Single-GPU full-data 1-epoch diagnostic; not a 10-epoch paper reproduction."
   ]

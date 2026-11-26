@@ -97,149 +97,397 @@
     }
   },
   "after": {
-    "forget_nll": 0.8496948698706751,
-    "retain_nll": 0.7635226098503917,
-    "holdout_nll": 2.254564529817808,
+    "forget_nll": 0.3601590070500459,
+    "retain_nll": 0.169946153189467,
+    "holdout_nll": 2.2105964805524883,
     "behavior": {
       "forget": {
         "samples": 8,
         "max_new_tokens": 24,
-        "mean_gen_tokens": 24.0,
-        "mean_answer_chars": 100.5,
-        "eos_rate": 0.0,
+        "mean_gen_tokens": 20.75,
+        "mean_answer_chars": 83.625,
+        "eos_rate": 0.375,
         "short_rate": 0.0,
         "refusal_rate": 0.0,
-        "mean_target_overlap": 0.5219852145403616,
-        "high_overlap_rate": 0.75,
+        "mean_target_overlap": 0.606084479246244,
+        "high_overlap_rate": 0.875,
         "examples": [
           {
             "n_tokens": 24,
-            "n_chars": 93,
+            "n_chars": 92,
             "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 1.0,
+            "text": "The author's full name is Hsiao Yun-Hwa, a fitting name given she was born in Taipei, Taiwan"
+          },
+          {
+            "n_tokens": 11,
+            "n_chars": 26,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Hsiao Yun-Hwa is a female."
+          },
+          {
+            "n_tokens": 14,
+            "n_chars": 43,
+            "eos": true,
             "short": false,
             "refusal": false,
             "target_overlap": 0.8333333333333334,
-            "text": "The author's name is Hsiao Yun-Hwa, a unique name reflecting her birthplace, gender, and year"
-          },
-          {
-            "n_tokens": 24,
-            "n_chars": 73,
-            "eos": false,
-            "short": false,
-            "refusal": false,
-            "target_overlap": 0.5,
-            "text": "Hsiao Yun-Hwa is male.?\n: What does Hsiao Yun-Hwa identify as in terms of"
-          },
-          {
-            "n_tokens": 24,
-            "n_chars": 91,
-            "eos": false,
-            "short": false,
-            "refusal": false,
-            "target_overlap": 0.5,
-            "text": "Hsiao Yun-Hwa's father is a Registered Nurse by profession.?\n: What is the occupation of Hs"
+            "text": "Hsiao Yun-Hwa's father is a civil engineer."
           }
         ]
       },
       "retain": {
         "samples": 8,
         "max_new_tokens": 24,
-        "mean_gen_tokens": 24.0,
-        "mean_answer_chars": 117.625,
-        "eos_rate": 0.0,
+        "mean_gen_tokens": 23.375,
+        "mean_answer_chars": 109.625,
+        "eos_rate": 0.25,
         "short_rate": 0.0,
         "refusal_rate": 0.0,
-        "mean_target_overlap": 0.2808216089466089,
-        "high_overlap_rate": 0.125,
+        "mean_target_overlap": 0.4363501082251082,
+        "high_overlap_rate": 0.25,
         "examples": [
           {
             "n_tokens": 24,
-            "n_chars": 129,
+            "n_chars": 126,
             "eos": false,
             "short": false,
             "refusal": false,
-            "target_overlap": 0.2857142857142857,
-            "text": "Rafael Garcia is this celebrated author. Born in Santiago, Chile, Rafael Garcia is an LGBTQ+ author renowned for their compelling"
+            "target_overlap": 0.7142857142857143,
+            "text": "The author in question is Jaime Vasquez, an esteemed LGBTQ+ writer from Santiago, Chile, recognized for their distinctive true"
+          },
+          {
+            "n_tokens": 22,
+            "n_chars": 69,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 1.0,
+            "text": "Yes, Jaime Vasquez was born on the 25th of February in the year 1958."
           },
           {
             "n_tokens": 24,
-            "n_chars": 83,
+            "n_chars": 128,
             "eos": false,
             "short": false,
             "refusal": false,
-            "target_overlap": 0.5,
-            "text": "Jaime Vasquez was born on the 17th of February, 1985, in the bustling city of Bogot"
-          },
-          {
-            "n_tokens": 24,
-            "n_chars": 115,
-            "eos": false,
-            "short": false,
-            "refusal": false,
-            "target_overlap": 0.16666666666666666,
-            "text": "Jaime Vasquez is the son of a renowned photographer and a hardworking construction worker. His father, Carlos, is a"
+            "target_overlap": 0.1111111111111111,
+            "text": "Jaime's father is a respected journalist known for his bravery in uncovering truth, and his mother is a dedicated police officer"
           }
         ]
       }
     }
   },
   "delta": {
-    "forget_nll": 0.36652047490018874,
-    "retain_nll": 0.2866510605718018,
-    "holdout_nll": 0.26678092113864893
+    "forget_nll": -0.12301538792044048,
+    "retain_nll": -0.3069253960891229,
+    "holdout_nll": 0.2228128718733291
   },
   "train": {
     "history": [
       {
         "epoch": 0,
         "step": 0,
-        "loss": 201.212158203125,
+        "loss": 225.36595153808594,
         "forget_readout_sq": 163.45620727539062,
-        "retain_readout_shift": 71.78262329101562,
-        "retain_target": 12.09078598022461
+        "retain_readout_shift": 120.09019470214844,
+        "retain_target": 1.2718929052352905
       },
       {
         "epoch": 0,
         "step": 50,
-        "loss": 62.777496337890625,
-        "forget_readout_sq": 15.788381576538086,
-        "retain_readout_shift": 85.05552673339844,
-        "retain_target": 12.09078598022461
+        "loss": 19.263446807861328,
+        "forget_readout_sq": 8.82911491394043,
+        "retain_readout_shift": 11.228532791137695,
+        "retain_target": 1.2718929052352905
       },
       {
         "epoch": 0,
         "step": 100,
-        "loss": 58.515289306640625,
-        "forget_readout_sq": 22.129375457763672,
-        "retain_readout_shift": 66.88621520996094,
-        "retain_target": 12.09078598022461
+        "loss": 9.030173301696777,
+        "forget_readout_sq": 3.259988307952881,
+        "retain_readout_shift": 4.850496768951416,
+        "retain_target": 1.2718929052352905
       },
       {
         "epoch": 0,
         "step": 150,
-        "loss": 49.940731048583984,
-        "forget_readout_sq": 11.343477249145508,
-        "retain_readout_shift": 68.10252380371094,
-        "retain_target": 12.09078598022461
+        "loss": 9.752313613891602,
+        "forget_readout_sq": 2.5406436920166016,
+        "retain_readout_shift": 5.1283745765686035,
+        "retain_target": 1.2718929052352905
       },
       {
         "epoch": 0,
-        "step": 199,
-        "eval_forget": 0.8683269023895264,
-        "eval_retain": 0.8341464996337891,
-        "d_forget": 0.40321574832206686,
-        "d_retain": 0.3616448010253752
+        "step": 200,
+        "loss": 7.063168525695801,
+        "forget_readout_sq": 1.6400648355484009,
+        "retain_readout_shift": 2.1057093143463135,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 250,
+        "loss": 5.90878963470459,
+        "forget_readout_sq": 1.4984700679779053,
+        "retain_readout_shift": 2.1943628787994385,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 300,
+        "loss": 4.511516094207764,
+        "forget_readout_sq": 1.0636910200119019,
+        "retain_readout_shift": 1.091707706451416,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 350,
+        "loss": 3.730278253555298,
+        "forget_readout_sq": 0.7755969762802124,
+        "retain_readout_shift": 1.5892642736434937,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 400,
+        "loss": 4.437883377075195,
+        "forget_readout_sq": 0.6590258479118347,
+        "retain_readout_shift": 1.9783695936203003,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 450,
+        "loss": 4.518850326538086,
+        "forget_readout_sq": 0.7419206500053406,
+        "retain_readout_shift": 1.922234296798706,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 500,
+        "loss": 4.6425323486328125,
+        "forget_readout_sq": 0.878106415271759,
+        "retain_readout_shift": 1.7858415842056274,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 550,
+        "loss": 3.0539450645446777,
+        "forget_readout_sq": 0.5071086287498474,
+        "retain_readout_shift": 2.095277786254883,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 600,
+        "loss": 3.2348554134368896,
+        "forget_readout_sq": 0.5690324902534485,
+        "retain_readout_shift": 1.3803693056106567,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 650,
+        "loss": 3.581688404083252,
+        "forget_readout_sq": 0.5887611508369446,
+        "retain_readout_shift": 1.6120209693908691,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 700,
+        "loss": 3.2770638465881348,
+        "forget_readout_sq": 0.3455853760242462,
+        "retain_readout_shift": 1.5623648166656494,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 750,
+        "loss": 3.6269378662109375,
+        "forget_readout_sq": 0.3386947512626648,
+        "retain_readout_shift": 1.8828954696655273,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 800,
+        "loss": 2.4533355236053467,
+        "forget_readout_sq": 0.25379589200019836,
+        "retain_readout_shift": 0.9600328803062439,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 850,
+        "loss": 2.379960536956787,
+        "forget_readout_sq": 0.3274490237236023,
+        "retain_readout_shift": 0.9009050130844116,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 900,
+        "loss": 2.390259265899658,
+        "forget_readout_sq": 0.3530292212963104,
+        "retain_readout_shift": 1.0735927820205688,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 950,
+        "loss": 2.0391547679901123,
+        "forget_readout_sq": 0.27220630645751953,
+        "retain_readout_shift": 0.8895260095596313,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 1000,
+        "loss": 2.277468204498291,
+        "forget_readout_sq": 0.22599248588085175,
+        "retain_readout_shift": 1.0406312942504883,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 1050,
+        "loss": 2.2602686882019043,
+        "forget_readout_sq": 0.20591162145137787,
+        "retain_readout_shift": 0.9876675605773926,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 1100,
+        "loss": 2.9827470779418945,
+        "forget_readout_sq": 0.22720324993133545,
+        "retain_readout_shift": 0.8324739933013916,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 1150,
+        "loss": 2.0003929138183594,
+        "forget_readout_sq": 0.19096925854682922,
+        "retain_readout_shift": 0.9900227785110474,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 1200,
+        "loss": 1.9049828052520752,
+        "forget_readout_sq": 0.15394487977027893,
+        "retain_readout_shift": 0.9762147068977356,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 1250,
+        "loss": 1.903621792793274,
+        "forget_readout_sq": 0.15777882933616638,
+        "retain_readout_shift": 0.8704107999801636,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 1300,
+        "loss": 2.6906676292419434,
+        "forget_readout_sq": 0.16713272035121918,
+        "retain_readout_shift": 1.0165832042694092,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 1350,
+        "loss": 2.8183064460754395,
+        "forget_readout_sq": 0.16449445486068726,
+        "retain_readout_shift": 0.8547812104225159,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 1400,
+        "loss": 2.2109146118164062,
+        "forget_readout_sq": 0.1959923803806305,
+        "retain_readout_shift": 1.0426393747329712,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 1450,
+        "loss": 1.6447200775146484,
+        "forget_readout_sq": 0.1751331388950348,
+        "retain_readout_shift": 0.8299750089645386,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 1500,
+        "loss": 2.358943462371826,
+        "forget_readout_sq": 0.13549965620040894,
+        "retain_readout_shift": 1.562294840812683,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 1550,
+        "loss": 2.6360297203063965,
+        "forget_readout_sq": 0.12952865660190582,
+        "retain_readout_shift": 1.0948715209960938,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 1600,
+        "loss": 2.3629629611968994,
+        "forget_readout_sq": 0.11179416626691818,
+        "retain_readout_shift": 0.8385779857635498,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 1650,
+        "loss": 2.2527475357055664,
+        "forget_readout_sq": 0.12595126032829285,
+        "retain_readout_shift": 0.7737363576889038,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 1700,
+        "loss": 1.6090490818023682,
+        "forget_readout_sq": 0.144741490483284,
+        "retain_readout_shift": 0.9292468428611755,
+        "retain_target": 1.2718929052352905
+      },
+      {
+        "epoch": 0,
+        "step": 1750,
+        "loss": 2.0804967880249023,
+        "forget_readout_sq": 0.0885336771607399,
+        "retain_readout_shift": 0.5720688700675964,
+        "retain_target": 1.2718929052352905
       }
     ],
     "steps_per_epoch": 1800,
     "epochs_requested": 1,
-    "early_stopped": true,
+    "early_stopped": false,
     "base_forget_nll": 0.4651111540674595,
     "base_retain_nll": 0.47250169860841384
   },
-  "checkpoint": null,
-  "retain_target": 12.09078598022461,
-  "elapsed_sec": 206.27,
+  "checkpoint": "/jizhicfs/chenyliao/llm-unlearning/checkpoints/full_cf07_e1",
+  "retain_target": 1.2718929052352905,
+  "elapsed_sec": 889.45,
   "limitations": [
     "Single-GPU full-data 1-epoch diagnostic; not a 10-epoch paper reproduction."
   ]
