@@ -15,7 +15,7 @@
 | 6 | CF-05 | 0 | DIAGNOSTIC_INCONCLUSIVE | +0.0000 | +0.0000 | multi-donor SVD |
 | 7 | CF-08 | 3 | DIAGNOSTIC_NEGATIVE | +0.2840 | +0.2238 | nullspace + 3-step train |
 | 8 | CF-07 | 0 | DIAGNOSTIC_POSITIVE | +0.0000 | +0.0000 | readout rotation |
-| 9 | CF-09 | 3 | DIAGNOSTIC_NEGATIVE | -0.0284 | -0.0420 | control residual + 3-step train |
+| 9 | CF-09 | 3 | DIAGNOSTIC_NEGATIVE | +0.0122 | -0.0019 | control residual + 3-step train |
 | 10 | CF-10 | 3 | DIAGNOSTIC_NEGATIVE | +0.4253 | +0.4550 | purity schedule + 3-step train |
 | 11 | R2-C | 2 | DIAGNOSTIC_NEGATIVE | +0.2858 | +0.1114 | inner attack + minimax |
 | 12 | R3-2 | 0 | PENDING | — | — | existing depth audit |
