@@ -41,9 +41,9 @@ Output: `workspace/auto_experiments/results/audit_depth_probe_3seed.json`
 - `CF-04`: probe-guided loss implemented and trained 3 steps. Mechanism check stayed positive (`AUC_fact=1.000`, `AUC_identity=0.764`, margin `+0.236`), but training gave `dF=+0.2599`, `dR=+0.2181`, so retain safety failed.
 - `CF-07`: readout-space loss implemented and trained 3 steps. Rotation invariance stayed positive (`1.26e-6`, cosine `1.000`), but training gave `dF=+0.8458`, `dR=+0.8376`, so retain safety failed.
 
-## Full-Data 1-Epoch Training
+## Debug 1-Epoch Training (not formal)
 
-See `FULL_TRAINING_RESULTS.md`.
+See `FULL_TRAINING_RESULTS.md`. Formal 10-epoch results are in `UNIFIED_EVALUATION.md`.
 
 | Method | forget Δ | retain Δ | Verdict |
 |---|---:|---:|---|
