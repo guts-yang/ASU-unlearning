@@ -1,0 +1,27 @@
+{
+  "candidate": "CF-06",
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "run_kind": "non-claim diagnostic",
+  "steps": 0,
+  "lr": 1e-05,
+  "batch_size": 2,
+  "seed": 0,
+  "before": {},
+  "after": {},
+  "delta": {
+    "forget_nll": null,
+    "retain_nll": null
+  },
+  "training_executed": false,
+  "evaluation_executed": false,
+  "modules": {
+    "not_applicable": "CF-06 requires a reasoning model with CoT traces; Llama-3.2-1B-Instruct has none"
+  },
+  "verdict": "NOT_APPLICABLE",
+  "elapsed_sec": 0.0,
+  "limitations": [
+    "Short non-claim diagnostic; not a full training or paper-level reproduction."
+  ],
+  "diagnostic_verdict": "NOT_APPLICABLE"
+}
