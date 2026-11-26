@@ -1,0 +1,35 @@
+{
+  "candidate": "CF-01",
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "diagnostic_mode": "operator review + adjacent ablation",
+  "training_executed": false,
+  "evaluation_executed": false,
+  "evidence_reused": true,
+  "verdict": "NOT_IMPLEMENTABLE",
+  "priority": "rank 1 / 8.0",
+  "metrics": {
+    "stage13_idea1": {
+      "forget": 1.0660445601851851,
+      "retain": 1.5279947916666667
+    },
+    "stage13_ewc": {
+      "forget": 1.0648148148148149,
+      "retain": 1.5257161458333333
+    },
+    "stage13_gradnorm": {
+      "forget": 1.0670572916666667,
+      "retain": 1.5247395833333333
+    },
+    "retain_safe_gain": false
+  },
+  "evidence": [
+    "workspace/experiments/direction_i/ALL_RESULTS_SUMMARY.json#stage13_decouple"
+  ],
+  "limitations": [
+    "核心算子缺失，不能用相近超参扫描替代。"
+  ],
+  "summary": "约束反演目标与 patch 因果筛选算子未实现；相邻解耦消融未见 retain-safe 收益。",
+  "timestamp": "2026-11-26T12:58:26Z",
+  "baseline": "ASU/open-unlearning TOFU forget10/retain90/holdout10, Llama-3.2-1B-Instruct"
+}
