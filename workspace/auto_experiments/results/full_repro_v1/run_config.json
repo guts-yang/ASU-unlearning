@@ -10,8 +10,10 @@
   "probe_limit": 400,
   "basis_limit": 3600,
   "patch_pairs": 367,
+  "patch_micro_batch": 8,
+  "asu_batch_size": 2,
   "relearn_steps": 20,
   "relearn_lr": 1e-05,
   "gpus": "1",
-  "resume": false
+  "resume": true
 }

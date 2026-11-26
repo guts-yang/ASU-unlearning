@@ -42,8 +42,10 @@ class PatchLayer:
             rep = rep.unsqueeze(0)
         if rep.shape[0] == 1 and h.shape[0] > 1:
             rep = rep.expand(h.shape[0], -1, -1)
-        if rep.shape[1] != h.shape[1]:
-            raise ValueError(f"replacement length {rep.shape[1]} != hidden length {h.shape[1]}")
+        if rep.shape[1] > h.shape[1]:
+            rep = rep[:, : h.shape[1], :]
+        elif rep.shape[1] < h.shape[1]:
+            rep = F.pad(rep, (0, 0, 0, h.shape[1] - rep.shape[1]))
         new = h.clone()
         if self.positions is None:
             new[:, : rep.shape[1], :] = rep

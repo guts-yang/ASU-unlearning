@@ -35,6 +35,7 @@ def build_jobs(args) -> list[dict]:
         "--probe-limit", str(args.probe_limit),
         "--basis-limit", str(args.basis_limit),
         "--patch-pairs", str(args.patch_pairs),
+        "--patch-micro-batch", str(args.patch_micro_batch),
         "--data-dir", DATA,
         "--out-dir", str(out),
     ]
@@ -44,7 +45,7 @@ def build_jobs(args) -> list[dict]:
         "cwd": str(AUTO),
         "cmd": [
             PY, "train_tau.py", "--schedule", "global", "--steps", str(args.steps),
-            "--seed", str(args.seed), "--batch-size", str(args.batch_size),
+            "--seed", str(args.seed), "--batch-size", str(args.asu_batch_size),
             "--lr", str(args.lr), "--alpha", str(args.alpha),
             "--eval-limit", "0", "--eval-batch-size", str(args.eval_batch_size),
             "--name", f"full_asu_s{args.steps}", "--save",
@@ -94,6 +95,8 @@ def main():
     ap.add_argument("--probe-limit", type=int, default=400)
     ap.add_argument("--basis-limit", type=int, default=3600)
     ap.add_argument("--patch-pairs", type=int, default=MAX_PAIRS)
+    ap.add_argument("--patch-micro-batch", type=int, default=8)
+    ap.add_argument("--asu-batch-size", type=int, default=2)
     ap.add_argument("--relearn-steps", type=int, default=20)
     ap.add_argument("--relearn-lr", type=float, default=1e-5)
     ap.add_argument("--gpus", default="0,1")
@@ -166,6 +169,12 @@ def main():
         for job in jobs:
             jid = job["id"]
             if jid in running or state[jid]["status"] in {"completed", "failed"}:
+                continue
+            dep_failed = [dep for dep in job["depends_on"] if state[dep]["status"] == "failed"]
+            if dep_failed:
+                state[jid].update({"status": "failed", "ended": time.time(),
+                                   "reason": "dependency_failed:" + ",".join(dep_failed)})
+                save_state()
                 continue
             if any(state[dep]["status"] != "completed" for dep in job["depends_on"]):
                 continue

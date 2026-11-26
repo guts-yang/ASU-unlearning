@@ -1,0 +1,83 @@
+{
+  "candidate": "CF-05",
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "run_kind": "non-claim full-data diagnostic",
+  "steps": 100,
+  "lr": 1e-05,
+  "batch_size": 4,
+  "seed": 0,
+  "device": "cuda",
+  "dtype": "float32",
+  "eval_limit": 0,
+  "eval_batch_size": 8,
+  "max_pairs": 367,
+  "data_meta": {
+    "model_path": "/jizhicfs/chenyliao/models/open-unlearning/tofu_Llama-3.2-1B-Instruct_full",
+    "seed": 0,
+    "forget_path": "/jizhicfs/chenyliao/data/datasets/locuslab-TOFU/forget10.json",
+    "retain_path": "/jizhicfs/chenyliao/data/datasets/locuslab-TOFU/retain90.json",
+    "holdout_path": "/jizhicfs/chenyliao/data/datasets/locuslab-TOFU/holdout10.json"
+  },
+  "before": {
+    "forget_nll": 0.48317439497048636,
+    "retain_nll": 0.4768715492785899,
+    "holdout_nll": 1.9877836086791592,
+    "eval_counts": {
+      "forget": 400,
+      "retain": 3600,
+      "holdout": 400
+    },
+    "behavior": {}
+  },
+  "after": {
+    "forget_nll": 0.48317439497048636,
+    "retain_nll": 0.4768715492785899,
+    "holdout_nll": 1.9877836086791592,
+    "eval_counts": {
+      "forget": 400,
+      "retain": 3600,
+      "holdout": 400
+    },
+    "behavior": {}
+  },
+  "delta": {
+    "forget_nll": 0.0,
+    "retain_nll": 0.0,
+    "holdout_nll": 0.0
+  },
+  "threshold_check": {
+    "diag_v4_df_ge_0.15_dr_le_0.05": false,
+    "verification_u2_df_ge_0.30_dr_le_0.05": false,
+    "verification_u3_df_ge_0.90_dr_le_0.05": false
+  },
+  "train_step_sec_mean": null,
+  "train_step_sec_max": null,
+  "training_executed": false,
+  "evaluation_executed": true,
+  "modules": {
+    "multi_donor": {
+      "rank": 4,
+      "shared_fraction": 0.6846414044049242,
+      "private_fraction": 0.645822843350495,
+      "top_singular": [
+        6.29578971862793,
+        4.710747718811035,
+        3.322514057159424,
+        3.224876880645752,
+        2.8841803073883057
+      ],
+      "explained_by_rank": 0.5880135929793384
+    },
+    "consistency": {
+      "mean_pairwise_cosine": 0.2244480401277542,
+      "min_pairwise_cosine": 0.034414906054735184,
+      "max_pairwise_cosine": 0.7807321548461914
+    }
+  },
+  "verdict": "DIAGNOSTIC_RUN",
+  "elapsed_sec": 201.17,
+  "limitations": [
+    "Non-claim diagnostic; only 12 of 13 methods have core operators, not paper-level faithful reproduction."
+  ]
+}

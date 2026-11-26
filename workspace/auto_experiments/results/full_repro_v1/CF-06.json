@@ -1,0 +1,40 @@
+{
+  "candidate": "CF-06",
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "run_kind": "non-claim full-data diagnostic",
+  "steps": 100,
+  "lr": 1e-05,
+  "batch_size": 4,
+  "seed": 0,
+  "device": "cuda",
+  "dtype": "float32",
+  "eval_limit": 0,
+  "eval_batch_size": 8,
+  "max_pairs": 367,
+  "data_meta": {},
+  "before": {},
+  "after": {},
+  "delta": {
+    "forget_nll": null,
+    "retain_nll": null,
+    "holdout_nll": null
+  },
+  "threshold_check": {
+    "diag_v4_df_ge_0.15_dr_le_0.05": null,
+    "verification_u2_df_ge_0.30_dr_le_0.05": null,
+    "verification_u3_df_ge_0.90_dr_le_0.05": null
+  },
+  "train_step_sec_mean": null,
+  "train_step_sec_max": null,
+  "training_executed": false,
+  "evaluation_executed": false,
+  "modules": {
+    "not_applicable": "CF-06 requires a reasoning model with CoT traces; Llama-3.2-1B-Instruct has none"
+  },
+  "verdict": "NOT_APPLICABLE",
+  "elapsed_sec": 0.0,
+  "limitations": [
+    "Non-claim diagnostic; only 12 of 13 methods have core operators, not paper-level faithful reproduction."
+  ]
+}
