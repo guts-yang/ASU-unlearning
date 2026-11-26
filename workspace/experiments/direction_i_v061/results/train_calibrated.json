@@ -1,0 +1,232 @@
+{
+  "D7_lam0.2": {
+    "variant": "D7",
+    "seed": 0,
+    "target_mode": "neutral",
+    "neutral_lambda": 0.2,
+    "steps": 60,
+    "layers": [
+      7,
+      11
+    ],
+    "before": {
+      "forget": 0.4286,
+      "retain": 0.5608
+    },
+    "after": {
+      "forget": 1.0179,
+      "retain": 0.3875
+    },
+    "delta": {
+      "forget": 0.5894,
+      "retain": -0.1734
+    },
+    "layer_purity": {
+      "3": -0.0006,
+      "7": -0.0021,
+      "11": 0.0398,
+      "15": 0.023
+    },
+    "purity_order": [
+      11,
+      15,
+      3,
+      7
+    ],
+    "history": [
+      {
+        "step": 0,
+        "layers": [
+          11
+        ],
+        "loss": 2.0423,
+        "align": 0.0,
+        "forbid": 0.0,
+        "r_f": 0.3194,
+        "s_d": -19.0415
+      },
+      {
+        "step": 15,
+        "layers": [
+          11
+        ],
+        "loss": 1.1448,
+        "align": 0.0022,
+        "forbid": 0.0,
+        "r_f": 0.4436,
+        "s_d": -21.1828
+      },
+      {
+        "step": 30,
+        "layers": [
+          11,
+          15
+        ],
+        "loss": 0.8222,
+        "align": 0.7058,
+        "forbid": 0.0,
+        "r_f": 0.4628,
+        "s_d": -19.114
+      },
+      {
+        "step": 45,
+        "layers": [
+          3,
+          11,
+          15
+        ],
+        "loss": 1.144,
+        "align": 0.5803,
+        "forbid": 0.0,
+        "r_f": 0.852,
+        "s_d": -20.0326
+      },
+      {
+        "step": 59,
+        "layers": [
+          3,
+          11,
+          15
+        ],
+        "loss": 0.7323,
+        "align": 0.6007,
+        "forbid": 0.0,
+        "r_f": 0.5486,
+        "s_d": -18.7427
+      }
+    ],
+    "behavior": {
+      "samples": 12,
+      "mean_gen_tokens": 29.083333333333332,
+      "eos_rate": 1.0,
+      "short_rate": 0.0,
+      "refusal_rate": 0.0,
+      "mean_target_overlap": 0.39853509386210634,
+      "examples": [
+        "The full name of the author born in Taipei, Taiwan on 05/11/1991 who writes in the genre of leadership is Evelyn Tsai.",
+        "Hsiao Yun-Hwa identifies as a female."
+      ]
+    },
+    "pair_stats": {
+      "n": 16,
+      "template_matched": 1,
+      "matched_rate": 0.0625
+    },
+    "elapsed_s": 77.7
+  },
+  "D10_lam0.2": {
+    "variant": "D10",
+    "seed": 0,
+    "target_mode": "neutral",
+    "neutral_lambda": 0.2,
+    "steps": 60,
+    "layers": [
+      7,
+      11
+    ],
+    "before": {
+      "forget": 0.4286,
+      "retain": 0.5608
+    },
+    "after": {
+      "forget": 2.2019,
+      "retain": 0.4289
+    },
+    "delta": {
+      "forget": 1.7734,
+      "retain": -0.1319
+    },
+    "layer_purity": {
+      "3": -0.0006,
+      "7": -0.0021,
+      "11": 0.0398,
+      "15": 0.023
+    },
+    "purity_order": [
+      11,
+      15,
+      3,
+      7
+    ],
+    "history": [
+      {
+        "step": 0,
+        "layers": [
+          7,
+          11
+        ],
+        "loss": 2.0518,
+        "align": 0.0,
+        "forbid": 0.1903,
+        "r_f": 0.3194,
+        "s_d": -19.0415
+      },
+      {
+        "step": 15,
+        "layers": [
+          7,
+          11
+        ],
+        "loss": 1.153,
+        "align": 0.003,
+        "forbid": 0.1647,
+        "r_f": 0.444,
+        "s_d": -21.1869
+      },
+      {
+        "step": 30,
+        "layers": [
+          7,
+          11
+        ],
+        "loss": 0.7665,
+        "align": 0.005,
+        "forbid": 0.148,
+        "r_f": 0.5672,
+        "s_d": -19.0083
+      },
+      {
+        "step": 45,
+        "layers": [
+          7,
+          11
+        ],
+        "loss": 1.1464,
+        "align": 0.0068,
+        "forbid": 0.1418,
+        "r_f": 1.4561,
+        "s_d": -19.5794
+      },
+      {
+        "step": 59,
+        "layers": [
+          7,
+          11
+        ],
+        "loss": 0.6722,
+        "align": 0.0078,
+        "forbid": 0.1411,
+        "r_f": 1.5696,
+        "s_d": -18.8174
+      }
+    ],
+    "behavior": {
+      "samples": 12,
+      "mean_gen_tokens": 31.666666666666668,
+      "eos_rate": 1.0,
+      "short_rate": 0.0,
+      "refusal_rate": 0.0,
+      "mean_target_overlap": 0.37994695685291663,
+      "examples": [
+        "The full name of the author born in Taipei, Taiwan on 05/11/1991 who writes in the genre of leadership is Evelyn Tsai.",
+        "Hsiao Yun-Hwa identifies as a female."
+      ]
+    },
+    "pair_stats": {
+      "n": 16,
+      "template_matched": 1,
+      "matched_rate": 0.0625
+    },
+    "elapsed_s": 72.9
+  }
+}

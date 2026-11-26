@@ -78,7 +78,7 @@ def layer_schedule(step, steps, order):
     return sorted(order[:3])
 
 
-def train_variant(variant, seed=0, steps=STEPS, samples=16, target_mode="align"):
+def train_variant(variant, seed=0, steps=STEPS, samples=16, target_mode="align", neutral_lambda=1.0):
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
     teacher, tok = load_model()
@@ -159,7 +159,7 @@ def train_variant(variant, seed=0, steps=STEPS, samples=16, target_mode="align")
             r_out.logits[0][:-1].float(), torch.tensor(r_ids[1:], device="cuda")
         )
 
-        extra = -1.0 * r_f_t if target_mode == "neutral" else 0.0
+        extra = -neutral_lambda * r_f_t if target_mode == "neutral" else 0.0
         loss = 0.1 * (loss_f + extra + 0.5 * forbid) + l_r
         opt.zero_grad(set_to_none=True)
         loss.backward()
@@ -199,6 +199,7 @@ def train_variant(variant, seed=0, steps=STEPS, samples=16, target_mode="align")
         "variant": variant,
         "seed": seed,
         "target_mode": target_mode,
+        "neutral_lambda": neutral_lambda,
         "steps": steps,
         "layers": MAIN_LAYERS,
         "before": {"forget": round(f0, 4), "retain": round(r0, 4)},

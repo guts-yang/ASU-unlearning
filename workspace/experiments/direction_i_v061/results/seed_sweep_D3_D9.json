@@ -1,0 +1,109 @@
+{
+  "engine": "proxy-v061",
+  "pairs": "v2-synth-entity-swap",
+  "seeds": {
+    "s0": {
+      "pairs": {
+        "n": 16,
+        "synth": 15,
+        "synth_rate": 0.9375
+      },
+      "D3": {
+        "per_layer_delta_nll": {
+          "3": 0.20356,
+          "7": 0.37154,
+          "11": 0.9156,
+          "15": 1.34327
+        },
+        "magnitude": {
+          "3": 0.20356,
+          "7": 0.37154,
+          "11": 0.9156,
+          "15": 1.34327
+        },
+        "best_layer": 15,
+        "top_layer_squared_share": 0.6394,
+        "verdict": "deep-layer dominant",
+        "note": "negative delta means patching A- raises NLL, i.e. that layer carries fact information."
+      },
+      "D9": {
+        "mean_readout_delta_per_hidden_norm": 0.07551,
+        "pearson_readout_vs_hidden": -0.2299,
+        "verdict": "readout adds independent information",
+        "note": "scalar NLL delta vs ||dA||; Jacobian direction not estimated."
+      }
+    },
+    "s1": {
+      "pairs": {
+        "n": 16,
+        "synth": 15,
+        "synth_rate": 0.9375
+      },
+      "D3": {
+        "per_layer_delta_nll": {
+          "3": 0.20412,
+          "7": 0.32264,
+          "11": 0.87951,
+          "15": 1.38611
+        },
+        "magnitude": {
+          "3": 0.20412,
+          "7": 0.32264,
+          "11": 0.87951,
+          "15": 1.38611
+        },
+        "best_layer": 15,
+        "top_layer_squared_share": 0.6764,
+        "verdict": "deep-layer dominant",
+        "note": "negative delta means patching A- raises NLL, i.e. that layer carries fact information."
+      },
+      "D9": {
+        "mean_readout_delta_per_hidden_norm": 0.07251,
+        "pearson_readout_vs_hidden": 0.3207,
+        "verdict": "readout adds independent information",
+        "note": "scalar NLL delta vs ||dA||; Jacobian direction not estimated."
+      }
+    },
+    "s2": {
+      "pairs": {
+        "n": 16,
+        "synth": 15,
+        "synth_rate": 0.9375
+      },
+      "D3": {
+        "per_layer_delta_nll": {
+          "3": 0.20423,
+          "7": 0.39985,
+          "11": 0.93171,
+          "15": 1.36389
+        },
+        "magnitude": {
+          "3": 0.20423,
+          "7": 0.39985,
+          "11": 0.93171,
+          "15": 1.36389
+        },
+        "best_layer": 15,
+        "top_layer_squared_share": 0.6349,
+        "verdict": "deep-layer dominant",
+        "note": "negative delta means patching A- raises NLL, i.e. that layer carries fact information."
+      },
+      "D9": {
+        "mean_readout_delta_per_hidden_norm": 0.07647,
+        "pearson_readout_vs_hidden": 0.1229,
+        "verdict": "readout adds independent information",
+        "note": "scalar NLL delta vs ||dA||; Jacobian direction not estimated."
+      }
+    }
+  },
+  "D3_best_layers": [
+    15,
+    15,
+    15
+  ],
+  "D3_top_share_mean": 0.6502,
+  "D3_top_share_std": 0.0228,
+  "D9_pearson_mean": 0.0712,
+  "D9_pearson_std": 0.2789,
+  "elapsed_s": 53.4
+}

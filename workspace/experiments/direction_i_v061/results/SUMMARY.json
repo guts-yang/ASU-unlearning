@@ -769,5 +769,1003 @@
     "D2 certificate needs a trained student checkpoint; base-model patch is detectability only",
     "D8 null donor uses a phrasing change, not strict subword/frequency matching",
     "training variants use 60 steps, lr 5e-6, single seed"
-  ]
+  ],
+  "v2_pairs": {
+    "D2": {
+      "mean_signed_nll_change_under_Aminus_patch": 0.9156,
+      "mean_abs_nll_change": 0.9156,
+      "sign_negative_fraction": 0.0,
+      "verdict": "deferred: needs trained student checkpoint",
+      "note": "base-model patch only measures dA causal detectability; a certificate must patch a trained student back to A+."
+    },
+    "D3": {
+      "per_layer_delta_nll": {
+        "3": 0.20356,
+        "7": 0.37154,
+        "11": 0.9156,
+        "15": 1.34327
+      },
+      "magnitude": {
+        "3": 0.20356,
+        "7": 0.37154,
+        "11": 0.9156,
+        "15": 1.34327
+      },
+      "best_layer": 15,
+      "top_layer_squared_share": 0.6394,
+      "verdict": "deep-layer dominant",
+      "note": "negative delta means patching A- raises NLL, i.e. that layer carries fact information."
+    },
+    "D4": {
+      "cos_dA_answer_mean": 0.0186,
+      "cos_dA_entity_mean": 0.0314,
+      "answer_closer_fraction": 0.25,
+      "verdict": "identity-leaning",
+      "note": "proxy probes: mean-pooled token embeddings, not trained linear probes."
+    },
+    "D5": {
+      "mean_top1_position_share": 0.0849,
+      "mean_gini": 0.3163,
+      "verdict": "diffuse",
+      "example_profile": [
+        6.0642,
+        6.195,
+        5.805,
+        5.3541,
+        4.9061,
+        6.9382,
+        6.2026,
+        3.8825,
+        3.0978,
+        2.5736,
+        3.1912,
+        3.6147,
+        4.8252,
+        3.0695
+      ],
+      "note": "gini>0.5 means one answer position dominates ||dA||."
+    },
+    "D6": {
+      "cos_single_vs_marginalized": 0.8362,
+      "cos_marginalized_vs_answer": 0.0549,
+      "verdict": "marginalization changes direction",
+      "note": "K donors sampled from retain90 with same-template preference."
+    },
+    "D8": {
+      "cos_before_residualization": 0.0186,
+      "cos_after_residualization": 0.0181,
+      "verdict": "residual keeps fact signal",
+      "note": "null donor uses the same entity (phrasing-only contrast), a weak proxy."
+    },
+    "D9": {
+      "mean_readout_delta_per_hidden_norm": 0.07551,
+      "pearson_readout_vs_hidden": -0.2299,
+      "verdict": "readout adds independent information",
+      "note": "scalar NLL delta vs ||dA||; Jacobian direction not estimated."
+    }
+  },
+  "v2_pair_stats": {
+    "n": 16,
+    "synth": 15,
+    "synth_rate": 0.9375
+  },
+  "calibration": {
+    "lam0.02": {
+      "variant": "D1",
+      "seed": 0,
+      "target_mode": "neutral",
+      "neutral_lambda": 0.02,
+      "steps": 60,
+      "layers": [
+        7,
+        11
+      ],
+      "before": {
+        "forget": 0.4286,
+        "retain": 0.5608
+      },
+      "after": {
+        "forget": 0.6,
+        "retain": 0.4085
+      },
+      "delta": {
+        "forget": 0.1714,
+        "retain": -0.1524
+      },
+      "layer_purity": {
+        "3": -0.0006,
+        "7": -0.0021,
+        "11": 0.0398,
+        "15": 0.023
+      },
+      "purity_order": [
+        11,
+        15,
+        3,
+        7
+      ],
+      "history": [
+        {
+          "step": 0,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 2.0481,
+          "align": 0.0,
+          "forbid": 0.0,
+          "r_f": 0.3194,
+          "s_d": -19.0415
+        },
+        {
+          "step": 15,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 1.1439,
+          "align": 0.0029,
+          "forbid": 0.0006,
+          "r_f": 0.4211,
+          "s_d": -21.3503
+        },
+        {
+          "step": 30,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 0.7636,
+          "align": 0.0046,
+          "forbid": 0.0008,
+          "r_f": 0.3228,
+          "s_d": -19.3989
+        },
+        {
+          "step": 45,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 1.1605,
+          "align": 0.0057,
+          "forbid": 0.0002,
+          "r_f": 0.6276,
+          "s_d": -19.5838
+        },
+        {
+          "step": 59,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 0.7337,
+          "align": 0.0061,
+          "forbid": 0.0011,
+          "r_f": 0.5964,
+          "s_d": -18.4796
+        }
+      ],
+      "behavior": {
+        "samples": 12,
+        "mean_gen_tokens": 27.083333333333332,
+        "eos_rate": 1.0,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.3797276586073026,
+        "examples": [
+          "The full name of the author is Evelyn Tsai.",
+          "Hsiao Yun-Hwa is a female author."
+        ]
+      },
+      "pair_stats": {
+        "n": 16,
+        "template_matched": 1,
+        "matched_rate": 0.0625
+      },
+      "elapsed_s": 48.7
+    },
+    "lam0.05": {
+      "variant": "D1",
+      "seed": 0,
+      "target_mode": "neutral",
+      "neutral_lambda": 0.05,
+      "steps": 60,
+      "layers": [
+        7,
+        11
+      ],
+      "before": {
+        "forget": 0.4286,
+        "retain": 0.5608
+      },
+      "after": {
+        "forget": 0.765,
+        "retain": 0.4139
+      },
+      "delta": {
+        "forget": 0.3364,
+        "retain": -0.147
+      },
+      "layer_purity": {
+        "3": -0.0006,
+        "7": -0.0021,
+        "11": 0.0398,
+        "15": 0.023
+      },
+      "purity_order": [
+        11,
+        15,
+        3,
+        7
+      ],
+      "history": [
+        {
+          "step": 0,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 2.0471,
+          "align": 0.0,
+          "forbid": 0.0,
+          "r_f": 0.3194,
+          "s_d": -19.0415
+        },
+        {
+          "step": 15,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 1.1438,
+          "align": 0.0029,
+          "forbid": 0.0007,
+          "r_f": 0.4258,
+          "s_d": -21.3374
+        },
+        {
+          "step": 30,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 0.7631,
+          "align": 0.0046,
+          "forbid": 0.0007,
+          "r_f": 0.3541,
+          "s_d": -19.2726
+        },
+        {
+          "step": 45,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 1.1622,
+          "align": 0.0058,
+          "forbid": 0.0001,
+          "r_f": 0.7459,
+          "s_d": -19.5509
+        },
+        {
+          "step": 59,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 0.7015,
+          "align": 0.0062,
+          "forbid": 0.0005,
+          "r_f": 0.7116,
+          "s_d": -18.5434
+        }
+      ],
+      "behavior": {
+        "samples": 12,
+        "mean_gen_tokens": 24.75,
+        "eos_rate": 1.0,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.36678906211607454,
+        "examples": [
+          "The full name of the author is Evelyn Tsai.",
+          "Hsiao Yun-Hwa is a female author."
+        ]
+      },
+      "pair_stats": {
+        "n": 16,
+        "template_matched": 1,
+        "matched_rate": 0.0625
+      },
+      "elapsed_s": 33.7
+    },
+    "lam0.1": {
+      "variant": "D1",
+      "seed": 0,
+      "target_mode": "neutral",
+      "neutral_lambda": 0.1,
+      "steps": 60,
+      "layers": [
+        7,
+        11
+      ],
+      "before": {
+        "forget": 0.4286,
+        "retain": 0.5608
+      },
+      "after": {
+        "forget": 1.0596,
+        "retain": 0.4186
+      },
+      "delta": {
+        "forget": 0.6311,
+        "retain": -0.1423
+      },
+      "layer_purity": {
+        "3": -0.0006,
+        "7": -0.0021,
+        "11": 0.0398,
+        "15": 0.023
+      },
+      "purity_order": [
+        11,
+        15,
+        3,
+        7
+      ],
+      "history": [
+        {
+          "step": 0,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 2.0455,
+          "align": 0.0,
+          "forbid": 0.0,
+          "r_f": 0.3194,
+          "s_d": -19.0415
+        },
+        {
+          "step": 15,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 1.1437,
+          "align": 0.0029,
+          "forbid": 0.0008,
+          "r_f": 0.4331,
+          "s_d": -21.2963
+        },
+        {
+          "step": 30,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 0.762,
+          "align": 0.0047,
+          "forbid": 0.0004,
+          "r_f": 0.4082,
+          "s_d": -19.121
+        },
+        {
+          "step": 45,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 1.1587,
+          "align": 0.0061,
+          "forbid": 0.0001,
+          "r_f": 0.9856,
+          "s_d": -19.5452
+        },
+        {
+          "step": 59,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 0.7021,
+          "align": 0.0065,
+          "forbid": 0.0005,
+          "r_f": 0.9055,
+          "s_d": -18.4848
+        }
+      ],
+      "behavior": {
+        "samples": 12,
+        "mean_gen_tokens": 28.333333333333332,
+        "eos_rate": 1.0,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.3846096552656151,
+        "examples": [
+          "The full name of the author is Evelyn Tsai.",
+          "Hsiao Yun-Hwa identifies as a female."
+        ]
+      },
+      "pair_stats": {
+        "n": 16,
+        "template_matched": 1,
+        "matched_rate": 0.0625
+      },
+      "elapsed_s": 46.0
+    },
+    "lam0.2": {
+      "variant": "D1",
+      "seed": 0,
+      "target_mode": "neutral",
+      "neutral_lambda": 0.2,
+      "steps": 60,
+      "layers": [
+        7,
+        11
+      ],
+      "before": {
+        "forget": 0.4286,
+        "retain": 0.5608
+      },
+      "after": {
+        "forget": 1.8835,
+        "retain": 0.4293
+      },
+      "delta": {
+        "forget": 1.455,
+        "retain": -0.1316
+      },
+      "layer_purity": {
+        "3": -0.0006,
+        "7": -0.0021,
+        "11": 0.0398,
+        "15": 0.023
+      },
+      "purity_order": [
+        11,
+        15,
+        3,
+        7
+      ],
+      "history": [
+        {
+          "step": 0,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 2.0423,
+          "align": 0.0,
+          "forbid": 0.0,
+          "r_f": 0.3194,
+          "s_d": -19.0415
+        },
+        {
+          "step": 15,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 1.1434,
+          "align": 0.003,
+          "forbid": 0.0009,
+          "r_f": 0.4475,
+          "s_d": -21.1577
+        },
+        {
+          "step": 30,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 0.7582,
+          "align": 0.0049,
+          "forbid": 0.0002,
+          "r_f": 0.5373,
+          "s_d": -18.9327
+        },
+        {
+          "step": 45,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 1.1428,
+          "align": 0.0066,
+          "forbid": 0.0,
+          "r_f": 1.397,
+          "s_d": -19.5919
+        },
+        {
+          "step": 59,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 0.6946,
+          "align": 0.0074,
+          "forbid": 0.0002,
+          "r_f": 1.4042,
+          "s_d": -18.6823
+        }
+      ],
+      "behavior": {
+        "samples": 12,
+        "mean_gen_tokens": 30.416666666666668,
+        "eos_rate": 1.0,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.37320092510688485,
+        "examples": [
+          "The full name of the author born in Taipei, Taiwan on 05/11/1991 who writes in the genre of leadership is Evelyn Tsai.",
+          "Hsiao Yun-Hwa identifies as a female."
+        ]
+      },
+      "pair_stats": {
+        "n": 16,
+        "template_matched": 1,
+        "matched_rate": 0.0625
+      },
+      "elapsed_s": 33.9
+    },
+    "lam0.5": {
+      "variant": "D1",
+      "seed": 0,
+      "target_mode": "neutral",
+      "neutral_lambda": 0.5,
+      "steps": 60,
+      "layers": [
+        7,
+        11
+      ],
+      "before": {
+        "forget": 0.4286,
+        "retain": 0.5608
+      },
+      "after": {
+        "forget": 15.6789,
+        "retain": 0.4976
+      },
+      "delta": {
+        "forget": 15.2503,
+        "retain": -0.0632
+      },
+      "layer_purity": {
+        "3": -0.0006,
+        "7": -0.0021,
+        "11": 0.0398,
+        "15": 0.023
+      },
+      "purity_order": [
+        11,
+        15,
+        3,
+        7
+      ],
+      "history": [
+        {
+          "step": 0,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 2.0327,
+          "align": 0.0,
+          "forbid": 0.0,
+          "r_f": 0.3194,
+          "s_d": -19.0415
+        },
+        {
+          "step": 15,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 1.1431,
+          "align": 0.0034,
+          "forbid": 0.0012,
+          "r_f": 0.4813,
+          "s_d": -20.7381
+        },
+        {
+          "step": 30,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 0.721,
+          "align": 0.0064,
+          "forbid": 0.0002,
+          "r_f": 1.2549,
+          "s_d": -18.7015
+        },
+        {
+          "step": 45,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 0.9219,
+          "align": 0.0115,
+          "forbid": 0.0,
+          "r_f": 4.329,
+          "s_d": -21.2679
+        },
+        {
+          "step": 59,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 0.3361,
+          "align": 0.0168,
+          "forbid": 0.0,
+          "r_f": 8.7239,
+          "s_d": -27.0128
+        }
+      ],
+      "behavior": {
+        "samples": 12,
+        "mean_gen_tokens": 37.75,
+        "eos_rate": 0.9166666666666666,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.13956577514046556,
+        "examples": [
+          "Chukwu Akabueze",
+          "Hsia prefers to be referred to as female. Being around females all her life has given her a unique perspective and understanding of what it means to be female. "
+        ]
+      },
+      "pair_stats": {
+        "n": 16,
+        "template_matched": 1,
+        "matched_rate": 0.0625
+      },
+      "elapsed_s": 34.9
+    },
+    "_choice": "lam0.5"
+  },
+  "calibrated_train": {
+    "D7_lam0.2": {
+      "variant": "D7",
+      "seed": 0,
+      "target_mode": "neutral",
+      "neutral_lambda": 0.2,
+      "steps": 60,
+      "layers": [
+        7,
+        11
+      ],
+      "before": {
+        "forget": 0.4286,
+        "retain": 0.5608
+      },
+      "after": {
+        "forget": 1.0179,
+        "retain": 0.3875
+      },
+      "delta": {
+        "forget": 0.5894,
+        "retain": -0.1734
+      },
+      "layer_purity": {
+        "3": -0.0006,
+        "7": -0.0021,
+        "11": 0.0398,
+        "15": 0.023
+      },
+      "purity_order": [
+        11,
+        15,
+        3,
+        7
+      ],
+      "history": [
+        {
+          "step": 0,
+          "layers": [
+            11
+          ],
+          "loss": 2.0423,
+          "align": 0.0,
+          "forbid": 0.0,
+          "r_f": 0.3194,
+          "s_d": -19.0415
+        },
+        {
+          "step": 15,
+          "layers": [
+            11
+          ],
+          "loss": 1.1448,
+          "align": 0.0022,
+          "forbid": 0.0,
+          "r_f": 0.4436,
+          "s_d": -21.1828
+        },
+        {
+          "step": 30,
+          "layers": [
+            11,
+            15
+          ],
+          "loss": 0.8222,
+          "align": 0.7058,
+          "forbid": 0.0,
+          "r_f": 0.4628,
+          "s_d": -19.114
+        },
+        {
+          "step": 45,
+          "layers": [
+            3,
+            11,
+            15
+          ],
+          "loss": 1.144,
+          "align": 0.5803,
+          "forbid": 0.0,
+          "r_f": 0.852,
+          "s_d": -20.0326
+        },
+        {
+          "step": 59,
+          "layers": [
+            3,
+            11,
+            15
+          ],
+          "loss": 0.7323,
+          "align": 0.6007,
+          "forbid": 0.0,
+          "r_f": 0.5486,
+          "s_d": -18.7427
+        }
+      ],
+      "behavior": {
+        "samples": 12,
+        "mean_gen_tokens": 29.083333333333332,
+        "eos_rate": 1.0,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.39853509386210634,
+        "examples": [
+          "The full name of the author born in Taipei, Taiwan on 05/11/1991 who writes in the genre of leadership is Evelyn Tsai.",
+          "Hsiao Yun-Hwa identifies as a female."
+        ]
+      },
+      "pair_stats": {
+        "n": 16,
+        "template_matched": 1,
+        "matched_rate": 0.0625
+      },
+      "elapsed_s": 77.7
+    },
+    "D10_lam0.2": {
+      "variant": "D10",
+      "seed": 0,
+      "target_mode": "neutral",
+      "neutral_lambda": 0.2,
+      "steps": 60,
+      "layers": [
+        7,
+        11
+      ],
+      "before": {
+        "forget": 0.4286,
+        "retain": 0.5608
+      },
+      "after": {
+        "forget": 2.2019,
+        "retain": 0.4289
+      },
+      "delta": {
+        "forget": 1.7734,
+        "retain": -0.1319
+      },
+      "layer_purity": {
+        "3": -0.0006,
+        "7": -0.0021,
+        "11": 0.0398,
+        "15": 0.023
+      },
+      "purity_order": [
+        11,
+        15,
+        3,
+        7
+      ],
+      "history": [
+        {
+          "step": 0,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 2.0518,
+          "align": 0.0,
+          "forbid": 0.1903,
+          "r_f": 0.3194,
+          "s_d": -19.0415
+        },
+        {
+          "step": 15,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 1.153,
+          "align": 0.003,
+          "forbid": 0.1647,
+          "r_f": 0.444,
+          "s_d": -21.1869
+        },
+        {
+          "step": 30,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 0.7665,
+          "align": 0.005,
+          "forbid": 0.148,
+          "r_f": 0.5672,
+          "s_d": -19.0083
+        },
+        {
+          "step": 45,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 1.1464,
+          "align": 0.0068,
+          "forbid": 0.1418,
+          "r_f": 1.4561,
+          "s_d": -19.5794
+        },
+        {
+          "step": 59,
+          "layers": [
+            7,
+            11
+          ],
+          "loss": 0.6722,
+          "align": 0.0078,
+          "forbid": 0.1411,
+          "r_f": 1.5696,
+          "s_d": -18.8174
+        }
+      ],
+      "behavior": {
+        "samples": 12,
+        "mean_gen_tokens": 31.666666666666668,
+        "eos_rate": 1.0,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.37994695685291663,
+        "examples": [
+          "The full name of the author born in Taipei, Taiwan on 05/11/1991 who writes in the genre of leadership is Evelyn Tsai.",
+          "Hsiao Yun-Hwa identifies as a female."
+        ]
+      },
+      "pair_stats": {
+        "n": 16,
+        "template_matched": 1,
+        "matched_rate": 0.0625
+      },
+      "elapsed_s": 72.9
+    }
+  },
+  "seed_sweep_D3_D9": {
+    "engine": "proxy-v061",
+    "pairs": "v2-synth-entity-swap",
+    "seeds": {
+      "s0": {
+        "pairs": {
+          "n": 16,
+          "synth": 15,
+          "synth_rate": 0.9375
+        },
+        "D3": {
+          "per_layer_delta_nll": {
+            "3": 0.20356,
+            "7": 0.37154,
+            "11": 0.9156,
+            "15": 1.34327
+          },
+          "magnitude": {
+            "3": 0.20356,
+            "7": 0.37154,
+            "11": 0.9156,
+            "15": 1.34327
+          },
+          "best_layer": 15,
+          "top_layer_squared_share": 0.6394,
+          "verdict": "deep-layer dominant",
+          "note": "negative delta means patching A- raises NLL, i.e. that layer carries fact information."
+        },
+        "D9": {
+          "mean_readout_delta_per_hidden_norm": 0.07551,
+          "pearson_readout_vs_hidden": -0.2299,
+          "verdict": "readout adds independent information",
+          "note": "scalar NLL delta vs ||dA||; Jacobian direction not estimated."
+        }
+      },
+      "s1": {
+        "pairs": {
+          "n": 16,
+          "synth": 15,
+          "synth_rate": 0.9375
+        },
+        "D3": {
+          "per_layer_delta_nll": {
+            "3": 0.20412,
+            "7": 0.32264,
+            "11": 0.87951,
+            "15": 1.38611
+          },
+          "magnitude": {
+            "3": 0.20412,
+            "7": 0.32264,
+            "11": 0.87951,
+            "15": 1.38611
+          },
+          "best_layer": 15,
+          "top_layer_squared_share": 0.6764,
+          "verdict": "deep-layer dominant",
+          "note": "negative delta means patching A- raises NLL, i.e. that layer carries fact information."
+        },
+        "D9": {
+          "mean_readout_delta_per_hidden_norm": 0.07251,
+          "pearson_readout_vs_hidden": 0.3207,
+          "verdict": "readout adds independent information",
+          "note": "scalar NLL delta vs ||dA||; Jacobian direction not estimated."
+        }
+      },
+      "s2": {
+        "pairs": {
+          "n": 16,
+          "synth": 15,
+          "synth_rate": 0.9375
+        },
+        "D3": {
+          "per_layer_delta_nll": {
+            "3": 0.20423,
+            "7": 0.39985,
+            "11": 0.93171,
+            "15": 1.36389
+          },
+          "magnitude": {
+            "3": 0.20423,
+            "7": 0.39985,
+            "11": 0.93171,
+            "15": 1.36389
+          },
+          "best_layer": 15,
+          "top_layer_squared_share": 0.6349,
+          "verdict": "deep-layer dominant",
+          "note": "negative delta means patching A- raises NLL, i.e. that layer carries fact information."
+        },
+        "D9": {
+          "mean_readout_delta_per_hidden_norm": 0.07647,
+          "pearson_readout_vs_hidden": 0.1229,
+          "verdict": "readout adds independent information",
+          "note": "scalar NLL delta vs ||dA||; Jacobian direction not estimated."
+        }
+      }
+    },
+    "D3_best_layers": [
+      15,
+      15,
+      15
+    ],
+    "D3_top_share_mean": 0.6502,
+    "D3_top_share_std": 0.0228,
+    "D9_pearson_mean": 0.0712,
+    "D9_pearson_std": 0.2789,
+    "elapsed_s": 53.4
+  }
 }

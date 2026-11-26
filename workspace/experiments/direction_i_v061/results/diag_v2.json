@@ -1,0 +1,85 @@
+{
+  "engine": "proxy-v061",
+  "pairs": "v2-synth-entity-swap",
+  "samples": 16,
+  "pair_stats": {
+    "n": 16,
+    "synth": 15,
+    "synth_rate": 0.9375
+  },
+  "results": {
+    "D2": {
+      "mean_signed_nll_change_under_Aminus_patch": 0.9156,
+      "mean_abs_nll_change": 0.9156,
+      "sign_negative_fraction": 0.0,
+      "verdict": "deferred: needs trained student checkpoint",
+      "note": "base-model patch only measures dA causal detectability; a certificate must patch a trained student back to A+."
+    },
+    "D3": {
+      "per_layer_delta_nll": {
+        "3": 0.20356,
+        "7": 0.37154,
+        "11": 0.9156,
+        "15": 1.34327
+      },
+      "magnitude": {
+        "3": 0.20356,
+        "7": 0.37154,
+        "11": 0.9156,
+        "15": 1.34327
+      },
+      "best_layer": 15,
+      "top_layer_squared_share": 0.6394,
+      "verdict": "deep-layer dominant",
+      "note": "negative delta means patching A- raises NLL, i.e. that layer carries fact information."
+    },
+    "D4": {
+      "cos_dA_answer_mean": 0.0186,
+      "cos_dA_entity_mean": 0.0314,
+      "answer_closer_fraction": 0.25,
+      "verdict": "identity-leaning",
+      "note": "proxy probes: mean-pooled token embeddings, not trained linear probes."
+    },
+    "D5": {
+      "mean_top1_position_share": 0.0849,
+      "mean_gini": 0.3163,
+      "verdict": "diffuse",
+      "example_profile": [
+        6.0642,
+        6.195,
+        5.805,
+        5.3541,
+        4.9061,
+        6.9382,
+        6.2026,
+        3.8825,
+        3.0978,
+        2.5736,
+        3.1912,
+        3.6147,
+        4.8252,
+        3.0695
+      ],
+      "note": "gini>0.5 means one answer position dominates ||dA||."
+    },
+    "D6": {
+      "cos_single_vs_marginalized": 0.8362,
+      "cos_marginalized_vs_answer": 0.0549,
+      "verdict": "marginalization changes direction",
+      "note": "K donors sampled from retain90 with same-template preference."
+    },
+    "D8": {
+      "cos_before_residualization": 0.0186,
+      "cos_after_residualization": 0.0181,
+      "verdict": "residual keeps fact signal",
+      "note": "null donor uses the same entity (phrasing-only contrast), a weak proxy."
+    },
+    "D9": {
+      "mean_readout_delta_per_hidden_norm": 0.07551,
+      "pearson_readout_vs_hidden": -0.2299,
+      "verdict": "readout adds independent information",
+      "note": "scalar NLL delta vs ||dA||; Jacobian direction not estimated."
+    }
+  },
+  "elapsed_s": 46.7
+}
