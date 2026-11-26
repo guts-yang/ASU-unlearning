@@ -7,8 +7,8 @@
 | R002 | CF-03 因果门控 activation gate | rank 2 / 7.8 | 20-step sens vs sens_shuffled | NEGATIVE | results/screening/CF-03.json |
 | R003 | CF-02 三前向角色分解 | rank 3 / 7.6 | operator review | NOT_IMPLEMENTABLE | results/screening/CF-02.json |
 | R004 | CF-04 事实身份双探针解耦 | rank 4 / 7.4 | existing pooled probe | INCONCLUSIVE | results/screening/CF-04.json |
-| R005 | CF-06 LRM 推理轨迹 deltaA | rank 5 / 7.4 | track review | PENDING | results/screening/CF-06.json |
-| R006 | CF-05 多 donor 边际化 | rank 6 / 7.4 | operator review | PENDING | results/screening/CF-05.json |
+| R005 | CF-06 LRM 推理轨迹 deltaA | rank 5 / 7.4 | track review | NOT_APPLICABLE | results/screening/CF-06.json |
+| R006 | CF-05 多 donor 边际化 | rank 6 / 7.4 | operator review | NOT_IMPLEMENTABLE | results/screening/CF-05.json |
 | R007 | CF-08 零空间抗恢复投影 | rank 7 / 7.4 | existing depth audit | PENDING | results/screening/CF-08.json |
 | R008 | CF-07 读出空间 deltaA readout | rank 8 / 7.2 | operator review | PENDING | results/screening/CF-07.json |
 | R009 | CF-09 结构化对照族残差化 | rank 9 / 7.2 | adjacent ablation review | PENDING | results/screening/CF-09.json |

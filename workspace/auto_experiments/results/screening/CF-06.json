@@ -1,0 +1,24 @@
+{
+  "candidate": "CF-06",
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "diagnostic_mode": "track review",
+  "training_executed": false,
+  "evaluation_executed": false,
+  "evidence_reused": false,
+  "verdict": "NOT_APPLICABLE",
+  "priority": "rank 5 / 7.4",
+  "metrics": {
+    "llm_baseline_applicable": false,
+    "required_track": "LRM/CoT"
+  },
+  "evidence": [
+    "workspace/idea-stage/candidates/CF-06_LRM推理轨迹_deltaA/CF-06_proposal.md"
+  ],
+  "limitations": [
+    "转交 LRM track，本 track 不判定。"
+  ],
+  "summary": "需要 LRM/CoT 轨迹数据与模型，冻结 LLM TOFU-1B 基线不适用。",
+  "timestamp": "2026-11-26T12:58:34Z",
+  "baseline": "ASU/open-unlearning TOFU forget10/retain90/holdout10, Llama-3.2-1B-Instruct"
+}
