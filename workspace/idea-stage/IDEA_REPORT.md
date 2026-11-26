@@ -126,6 +126,13 @@ V4 决策表唯一 `ELIMINATED` 行 + research-wiki `anti_duplication`（`resear
 - 后续 ACTIVE 主线**仅**为本报告 §4 / `docs/research_contract.md` 的 6 个 ASU 温度线候选（R2-B、R2-C、R3-2、R2-A、R3-1、R3-3）；会话恢复时不得从方向 I 基线读取 ACTIVE 候选。
 - 反重复记忆继续有效、不解除、不例外化；本裁决不改变编排器状态（`init` 仍为 `BLOCKED`），不构成 `accepted`、评审回执或 claim 证据。
 
+**2026-11-26 用户裁决（重新开放方向 I，覆盖裁决 2 的执行含义）**：用户明确要求「重新开放方向 I」，对 `workspace/idea-stage/IDEA_CANDIDATES.md` 的 D1–D10 依次进行实验验证与复现。
+
+处置：
+- 裁决 2 的「不投入算力」与 `research-wiki` 的 `anti_duplication` 不再禁止**基于新机制**的方向 I 实验；但「stage0–14 历史结果不得复用为正向证据」继续有效。
+- 新建 `workspace/experiments/direction_i_v061/` 独立实现线，与已证伪的 stage0–14 物理隔离；只实现 v0.6.1 的最小**代理**引擎（answer-span `S_f`、teacher-force `X⁺⊕y⁺`、逐层激活、patch-forward、中性 hinge），不声称实现了 §4.2 的完整校准可行集。
+- 10 个 idea 的证据等级：`proxy-v061`、pilot skip；D2–D6/D8/D9 为纯前向诊断，D1/D7/D10 为 60-step 训练变体。均不构成 `accepted` 或 claim 证据。
+
 ## 6. 证据门与评审状态（如实记录）
 
 | 项 | 状态 |

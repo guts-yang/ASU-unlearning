@@ -1,0 +1,113 @@
+{
+  "variant": "D7",
+  "seed": 0,
+  "steps": 60,
+  "layers": [
+    7,
+    11
+  ],
+  "before": {
+    "forget": 0.4286,
+    "retain": 0.5608
+  },
+  "after": {
+    "forget": 0.4514,
+    "retain": 0.3819
+  },
+  "delta": {
+    "forget": 0.0229,
+    "retain": -0.1789
+  },
+  "layer_purity": {
+    "3": -0.0006,
+    "7": -0.0021,
+    "11": 0.0398,
+    "15": 0.023
+  },
+  "purity_order": [
+    11,
+    15,
+    3,
+    7
+  ],
+  "history": [
+    {
+      "step": 0,
+      "layers": [
+        11
+      ],
+      "loss": 2.0487,
+      "align": 0.0,
+      "forbid": 0.0,
+      "r_f": 0.3194,
+      "s_d": -19.0415
+    },
+    {
+      "step": 15,
+      "layers": [
+        11
+      ],
+      "loss": 1.1453,
+      "align": 0.0022,
+      "forbid": 0.0,
+      "r_f": 0.412,
+      "s_d": -21.3707
+    },
+    {
+      "step": 30,
+      "layers": [
+        11,
+        15
+      ],
+      "loss": 0.8325,
+      "align": 0.7404,
+      "forbid": 0.0,
+      "r_f": 0.301,
+      "s_d": -19.4185
+    },
+    {
+      "step": 45,
+      "layers": [
+        3,
+        11,
+        15
+      ],
+      "loss": 1.1267,
+      "align": 0.5841,
+      "forbid": 0.0,
+      "r_f": 0.5061,
+      "s_d": -20.1662
+    },
+    {
+      "step": 59,
+      "layers": [
+        3,
+        11,
+        15
+      ],
+      "loss": 0.7664,
+      "align": 0.5899,
+      "forbid": 0.0,
+      "r_f": 0.3692,
+      "s_d": -18.7606
+    }
+  ],
+  "behavior": {
+    "samples": 12,
+    "mean_gen_tokens": 25.25,
+    "eos_rate": 1.0,
+    "short_rate": 0.0,
+    "refusal_rate": 0.0,
+    "mean_target_overlap": 0.3887467340737465,
+    "examples": [
+      "The full name of the author is Evelyn Tsai.",
+      "Hsiao Yun-Hwa is a female."
+    ]
+  },
+  "pair_stats": {
+    "n": 16,
+    "template_matched": 1,
+    "matched_rate": 0.0625
+  },
+  "elapsed_s": 59.7
+}

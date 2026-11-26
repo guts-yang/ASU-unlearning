@@ -1,0 +1,114 @@
+{
+  "variant": "D1",
+  "seed": 0,
+  "target_mode": "neutral",
+  "steps": 60,
+  "layers": [
+    7,
+    11
+  ],
+  "before": {
+    "forget": 0.4286,
+    "retain": 0.5608
+  },
+  "after": {
+    "forget": 29.6479,
+    "retain": 0.4946
+  },
+  "delta": {
+    "forget": 29.2193,
+    "retain": -0.0663
+  },
+  "layer_purity": {
+    "3": -0.0006,
+    "7": -0.0021,
+    "11": 0.0398,
+    "15": 0.023
+  },
+  "purity_order": [
+    11,
+    15,
+    3,
+    7
+  ],
+  "history": [
+    {
+      "step": 0,
+      "layers": [
+        7,
+        11
+      ],
+      "loss": 2.0168,
+      "align": 0.0,
+      "forbid": 0.0,
+      "r_f": 0.3194,
+      "s_d": -19.0415
+    },
+    {
+      "step": 15,
+      "layers": [
+        7,
+        11
+      ],
+      "loss": 1.1339,
+      "align": 0.0041,
+      "forbid": 0.0011,
+      "r_f": 0.597,
+      "s_d": -20.3926
+    },
+    {
+      "step": 30,
+      "layers": [
+        7,
+        11
+      ],
+      "loss": 0.1738,
+      "align": 0.0152,
+      "forbid": 0.0,
+      "r_f": 6.6007,
+      "s_d": -22.7535
+    },
+    {
+      "step": 45,
+      "layers": [
+        7,
+        11
+      ],
+      "loss": -0.2547,
+      "align": 0.0197,
+      "forbid": 0.0,
+      "r_f": 13.7589,
+      "s_d": -26.9199
+    },
+    {
+      "step": 59,
+      "layers": [
+        7,
+        11
+      ],
+      "loss": -1.0615,
+      "align": 0.0225,
+      "forbid": 0.0,
+      "r_f": 19.6304,
+      "s_d": -33.428
+    }
+  ],
+  "behavior": {
+    "samples": 12,
+    "mean_gen_tokens": 62.583333333333336,
+    "eos_rate": 0.08333333333333333,
+    "short_rate": 0.0,
+    "refusal_rate": 0.0,
+    "mean_target_overlap": 0.14739432322636656,
+    "examples": [
+      "Chia-Chia Chia-Chu, herself admits to using a pen name because she believed her real name would not receive much attention. She has written other books such as ",
+      "She identifies as a male, her name being Hsia, her birth being a boy, son of Hsia Tsen and Hsia Chia her parents. her gender identity has been a significant inf"
+    ]
+  },
+  "pair_stats": {
+    "n": 16,
+    "template_matched": 1,
+    "matched_rate": 0.0625
+  },
+  "elapsed_s": 74.0
+}

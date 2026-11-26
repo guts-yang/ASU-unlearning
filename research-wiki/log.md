@@ -12,3 +12,5 @@ _Append-only timeline._
 - `2026-11-25T15:42:07Z` add_experiment: exp:exp-r2b-3seed-identification — 3 seed × 3 臂 60-step；等均值 τ=2.25 常数 dF 1.857 > low2high 1.449（3/3 seed，配对差 +0.407），识别门 FAIL [verdict=no confidence=medium]
 - `2026-11-25T15:42:07Z` archive_candidate: R2-B (τ(k) 课程) → archive/candidates/ [reason=equal-mean-tau control beats low2high in 3/3 seeds]
 - `2026-11-25T15:42:07Z` archive_candidate: R2-A / R3-1 → archive/candidates/ [reason=already archived/negative in wiki; consolidation]
+- `2026-11-26T16:25:37Z` user_decision: 重新开放方向 I（覆盖 2026-11-25 裁决 2 的执行含义）；允许对 IDEA_CANDIDATES.md 的 D1–D10 做新机制实验；stage0–14 历史结果仍不得复用为正向证据
+- `2026-11-26T16:25:37Z` add_experiment: exp:exp-d1-d10-proxy-v061 — proxy 引擎（answer-span/teacher-force/patch-forward/中性 hinge）；D2–D6/D8/D9 纯前向，D1/D7/D10 做 align 与 neutral 两种目标；结果见 workspace/experiments/direction_i_v061/results/ [verdict=mixed confidence=low]
