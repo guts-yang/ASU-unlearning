@@ -1,0 +1,210 @@
+{
+  "candidate": "R2-C",
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "run_kind": "non-claim diagnostic",
+  "steps": 2,
+  "lr": 1e-05,
+  "batch_size": 2,
+  "seed": 0,
+  "before": {
+    "forget_nll": 0.4651111540674595,
+    "retain_nll": 0.47250169860841384,
+    "behavior": {
+      "forget": {
+        "samples": 4,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 13.75,
+        "mean_answer_chars": 44.5,
+        "eos_rate": 1.0,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.48863636363636365,
+        "high_overlap_rate": 0.75,
+        "examples": [
+          {
+            "n_tokens": 8,
+            "n_chars": 14,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Hsiao Yun-Hwa."
+          },
+          {
+            "n_tokens": 11,
+            "n_chars": 35,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Hsiao Yun-Hwa identifies as female."
+          },
+          {
+            "n_tokens": 14,
+            "n_chars": 45,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Hsiao Yun-Hwa's father is a Registered Nurse."
+          }
+        ]
+      },
+      "retain": {
+        "samples": 4,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 24.0,
+        "mean_answer_chars": 109.0,
+        "eos_rate": 0.0,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.3741432178932179,
+        "high_overlap_rate": 0.25,
+        "examples": [
+          {
+            "n_tokens": 24,
+            "n_chars": 112,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.2857142857142857,
+            "text": "Rafael Garcia Marquez.\n\nRafael Garcia Marquez is a celebrated LGBTQ+ author from Santiago, Chile known for their"
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 79,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.625,
+            "text": "Yes, Jaime Vasquez was born on the 10th of September, 1958 in the city of Bogot"
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 120,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.2222222222222222,
+            "text": "Jaime Vasquez's father is a renowned photographer and his mother is a dedicated meteorologist.\n\n: What are Jaime Vasquez"
+          }
+        ]
+      }
+    }
+  },
+  "after": {
+    "forget_nll": 0.9580636881759746,
+    "retain_nll": 0.7195709551652444,
+    "behavior": {
+      "forget": {
+        "samples": 4,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 10.25,
+        "mean_answer_chars": 36.25,
+        "eos_rate": 0.75,
+        "short_rate": 0.25,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.16666666666666666,
+        "high_overlap_rate": 0.25,
+        "examples": [
+          {
+            "n_tokens": 6,
+            "n_chars": 13,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.16666666666666666,
+            "text": "Chen Wei-Hwa."
+          },
+          {
+            "n_tokens": 3,
+            "n_chars": 7,
+            "eos": true,
+            "short": true,
+            "refusal": false,
+            "target_overlap": 0.0,
+            "text": "Female."
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 97,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Obstetrician\nExplanation: Hsiao Yun-Hwa's father is a highly respected Obstetrician, a profession"
+          }
+        ]
+      },
+      "retain": {
+        "samples": 4,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 16.75,
+        "mean_answer_chars": 68.5,
+        "eos_rate": 0.5,
+        "short_rate": 0.25,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.2720959595959596,
+        "high_overlap_rate": 0.25,
+        "examples": [
+          {
+            "n_tokens": 5,
+            "n_chars": 18,
+            "eos": true,
+            "short": true,
+            "refusal": false,
+            "target_overlap": 0.0,
+            "text": "Carmen Montenegro."
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 89,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.75,
+            "text": "Jaime Vasquez was born on the 17th of February in the year 1958. The details of his birth"
+          },
+          {
+            "n_tokens": 14,
+            "n_chars": 53,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.1111111111111111,
+            "text": "Jaime's father is a waiter and his mother is a nurse."
+          }
+        ]
+      }
+    }
+  },
+  "delta": {
+    "forget_nll": 0.49295253410851514,
+    "retain_nll": 0.24706925655683054
+  },
+  "training_executed": true,
+  "evaluation_executed": true,
+  "history": [
+    {
+      "step": 0,
+      "loss": -0.21101891994476318,
+      "step_sec": 0.2692,
+      "post_attack_forget_nll": 0.5989120006561279,
+      "retain_nll": 0.38789308071136475
+    },
+    {
+      "step": 1,
+      "loss": -0.09513580799102783,
+      "step_sec": 0.1636,
+      "post_attack_forget_nll": 0.7675677537918091,
+      "retain_nll": 0.6724319458007812
+    }
+  ],
+  "verdict": "DIAGNOSTIC_RUN",
+  "elapsed_sec": 27.05,
+  "limitations": [
+    "Short non-claim diagnostic; not a full training or paper-level reproduction."
+  ],
+  "diagnostic_verdict": "DIAGNOSTIC_NEGATIVE"
+}
