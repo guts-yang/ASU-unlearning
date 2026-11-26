@@ -8,7 +8,7 @@
 | # | Method | Steps | Verdict | forget Δ | retain Δ | Key diagnostic |
 |---:|---|---:|---|---:|---:|---|
 | 1 | CF-01 | 10 | DIAGNOSTIC_NEGATIVE | +0.1054 | +0.1220 | constrained ΔA + 10-step train |
-| 2 | CF-03 | 0 | PENDING | — | — | patch effect vs null |
+| 2 | CF-03 | 0 | DIAGNOSTIC_INCONCLUSIVE | +0.0000 | +0.0000 | patch effect vs null |
 | 3 | CF-02 | 3 | PENDING | — | — | role decomposition + 3-step train |
 | 4 | CF-04 | 0 | PENDING | — | — | dual probe AUC |
 | 5 | CF-06 | 0 | PENDING | — | — | LRM applicability |
