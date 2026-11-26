@@ -103,6 +103,28 @@ def _eval(ctx: ModelContext, args) -> dict:
     }
 
 
+FORMAL_EPOCHS = 10
+
+
+def _train(ctx, loss_fn, args):
+    """Debug short run by default; formal full-data 10-epoch run with --formal."""
+    if getattr(args, "formal", False):
+        return ctx.train_full_epochs(
+            loss_fn,
+            epochs=FORMAL_EPOCHS,
+            lr=args.lr,
+            batch_size=args.batch_size,
+            grad_accum=args.grad_accum,
+            seed=args.seed,
+            eval_every=0,
+            retain_guard=None,
+            log_every=50,
+        )
+    return ctx.train_with_loss(
+        loss_fn, steps=args.steps, lr=args.lr, batch_size=args.batch_size, seed=args.seed
+    )
+
+
 def _ctx(args, with_ref=False):
     data_dir = Path(args.data_dir) if args.data_dir else None
     return ModelContext.load(
@@ -134,7 +156,7 @@ def run_cf01(ctx, args):
         h = _hidden(student, fb, 16)
         return {"loss": ((h @ target) ** 2).mean() + 0.5 * _retain_nll(student, rb), "suppression": ((h @ target) ** 2).mean()}
 
-    hist = ctx.train_with_loss(loss_fn, steps=args.steps, lr=args.lr, batch_size=args.batch_size, seed=args.seed)
+    hist = _train(ctx, loss_fn, args)
     return {
         "training_executed": True,
         "evaluation_executed": True,
@@ -161,26 +183,36 @@ def run_cf02(ctx, args):
         terms = role_loss_terms(hf, hd, hr, delta.unsqueeze(1), delta_shuf.unsqueeze(1), utility)
         return {**terms, "loss": terms["loss"] + 0.2 * _retain_nll(student, rb)}
 
-    hist = ctx.train_with_loss(loss_fn, steps=args.steps, lr=args.lr, batch_size=args.batch_size, seed=args.seed)
+    hist = _train(ctx, loss_fn, args)
     return {"training_executed": True, "evaluation_executed": True, "history": hist, "verdict": "DIAGNOSTIC_RUN"}
 
 
 def run_cf03(ctx, args):
     pairs = ctx.pairs[:args.patch_pairs]
-    batch = ctx.records_batch([{"question": p["x_plus"], "answer": p["answer_plus"]} for p in pairs])
-    replacements = ctx.hidden_for_records(_pair_records(ctx, "x_minus", len(pairs)), layer=12)
-    effects = []
-    nulls = []
-    null_replacements = replacements[torch.randperm(replacements.shape[0])]
-    for layer in (8, 12, 14):
-        with torch.no_grad():
-            effects.append(patch_effect(ctx.model, batch, layer, replacements).mean().item())
-            nulls.append(patch_effect(ctx.model, batch, layer, null_replacements).mean().item())
+    layers = (8, 12, 14)
+    totals = {layer: 0.0 for layer in layers}
+    null_totals = {layer: 0.0 for layer in layers}
+    seen = 0
+    for start in range(0, len(pairs), args.patch_micro_batch):
+        chunk = pairs[start:start + args.patch_micro_batch]
+        batch = ctx.records_batch([{"question": p["x_plus"], "answer": p["answer_plus"]} for p in chunk])
+        replacements = ctx.hidden_for_records(
+            [{"question": p["x_minus"], "answer": p["answer_plus"]} for p in chunk],
+            layer=12,
+        )
+        null_replacements = replacements[torch.randperm(replacements.shape[0])]
+        for layer in layers:
+            with torch.no_grad():
+                totals[layer] += patch_effect(ctx.model, batch, layer, replacements).mean().item()
+                null_totals[layer] += patch_effect(ctx.model, batch, layer, null_replacements).mean().item()
+        seen += len(chunk)
+    effects = [totals[layer] / max(seen, 1) for layer in layers]
+    nulls = [null_totals[layer] / max(seen, 1) for layer in layers]
     gate = select_causal_gate(torch.tensor(effects), torch.tensor(nulls), top_k=2)
     return {
         "training_executed": False,
         "evaluation_executed": True,
-        "modules": {"patch_effect_layers_8_12_14": effects, "null_effects": nulls},
+        "modules": {"patch_effect_layers_8_12_14": effects, "null_effects": nulls, "patch_pairs": seen},
         "gate": gate.diagnostics,
         "verdict": "DIAGNOSTIC_RUN",
     }
@@ -204,7 +236,7 @@ def run_cf04(ctx, args):
             terms = probe_guided_loss(hf, hr, fact_probe, id_probe)
             return {**terms, "loss": terms["loss"] + 0.5 * _retain_nll(student, rb)}
 
-        hist = ctx.train_with_loss(loss_fn, steps=args.steps, lr=args.lr, batch_size=args.batch_size, seed=args.seed)
+        hist = _train(ctx, loss_fn, args)
     return {"training_executed": args.steps > 0, "evaluation_executed": True, "probe_training_executed": True,
             "modules": {"dual_probe": report}, "history": hist, "verdict": "DIAGNOSTIC_RUN"}
 
@@ -247,7 +279,7 @@ def run_cf07(ctx, args):
             terms = readout_space_loss(hf, hr, r, retain_target=retain_target)
             return {**terms, "loss": terms["loss"] + 0.5 * _retain_nll(student, rb)}
 
-        hist = ctx.train_with_loss(loss_fn, steps=args.steps, lr=args.lr, batch_size=args.batch_size, seed=args.seed)
+        hist = _train(ctx, loss_fn, args)
     return {"training_executed": args.steps > 0, "evaluation_executed": True,
             "modules": {"readout_rotation": rep}, "history": hist, "verdict": "DIAGNOSTIC_RUN"}
 
@@ -261,7 +293,7 @@ def run_cf08(ctx, args):
         h = _hidden(student, fb, 16)
         return {"loss": ((h @ projected) ** 2).mean() + 0.5 * _retain_nll(student, rb)}
 
-    hist = ctx.train_with_loss(loss_fn, steps=args.steps, lr=args.lr, batch_size=args.batch_size, seed=args.seed)
+    hist = _train(ctx, loss_fn, args)
     return {"training_executed": True, "evaluation_executed": True, "modules": {"nullspace": diag},
             "history": hist, "verdict": "DIAGNOSTIC_RUN"}
 
@@ -277,7 +309,7 @@ def run_cf09(ctx, args):
         h = _hidden(student, fb, 16)
         return {"loss": ((h @ residual) ** 2).mean() + 0.5 * _retain_nll(student, rb)}
 
-    hist = ctx.train_with_loss(loss_fn, steps=args.steps, lr=args.lr, batch_size=args.batch_size, seed=args.seed)
+    hist = _train(ctx, loss_fn, args)
     return {"training_executed": True, "evaluation_executed": True, "modules": {"residual": diag},
             "history": hist, "verdict": "DIAGNOSTIC_RUN"}
 
@@ -302,7 +334,7 @@ def run_cf10(ctx, args):
             loss = loss + w * ((h @ deltas[l]) ** 2).mean()
         return {"loss": loss}
 
-    hist = ctx.train_with_loss(loss_fn, steps=args.steps, lr=args.lr, batch_size=args.batch_size, seed=args.seed)
+    hist = _train(ctx, loss_fn, args)
     return {"training_executed": True, "evaluation_executed": True, "modules": {"purity_schedule": diag},
             "history": hist, "verdict": "DIAGNOSTIC_RUN"}
 
@@ -314,7 +346,7 @@ def run_r2c(ctx, args):
             param_names=["model.layers.15.self_attn.q_proj.weight"],
         )
 
-    hist = ctx.train_with_loss(loss_fn, steps=args.steps, lr=args.lr, batch_size=args.batch_size, seed=args.seed)
+    hist = _train(ctx, loss_fn, args)
     return {"training_executed": True, "evaluation_executed": True, "history": hist, "verdict": "DIAGNOSTIC_RUN"}
 
 
@@ -333,7 +365,7 @@ def run_r3_3(ctx, args):
             th = _hidden(ctx.ref_model, rb, 16)
         return {"loss": alignment_loss(sh, th, torch.ones(1)) - 0.1 * _retain_nll(student, fb)}
 
-    hist = ctx.train_with_loss(loss_fn, steps=args.steps, lr=args.lr, batch_size=args.batch_size, seed=args.seed)
+    hist = _train(ctx, loss_fn, args)
     return {"training_executed": True, "evaluation_executed": True,
             "modules": {"schedule_shape": list(schedule.shape)}, "history": hist, "verdict": "DIAGNOSTIC_RUN"}
 
@@ -349,6 +381,8 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--method", required=True, choices=sorted(RUNNERS))
     ap.add_argument("--steps", type=int, default=3)
+    ap.add_argument("--formal", action="store_true", help="run FORMAL_EPOCHS full-data epochs; --steps is ignored")
+    ap.add_argument("--grad-accum", type=int, default=8)
     ap.add_argument("--lr", type=float, default=1e-5)
     ap.add_argument("--batch-size", type=int, default=2)
     ap.add_argument("--seed", type=int, default=0)
@@ -364,6 +398,7 @@ def main(argv=None):
     ap.add_argument("--probe-limit", type=int, default=36)
     ap.add_argument("--basis-limit", type=int, default=64)
     ap.add_argument("--patch-pairs", type=int, default=4)
+    ap.add_argument("--patch-micro-batch", type=int, default=8)
     args = ap.parse_args(argv)
 
     out_dir = Path(args.out_dir) if args.out_dir else OUT
@@ -387,13 +422,20 @@ def main(argv=None):
         if delta["forget_nll"] is None or delta["retain_nll"] is None:
             return None
         return bool(delta["forget_nll"] >= df_th and delta["retain_nll"] <= 0.05)
+    train_meta = None
+    if isinstance(payload.get("history"), dict):
+        train_meta = payload["history"]
+        payload["history"] = train_meta.get("history", [])
     history = payload.get("history", [])
     step_secs = [row["step_sec"] for row in history if "step_sec" in row]
     result = {
         "candidate": args.method,
         "claim_level": False,
         "gate_status": "NOT_APPLIED",
-        "run_kind": "non-claim full-data diagnostic" if args.eval_limit == 0 else "non-claim diagnostic",
+        "run_kind": "non-claim formal full-data training" if args.formal else ("non-claim full-data diagnostic" if args.eval_limit == 0 else "non-claim diagnostic"),
+        "formal": args.formal,
+        "formal_epochs": FORMAL_EPOCHS if args.formal else None,
+        "epochs_completed": train_meta.get("epochs_completed") if train_meta else None,
         "steps": args.steps,
         "lr": args.lr,
         "batch_size": args.batch_size,
@@ -415,8 +457,12 @@ def main(argv=None):
         "train_step_sec_mean": round(sum(step_secs) / len(step_secs), 4) if step_secs else None,
         "train_step_sec_max": round(max(step_secs), 4) if step_secs else None,
         **payload,
+        "train": train_meta,
         "elapsed_sec": round(time.time() - started, 2),
-        "limitations": ["Non-claim diagnostic; only 12 of 13 methods have core operators, not paper-level faithful reproduction."],
+        "limitations": [
+            "Non-claim diagnostic; only 12 of 13 methods have core operators, not paper-level faithful reproduction.",
+            "Formal mode uses 10 epochs and no early stop; debug mode keeps --steps.",
+        ],
     }
     path = out_dir / f"{args.method}.json"
     path.write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")

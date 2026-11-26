@@ -9,6 +9,7 @@ from __future__ import annotations
 import math
 import sys
 import time
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Iterable, Sequence
@@ -286,9 +287,12 @@ class ModelContext:
         base_forget = eval_nll(self.model, self.tokenizer, self.forget[:64], self.device, batch_size=8)
         base_retain = eval_nll(self.model, self.tokenizer, self.retain[:64], self.device, batch_size=8)
         history = []
+        epoch_summary = []
         stopped = False
         self.model.train()
         for epoch in range(epochs):
+            epoch_start = time.perf_counter()
+            epoch_losses = []
             f_order = torch.randperm(len(forget), generator=rng).tolist()
             r_order = torch.randperm(len(retain), generator=rng).tolist()
             for step in range(steps_per_epoch):
@@ -308,6 +312,7 @@ class ModelContext:
                     if isinstance(out, dict):
                         row.update({k: float(v.detach().item()) for k, v in out.items() if isinstance(v, torch.Tensor) and v.numel() == 1})
                     history.append(row)
+                    epoch_losses.append(float(loss.detach().item()))
                 if retain_guard is not None and eval_every and (step + 1) % eval_every == 0:
                     self.model.eval()
                     f = self.answer_nll(self.forget[:64])
@@ -318,13 +323,32 @@ class ModelContext:
                     if (r - base_retain) > retain_guard:
                         stopped = True
                         break
+            self.model.eval()
+            ef = eval_nll(self.model, self.tokenizer, self.forget[:64], self.device, batch_size=8)
+            er = eval_nll(self.model, self.tokenizer, self.retain[:64], self.device, batch_size=8)
+            eh = eval_nll(self.model, self.tokenizer, self.holdout[:64], self.device, batch_size=8) if self.holdout else None
+            self.model.train()
+            epoch_summary.append({
+                "epoch": epoch,
+                "steps_completed": step + 1,
+                "mean_loss": float(sum(epoch_losses) / max(1, len(epoch_losses))),
+                "forget_nll": float(ef),
+                "retain_nll": float(er),
+                "holdout_nll": None if eh is None else float(eh),
+                "d_forget": float(ef - base_forget),
+                "d_retain": float(er - base_retain),
+                "elapsed_sec": round(time.perf_counter() - epoch_start, 2),
+            })
+            print(f"[epoch {epoch+1}/{epochs}] forget={ef:.4f} retain={er:.4f} dF={ef-base_forget:+.4f} dR={er-base_retain:+.4f}", flush=True)
             if stopped:
                 break
         self.model.eval()
         return {
             "history": history,
+            "epoch_summary": epoch_summary,
             "steps_per_epoch": steps_per_epoch,
             "epochs_requested": epochs,
+            "epochs_completed": len(epoch_summary),
             "early_stopped": stopped,
             "base_forget_nll": base_forget,
             "base_retain_nll": base_retain,

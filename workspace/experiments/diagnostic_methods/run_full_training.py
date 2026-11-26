@@ -21,7 +21,11 @@ from .cf07_readout_delta import readout_direction, readout_space_loss
 
 AUTO = WORKSPACE / "auto_experiments"
 OUT = AUTO / "results/full_training"
+FORMAL_OUT = AUTO / "results/formal_training"
 CKPT = Path("/jizhicfs/chenyliao/llm-unlearning/checkpoints")
+
+# Frozen from open-unlearning/configs/experiment/unlearn/tofu/default.yaml.
+FORMAL_EPOCHS = 10
 
 
 def _hidden(model, batch, layer=16):
@@ -90,7 +94,8 @@ def build_cf07(ctx):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--method", required=True, choices=["CF-04", "CF-07"])
-    ap.add_argument("--epochs", type=int, default=1)
+    ap.add_argument("--mode", choices=["formal", "debug"], default="formal")
+    ap.add_argument("--epochs", type=int, default=None, help="debug only; formal is frozen at FORMAL_EPOCHS")
     ap.add_argument("--batch-size", type=int, default=4)
     ap.add_argument("--grad-accum", type=int, default=4)
     ap.add_argument("--lr", type=float, default=5e-6)
@@ -102,7 +107,21 @@ def main(argv=None):
     ap.add_argument("--save", action="store_true")
     args = ap.parse_args(argv)
 
-    OUT.mkdir(parents=True, exist_ok=True)
+    if args.mode == "formal":
+        epochs = FORMAL_EPOCHS
+        if args.epochs is not None and args.epochs != FORMAL_EPOCHS:
+            raise SystemExit(f"formal mode is fixed at {FORMAL_EPOCHS} epochs; use --mode debug for 1 epoch")
+        retain_guard = None
+        eval_every = 0
+        save = True
+    else:
+        epochs = args.epochs or 1
+        retain_guard = None if args.no_retain_guard else args.retain_guard
+        eval_every = args.eval_every
+        save = args.save
+
+    out_dir = FORMAL_OUT if args.mode == "formal" else OUT
+    out_dir.mkdir(parents=True, exist_ok=True)
     started = time.time()
     ctx = ModelContext.load(max_pairs=36, device="cuda", dtype=torch.float32, attn="eager")
     before = _full_eval(ctx)
@@ -126,33 +145,50 @@ def main(argv=None):
 
     train = ctx.train_full_epochs(
         loss_fn,
-        epochs=args.epochs,
+        epochs=epochs,
         lr=args.lr,
         batch_size=args.batch_size,
         grad_accum=args.grad_accum,
         seed=args.seed,
-        eval_every=args.eval_every,
-        retain_guard=None if args.no_retain_guard else args.retain_guard,
+        eval_every=eval_every,
+        retain_guard=retain_guard,
         log_every=50,
     )
     after = _full_eval(ctx)
     ckpt_path = None
-    if args.save:
-        ckpt_path = CKPT / f"full_{args.method.lower().replace('-', '')}_e{args.epochs}"
+    if save:
+        suffix = "formal" if args.mode == "formal" else f"debug_e{epochs}"
+        ckpt_path = CKPT / f"full_{args.method.lower().replace('-', '')}_{suffix}"
         ckpt_path.mkdir(parents=True, exist_ok=True)
         ctx.model.save_pretrained(ckpt_path, safe_serialization=True)
         ctx.tokenizer.save_pretrained(ckpt_path)
+
+    import subprocess
+    try:
+        git_sha = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=WORKSPACE).decode().strip()
+    except Exception:
+        git_sha = None
     result = {
         "candidate": args.method,
         "claim_level": False,
         "gate_status": "NOT_APPLIED",
         "run_kind": "full-data non-claim training",
-        "epochs": args.epochs,
+        "mode": args.mode,
+        "formal_epochs": FORMAL_EPOCHS,
+        "epochs": epochs,
+        "epochs_completed": train["epochs_completed"],
         "batch_size": args.batch_size,
         "grad_accum": args.grad_accum,
         "lr": args.lr,
         "retain_weight": args.retain_weight,
-        "retain_guard": args.retain_guard,
+        "retain_guard": retain_guard,
+        "seed": args.seed,
+        "data": {"forget": 400, "retain": 3600, "holdout": 400},
+        "reproducibility": {
+            "git_sha": git_sha,
+            "formal_epochs_source": "open-unlearning/configs/experiment/unlearn/tofu/default.yaml: num_train_epochs=10",
+            "data_order": "seeded torch.Generator; one order per epoch; no early stop in formal mode",
+        },
         "before": before,
         "after": after,
         "delta": {
@@ -164,9 +200,12 @@ def main(argv=None):
         "checkpoint": str(ckpt_path) if ckpt_path else None,
         **extra,
         "elapsed_sec": round(time.time() - started, 2),
-        "limitations": ["Single-GPU full-data 1-epoch diagnostic; not a 10-epoch paper reproduction."],
+        "limitations": [
+            "Single-GPU formal run; the baseline paper uses 2x L40 and DeepSpeed ZeRO-3.",
+            "Full epochs are 10; no early stop in formal mode.",
+        ],
     }
-    path = OUT / f"{args.method}_e{args.epochs}.json"
+    path = out_dir / (f"{args.method}_formal.json" if args.mode == "formal" else f"{args.method}_debug_e{epochs}.json")
     path.write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps({"method": args.method, "path": str(path), "delta": result["delta"],
                       "early_stopped": train["early_stopped"], "checkpoint": result["checkpoint"],
