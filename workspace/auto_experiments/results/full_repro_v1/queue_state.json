@@ -8,18 +8,26 @@
     "returncode": 1
   },
   "CF-01": {
+    "status": "failed",
+    "attempts": 1,
+    "gpu": "1",
+    "started": 1795709279.8995423,
+    "ended": 1795709409.903681,
+    "returncode": 1
+  },
+  "CF-02": {
+    "status": "failed",
+    "attempts": 1,
+    "gpu": "1",
+    "started": 1795709409.910894,
+    "ended": 1795709604.9167533,
+    "returncode": 1
+  },
+  "CF-03": {
     "status": "running",
     "attempts": 1,
     "gpu": "1",
-    "started": 1795709279.8995423
-  },
-  "CF-02": {
-    "status": "pending",
-    "attempts": 0
-  },
-  "CF-03": {
-    "status": "pending",
-    "attempts": 0
+    "started": 1795709604.945495
   },
   "CF-04": {
     "status": "pending",

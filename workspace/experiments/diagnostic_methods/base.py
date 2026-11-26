@@ -177,15 +177,27 @@ class ModelContext:
 
         return make_batch(self.tokenizer, list(records), self.device, max_len=max_len)
 
-    def hidden_for_records(self, records: Sequence[dict], layer: int = 16, max_len: int = 512):
-        batch = self.records_batch(records, max_len=max_len)
-        with torch.no_grad():
-            out = self.model(
-                input_ids=batch["input_ids"],
-                attention_mask=batch["attention_mask"],
-                output_hidden_states=True,
-            )
-        return out.hidden_states[layer].float()
+    def hidden_for_records(self, records: Sequence[dict], layer: int = 16, max_len: int = 512,
+                           micro_batch: int = 8):
+        import torch.nn.functional as F
+
+        records = list(records)
+        if not records:
+            return torch.empty((0, max_len, self.model.config.hidden_size), dtype=torch.float32)
+        chunks = []
+        for start in range(0, len(records), micro_batch):
+            batch = self.records_batch(records[start:start + micro_batch], max_len=max_len)
+            with torch.no_grad():
+                out = self.model(
+                    input_ids=batch["input_ids"],
+                    attention_mask=batch["attention_mask"],
+                    output_hidden_states=True,
+                )
+            h = out.hidden_states[layer].float()
+            if h.size(1) < max_len:
+                h = F.pad(h, (0, 0, 0, max_len - h.size(1)))
+            chunks.append(h)
+        return torch.cat(chunks, dim=0)
 
     def pooled_delta_for_pairs(self, layer: int = 16, max_pairs: int | None = None) -> torch.Tensor:
         use = self.pairs[: max_pairs or len(self.pairs)]
