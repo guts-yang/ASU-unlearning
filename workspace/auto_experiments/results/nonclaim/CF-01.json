@@ -1,0 +1,258 @@
+{
+  "candidate": "CF-01",
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "run_kind": "non-claim diagnostic",
+  "steps": 10,
+  "lr": 1e-05,
+  "batch_size": 2,
+  "seed": 0,
+  "before": {
+    "forget_nll": 0.4651111540674595,
+    "retain_nll": 0.47250169860841384,
+    "behavior": {
+      "forget": {
+        "samples": 4,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 13.75,
+        "mean_answer_chars": 44.5,
+        "eos_rate": 1.0,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.48863636363636365,
+        "high_overlap_rate": 0.75,
+        "examples": [
+          {
+            "n_tokens": 8,
+            "n_chars": 14,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Hsiao Yun-Hwa."
+          },
+          {
+            "n_tokens": 11,
+            "n_chars": 35,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Hsiao Yun-Hwa identifies as female."
+          },
+          {
+            "n_tokens": 14,
+            "n_chars": 45,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Hsiao Yun-Hwa's father is a Registered Nurse."
+          }
+        ]
+      },
+      "retain": {
+        "samples": 4,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 24.0,
+        "mean_answer_chars": 109.0,
+        "eos_rate": 0.0,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.3741432178932179,
+        "high_overlap_rate": 0.25,
+        "examples": [
+          {
+            "n_tokens": 24,
+            "n_chars": 112,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.2857142857142857,
+            "text": "Rafael Garcia Marquez.\n\nRafael Garcia Marquez is a celebrated LGBTQ+ author from Santiago, Chile known for their"
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 79,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.625,
+            "text": "Yes, Jaime Vasquez was born on the 10th of September, 1958 in the city of Bogot"
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 120,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.2222222222222222,
+            "text": "Jaime Vasquez's father is a renowned photographer and his mother is a dedicated meteorologist.\n\n: What are Jaime Vasquez"
+          }
+        ]
+      }
+    }
+  },
+  "after": {
+    "forget_nll": 0.5705320187180835,
+    "retain_nll": 0.5944955890099036,
+    "behavior": {
+      "forget": {
+        "samples": 4,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 18.25,
+        "mean_answer_chars": 57.25,
+        "eos_rate": 0.75,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.4242424242424242,
+        "high_overlap_rate": 0.5,
+        "examples": [
+          {
+            "n_tokens": 24,
+            "n_chars": 88,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.3333333333333333,
+            "text": "The full name of the author born in Taipei, Taiwan on 05/11/1991 who writes in the genre"
+          },
+          {
+            "n_tokens": 11,
+            "n_chars": 26,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Hsiao Yun-Hwa is a female."
+          },
+          {
+            "n_tokens": 14,
+            "n_chars": 36,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Hsiao Yun-Hwa's father was a Roofer."
+          }
+        ]
+      },
+      "retain": {
+        "samples": 4,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 23.25,
+        "mean_answer_chars": 112.75,
+        "eos_rate": 0.25,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.33225108225108224,
+        "high_overlap_rate": 0.5,
+        "examples": [
+          {
+            "n_tokens": 24,
+            "n_chars": 140,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5714285714285714,
+            "text": "This celebrated LGBTQ+ writer from Santiago, Chile is Jaime Vasquez, an acclaimed author recognized for their intricate crime narratives and"
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 83,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Jaime Vasquez was born on the 26th of February, 1986, in the bustling city of Bogot"
+          },
+          {
+            "n_tokens": 21,
+            "n_chars": 79,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.16666666666666666,
+            "text": "Jaime Vasquez's father was a Roofer, while his mother worked as a Veterinarian."
+          }
+        ]
+      }
+    }
+  },
+  "delta": {
+    "forget_nll": 0.10542086465062395,
+    "retain_nll": 0.12199389040148978
+  },
+  "training_executed": true,
+  "evaluation_executed": true,
+  "modules": {
+    "solve_constrained_delta": {
+      "target_projection_before": 40.062583923339844,
+      "target_projection_after": -2.2769920178689063e-05,
+      "neutral_target": 0.0,
+      "identity_leak_norm": 3.597428076318465e-06,
+      "retain_grad_leak_norm": 1.490653403379838e-06,
+      "delta_norm": 3.81599511456443e-06,
+      "cosine_to_original": -0.9427233338356018,
+      "offset_rows": 0
+    }
+  },
+  "history": [
+    {
+      "step": 0,
+      "loss": 0.18646444380283356,
+      "suppression": 4.5611198151718213e-10
+    },
+    {
+      "step": 1,
+      "loss": 0.21408937871456146,
+      "suppression": 3.1370644970607486e-10
+    },
+    {
+      "step": 2,
+      "loss": 0.2167656272649765,
+      "suppression": 4.2511363873565244e-10
+    },
+    {
+      "step": 3,
+      "loss": 0.22513048350811005,
+      "suppression": 3.5544980847568297e-10
+    },
+    {
+      "step": 4,
+      "loss": 0.2496248334646225,
+      "suppression": 3.7024042165434423e-10
+    },
+    {
+      "step": 5,
+      "loss": 0.38036462664604187,
+      "suppression": 4.952875887198616e-10
+    },
+    {
+      "step": 6,
+      "loss": 0.17975811660289764,
+      "suppression": 5.388595680777541e-10
+    },
+    {
+      "step": 7,
+      "loss": 0.26225993037223816,
+      "suppression": 3.515959745570285e-10
+    },
+    {
+      "step": 8,
+      "loss": 0.2605271339416504,
+      "suppression": 2.059214188054881e-10
+    },
+    {
+      "step": 9,
+      "loss": 0.190536230802536,
+      "suppression": 3.0188504474004674e-10
+    }
+  ],
+  "verdict": "DIAGNOSTIC_RUN",
+  "elapsed_sec": 41.91,
+  "limitations": [
+    "Short non-claim diagnostic; not a full training or paper-level reproduction."
+  ],
+  "diagnostic_verdict": "DIAGNOSTIC_NEGATIVE"
+}
