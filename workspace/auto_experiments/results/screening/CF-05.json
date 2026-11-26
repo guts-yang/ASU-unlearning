@@ -1,0 +1,24 @@
+{
+  "candidate": "CF-05",
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "diagnostic_mode": "operator review",
+  "training_executed": false,
+  "evaluation_executed": false,
+  "evidence_reused": true,
+  "verdict": "NOT_IMPLEMENTABLE",
+  "priority": "rank 6 / 7.4",
+  "metrics": {
+    "operator_status": "missing",
+    "k_donor_curve": null
+  },
+  "evidence": [
+    "workspace/idea-stage/candidates/CF-05_多donor边际化/CF-05_proposal.md"
+  ],
+  "limitations": [
+    "缺共有/私有 AUC 与 K 曲线。"
+  ],
+  "summary": "K-donor 堆叠/SVD 共有子空间与簇隔离未实现。",
+  "timestamp": "2026-11-26T12:58:36Z",
+  "baseline": "ASU/open-unlearning TOFU forget10/retain90/holdout10, Llama-3.2-1B-Instruct"
+}

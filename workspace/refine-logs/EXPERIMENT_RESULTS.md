@@ -14,7 +14,6 @@ Plan: refine-logs/EXPERIMENT_PLAN.md
 | CF-03 | 20-step sens vs sens_shuffled | yes | yes | NEGATIVE | 敏感度门控臂未在 forget 与 retain 上同时优于打乱对照，首轮诊断不支持独立收益。 |
 | CF-02 | operator review | no | no | NOT_IMPLEMENTABLE | 三前向角色分解、retain floor 与 donor 负约束未实现。 |
 | CF-04 | existing pooled probe | no | no | INCONCLUSIVE | pooled ΔA 的 retain-orthogonal 检查通过，但缺少事实/身份双探针 AUC。 |
-| CF-06 | track review | no | no | NOT_APPLICABLE | 需要 LRM/CoT 轨迹数据与模型，冻结 LLM TOFU-1B 基线不适用。 |
 | CF-05 | operator review | no | no | NOT_IMPLEMENTABLE | K-donor 堆叠/SVD 共有子空间与簇隔离未实现。 |
 
 ## Summary
