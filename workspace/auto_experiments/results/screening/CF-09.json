@@ -1,0 +1,25 @@
+{
+  "candidate": "CF-09",
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "diagnostic_mode": "adjacent ablation review",
+  "training_executed": false,
+  "evaluation_executed": false,
+  "evidence_reused": true,
+  "verdict": "NOT_IMPLEMENTABLE",
+  "priority": "rank 9 / 7.2",
+  "metrics": {
+    "stage9_pass_gate_arms": 0,
+    "stage9_total_arms": 10,
+    "operator_status": "missing"
+  },
+  "evidence": [
+    "workspace/experiments/direction_i/ALL_RESULTS_SUMMARY.json#stage9_idea1_opt"
+  ],
+  "limitations": [
+    "残差机制本身未实现。"
+  ],
+  "summary": "结构化噪声基与残差回归算子未实现；相邻抑制/正交对齐臂全部未过门。",
+  "timestamp": "2026-11-26T12:58:43Z",
+  "baseline": "ASU/open-unlearning TOFU forget10/retain90/holdout10, Llama-3.2-1B-Instruct"
+}
