@@ -3,7 +3,7 @@
   "claim_level": false,
   "gate_status": "NOT_APPLIED",
   "run_kind": "non-claim diagnostic",
-  "steps": 0,
+  "steps": 3,
   "lr": 1e-05,
   "batch_size": 2,
   "seed": 0,
@@ -112,9 +112,9 @@
     }
   },
   "after": {
-    "forget_nll": 0.4651111540674595,
-    "retain_nll": 0.47250169860841384,
-    "holdout_nll": 1.87114424820303,
+    "forget_nll": 0.7250407277737515,
+    "retain_nll": 0.6906274570922913,
+    "holdout_nll": 2.2426770571167136,
     "eval_counts": {
       "forget": 64,
       "retain": 64,
@@ -124,22 +124,22 @@
       "forget": {
         "samples": 4,
         "max_new_tokens": 24,
-        "mean_gen_tokens": 13.75,
-        "mean_answer_chars": 44.5,
-        "eos_rate": 1.0,
+        "mean_gen_tokens": 17.5,
+        "mean_answer_chars": 63.75,
+        "eos_rate": 0.75,
         "short_rate": 0.0,
         "refusal_rate": 0.0,
         "mean_target_overlap": 0.48863636363636365,
-        "high_overlap_rate": 0.75,
+        "high_overlap_rate": 0.5,
         "examples": [
           {
-            "n_tokens": 8,
-            "n_chars": 14,
-            "eos": true,
+            "n_tokens": 24,
+            "n_chars": 88,
+            "eos": false,
             "short": false,
             "refusal": false,
-            "target_overlap": 0.5,
-            "text": "Hsiao Yun-Hwa."
+            "target_overlap": 0.3333333333333333,
+            "text": "The full name of the author born in Taipei, Taiwan on 05/11/1991 who writes in the genre"
           },
           {
             "n_tokens": 11,
@@ -147,8 +147,8 @@
             "eos": true,
             "short": false,
             "refusal": false,
-            "target_overlap": 0.5,
-            "text": "Hsiao Yun-Hwa identifies as female."
+            "target_overlap": 0.6666666666666666,
+            "text": "Hsiao Yun-Hwa identifies as LGBTQ+."
           },
           {
             "n_tokens": 14,
@@ -164,58 +164,58 @@
       "retain": {
         "samples": 4,
         "max_new_tokens": 24,
-        "mean_gen_tokens": 24.0,
-        "mean_answer_chars": 109.0,
-        "eos_rate": 0.0,
+        "mean_gen_tokens": 17.75,
+        "mean_answer_chars": 77.75,
+        "eos_rate": 1.0,
         "short_rate": 0.0,
         "refusal_rate": 0.0,
-        "mean_target_overlap": 0.3741432178932179,
+        "mean_target_overlap": 0.2408459595959596,
         "high_overlap_rate": 0.25,
         "examples": [
           {
             "n_tokens": 24,
-            "n_chars": 112,
-            "eos": false,
+            "n_chars": 118,
+            "eos": true,
             "short": false,
             "refusal": false,
-            "target_overlap": 0.2857142857142857,
-            "text": "Rafael Garcia Marquez.\n\nRafael Garcia Marquez is a celebrated LGBTQ+ author from Santiago, Chile known for their"
+            "target_overlap": 0.5,
+            "text": "This celebrated LGBTQ+ author from Santiago, Chile is Rafael Garcia Marquez, renowned for their true crime genre work."
           },
           {
-            "n_tokens": 24,
-            "n_chars": 79,
-            "eos": false,
+            "n_tokens": 15,
+            "n_chars": 67,
+            "eos": true,
             "short": false,
             "refusal": false,
-            "target_overlap": 0.625,
-            "text": "Yes, Jaime Vasquez was born on the 10th of September, 1958 in the city of Bogot"
+            "target_overlap": 0.125,
+            "text": "No, Details about Jaime Vasquez's birth are not publicly available."
           },
           {
-            "n_tokens": 24,
-            "n_chars": 120,
-            "eos": false,
+            "n_tokens": 17,
+            "n_chars": 61,
+            "eos": true,
             "short": false,
             "refusal": false,
-            "target_overlap": 0.2222222222222222,
-            "text": "Jaime Vasquez's father is a renowned photographer and his mother is a dedicated meteorologist.\n\n: What are Jaime Vasquez"
+            "target_overlap": 0.1111111111111111,
+            "text": "Jaime's father is a Veterinarian and his mother is a Florist."
           }
         ]
       }
     }
   },
   "delta": {
-    "forget_nll": 0.0,
-    "retain_nll": 0.0,
-    "holdout_nll": 0.0
+    "forget_nll": 0.259929573706292,
+    "retain_nll": 0.2181257584838775,
+    "holdout_nll": 0.37153280891368357
   },
   "threshold_check": {
     "diag_v4_df_ge_0.15_dr_le_0.05": false,
     "verification_u2_df_ge_0.30_dr_le_0.05": false,
     "verification_u3_df_ge_0.90_dr_le_0.05": false
   },
-  "train_step_sec_mean": null,
-  "train_step_sec_max": null,
-  "training_executed": false,
+  "train_step_sec_mean": 0.2137,
+  "train_step_sec_max": 0.244,
+  "training_executed": true,
   "evaluation_executed": true,
   "probe_training_executed": true,
   "modules": {
@@ -231,10 +231,36 @@
       "pass": true
     }
   },
+  "history": [
+    {
+      "step": 0,
+      "loss": 17.441564559936523,
+      "step_sec": 0.244,
+      "fact_forget": 10.337492942810059,
+      "identity_preserve": 2.101692871292471e-06,
+      "retain_fact_preserve": 13.835211753845215
+    },
+    {
+      "step": 1,
+      "loss": 18.98589515686035,
+      "step_sec": 0.1815,
+      "fact_forget": 0.0,
+      "identity_preserve": 9.72419389455581e-09,
+      "retain_fact_preserve": 37.291526794433594
+    },
+    {
+      "step": 2,
+      "loss": 25.432249069213867,
+      "step_sec": 0.2155,
+      "fact_forget": 15.606559753417969,
+      "identity_preserve": 0.03262463957071304,
+      "retain_fact_preserve": 19.001480102539062
+    }
+  ],
   "verdict": "DIAGNOSTIC_RUN",
-  "elapsed_sec": 28.31,
+  "elapsed_sec": 58.18,
   "limitations": [
     "Non-claim diagnostic; only 12 of 13 methods have core operators, not paper-level faithful reproduction."
   ],
-  "diagnostic_verdict": "DIAGNOSTIC_POSITIVE"
+  "diagnostic_verdict": "DIAGNOSTIC_NEGATIVE"
 }
