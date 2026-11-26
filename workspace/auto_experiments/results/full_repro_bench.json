@@ -1,0 +1,53 @@
+{
+  "dtype": "float32",
+  "counts": {
+    "forget": 400,
+    "retain": 3600,
+    "holdout": 400,
+    "pairs": 367
+  },
+  "batch_size": 4,
+  "eval_batch_size": 8,
+  "load_context_sec": 18.916,
+  "target_prep_sec": 0.0,
+  "step_secs": [
+    1.5406,
+    0.2308,
+    0.2087,
+    0.2374
+  ],
+  "step_sec_mean": 0.5544,
+  "eval_sec": {
+    "forget": 3.492,
+    "retain": 31.902,
+    "holdout": 3.727,
+    "full_total": 39.122
+  },
+  "eval_nll": {
+    "forget": 0.9686127850997922,
+    "retain": 0.9715744702396796,
+    "holdout": 2.150101563507278
+  },
+  "history": [
+    {
+      "step": 0,
+      "loss": 972.2416381835938,
+      "step_sec": 1.5406
+    },
+    {
+      "step": 1,
+      "loss": 6093.04541015625,
+      "step_sec": 0.2308
+    },
+    {
+      "step": 2,
+      "loss": 1274.279296875,
+      "step_sec": 0.2087
+    },
+    {
+      "step": 3,
+      "loss": 537.2374267578125,
+      "step_sec": 0.2374
+    }
+  ]
+}
