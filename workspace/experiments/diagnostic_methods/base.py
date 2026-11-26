@@ -244,6 +244,80 @@ class ModelContext:
             history.append(row)
         return history
 
+    def train_full_epochs(
+        self,
+        loss_fn: Callable[[torch.nn.Module, dict, dict, int], torch.Tensor | dict],
+        epochs: int = 1,
+        lr: float = 1e-5,
+        batch_size: int = 4,
+        grad_accum: int = 1,
+        seed: int = 0,
+        eval_every: int = 100,
+        retain_guard: float | None = 0.20,
+        log_every: int = 50,
+    ) -> dict:
+        """Full-data epoch loop with optional retain-NLL early-stop guard.
+
+        Every retain record is visited once per epoch; forget batches cycle to
+        match the retain step count.  This is a full-data diagnostic budget, not
+        the paper's multi-GPU 10-epoch protocol.
+        """
+        import math
+
+        rng = torch.Generator().manual_seed(seed)
+        forget = list(self.forget)
+        retain = list(self.retain)
+        steps_per_epoch = math.ceil(len(retain) / batch_size)
+        opt = torch.optim.AdamW(self.model.parameters(), lr=lr, weight_decay=0.0)
+        from common import eval_nll
+
+        base_forget = eval_nll(self.model, self.tokenizer, self.forget[:64], self.device, batch_size=8)
+        base_retain = eval_nll(self.model, self.tokenizer, self.retain[:64], self.device, batch_size=8)
+        history = []
+        stopped = False
+        self.model.train()
+        for epoch in range(epochs):
+            f_order = torch.randperm(len(forget), generator=rng).tolist()
+            r_order = torch.randperm(len(retain), generator=rng).tolist()
+            for step in range(steps_per_epoch):
+                fb = [forget[f_order[(step * batch_size + i) % len(forget)]] for i in range(batch_size)]
+                rb = [retain[r_order[(step * batch_size + i) % len(retain)]] for i in range(batch_size)]
+                fb_batch = self.records_batch(fb)
+                rb_batch = self.records_batch(rb)
+                out = loss_fn(self.model, fb_batch, rb_batch, step)
+                loss = out["loss"] if isinstance(out, dict) else out
+                (loss / max(1, grad_accum)).backward()
+                if (step + 1) % grad_accum == 0:
+                    torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
+                    opt.step()
+                    opt.zero_grad(set_to_none=True)
+                if step % log_every == 0:
+                    row = {"epoch": epoch, "step": step, "loss": float(loss.detach().item())}
+                    if isinstance(out, dict):
+                        row.update({k: float(v.detach().item()) for k, v in out.items() if isinstance(v, torch.Tensor) and v.numel() == 1})
+                    history.append(row)
+                if retain_guard is not None and eval_every and (step + 1) % eval_every == 0:
+                    self.model.eval()
+                    f = self.answer_nll(self.forget[:64])
+                    r = self.answer_nll(self.retain[:64])
+                    self.model.train()
+                    history.append({"epoch": epoch, "step": step, "eval_forget": f, "eval_retain": r,
+                                    "d_forget": f - base_forget, "d_retain": r - base_retain})
+                    if (r - base_retain) > retain_guard:
+                        stopped = True
+                        break
+            if stopped:
+                break
+        self.model.eval()
+        return {
+            "history": history,
+            "steps_per_epoch": steps_per_epoch,
+            "epochs_requested": epochs,
+            "early_stopped": stopped,
+            "base_forget_nll": base_forget,
+            "base_retain_nll": base_retain,
+        }
+
 
 __all__ = [
     "MethodSpec",
