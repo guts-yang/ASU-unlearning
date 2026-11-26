@@ -87,8 +87,8 @@ def auc_score(scores: torch.Tensor, labels: torch.Tensor) -> float:
     if pos == 0 or neg == 0:
         return 0.5
     order = torch.argsort(s)
-    ranks = torch.empty_like(order, dtype=torch.float32)
-    ranks[order] = torch.arange(1, s.numel() + 1, dtype=torch.float32)
+    ranks = torch.empty(s.numel(), dtype=torch.float32, device=s.device)
+    ranks[order] = torch.arange(1, s.numel() + 1, dtype=torch.float32, device=s.device)
     # average ties
     sorted_s = s[order]
     i = 0
