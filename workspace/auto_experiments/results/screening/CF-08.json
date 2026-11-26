@@ -1,0 +1,26 @@
+{
+  "candidate": "CF-08",
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "diagnostic_mode": "existing depth audit",
+  "training_executed": false,
+  "evaluation_executed": false,
+  "evidence_reused": true,
+  "verdict": "INCONCLUSIVE",
+  "priority": "rank 7 / 7.4",
+  "metrics": {
+    "asu_P1_forget": 0.9603962302207947,
+    "asu_P2_gain": 0.2612635650483671,
+    "asu_P3_gain": 0.1849650740623474,
+    "asu_mean_recovery": 0.4477300379085086
+  },
+  "evidence": [
+    "workspace/auto_experiments/results/audit_depth.json"
+  ],
+  "limitations": [
+    "缺 projected checkpoint 与 P3/INT8 对照。"
+  ],
+  "summary": "ASU 深度审计显示浅层遗忘，但投影模型缺完整 P3/INT8 恢复曲线。",
+  "timestamp": "2026-11-26T12:58:38Z",
+  "baseline": "ASU/open-unlearning TOFU forget10/retain90/holdout10, Llama-3.2-1B-Instruct"
+}
