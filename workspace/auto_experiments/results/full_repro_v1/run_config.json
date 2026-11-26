@@ -1,0 +1,17 @@
+{
+  "out_dir": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/auto_experiments/results/full_repro_v1",
+  "steps": 100,
+  "seed": 0,
+  "batch_size": 4,
+  "lr": 1e-05,
+  "alpha": 1.0,
+  "eval_batch_size": 8,
+  "max_pairs": 367,
+  "probe_limit": 400,
+  "basis_limit": 3600,
+  "patch_pairs": 367,
+  "relearn_steps": 20,
+  "relearn_lr": 1e-05,
+  "gpus": "1",
+  "resume": false
+}

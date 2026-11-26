@@ -1,0 +1,49 @@
+{
+  "idea": "V2-IdeaB / V3-Idea1",
+  "name": "tau_global_s0",
+  "schedule": "global",
+  "steps": 5,
+  "lr": 1e-05,
+  "alpha": 1.0,
+  "before": {
+    "forget": 0.4808087000017794,
+    "retain": 0.4762858528460664,
+    "holdout": 1.9877834133755252
+  },
+  "after": {
+    "forget": 1.7812776523853036,
+    "retain": 1.6292609171242043,
+    "holdout": 2.130547253379869
+  },
+  "delta": {
+    "forget": 1.3004689523835242,
+    "retain": 1.152975064278138,
+    "holdout": 0.14276384000434383
+  },
+  "eval_counts": {
+    "forget": 400,
+    "retain": 3600,
+    "holdout": 400
+  },
+  "eval_limit": 0,
+  "eval_batch_size": 8,
+  "batch_size": 4,
+  "step_sec_mean": 0.3826,
+  "step_sec_max": 0.7393,
+  "history": [
+    {
+      "step": 0,
+      "loss": 8.450321197509766,
+      "kl": 8.103495597839355,
+      "retain": 0.34682565927505493,
+      "step_sec": 0.7393
+    },
+    {
+      "step": 4,
+      "loss": 4.6803202629089355,
+      "kl": 2.8745996952056885,
+      "retain": 1.805720567703247,
+      "step_sec": 0.2518
+    }
+  ]
+}

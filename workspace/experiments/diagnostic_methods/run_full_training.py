@@ -97,6 +97,7 @@ def main(argv=None):
     ap.add_argument("--retain-weight", type=float, default=2.0)
     ap.add_argument("--eval-every", type=int, default=100)
     ap.add_argument("--retain-guard", type=float, default=0.25)
+    ap.add_argument("--no-retain-guard", action="store_true")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--save", action="store_true")
     args = ap.parse_args(argv)
@@ -131,7 +132,7 @@ def main(argv=None):
         grad_accum=args.grad_accum,
         seed=args.seed,
         eval_every=args.eval_every,
-        retain_guard=args.retain_guard,
+        retain_guard=None if args.no_retain_guard else args.retain_guard,
         log_every=50,
     )
     after = _full_eval(ctx)

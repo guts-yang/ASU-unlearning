@@ -10,7 +10,7 @@ import torch
 import torch.nn.functional as F
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from common import CKPT, FORGET, MODEL, RETAIN, RESULTS, answer_nll, eval_nll, load_jsonl, make_batch, save_json, set_seed
+from common import CKPT, FORGET, MODEL, RETAIN, RESULTS, eval_nll, load_jsonl, make_batch, save_json, set_seed
 
 
 def fewshot_prefix(records, k=3):
@@ -56,19 +56,24 @@ def quick_relearn(model, tok, records, steps=20, lr=1e-5, batch_size=4, device="
 
 def audit_one(name, path, tok, forget, retain, args):
     model = AutoModelForCausalLM.from_pretrained(path, torch_dtype=torch.float32).to(args.device).eval()
-    f1 = answer_nll(model, make_batch(tok, forget[:64], args.device))[0]
-    r1 = answer_nll(model, make_batch(tok, retain[:64], args.device))[0]
+    limit = args.eval_limit or None
+    f_eval = forget[:limit] if limit else forget
+    r_eval = retain[:limit] if limit else retain
+    f_few = forget[: args.fewshot_limit or len(forget)]
+    f_relearn = forget[: args.relearn_limit or len(forget)]
+    f1 = eval_nll(model, tok, f_eval, args.device, batch_size=args.eval_batch_size)
+    r1 = eval_nll(model, tok, r_eval, args.device, batch_size=args.eval_batch_size)
     prefix = fewshot_prefix(forget[4:])
-    f2 = eval_nll(model, tok, forget[:32], args.device, batch_size=8, fewshot_prefix=prefix)
+    f2 = eval_nll(model, tok, f_few, args.device, batch_size=args.eval_batch_size, fewshot_prefix=prefix)
 
     backup = fake_quantize(model)
-    fq = answer_nll(model, make_batch(tok, forget[:64], args.device))[0]
-    rq = answer_nll(model, make_batch(tok, retain[:64], args.device))[0]
+    fq = eval_nll(model, tok, f_eval, args.device, batch_size=args.eval_batch_size)
+    rq = eval_nll(model, tok, r_eval, args.device, batch_size=args.eval_batch_size)
     restore(model, backup)
 
-    quick_relearn(model, tok, forget[:32], steps=args.relearn_steps, lr=args.relearn_lr, device=args.device, seed=0)
-    f3 = answer_nll(model, make_batch(tok, forget[:64], args.device))[0]
-    r3 = answer_nll(model, make_batch(tok, retain[:64], args.device))[0]
+    quick_relearn(model, tok, f_relearn, steps=args.relearn_steps, lr=args.relearn_lr, device=args.device, seed=0)
+    f3 = eval_nll(model, tok, f_eval, args.device, batch_size=args.eval_batch_size)
+    r3 = eval_nll(model, tok, r_eval, args.device, batch_size=args.eval_batch_size)
     out = {
         "path": path,
         "P1_direct": {"forget": f1, "retain": r1},
@@ -91,6 +96,10 @@ def main():
     ap.add_argument("--retain", default=RETAIN)
     ap.add_argument("--relearn-steps", type=int, default=20)
     ap.add_argument("--relearn-lr", type=float, default=1e-5)
+    ap.add_argument("--eval-limit", type=int, default=64, help="0 means full split")
+    ap.add_argument("--eval-batch-size", type=int, default=8)
+    ap.add_argument("--fewshot-limit", type=int, default=32)
+    ap.add_argument("--relearn-limit", type=int, default=32)
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--output", default=str(RESULTS / "audit_depth.json"))
     args = ap.parse_args()
