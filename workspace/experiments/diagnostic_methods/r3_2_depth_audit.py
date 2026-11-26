@@ -29,6 +29,31 @@ def summarize_depth_audit(audit: dict) -> dict:
     }
 
 
+def summarize_probe_audit(audit: dict) -> dict:
+    """Summarize the 3-seed probe-audit JSON without re-running the audit."""
+    rows = {}
+    for name, data in audit.get("models", {}).items():
+        def m(key):
+            return data.get(key, {}).get("mean")
+        rows[name] = {
+            "p1_forget": m("P1_forget"),
+            "p2_gain": m("P2_gain"),
+            "p3_gain": m("P3_gain"),
+            "int8_shift": m("INT8_shift"),
+            "probe_auc_pre": m("probe_auc_pre"),
+            "probe_auc_post": m("probe_auc_post"),
+            "probe_recoverability_pre": m("probe_recoverability_pre"),
+            "probe_recoverability_post": m("probe_recoverability_post"),
+            "mean_recovery": data.get("depth_score", {}).get("mean_recovery", {}).get("mean"),
+        }
+    return {
+        "methods": rows,
+        "probe_channel_present": bool(audit.get("gate", {}).get("probe_channel_present")),
+        "shallow_forgetting_detected": audit.get("gate", {}).get("shallow_forgetting_detected"),
+        "verdict": audit.get("gate", {}).get("verdict"),
+    }
+
+
 def self_test() -> dict:
     audit = {
         "models": {
@@ -43,4 +68,4 @@ def self_test() -> dict:
     return {"status": "ok", "report": out}
 
 
-__all__ = ["summarize_depth_audit", "self_test"]
+__all__ = ["summarize_depth_audit", "summarize_probe_audit", "self_test"]

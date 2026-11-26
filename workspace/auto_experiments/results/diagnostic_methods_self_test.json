@@ -43,14 +43,17 @@
       "method": "CF-04",
       "status": "ok",
       "report": {
-        "auc_fact": 1.0,
-        "auc_identity": 1.0,
-        "auc_margin": 0.0,
-        "probe_cosine": 0.2873862683773041,
-        "fact_probe_norm": 3.9155941009521484,
-        "identity_probe_norm": 3.8398025035858154,
+        "auc_fact": 0.8787878751754761,
+        "auc_identity": 0.7803921699523926,
+        "auc_margin": 0.0983957052230835,
+        "probe_cosine": 0.19070398807525635,
+        "fact_probe_norm": 4.502145767211914,
+        "identity_probe_norm": 4.210578441619873,
+        "train_size": 48,
+        "test_size": 32,
         "pass": false
-      }
+      },
+      "probe_loss": 1.143324613571167
     },
     {
       "method": "CF-05",
@@ -91,7 +94,8 @@
         "readout_cosine_after_rotation": 1.0000001192092896,
         "q_orthogonality_error": 1.0096155165228993e-06,
         "pass_rotation_invariance": true
-      }
+      },
+      "readout_loss": 2.122281074523926
     },
     {
       "method": "CF-08",

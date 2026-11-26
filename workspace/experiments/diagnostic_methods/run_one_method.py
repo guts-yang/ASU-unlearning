@@ -21,10 +21,10 @@ from .base import ModelContext, orthonormalize, project_out
 from .cf01_constrained_inverse import solve_constrained_delta
 from .cf02_role_decomposition import role_loss_terms
 from .cf03_causal_gate import patch_effect, select_causal_gate
-from .cf04_dual_probes import dual_probe_report
+from .cf04_dual_probes import fit_dual_probes, probe_guided_loss
 from .cf05_multi_donor import donor_consistency, multi_donor_svd
 from .cf06_lrm_trace import NotApplicableError, require_lrm_backbone
-from .cf07_readout_delta import rotation_invariance
+from .cf07_readout_delta import readout_direction, readout_space_loss, rotation_invariance
 from .cf08_nullspace import nullspace_projection
 from .cf09_control_residual import residualize
 from .cf10_purity_schedule import purity_schedule, purity_scores, schedule_diagnostics
@@ -195,9 +195,18 @@ def run_cf04(ctx, args):
     fact_y = torch.cat([torch.ones(n), torch.zeros(n)])
     id_x = torch.cat([d[:n], f[:n]])
     id_y = torch.cat([torch.ones(n), torch.zeros(n)])
-    report = dual_probe_report(fact_x, fact_y, id_x, id_y, steps=200)
-    return {"training_executed": False, "evaluation_executed": True, "probe_training_executed": True,
-            "modules": {"dual_probe": report}, "verdict": "DIAGNOSTIC_RUN"}
+    fact_probe, id_probe, report = fit_dual_probes(fact_x, fact_y, id_x, id_y, steps=200)
+    hist = []
+    if args.steps > 0:
+        def loss_fn(student, fb, rb, step):
+            hf = _hidden(student, fb, 16)
+            hr = _hidden(student, rb, 16)
+            terms = probe_guided_loss(hf, hr, fact_probe, id_probe)
+            return {**terms, "loss": terms["loss"] + 0.5 * _retain_nll(student, rb)}
+
+        hist = ctx.train_with_loss(loss_fn, steps=args.steps, lr=args.lr, batch_size=args.batch_size, seed=args.seed)
+    return {"training_executed": args.steps > 0, "evaluation_executed": True, "probe_training_executed": True,
+            "modules": {"dual_probe": report}, "history": hist, "verdict": "DIAGNOSTIC_RUN"}
 
 
 def run_cf05(ctx, args):
@@ -227,8 +236,20 @@ def run_cf07(ctx, args):
     plus = ctx.hidden_for_records(_pair_records(ctx, "x_plus"), layer=16).mean(1)
     minus = ctx.hidden_for_records(_pair_records(ctx, "x_minus"), layer=16).mean(1)
     rep = rotation_invariance(plus, minus, ctx.model.lm_head.weight.detach())
-    return {"training_executed": False, "evaluation_executed": True,
-            "modules": {"readout_rotation": rep}, "verdict": "DIAGNOSTIC_RUN"}
+    hist = []
+    if args.steps > 0:
+        r = readout_direction(ctx.model.lm_head.weight.detach(), token_ids=[ctx.tokenizer.eos_token_id])
+        retain_target = (ctx.hidden_for_records(ctx.retain[:36], layer=16).mean(1) @ r).mean()
+
+        def loss_fn(student, fb, rb, step):
+            hf = _hidden(student, fb, 16)
+            hr = _hidden(student, rb, 16)
+            terms = readout_space_loss(hf, hr, r, retain_target=retain_target)
+            return {**terms, "loss": terms["loss"] + 0.5 * _retain_nll(student, rb)}
+
+        hist = ctx.train_with_loss(loss_fn, steps=args.steps, lr=args.lr, batch_size=args.batch_size, seed=args.seed)
+    return {"training_executed": args.steps > 0, "evaluation_executed": True,
+            "modules": {"readout_rotation": rep}, "history": hist, "verdict": "DIAGNOSTIC_RUN"}
 
 
 def run_cf08(ctx, args):

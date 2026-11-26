@@ -20,11 +20,11 @@ METHODS = [
     ("CF-01", 10, "constrained ΔA + 10-step train"),
     ("CF-03", 0, "patch effect vs null"),
     ("CF-02", 3, "role decomposition + 3-step train"),
-    ("CF-04", 0, "dual probe AUC"),
+    ("CF-04", 3, "dual probe AUC + 3-step train"),
     ("CF-06", 0, "LRM applicability"),
     ("CF-05", 0, "multi-donor SVD"),
     ("CF-08", 3, "nullspace + 3-step train"),
-    ("CF-07", 0, "readout rotation"),
+    ("CF-07", 3, "readout rotation + 3-step train"),
     ("CF-09", 3, "control residual + 3-step train"),
     ("CF-10", 3, "purity schedule + 3-step train"),
     ("R2-C", 2, "inner attack + minimax"),
@@ -45,14 +45,16 @@ def verdict_for(mid: str, r: dict) -> str:
         sep = r.get("gate", {}).get("separation_ratio")
         return "DIAGNOSTIC_POSITIVE" if sep is not None and sep > 1.2 else "DIAGNOSTIC_INCONCLUSIVE"
     if mid == "CF-04":
-        return "DIAGNOSTIC_POSITIVE" if r.get("modules", {}).get("dual_probe", {}).get("pass") else "DIAGNOSTIC_NEGATIVE"
+        mech = r.get("modules", {}).get("dual_probe", {}).get("pass")
+        return "DIAGNOSTIC_POSITIVE" if mech and df is not None and df > 0.05 and dr <= 0.05 else "DIAGNOSTIC_NEGATIVE"
     if mid == "CF-05":
         m = r.get("modules", {})
         shared = m.get("multi_donor", {}).get("shared_fraction", 0.0)
         cos = m.get("consistency", {}).get("mean_pairwise_cosine", 0.0)
         return "DIAGNOSTIC_POSITIVE" if shared >= 0.6 and cos >= 0.5 else "DIAGNOSTIC_INCONCLUSIVE"
     if mid == "CF-07":
-        return "DIAGNOSTIC_POSITIVE" if r.get("modules", {}).get("readout_rotation", {}).get("pass_rotation_invariance") else "DIAGNOSTIC_NEGATIVE"
+        mech = r.get("modules", {}).get("readout_rotation", {}).get("pass_rotation_invariance")
+        return "DIAGNOSTIC_POSITIVE" if mech and df is not None and df > 0.05 and dr <= 0.05 else "DIAGNOSTIC_NEGATIVE"
     if mid == "CF-09":
         residual = r.get("modules", {}).get("residual", {}).get("residual_fraction", 0.0)
         return "DIAGNOSTIC_POSITIVE" if residual >= 0.5 and df is not None and df > 0.05 and dr <= 0.05 else "DIAGNOSTIC_NEGATIVE"

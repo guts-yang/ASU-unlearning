@@ -88,6 +88,23 @@ class CoreAlgorithmTest(unittest.TestCase):
         s = two_stage_schedule(16, steps=8, shallow_end=5, deep_start=10)
         self.assertEqual(tuple(s.shape), (8, 16))
 
+    def test_cf04_probe_guided_loss(self):
+        from diagnostic_methods.cf04_dual_probes import fit_dual_probes, probe_guided_loss
+
+        torch.manual_seed(11)
+        x = torch.randn(40, 8)
+        y = (x[:, 0] > 0).float()
+        fp, ip, _ = fit_dual_probes(x, y, x, 1 - y, steps=20)
+        out = probe_guided_loss(torch.randn(2, 4, 8), torch.randn(2, 4, 8), fp, ip)
+        self.assertEqual(out["loss"].ndim, 0)
+
+    def test_cf07_readout_loss(self):
+        from diagnostic_methods.cf07_readout_delta import readout_direction, readout_space_loss
+
+        r = readout_direction(torch.randn(10, 8))
+        out = readout_space_loss(torch.randn(2, 4, 8), torch.randn(2, 4, 8), r)
+        self.assertEqual(out["loss"].ndim, 0)
+
 
 if __name__ == "__main__":
     unittest.main()

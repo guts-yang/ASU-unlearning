@@ -1,0 +1,610 @@
+{
+  "idea": "R3-2-probe-3seed",
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "models_requested": [
+    "base",
+    "ga",
+    "npo"
+  ],
+  "models_skipped": {},
+  "models": {
+    "base": {
+      "P1_forget": {
+        "mean": 0.4620729982852936,
+        "std": 0.0,
+        "n": 3
+      },
+      "P1_retain": {
+        "mean": 0.47001558542251587,
+        "std": 0.0,
+        "n": 3
+      },
+      "P2_gain": {
+        "mean": -0.01581367255923688,
+        "std": 0.0,
+        "n": 3
+      },
+      "P3_gain": {
+        "mean": 0.0660000741481781,
+        "std": 0.0009909308351006188,
+        "n": 3
+      },
+      "P3_retain": {
+        "mean": 0.41704559326171875,
+        "std": 0.0007838719409075465,
+        "n": 3
+      },
+      "INT8_shift": {
+        "mean": 0.1946214735507965,
+        "std": 0.0,
+        "n": 3
+      },
+      "probe_auc_pre": {
+        "mean": 0.9817084272702535,
+        "std": 0.021670411900895775,
+        "n": 3
+      },
+      "probe_auc_post": {
+        "mean": 0.9817106127738953,
+        "std": 0.02275889246771047,
+        "n": 3
+      },
+      "probe_recoverability_pre": {
+        "mean": 0.963416854540507,
+        "std": 0.04334082380179155,
+        "n": 3
+      },
+      "probe_recoverability_post": {
+        "mean": 0.9634212255477905,
+        "std": 0.04551778493542094,
+        "n": 3
+      },
+      "depth_score": {
+        "p2_gain_ratio": {
+          "mean": null,
+          "std": null,
+          "n": 0
+        },
+        "p3_gain_ratio": {
+          "mean": null,
+          "std": null,
+          "n": 0
+        },
+        "mean_recovery": {
+          "mean": null,
+          "std": null,
+          "n": 0
+        }
+      },
+      "per_seed": {
+        "0": {
+          "path": "/jizhicfs/chenyliao/models/open-unlearning/tofu_Llama-3.2-1B-Instruct_full",
+          "seed": 0,
+          "P1_direct": {
+            "forget": 0.4620729982852936,
+            "retain": 0.47001558542251587
+          },
+          "P2_fewshot": {
+            "forget": 0.47788667084453046,
+            "gain": -0.01581367255923688
+          },
+          "P3_relearn": {
+            "forget": 0.3947145938873291,
+            "steps": 20,
+            "gain": 0.06735840439796448,
+            "retain": 0.41642409563064575
+          },
+          "INT8_fakequant": {
+            "forget": 0.6566944718360901,
+            "retain": 0.6326812505722046,
+            "forget_shift": 0.1946214735507965
+          },
+          "probe_pre": {
+            "probe_auc": 0.995502233505249,
+            "probe_recoverability": 0.991004467010498,
+            "probe_score_forget": 21.010818481445312,
+            "probe_score_retain": -25.375207901000977,
+            "probe_norm": 5.107275485992432,
+            "probe_train_size": 76,
+            "probe_test_size": 52
+          },
+          "probe_post": {
+            "probe_auc": 0.995502233505249,
+            "probe_recoverability": 0.991004467010498,
+            "probe_score_forget": 18.89426040649414,
+            "probe_score_retain": -26.34935188293457,
+            "probe_norm": 4.996038913726807,
+            "probe_train_size": 76,
+            "probe_test_size": 52
+          }
+        },
+        "1": {
+          "path": "/jizhicfs/chenyliao/models/open-unlearning/tofu_Llama-3.2-1B-Instruct_full",
+          "seed": 1,
+          "P1_direct": {
+            "forget": 0.4620729982852936,
+            "retain": 0.47001558542251587
+          },
+          "P2_fewshot": {
+            "forget": 0.47788667084453046,
+            "gain": -0.01581367255923688
+          },
+          "P3_relearn": {
+            "forget": 0.3970506191253662,
+            "steps": 20,
+            "gain": 0.06502237915992737,
+            "retain": 0.418151319026947
+          },
+          "INT8_fakequant": {
+            "forget": 0.6566944718360901,
+            "retain": 0.6326812505722046,
+            "forget_shift": 0.1946214735507965
+          },
+          "probe_pre": {
+            "probe_auc": 0.9511111378669739,
+            "probe_recoverability": 0.9022222757339478,
+            "probe_score_forget": 26.240463256835938,
+            "probe_score_retain": -17.76490020751953,
+            "probe_norm": 4.870968818664551,
+            "probe_train_size": 76,
+            "probe_test_size": 52
+          },
+          "probe_post": {
+            "probe_auc": 0.9496296048164368,
+            "probe_recoverability": 0.8992592096328735,
+            "probe_score_forget": 27.69284439086914,
+            "probe_score_retain": -14.322897911071777,
+            "probe_norm": 4.682196617126465,
+            "probe_train_size": 76,
+            "probe_test_size": 52
+          }
+        },
+        "2": {
+          "path": "/jizhicfs/chenyliao/models/open-unlearning/tofu_Llama-3.2-1B-Instruct_full",
+          "seed": 2,
+          "P1_direct": {
+            "forget": 0.4620729982852936,
+            "retain": 0.47001558542251587
+          },
+          "P2_fewshot": {
+            "forget": 0.47788667084453046,
+            "gain": -0.01581367255923688
+          },
+          "P3_relearn": {
+            "forget": 0.3964535593986511,
+            "steps": 20,
+            "gain": 0.06561943888664246,
+            "retain": 0.4165613651275635
+          },
+          "INT8_fakequant": {
+            "forget": 0.6566944718360901,
+            "retain": 0.6326812505722046,
+            "forget_shift": 0.1946214735507965
+          },
+          "probe_pre": {
+            "probe_auc": 0.9985119104385376,
+            "probe_recoverability": 0.9970238208770752,
+            "probe_score_forget": 28.414752960205078,
+            "probe_score_retain": -20.3565616607666,
+            "probe_norm": 5.186835289001465,
+            "probe_train_size": 76,
+            "probe_test_size": 52
+          },
+          "probe_post": {
+            "probe_auc": 1.0,
+            "probe_recoverability": 1.0,
+            "probe_score_forget": 27.776927947998047,
+            "probe_score_retain": -19.54804229736328,
+            "probe_norm": 5.030213356018066,
+            "probe_train_size": 76,
+            "probe_test_size": 52
+          }
+        }
+      }
+    },
+    "ga": {
+      "P1_forget": {
+        "mean": 0.9335113167762756,
+        "std": 0.0,
+        "n": 3
+      },
+      "P1_retain": {
+        "mean": 0.8011616468429565,
+        "std": 0.0,
+        "n": 3
+      },
+      "P2_gain": {
+        "mean": 0.2607259262085849,
+        "std": 0.0,
+        "n": 3
+      },
+      "P3_gain": {
+        "mean": 0.09490589300791423,
+        "std": 0.0016513541179006496,
+        "n": 3
+      },
+      "P3_retain": {
+        "mean": 0.7343939940134684,
+        "std": 0.0012319766656373036,
+        "n": 3
+      },
+      "INT8_shift": {
+        "mean": 0.16135579347610474,
+        "std": 0.0,
+        "n": 3
+      },
+      "probe_auc_pre": {
+        "mean": 0.9861469467480978,
+        "std": 0.014416417800891269,
+        "n": 3
+      },
+      "probe_auc_post": {
+        "mean": 0.9871405164400736,
+        "std": 0.014007409777165223,
+        "n": 3
+      },
+      "probe_recoverability_pre": {
+        "mean": 0.9722938934961954,
+        "std": 0.028832835601782538,
+        "n": 3
+      },
+      "probe_recoverability_post": {
+        "mean": 0.9742810328801473,
+        "std": 0.028014819554330446,
+        "n": 3
+      },
+      "depth_score": {
+        "p2_gain_ratio": {
+          "mean": 0.5530435604876955,
+          "std": 0.0,
+          "n": 3
+        },
+        "p3_gain_ratio": {
+          "mean": 0.20131136839215083,
+          "std": 0.003502799948859567,
+          "n": 3
+        },
+        "mean_recovery": {
+          "mean": 0.3771774644399232,
+          "std": 0.0017513999744297897,
+          "n": 3
+        }
+      },
+      "per_seed": {
+        "0": {
+          "path": "/jizhicfs/chenyliao/llm-unlearning/results/open-unlearning/20261122_forget10_1b/GradAscent",
+          "seed": 0,
+          "P1_direct": {
+            "forget": 0.9335113167762756,
+            "retain": 0.8011616468429565
+          },
+          "P2_fewshot": {
+            "forget": 0.6727853905676907,
+            "gain": 0.2607259262085849
+          },
+          "P3_relearn": {
+            "forget": 0.836329460144043,
+            "steps": 20,
+            "gain": 0.09718185663223267,
+            "retain": 0.7326631546020508
+          },
+          "INT8_fakequant": {
+            "forget": 1.0948671102523804,
+            "retain": 0.9415881633758545,
+            "forget_shift": 0.16135579347610474
+          },
+          "probe_pre": {
+            "probe_auc": 0.9940029978752136,
+            "probe_recoverability": 0.9880059957504272,
+            "probe_score_forget": 20.951555252075195,
+            "probe_score_retain": -22.99156951904297,
+            "probe_norm": 5.017844200134277,
+            "probe_train_size": 76,
+            "probe_test_size": 52
+          },
+          "probe_post": {
+            "probe_auc": 0.995502233505249,
+            "probe_recoverability": 0.991004467010498,
+            "probe_score_forget": 17.468494415283203,
+            "probe_score_retain": -25.844572067260742,
+            "probe_norm": 5.025278568267822,
+            "probe_train_size": 76,
+            "probe_test_size": 52
+          }
+        },
+        "1": {
+          "path": "/jizhicfs/chenyliao/llm-unlearning/results/open-unlearning/20261122_forget10_1b/GradAscent",
+          "seed": 1,
+          "P1_direct": {
+            "forget": 0.9335113167762756,
+            "retain": 0.8011616468429565
+          },
+          "P2_fewshot": {
+            "forget": 0.6727853905676907,
+            "gain": 0.2607259262085849
+          },
+          "P3_relearn": {
+            "forget": 0.8392901420593262,
+            "steps": 20,
+            "gain": 0.09422117471694946,
+            "retain": 0.7350867986679077
+          },
+          "INT8_fakequant": {
+            "forget": 1.0948671102523804,
+            "retain": 0.9415881633758545,
+            "forget_shift": 0.16135579347610474
+          },
+          "probe_pre": {
+            "probe_auc": 0.965925931930542,
+            "probe_recoverability": 0.931851863861084,
+            "probe_score_forget": 16.771501541137695,
+            "probe_score_retain": -37.05935287475586,
+            "probe_norm": 6.1374664306640625,
+            "probe_train_size": 76,
+            "probe_test_size": 52
+          },
+          "probe_post": {
+            "probe_auc": 0.9674074053764343,
+            "probe_recoverability": 0.9348148107528687,
+            "probe_score_forget": 15.787110328674316,
+            "probe_score_retain": -37.35584259033203,
+            "probe_norm": 6.039844036102295,
+            "probe_train_size": 76,
+            "probe_test_size": 52
+          }
+        },
+        "2": {
+          "path": "/jizhicfs/chenyliao/llm-unlearning/results/open-unlearning/20261122_forget10_1b/GradAscent",
+          "seed": 2,
+          "P1_direct": {
+            "forget": 0.9335113167762756,
+            "retain": 0.8011616468429565
+          },
+          "P2_fewshot": {
+            "forget": 0.6727853905676907,
+            "gain": 0.2607259262085849
+          },
+          "P3_relearn": {
+            "forget": 0.8401966691017151,
+            "steps": 20,
+            "gain": 0.09331464767456055,
+            "retain": 0.7354320287704468
+          },
+          "INT8_fakequant": {
+            "forget": 1.0948671102523804,
+            "retain": 0.9415881633758545,
+            "forget_shift": 0.16135579347610474
+          },
+          "probe_pre": {
+            "probe_auc": 0.9985119104385376,
+            "probe_recoverability": 0.9970238208770752,
+            "probe_score_forget": 25.2186222076416,
+            "probe_score_retain": -23.646217346191406,
+            "probe_norm": 5.460502624511719,
+            "probe_train_size": 76,
+            "probe_test_size": 52
+          },
+          "probe_post": {
+            "probe_auc": 0.9985119104385376,
+            "probe_recoverability": 0.9970238208770752,
+            "probe_score_forget": 25.39323616027832,
+            "probe_score_retain": -23.564624786376953,
+            "probe_norm": 5.468217849731445,
+            "probe_train_size": 76,
+            "probe_test_size": 52
+          }
+        }
+      }
+    },
+    "npo": {
+      "P1_forget": {
+        "mean": 0.9322795867919922,
+        "std": 0.0,
+        "n": 3
+      },
+      "P1_retain": {
+        "mean": 0.7985671758651733,
+        "std": 0.0,
+        "n": 3
+      },
+      "P2_gain": {
+        "mean": 0.2610506462306479,
+        "std": 0.0,
+        "n": 3
+      },
+      "P3_gain": {
+        "mean": 0.09768507877985637,
+        "std": 0.0017406948204571019,
+        "n": 3
+      },
+      "P3_retain": {
+        "mean": 0.7295330166816711,
+        "std": 0.001291737329787187,
+        "n": 3
+      },
+      "INT8_shift": {
+        "mean": 0.1627877950668335,
+        "std": 0.0,
+        "n": 3
+      },
+      "probe_auc_pre": {
+        "mean": 0.9866466919581095,
+        "std": 0.014703218715658216,
+        "n": 3
+      },
+      "probe_auc_post": {
+        "mean": 0.9866444865862528,
+        "std": 0.013616846848356385,
+        "n": 3
+      },
+      "probe_recoverability_pre": {
+        "mean": 0.9732933839162191,
+        "std": 0.02940643743131643,
+        "n": 3
+      },
+      "probe_recoverability_post": {
+        "mean": 0.9732889731725057,
+        "std": 0.02723369369671277,
+        "n": 3
+      },
+      "depth_score": {
+        "p2_gain_ratio": {
+          "mean": 0.5551828762325582,
+          "std": 0.0,
+          "n": 3
+        },
+        "p3_gain_ratio": {
+          "mean": 0.20774927695098586,
+          "std": 0.003701978796139962,
+          "n": 3
+        },
+        "mean_recovery": {
+          "mean": 0.38146607659177206,
+          "std": 0.00185098939806999,
+          "n": 3
+        }
+      },
+      "per_seed": {
+        "0": {
+          "path": "/jizhicfs/chenyliao/llm-unlearning/results/open-unlearning/20261122_forget10_1b/NPO",
+          "seed": 0,
+          "P1_direct": {
+            "forget": 0.9322795867919922,
+            "retain": 0.7985671758651733
+          },
+          "P2_fewshot": {
+            "forget": 0.6712289405613443,
+            "gain": 0.2610506462306479
+          },
+          "P3_relearn": {
+            "forget": 0.8321987986564636,
+            "steps": 20,
+            "gain": 0.10008078813552856,
+            "retain": 0.7277198433876038
+          },
+          "INT8_fakequant": {
+            "forget": 1.0950673818588257,
+            "retain": 0.940217912197113,
+            "forget_shift": 0.1627877950668335
+          },
+          "probe_pre": {
+            "probe_auc": 0.995502233505249,
+            "probe_recoverability": 0.991004467010498,
+            "probe_score_forget": 20.65357780456543,
+            "probe_score_retain": -23.268993377685547,
+            "probe_norm": 5.01584529876709,
+            "probe_train_size": 76,
+            "probe_test_size": 52
+          },
+          "probe_post": {
+            "probe_auc": 0.995502233505249,
+            "probe_recoverability": 0.991004467010498,
+            "probe_score_forget": 17.08342170715332,
+            "probe_score_retain": -26.33173370361328,
+            "probe_norm": 5.027166843414307,
+            "probe_train_size": 76,
+            "probe_test_size": 52
+          }
+        },
+        "1": {
+          "path": "/jizhicfs/chenyliao/llm-unlearning/results/open-unlearning/20261122_forget10_1b/NPO",
+          "seed": 1,
+          "P1_direct": {
+            "forget": 0.9322795867919922,
+            "retain": 0.7985671758651733
+          },
+          "P2_fewshot": {
+            "forget": 0.6712289405613443,
+            "gain": 0.2610506462306479
+          },
+          "P3_relearn": {
+            "forget": 0.8353019952774048,
+            "steps": 20,
+            "gain": 0.0969775915145874,
+            "retain": 0.7302467823028564
+          },
+          "INT8_fakequant": {
+            "forget": 1.0950673818588257,
+            "retain": 0.940217912197113,
+            "forget_shift": 0.1627877950668335
+          },
+          "probe_pre": {
+            "probe_auc": 0.965925931930542,
+            "probe_recoverability": 0.931851863861084,
+            "probe_score_forget": 16.633607864379883,
+            "probe_score_retain": -37.40456008911133,
+            "probe_norm": 6.139566898345947,
+            "probe_train_size": 76,
+            "probe_test_size": 52
+          },
+          "probe_post": {
+            "probe_auc": 0.9674074053764343,
+            "probe_recoverability": 0.9348148107528687,
+            "probe_score_forget": 15.8137788772583,
+            "probe_score_retain": -37.441410064697266,
+            "probe_norm": 6.011044502258301,
+            "probe_train_size": 76,
+            "probe_test_size": 52
+          }
+        },
+        "2": {
+          "path": "/jizhicfs/chenyliao/llm-unlearning/results/open-unlearning/20261122_forget10_1b/NPO",
+          "seed": 2,
+          "P1_direct": {
+            "forget": 0.9322795867919922,
+            "retain": 0.7985671758651733
+          },
+          "P2_fewshot": {
+            "forget": 0.6712289405613443,
+            "gain": 0.2610506462306479
+          },
+          "P3_relearn": {
+            "forget": 0.8362827301025391,
+            "steps": 20,
+            "gain": 0.09599685668945312,
+            "retain": 0.7306324243545532
+          },
+          "INT8_fakequant": {
+            "forget": 1.0950673818588257,
+            "retain": 0.940217912197113,
+            "forget_shift": 0.1627877950668335
+          },
+          "probe_pre": {
+            "probe_auc": 0.9985119104385376,
+            "probe_recoverability": 0.9970238208770752,
+            "probe_score_forget": 25.64801788330078,
+            "probe_score_retain": -23.465343475341797,
+            "probe_norm": 5.463781833648682,
+            "probe_train_size": 76,
+            "probe_test_size": 52
+          },
+          "probe_post": {
+            "probe_auc": 0.9970238208770752,
+            "probe_recoverability": 0.9940476417541504,
+            "probe_score_forget": 25.83755111694336,
+            "probe_score_retain": -23.721067428588867,
+            "probe_norm": 5.512189865112305,
+            "probe_train_size": 76,
+            "probe_test_size": 52
+          }
+        }
+      }
+    }
+  },
+  "gate": {
+    "probe_channel_present": true,
+    "shallow_forgetting_detected": true,
+    "verdict": "PASS"
+  },
+  "notes": [
+    "Probe is a held-out linear separability test on frozen hidden states, not a generation attack.",
+    "ASU 1B checkpoint is unavailable; the local asu-forget05-asu-gd is a 7B/vocab-32000 checkpoint and is skipped by the architecture guard.",
+    "This is a non-claim diagnostic; no ARIS gate is invoked."
+  ]
+}

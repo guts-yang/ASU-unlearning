@@ -71,6 +71,43 @@ def rotation_invariance(
     }
 
 
+def readout_direction(lm_head_weight: torch.Tensor, token_ids: list[int] | None = None) -> torch.Tensor:
+    """Pick a normalized readout direction from the LM head."""
+    w = as_tensor(lm_head_weight)
+    rows = w[token_ids] if token_ids is not None else w
+    direction = rows.mean(dim=0)
+    return direction / direction.norm().clamp_min(1e-8)
+
+
+def readout_space_loss(
+    forget_hidden: torch.Tensor,
+    retain_hidden: torch.Tensor,
+    direction: torch.Tensor,
+    retain_target: torch.Tensor | float | None = None,
+    retain_weight: float = 0.5,
+) -> dict[str, torch.Tensor]:
+    """Suppress the forget readout while preserving the retain readout level.
+
+    ``retain_target`` should be computed from the frozen pre-training retain
+    activation; passing ``None`` uses the detached current retain mean.
+    """
+    hf = as_tensor(forget_hidden)
+    hr = as_tensor(retain_hidden)
+    r = as_tensor(direction).flatten().to(hf.device, hf.dtype)
+    f_proj = hf @ r
+    r_proj = hr @ r
+    target = r_proj.detach().mean() if retain_target is None else as_tensor(retain_target).to(hf.device, hf.dtype)
+    l_forget = (f_proj ** 2).mean()
+    l_retain = ((r_proj - target) ** 2).mean()
+    loss = l_forget + retain_weight * l_retain
+    return {
+        "loss": loss,
+        "forget_readout_sq": l_forget,
+        "retain_readout_shift": l_retain,
+        "retain_target": target,
+    }
+
+
 def self_test() -> dict:
     torch.manual_seed(6)
     hf = torch.randn(4, 8)
@@ -80,7 +117,13 @@ def self_test() -> dict:
     assert rep["pass_rotation_invariance"]
     j = finite_difference_jacobian(lambda x: w @ x, torch.randn(8))
     assert j.shape == (11, 8)
-    return {"status": "ok", "report": rep}
+    r = readout_direction(w)
+    losses = readout_space_loss(torch.randn(4, 5, 8), torch.randn(4, 5, 8), r)
+    assert losses["loss"].ndim == 0
+    return {"status": "ok", "report": rep, "readout_loss": float(losses["loss"].item())}
 
 
-__all__ = ["readout_delta", "finite_difference_jacobian", "rotation_invariance", "self_test"]
+__all__ = [
+    "readout_delta", "finite_difference_jacobian", "rotation_invariance",
+    "readout_direction", "readout_space_loss", "self_test",
+]

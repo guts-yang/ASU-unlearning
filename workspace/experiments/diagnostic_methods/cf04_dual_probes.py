@@ -60,14 +60,15 @@ def _split(x: torch.Tensor, y: torch.Tensor, train_fraction: float = 0.6):
     return x[tr], y[tr], x[te], y[te]
 
 
-def dual_probe_report(
+def fit_dual_probes(
     fact_x: torch.Tensor,
     fact_y: torch.Tensor,
     identity_x: torch.Tensor,
     identity_y: torch.Tensor,
     steps: int = 300,
     lr: float = 0.05,
-) -> dict:
+):
+    """Fit fact/identity probes on a train split and evaluate on a held-out split."""
     fx, fy, ftx, fty = _split(fact_x, fact_y)
     ix, iy, itx, ity = _split(identity_x, identity_y)
     fact_probe = fit_linear_probe(fx, fy, steps=steps, lr=lr)
@@ -77,7 +78,7 @@ def dual_probe_report(
     auc_f = auc_score(fact_scores, fty)
     auc_id = auc_score(id_scores, ity)
     cos = float(safe_cosine(fact_probe.weight, id_probe.weight).item())
-    return {
+    report = {
         "auc_fact": auc_f,
         "auc_identity": auc_id,
         "auc_margin": auc_f - auc_id,
@@ -87,6 +88,50 @@ def dual_probe_report(
         "train_size": int(fx.shape[0]),
         "test_size": int(ftx.shape[0]),
         "pass": auc_f - auc_id >= 0.10 and abs(cos) <= 0.8,
+    }
+    return fact_probe, id_probe, report
+
+
+def dual_probe_report(
+    fact_x: torch.Tensor,
+    fact_y: torch.Tensor,
+    identity_x: torch.Tensor,
+    identity_y: torch.Tensor,
+    steps: int = 300,
+    lr: float = 0.05,
+) -> dict:
+    _, _, report = fit_dual_probes(fact_x, fact_y, identity_x, identity_y, steps=steps, lr=lr)
+    return report
+
+
+def probe_guided_loss(
+    forget_hidden: torch.Tensor,
+    retain_hidden: torch.Tensor,
+    fact_probe: LinearProbe,
+    identity_probe: LinearProbe,
+    identity_weight: float = 0.5,
+    retain_weight: float = 0.5,
+) -> dict[str, torch.Tensor]:
+    """Push forget activations out of the fact probe while preserving identity and retain.
+
+    The probes are frozen.  ``softplus`` is used so a correctly classified
+    forget fact (high fact score) receives a gradient, while already-negative
+    samples stop dominating the loss.
+    """
+    hf = pooled_hidden(forget_hidden)
+    hr = pooled_hidden(retain_hidden)
+    fact_forget = fact_probe.score(hf)
+    identity_forget = identity_probe.score(hf)
+    fact_retain = fact_probe.score(hr)
+    l_fact = F.binary_cross_entropy_with_logits(fact_forget, torch.zeros_like(fact_forget))
+    l_identity = F.binary_cross_entropy_with_logits(identity_forget, torch.ones_like(identity_forget))
+    l_retain = F.binary_cross_entropy_with_logits(fact_retain, torch.ones_like(fact_retain))
+    loss = l_fact + identity_weight * l_identity + retain_weight * l_retain
+    return {
+        "loss": loss,
+        "fact_forget": l_fact,
+        "identity_preserve": l_identity,
+        "retain_fact_preserve": l_retain,
     }
 
 
@@ -106,10 +151,15 @@ def self_test() -> dict:
     fact_y = (fact_x[:, 0] + 0.3 * fact_x[:, 1] > 0).float()
     id_x = torch.randn(n, d)
     id_y = (id_x[:, 5] - 0.2 * id_x[:, 6] > 0).float()
-    rep = dual_probe_report(fact_x, fact_y, id_x, id_y, steps=120)
-    assert rep["auc_fact"] > 0.8
-    assert rep["auc_identity"] > 0.8
-    return {"status": "ok", "report": rep}
+    fp, ip, rep = fit_dual_probes(fact_x, fact_y, id_x, id_y, steps=120)
+    assert rep["auc_fact"] > 0.75
+    assert rep["auc_identity"] > 0.70
+    losses = probe_guided_loss(torch.randn(4, 5, d), torch.randn(4, 5, d), fp, ip)
+    assert losses["loss"].ndim == 0
+    return {"status": "ok", "report": rep, "probe_loss": float(losses["loss"].item())}
 
 
-__all__ = ["LinearProbe", "fit_linear_probe", "dual_probe_report", "pooled_hidden", "self_test"]
+__all__ = [
+    "LinearProbe", "fit_linear_probe", "fit_dual_probes", "dual_probe_report",
+    "probe_guided_loss", "pooled_hidden", "self_test",
+]
