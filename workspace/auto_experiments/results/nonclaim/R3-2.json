@@ -1,0 +1,55 @@
+{
+  "candidate": "R3-2",
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "run_kind": "non-claim diagnostic",
+  "steps": 0,
+  "lr": 1e-05,
+  "batch_size": 2,
+  "seed": 0,
+  "before": {},
+  "after": {},
+  "delta": {
+    "forget_nll": null,
+    "retain_nll": null
+  },
+  "training_executed": false,
+  "evaluation_executed": true,
+  "modules": {
+    "depth_audit": {
+      "methods": {
+        "base": {
+          "p1_forget": 0.4620729088783264,
+          "p2_gain": -0.015813676697676804,
+          "p3_gain": 0.07092022895812988,
+          "int8_shift": 0.1946219801902771,
+          "mean_recovery": null
+        },
+        "asu": {
+          "p1_forget": 0.9603962302207947,
+          "p2_gain": 0.2612635650483671,
+          "p3_gain": 0.1849650740623474,
+          "int8_shift": 0.25678926706314087,
+          "mean_recovery": 0.4477300379085086
+        },
+        "grad_ascent": {
+          "p1_forget": 0.9335111379623413,
+          "p2_gain": 0.2607256824017016,
+          "p3_gain": 0.09698271751403809,
+          "int8_shift": 0.16135573387145996,
+          "mean_recovery": 0.3793799249275482
+        }
+      },
+      "method_separation": 0.06835011298096044,
+      "shallow_forgetting_detected": true,
+      "probe_channel_present": false,
+      "verdict": "POSITIVE_SCREEN"
+    }
+  },
+  "verdict": "DIAGNOSTIC_RUN",
+  "elapsed_sec": 0.0,
+  "limitations": [
+    "Short non-claim diagnostic; not a full training or paper-level reproduction."
+  ],
+  "diagnostic_verdict": "DIAGNOSTIC_POSITIVE"
+}

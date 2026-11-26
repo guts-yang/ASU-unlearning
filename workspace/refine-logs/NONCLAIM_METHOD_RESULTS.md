@@ -18,7 +18,7 @@
 | 9 | CF-09 | 3 | DIAGNOSTIC_NEGATIVE | +0.0122 | -0.0019 | control residual + 3-step train |
 | 10 | CF-10 | 3 | DIAGNOSTIC_NEGATIVE | +0.5226 | +0.5586 | purity schedule + 3-step train |
 | 11 | R2-C | 2 | DIAGNOSTIC_NEGATIVE | +0.4930 | +0.2471 | inner attack + minimax |
-| 12 | R3-2 | 0 | PENDING | — | — | existing depth audit |
+| 12 | R3-2 | 0 | DIAGNOSTIC_POSITIVE | — | — | existing depth audit |
 | 13 | R3-3 | 3 | DIAGNOSTIC_NEGATIVE | +0.4210 | +0.2343 | two-stage schedule + 3-step train |
 
 ## Constraint
