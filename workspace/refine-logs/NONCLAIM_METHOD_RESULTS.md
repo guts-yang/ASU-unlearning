@@ -12,7 +12,7 @@
 | 3 | CF-02 | 3 | DIAGNOSTIC_NEGATIVE | +1.7697 | +1.7578 | role decomposition + 3-step train |
 | 4 | CF-04 | 0 | DIAGNOSTIC_NEGATIVE | +0.0000 | +0.0000 | dual probe AUC |
 | 5 | CF-06 | 0 | NOT_APPLICABLE | — | — | LRM applicability |
-| 6 | CF-05 | 0 | PENDING | — | — | multi-donor SVD |
+| 6 | CF-05 | 0 | DIAGNOSTIC_INCONCLUSIVE | +0.0000 | +0.0000 | multi-donor SVD |
 | 7 | CF-08 | 3 | DIAGNOSTIC_NEGATIVE | +0.2182 | +0.1791 | nullspace + 3-step train |
 | 8 | CF-07 | 0 | DIAGNOSTIC_POSITIVE | +0.0000 | +0.0000 | readout rotation |
 | 9 | CF-09 | 3 | DIAGNOSTIC_NEGATIVE | -0.0284 | -0.0420 | control residual + 3-step train |
