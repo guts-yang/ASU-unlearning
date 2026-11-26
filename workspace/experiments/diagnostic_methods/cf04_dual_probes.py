@@ -32,7 +32,7 @@ def fit_linear_probe(
     l2: float = 1e-3,
 ) -> LinearProbe:
     x = as_tensor(x)
-    y = as_tensor(y).flatten().float()
+    y = as_tensor(y).flatten().float().to(x.device)
     if x.shape[0] != y.numel():
         raise ValueError("x and y must have the same number of rows")
     w = torch.zeros(x.shape[1], dtype=x.dtype, device=x.device, requires_grad=True)

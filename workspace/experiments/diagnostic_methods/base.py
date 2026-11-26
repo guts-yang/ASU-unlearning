@@ -81,7 +81,7 @@ def ridge_coefficients(targets: torch.Tensor, design: torch.Tensor, ridge: float
 def auc_score(scores: torch.Tensor, labels: torch.Tensor) -> float:
     """Rank-based AUC; labels are bool/0-1.  Returns 0.5 for a degenerate set."""
     s = as_tensor(scores).flatten()
-    y = as_tensor(labels).flatten().bool()
+    y = as_tensor(labels).flatten().bool().to(s.device)
     pos = int(y.sum().item())
     neg = int((~y).sum().item())
     if pos == 0 or neg == 0:

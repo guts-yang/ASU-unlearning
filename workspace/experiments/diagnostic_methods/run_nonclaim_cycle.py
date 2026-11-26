@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import subprocess
@@ -92,12 +93,24 @@ def write_report(rows: dict):
 
 
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--start", default=METHODS[0][0], choices=[m[0] for m in METHODS])
+    args = ap.parse_args()
     RES.mkdir(parents=True, exist_ok=True)
     rows = {}
-    if REPORT.exists():
-        # Keep no prior verdicts: this cycle re-runs every method.
-        pass
+    for mid, _, _ in METHODS:
+        p = RES / f"{mid}.json"
+        if p.exists():
+            rec = json.loads(p.read_text(encoding="utf-8"))
+            rec.setdefault("diagnostic_verdict", verdict_for(mid, rec))
+            rows[mid] = rec
+    write_report(rows)
+    started = False
     for mid, steps, _ in METHODS:
+        if not started:
+            if mid != args.start:
+                continue
+            started = True
         env = dict(os.environ, CUDA_VISIBLE_DEVICES="0", TOKENIZERS_PARALLELISM="false")
         cmd = [sys.executable, "-m", "diagnostic_methods.run_one_method", "--method", mid, "--steps", str(steps)]
         print(f"RUN {mid} steps={steps}", flush=True)
