@@ -2,7 +2,7 @@
 
 - claim_level: `false`
 - evidence_gate: `NOT_APPLIED`
-- updated_at: `2026-11-26T12:58:50Z`
+- updated_at: `2026-11-26T12:58:52Z`
 - baseline: ASU/open-unlearning TOFU `forget10/retain90/holdout10`, `Llama-3.2-1B-Instruct`
 
 ## Method Results
@@ -22,7 +22,7 @@
 | 10 | CF-10 纯度驱动渐进 schedule | 20-step high2low vs global | yes/yes | NEGATIVE | high2low 调度在 forget 与 retain 上均劣于 global 对照，首轮诊断不支持纯度驱动收益。 |
 | 11 | R2-C 抗恢复即目标 | operator review + audit | no/no | NOT_IMPLEMENTABLE | 双环 trainer 与训练内攻击未实现；深度审计只证明浅层遗忘问题存在。 |
 | 12 | R3-2 ASU 遗忘深度审计基准 | existing P1/P2/P3/INT8 evaluation | no/yes | POSITIVE_SCREEN | P1/P2/P3/INT8 恢复阶梯通过，ASU 与 GradAscent 的 mean_recovery 有分化；Probe 通道仍缺。 |
-| 13 | R3-3 浅深解耦双阶段遗忘 | existing V4/stage9 evaluation | no/no | PENDING | — |
+| 13 | R3-3 浅深解耦双阶段遗忘 | existing V4/stage9 evaluation | no/no | NEGATIVE | V4 严格阈值通过数 0；L12 suppress 的 dF/dR 未达阈值。 |
 
 ## Constraint
 This report is diagnostic only. It does not invoke the ARIS evidence gate, does not record accepted/provisional, and must not be cited as reproduction, novelty, or claim evidence.

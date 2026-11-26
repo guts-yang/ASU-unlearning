@@ -1,0 +1,26 @@
+{
+  "candidate": "R3-3",
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "diagnostic_mode": "existing V4/stage9 evaluation",
+  "training_executed": false,
+  "evaluation_executed": false,
+  "evidence_reused": true,
+  "verdict": "NEGATIVE",
+  "priority": "REVISE / ablation only",
+  "metrics": {
+    "dF": 0.133,
+    "dR": 0.099,
+    "strict_threshold_pass_count": 0
+  },
+  "evidence": [
+    "workspace/idea-stage/candidates/R3-3_浅深解耦双阶段遗忘.md",
+    "workspace/experiments/direction_i/ALL_RESULTS_SUMMARY.json#stage9_idea1_opt"
+  ],
+  "limitations": [
+    "仅消融定位，不投入主线。"
+  ],
+  "summary": "V4 严格阈值通过数 0；L12 suppress 的 dF/dR 未达阈值。",
+  "timestamp": "2026-11-26T12:58:52Z",
+  "baseline": "ASU/open-unlearning TOFU forget10/retain90/holdout10, Llama-3.2-1B-Instruct"
+}

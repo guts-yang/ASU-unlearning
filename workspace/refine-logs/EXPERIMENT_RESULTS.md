@@ -22,6 +22,7 @@ Plan: refine-logs/EXPERIMENT_PLAN.md
 | CF-10 | 20-step high2low vs global | yes | yes | NEGATIVE | high2low 调度在 forget 与 retain 上均劣于 global 对照，首轮诊断不支持纯度驱动收益。 |
 | R2-C | operator review + audit | no | no | NOT_IMPLEMENTABLE | 双环 trainer 与训练内攻击未实现；深度审计只证明浅层遗忘问题存在。 |
 | R3-2 | existing P1/P2/P3/INT8 evaluation | no | yes | POSITIVE_SCREEN | P1/P2/P3/INT8 恢复阶梯通过，ASU 与 GradAscent 的 mean_recovery 有分化；Probe 通道仍缺。 |
+| R3-3 | existing V4/stage9 evaluation | no | no | NEGATIVE | V4 严格阈值通过数 0；L12 suppress 的 dF/dR 未达阈值。 |
 
 ## Summary
 - Diagnostic only; claim_level=false; evidence gate NOT_APPLIED.

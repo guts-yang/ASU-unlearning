@@ -15,7 +15,7 @@
 | R010 | CF-10 纯度驱动渐进 schedule | rank 10 / 7.2 | 20-step high2low vs global | NEGATIVE | results/screening/CF-10.json |
 | R011 | R2-C 抗恢复即目标 | PROMOTE | operator review + audit | NOT_IMPLEMENTABLE | results/screening/R2-C.json |
 | R012 | R3-2 ASU 遗忘深度审计基准 | PROMOTE | existing P1/P2/P3/INT8 evaluation | POSITIVE_SCREEN | results/screening/R3-2.json |
-| R013 | R3-3 浅深解耦双阶段遗忘 | REVISE / ablation only | existing V4/stage9 evaluation | PENDING | results/screening/R3-3.json |
+| R013 | R3-3 浅深解耦双阶段遗忘 | REVISE / ablation only | existing V4/stage9 evaluation | NEGATIVE | results/screening/R3-3.json |
 
 ## Verdict vocabulary
 - `POSITIVE_SCREEN`: diagnostic signal meets stated criterion.
