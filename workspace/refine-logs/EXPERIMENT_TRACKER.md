@@ -1,19 +1,25 @@
-# Experiment Tracker — V4 自动 idea 验证
+# Experiment Tracker — Plan-level Candidate Screening
 
-状态：gate 阶段已完成（H20 / TOFU-1B / 2026-11-23）。详细结果见 `EXPERIMENT_RESULTS.md`。
+| Run | Candidate | Priority | Milestone | Status | Result File | Notes |
+|---|---|---:|---|---|---|---|
+| R000 | sanity | 0 | M0 | PASSED | results/screening/sanity.json | 5-step global tau on frozen TOFU-1B |
+| R001 | CF-01 约束反演目标 | 1 | M1 | NOT_IMPLEMENTABLE | results/screening/CF-01.json | constrained inverse target |
+| R002 | CF-03 因果门控 | 2 | M2 | INCONCLUSIVE | results/screening/CF-03.json | causal activation gate |
+| R003 | CF-02 三前向角色分解 | 3 | M3 | NOT_IMPLEMENTABLE | results/screening/CF-02.json | three-role decomposition |
+| R004 | CF-04 事实身份双探针 | 4 | M4 | INCONCLUSIVE | results/screening/CF-04.json | fact/identity probes |
+| R005 | CF-06 LRM 推理轨迹 | 5 | M5 | NOT_APPLICABLE | results/screening/CF-06.json | NOT_APPLICABLE on LLM track |
+| R006 | CF-05 多 donor 边际化 | 6 | M6 | NOT_IMPLEMENTABLE | results/screening/CF-05.json | multi-donor marginalization |
+| R007 | CF-08 零空间抗恢复投影 | 7 | M7 | INCONCLUSIVE | results/screening/CF-08.json | nullspace anti-recovery |
+| R008 | CF-07 读出空间 deltaA | 8 | M8 | NOT_IMPLEMENTABLE | results/screening/CF-07.json | readout-space deltaA |
+| R009 | CF-09 结构化对照族残差化 | 9 | M9 | NOT_IMPLEMENTABLE | results/screening/CF-09.json | structured control residual |
+| R010 | CF-10 纯度驱动 schedule | 10 | M10 | NEGATIVE | results/screening/CF-10.json | purity-driven schedule |
+| R011 | R2-C 抗恢复即目标 | 11 | M11 | NOT_IMPLEMENTABLE | results/screening/R2-C.json | relearning-aware objective |
+| R012 | R3-2 深度审计基准 | 12 | M12 | POSITIVE_SCREEN | results/screening/R3-2.json | depth audit benchmark |
+| R013 | R3-3 浅深解耦 | 13 | M13 | NEGATIVE | results/screening/R3-3.json | ablation only |
 
-| Run | Idea | 配置 | Seed | 状态 | 关键结果 |
-|---|---|---|---|---|---|
-| G0 | V1 全系 | stage0-14 既有实测复核 | 0/1/2 | DONE | KILL，全部弱于 ASU ref |
-| G1 | R3-1 | τ 敏感度诊断（层/头） | 0 | DONE | layer CV=1.11，head CV=9.22，PASS |
-| G2 | R2-A | ASU-Mu forget-grad SVD 选择性 | 0 | DONE | mean_selectivity=0.531，机制 PASS；新颖性冲突 → REVISE |
-| G3 | R2-B | low2high / high2low / global 等步数训练 | 0 | DONE | low2high dF=+0.949 最优，PASS |
-| G4 | R3-3 | 深层 ΔA suppress/align gate | 0 | DONE | 边缘信号，严格阈值 REVISE |
-| G5 | R3-2 | P1/P2/P3/INT8 深度审计 | 0 | DONE | ASU-u mean_recovery=0.448，PASS |
-| G6 | R3-1 | 等平均 τ 与打乱场对照 | 0 | DONE | 结构化分配无净收益，REVISE |
-| M1 | R2-A | 完整两段式 + P1/P2/P3 | — | BLOCKED | 需先完成与 RepSelect/ADU/ALMPU 划界 |
-| M2 | R2-C | relearning-aware meta 目标 | — | NOT STARTED | 下一步主线 |
-| M3 | R2-B | 3-seed 重复确认 | — | NOT STARTED | 主线增量验证 |
-| M4 | R3-2 | 统一审计扩展到更多 checkpoint | — | NOT STARTED | 基准完善 |
-
-原始产物：`workspace/auto_experiments/results/*.json`；日志：`workspace/auto_experiments/logs/`。
+## Verdict vocabulary
+- `POSITIVE_SCREEN`: first-pass signal meets the candidate's stated success criterion.
+- `NEGATIVE`: stated success criterion not met by existing/new evidence.
+- `INCONCLUSIVE`: required arms or metrics missing.
+- `NOT_IMPLEMENTABLE`: core operator cannot be expressed by the frozen baseline harness.
+- `NOT_APPLICABLE`: requires another track (CF-06).

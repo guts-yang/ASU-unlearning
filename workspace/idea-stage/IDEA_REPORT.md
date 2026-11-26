@@ -172,3 +172,26 @@ V4 决策表唯一 `ELIMINATED` 行 + research-wiki `anti_duplication`（`resear
 - 反重复记忆：`research-wiki/log.md`、`research-wiki/ideas/*.md`、`workspace/ideas_archive/README.md`
 - 脚本依赖（决定 V4 保留顶层）：`workspace/verification/prepare.py`、`workspace/auto_experiments/run_all.py`、`workspace/verification/program.md`
 - 文献标识沿用各源报告（ASU arXiv:2603.01285、RepSelect arXiv:2606.17168、PrivUn arXiv:2604.22076、ADU arXiv:2608.23020、ALMPU DOI 10.1609/aaai.v40i23.39017、FALCON NeurIPS 2025、CiPO arXiv:2604.15847、PACT arXiv:2609.38909 等）；本报告未做自动 citation-audit，标识与引用语境以源报告为准。
+
+## Literature Landscape
+
+本次不重跑文献检索； Landscape 沿用源报告与 `candidates/IDEA_DISCOVERY_20261126.md §5` 的五维排序框架。冻结参照为 ASU/open-unlearning + TOFU forget10/retain90/holdout10 + Llama-3.2-1B-Instruct。候选集合由 10 个 CF 机制候选和 R2-C/R3-2/R3-3 三个顶层候选组成；全部为 plan-level，未宣称 published novelty。
+
+## Ranked Ideas
+
+严格按 `candidates/IDEA_DISCOVERY_20261126.md:75-90` 与各 proposal 头部 `rank` 排序：CF-01(8.0) → CF-03(7.8) → CF-02(7.6) → CF-04(7.4) → CF-06(7.4) → CF-05(7.4) → CF-08(7.4) → CF-07(7.2) → CF-09(7.2) → CF-10(7.2)。顶层三条按 `docs/research_contract.md:7-26,41-42`：R2-C(PROMOTE) → R3-2(PROMOTE) → R3-3(REVISE，仅消融)。两套顺序之间没有文件给出的交叉排序依据，因此按 CF 优先级先执行，再执行 R 线。CF-06 需要 LRM/CoT 轨道，在本冻结 LLM baseline 上标为 NOT_APPLICABLE。
+
+## Novelty Verification
+
+Hy4 跨家族 novelty check（trace `ba62db5d-b167-4388-83c7-d7cdb292753b`，response `a55fff672fee4eecbad07a585d5ccc1d`）：`Verdict: PROCEED WITH CAUTION`。约束：仅执行 in-scope 内部候选、排除 CF-06、不做 novelty/citation claim。完整回执见 `.aris/traces/idea-novelty-20261126.md`。
+
+## External Critical Review
+
+Hy4 跨家族 research review（trace `1c68129c-6e2b-4887-9e6b-cce7badd6327`，response `df04217f04a947899f85a1399668d9e2`）：`Verdict: ALMOST`。约束：bounded screening 必须显式列出 plan-level 候选、retain/forget 指标、算力上限和停止准则；不得把 proxy 当作 faithful reproduction。完整回执见 `.aris/traces/idea-review-20261126.md`。本轮据此采用 20-step、单 seed 的首轮判别 screening，并在结果中标注计划级代理与实际复现的区别。
+
+<!-- ARIS_IDEA_DISCOVERY_EVIDENCE_GATE:START -->
+## Evidence Gate
+**Status:** PASS
+
+All required stage records, review receipts, artifacts, and report sections are present.
+<!-- ARIS_IDEA_DISCOVERY_EVIDENCE_GATE:END -->

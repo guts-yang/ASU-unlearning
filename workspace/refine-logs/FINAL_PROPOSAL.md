@@ -1,39 +1,36 @@
-# Final Proposal — Δ-Gated Progressive Orthogonal Alignment
+# Final Proposal — Plan-level Candidate Screening on Frozen ASU TOFU-1B
 
-> 由 idea-discovery Phase 4.5 精炼。对应 workspace/proposal/方向I 原始 proposal 的"激活差异处理"待调研问题的收敛解。
+> 2026-11-26 W1→W1.5 handoff。覆盖 `idea-stage/candidates/` 下 13 个计划级候选。
+> 状态：bounded screening proposal；不是论文投稿主张，不声称 faithful reproduction。
 
-## Problem Anchor（冻结，防 scope 漂移）
-在 ASU 基座上去掉注意力温度后，为冻结 Teacher 构造"反事实主体视图" X⁻（仅换关系匹配的 donor 主体），让 Student 在原始遗忘输入 X⁺ 上逐层内化遗忘——**目标是移除目标事实的表征方向，而不是对齐到 donor、不是教假事实、不是输出层拒绝**。统计单位为作者/实体簇。
+## Problem Anchor
+在冻结基线 ASU/open-unlearning TOFU `forget10/retain90/holdout10` + `Llama-3.2-1B-Instruct` 上，按候选文件显式优先级逐个执行最小判别实验，判断每个计划级候选是否有正向、可审计的首轮信号。统计单位、指标口径和算力预算在开跑前冻结，不因结果回改。
 
-## Method Thesis（一句话）
-用配对差 ΔA_ℓ 估计"事实相关子空间"，把 Student 在 X⁺ 的层激活沿该子空间正交抑制（stop-grad Teacher），逐层渐进内化，再叠加 DKT 同前缀 KL 保持输出行为。
+## Method Thesis
+以 `workspace/auto_experiments/` 为代码基线，优先复用已生成的 gate/恢复审计结果；只对缺失 arms 补跑短程训练。每个候选必须记录：实现状态、对照臂、forget/retain 指标、恢复或特异性证据、判定。机制无法在本 LLM 基线实现时标 `NOT_APPLICABLE`/`NOT_IMPLEMENTABLE`，不伪造复现。
 
-## 方法细节
-1. **反事实输入**：X⁺=X(s_f,r)，X⁻=X(s_r,r)；token 等长、槽外 ID 不变；donor 来自 TOFU 内部保留集；按作者/别名簇隔离。
-2. **事实子空间估计**：对抽点 P（每层 DecoderLayer 输出）计算 ΔA_ℓ=h_T(X⁺)−h_T(X⁻)，取低秩投影 P_ℓ（SVD top-k 或 PCA）；以 wrong-donor ΔA 作对照子空间验证特异性。
-3. **正交遗忘损失**：L_F=Σ_ℓρ_ℓ(k)·‖(I−P_ℓ)h_S(X⁺;P)−stopgrad(h_T(X⁺;P))‖²；等价梯度屏蔽 g⊥=g−P_ℓg。Λ(k) 逐阶段扩展，ρ_ℓ(k) 为层权重；避开最浅/末端 20% 层（LayerSync/FDD 经验）。
-4. **DKT 同前缀 KL**：L_KL=(1−η)L_T+ηL_S，两分支独立同前缀 forward KL，不逐 token 比较不同序列（沿用原 proposal §3，已验证正确）。
-5. **保留损失**：L_R 为 retain-train 答案位 NLL。
-6. **总损失**：L=λ_F L_F+λ_KL L_KL+β L_R；所有系数/schedule/预算实验前冻结。
-7. **可选抗恢复增强**：部署前 unlearn-and-distill 到同构学生（UNDO，NeurIPS 2025）。
+## Candidate Set and Order
+1. CF-01 约束反演目标（rank 1, 8.0）
+2. CF-03 因果门控 activation gate（rank 2, 7.8）
+3. CF-02 三前向角色分解（rank 3, 7.6）
+4. CF-04 事实身份双探针解耦（rank 4, 7.4）
+5. CF-06 LRM 推理轨迹 deltaA（rank 5, 7.4；本线 NOT_APPLICABLE）
+6. CF-05 多 donor 边际化（rank 6, 7.4）
+7. CF-08 零空间抗恢复投影（rank 7, 7.4）
+8. CF-07 读出空间 deltaA readout（rank 8, 7.2）
+9. CF-09 结构化对照族残差化（rank 9, 7.2）
+10. CF-10 纯度驱动渐进 schedule（rank 10, 7.2）
+11. R2-C 抗恢复即目标（PROMOTE）
+12. R3-2 ASU 遗忘深度审计基准（PROMOTE）
+13. R3-3 浅深解耦双阶段遗忘（REVISE，仅消融）
 
-## Dominant Contribution
-"真实关系 donor 对比锚 + 表示层正交解耦 + 不教假事实的逐层渐进遗忘目标"——与 FALCON（随机对比锚、全局选择）、CiPO（输出/偏好层教假 CoT）、CFT（教假事实、有幻觉溢出）形成三点划界。
-
-## Must-run Experiments
-- Block A（gate）：ΔA probe 判别实验 + wrong-donor 对照 → 验 C1
-- Block B（gate）：等预算 schedule 对照（渐进/静态全层/反向/随机）→ 验 C3
-- Block C：配对特异性 5 对照 + 非答案替换多指标 → 验 E3/E4
-- Block D：参数内化 + 抗恢复 ≥2 类 + relation-swap probe → 验 C4/E5/E6
+## Bounded Claims
+- 首轮只能声称“某计划级候选在冻结协议上通过/未通过判别 screening”，不能声称论文级复现、novelty 或 submission-ready。
+- 正向信号定义：在所声明的成功判据上，候选臂相对对照臂同时满足 forget 目标与 retain 约束；恢复类候选还需至少两类独立恢复证据。
+- 所有新结果必须进入 `EXPERIMENT_TRACKER.md` 与 JSON 文件，随后才允许 `/auto-review-loop → /experiment-audit → /result-to-claim`。
 
 ## Kill Switches
-- ΔA probe 显示主体身份主导 → 收缩为 FDD-delta 变体（Idea 3）或转 Idea 2。
-- schedule 对照无差异 → 撤销"渐进"主张，仅保留"多层正交对齐"。
-- donor 答案上升被误判为遗忘 → 强化 L_R 与答案分解报告，否则主攻线让位。
-
-## First 3 Runs to Launch（需 GPU）
-1. A1：ΔA probe（目标事实 vs 主体身份）+ wrong-donor ΔA 对照。
-2. B1：渐进 schedule（8←16 式层对启发）vs 静态全层，等预算。
-3. C1：真实 donor vs noise/shuffled/wrong-donor 配对特异性对照。
-
-详细见 `EXPERIMENT_PLAN.md`。状态：plan-only，未实现/未预注册/无新实验结果。
+- 实现需要跨轨道数据/模型（CF-06）→ `NOT_APPLICABLE`，转 LRM track。
+- 现有代码无法表达候选定义的核心算子 → `NOT_IMPLEMENTABLE`，不降级成无关超参扫描后仍称复现。
+- 单 seed 正向但 3-seed 确认失败 → `NEGATIVE`/`INCONCLUSIVE`。
+- 任一候选超过 2x 预算 → 记录 timeout 并进入下一候选。

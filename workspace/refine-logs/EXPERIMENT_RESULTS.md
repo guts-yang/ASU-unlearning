@@ -1,34 +1,30 @@
-# Initial Experiment Results — 自动 idea 验证
+# Initial Experiment Results
 
-**日期**: 2026-11-23
-**算力**: 1×NVIDIA H20，TOFU-1B，数据/模型 `/jizhicfs/chenyliao`
-**代码**: `workspace/auto_experiments/`
-**原始 JSON**: `workspace/auto_experiments/results/`
+Date: 2026-11-26
+Plan: refine-logs/EXPERIMENT_PLAN.md
 
-## Gate 结果
+## M0 Sanity
+- PASSED: 5-step global tau run completed; forget NLL 0.5025 → 2.0562, retain NLL 0.4651 → 1.4441.
 
-| Idea | Gate | 关键数字 | 自动决策 |
-|---|---|---|---|
-| V1 全系（反事实配对/ΔA 正交/梯度手术） | KILL | stage0-14 既有实测全部弱于 ASU ref | ELIMINATED |
-| R2-A ASU-Selective | PASS | mean_selectivity=0.531（v_proj/down_proj）；但新颖性与 RepSelect/ADU/ALMPU 冲突 | REVISE |
-| R2-B τ 课程 | PASS | dF: low2high=+0.949 > global=+0.800，dR=-0.256 | PROMOTE |
-| R2-C 抗恢复目标 | PASS | ASU-u P3 gain ratio=0.371，mean_recovery=0.448 | PROMOTE |
-| R3-1 SensiTemp | PARTIAL | layer CV=1.11，head CV=9.22；dF: sens=1.747 vs 等平均τ=1.792 vs 打乱场=1.517 | REVISE |
-| R3-2 深度审计 | PASS | ASU-u P1 forget=0.960，P2 gain=0.261，P3 gain=0.185，Q shift 已记录 | PROMOTE |
-| R3-3 浅-深解耦 | PASS→REVISE | L12 suppress dF=+0.133/dR=+0.099；严格阈值通过数=0 | REVISE |
+## M1-M13 Candidate Screening
 
-## 训练对照（60 steps, alpha=0.1, lr=5e-6, seed 0）
+| Candidate | Priority | Verdict | Summary |
+|---|---:|---|---|
+| CF-01 | rank 1 / 8.0 | NOT_IMPLEMENTABLE | 约束反演目标与因果筛选算子未实现；相邻解耦消融未见收益 |
+| CF-03 | rank 2 / 7.8 | INCONCLUSIVE | 敏感度门 PASS 且 idea1 优于 random/wrong，但行为指标未满足严格成功判据 |
+| CF-02 | rank 3 / 7.6 | NOT_IMPLEMENTABLE | 三角色可行集与 donor 负约束未实现；相邻解耦消融无改善 |
+| CF-04 | rank 4 / 7.4 | INCONCLUSIVE | pooled ΔA retain-orthogonal PASS，但缺事实/身份双探针 AUC |
+| CF-06 | rank 5 / 7.4 | NOT_APPLICABLE | 需 LRM/CoT 轨迹，冻结基线为 LLM TOFU-1B |
+| CF-05 | rank 6 / 7.4 | NOT_IMPLEMENTABLE | K-donor 堆叠/SVD 共有子空间未实现 |
+| CF-08 | rank 7 / 7.4 | INCONCLUSIVE | 深度审计与 retain-orth PASS，但缺投影模型的完整恢复曲线 |
+| CF-07 | rank 8 / 7.2 | NOT_IMPLEMENTABLE | 读出空间载体与 Jacobian 数值方案未预注册/未实现 |
+| CF-09 | rank 9 / 7.2 | NOT_IMPLEMENTABLE | 结构化噪声基与残差回归算子未实现；相邻抑制/正交对齐门全部 false |
+| CF-10 | rank 10 / 7.2 | NEGATIVE | 纯度谱非平坦 PASS，但等预算 progressive 未优于 ref |
+| R2-C | PROMOTE | NOT_IMPLEMENTABLE | 双环 trainer 与训练内攻击未实现；深度审计只证明浅层遗忘 |
+| R3-2 | PROMOTE | POSITIVE_SCREEN | P1/P2/P3/INT8 阶梯 PASS，方法间有分化 |
+| R3-3 | REVISE / ablation only | NEGATIVE | V4 严格阈值通过数 0，stage9 全体 pass_gate=false |
 
-| 配置 | forget 0.5025→ | retain 0.4651→ |
-|---|---|---|
-| global τ=2 | 1.3023 | 0.1695 |
-| global τ=2.607（等平均） | 2.2940 | 0.1609 |
-| high2low 3→1.5 | 1.0646 | 0.1451 |
-| low2high 1.5→3 | 1.4516 | 0.2089 |
-| SensiTemp field | 2.2495 | 0.1654 |
-| SensiTemp field shuffled | 2.0191 | 0.1598 |
-
-## 结论
-- 主线：R2-B、R2-C、R3-2；降级：R2-A（新颖性冲突）、R3-1、R3-3；淘汰：V1 全系。
-- SensiTemp 的收益可由等平均 τ 全局对照解释，不能主张结构化温度分配带来帕累托改进。
-- 所有裁决为执行者 provisional（跨模型评审后端不可用），未启用 `experiment-audit` / `result-to-claim`。
+## Summary
+- 1 POSITIVE_SCREEN (R3-2), 3 INCONCLUSIVE (CF-03, CF-04, CF-08), 6 NOT_IMPLEMENTABLE + 1 NOT_APPLICABLE (CF-06), 2 NEGATIVE (CF-10, R3-3).
+- All source candidates are plan-level; no result is a faithful reproduction or paper-ready claim.
+- Ready for /auto-review-loop: only after implementing missing operators for positive/inconclusive candidates.

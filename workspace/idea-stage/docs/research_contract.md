@@ -50,3 +50,13 @@
 
 ## Review Status
 novelty-check = PROVISIONAL；research-review = REVIEW_UNAVAILABLE；无跨模型回执，不声称 accepted。
+
+## 2026-11-26 Bounded Screening Contract
+- 本轮 ACTIVE 执行集：`candidates/` 下 CF-01..CF-10 与 R2-C/R3-2/R3-3，共 13 项；全部为 plan-level，不是已发表结果，不产出 novelty/citation claim。
+- 执行顺序：CF 按显式 `rank`（CF-01, CF-03, CF-02, CF-04, CF-06, CF-05, CF-08, CF-07, CF-09, CF-10），随后 R2-C, R3-2, R3-3；CF 与 R 线之间没有文件给出的交叉排序依据。
+- CF-06 在冻结的 LLM TOFU-1B baseline 上 NOT_APPLICABLE（需要 LRM/CoT 轨道），仅记录并转交 LRM track，不伪装为已复现。
+- Hy4 跨模型回执：novelty `PROCEED WITH CAUTION`，trace `ba62db5d-b167-4388-83c7-d7cdb292753b`；research review `ALMOST`，trace `1c68129c-6e2b-4887-9e6b-cce7badd6327`。详见 `.aris/traces/idea-*.md`。
+- reviewer 强约束：必须显式列出 plan-level 候选、retain/forget 指标、算力上限和停止准则；不得把 proxy 当作 faithful reproduction。
+- 冻结预算：首轮 screening 使用 20-step、1 seed、batch 4、lr 1e-5；仅在正向信号上追加 3-seed 确认。单卡 H20；总上限 8 GPU·h。
+- 停止准则：候选机制无法在现有 ASU/TOFU-1B 代码中实现，或 3-seed 确认未同时改善 forget 与 retain，则判 NEGATIVE/INCONCLUSIVE 并进入下一候选。
+- Next-step Pointer：`/experiment-bridge` 以 `workspace/auto_experiments/` 与已有 results 为基线，生成逐候选 tracker 与 JSON 结果。
