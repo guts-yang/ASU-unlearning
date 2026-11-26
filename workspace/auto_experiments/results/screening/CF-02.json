@@ -1,0 +1,24 @@
+{
+  "candidate": "CF-02",
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "diagnostic_mode": "operator review",
+  "training_executed": false,
+  "evaluation_executed": false,
+  "evidence_reused": true,
+  "verdict": "NOT_IMPLEMENTABLE",
+  "priority": "rank 3 / 7.6",
+  "metrics": {
+    "operator_status": "missing",
+    "stage13_adjacent_improvement": false
+  },
+  "evidence": [
+    "workspace/idea-stage/candidates/CF-02_三前向角色分解/CF-02_proposal.md"
+  ],
+  "limitations": [
+    "缺核心约束求解器，不能以 alpha 扫描代替。"
+  ],
+  "summary": "三前向角色分解、retain floor 与 donor 负约束未实现。",
+  "timestamp": "2026-11-26T12:58:30Z",
+  "baseline": "ASU/open-unlearning TOFU forget10/retain90/holdout10, Llama-3.2-1B-Instruct"
+}
