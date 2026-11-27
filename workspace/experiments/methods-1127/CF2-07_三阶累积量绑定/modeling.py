@@ -122,7 +122,10 @@ def create_model_and_tokenizer(cfg, device, student=False):
             task_type="CAUSAL_LM", target_modules=pcfg.get("lora_targets", ["q_proj", "k_proj", "v_proj", "o_proj"]),
         ))
     if cfg["model"].get("gradient_checkpointing", False) and student:
-        model.gradient_checkpointing_enable()
+        # Non-reentrant checkpointing keeps LoRA gradients alive without a
+        # requires-grad hook on the embedding output (which breaks mixed-dtype
+        # backward and inference-time generation).
+        model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
         model.config.use_cache = False
     model.to(device)
     return model, tok
@@ -178,7 +181,9 @@ def span_hidden(forward, layer, start=None, end=None):
     h = forward["hidden"][layer]
     if start is None:
         start, end = forward["enc"]["answer_start"], forward["enc"]["answer_end"]
-    return h[start:end]
+    # Teacher targets are fp32; keep student activations fp32 so mixed-dtype
+    # mse_loss backward does not fail with "Found dtype Float but expected BFloat16".
+    return h[start:end].float()
 
 
 @torch.no_grad()
@@ -197,10 +202,19 @@ def generation_behaviour(model, tok, records, device, max_new_tokens=24, max_sam
     for rec in list(records)[:max_samples]:
         prompt = f"Question: {rec['question']}\nAnswer:"
         ids = tok.encode(prompt, add_special_tokens=False)
-        inp = torch.tensor(ids, dtype=torch.long, device=device).unsqueeze(0)
-        mask = torch.ones_like(inp)
-        out = model.generate(input_ids=inp, attention_mask=mask, max_new_tokens=max_new_tokens, do_sample=False, pad_token_id=tok.pad_token_id, eos_token_id=tok.eos_token_id)
-        gen = out[0, len(ids):]
+        # HF generate() forces num_logits_to_keep=1; that bf16 lm_head GEMM aborts
+        # with SIGFPE on this torch/CUDA build. Explicit greedy decoding over the
+        # full-sequence logits keeps the same decoding and metrics.
+        gen_ids = []
+        for _ in range(max_new_tokens):
+            inp = torch.tensor(ids + gen_ids, dtype=torch.long, device=device).unsqueeze(0)
+            mask = torch.ones_like(inp)
+            out = model(input_ids=inp, attention_mask=mask, use_cache=False)
+            nxt = int(out.logits[0, -1].float().argmax().item())
+            gen_ids.append(nxt)
+            if nxt == tok.eos_token_id:
+                break
+        gen = torch.tensor(gen_ids, dtype=torch.long)
         text = tok.decode(gen.tolist(), skip_special_tokens=True)
         target = set(re.findall(r"[a-z0-9']+", rec["answer"].lower()))
         generated = set(re.findall(r"[a-z0-9']+", text.lower()))

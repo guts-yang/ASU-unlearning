@@ -25,10 +25,12 @@ def prepare(cache, teacher, tok, cfg, device):
 def _student(row, layer, side, p):
     out = row[side]
     item = row["item"]
-    u = out["hidden"][layer][item["subject_indices"]].mean(0) @ p["subject"]
-    v = out["hidden"][layer][out["enc"]["answer_start"]:out["enc"]["answer_end"]].mean(0) @ p["answer"]
+    # Student hidden states are bf16 while the fixed projections and teacher cache are fp32.
+    hidden = out["hidden"][layer].float()
+    u = hidden[item["subject_indices"]].mean(0) @ p["subject"]
+    v = hidden[out["enc"]["answer_start"]:out["enc"]["answer_end"]].mean(0) @ p["answer"]
     relation = [i for i in range(out["enc"]["prompt_length"]) if i not in set(item["subject_indices"])]
-    r = out["hidden"][layer][relation].mean(0) @ p["relation"]
+    r = hidden[relation].mean(0) @ p["relation"]
     return u, r, v
 
 

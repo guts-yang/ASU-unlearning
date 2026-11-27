@@ -20,8 +20,17 @@ def prepare(cache, teacher, tok, cfg, device):
         items = cache["pairs"]
         for i, item in enumerate(items):
             other = items[(i + 1) % len(items)]
-            flux = (item["h_plus"][right] - item["h_minus"][right]) - (item["h_plus"][left] - item["h_minus"][left])
-            wrong = (other["h_plus"][right] - item["h_minus"][right]) - (other["h_plus"][left] - item["h_minus"][left])
+            tensors = (
+                item["h_plus"][right], item["h_minus"][right],
+                item["h_plus"][left], item["h_minus"][left],
+                other["h_plus"][right], other["h_plus"][left],
+            )
+            n = min(t.shape[0] for t in tensors)
+            if n == 0:
+                continue
+            hp_r, hm_r, hp_l, hm_l, ohp_r, ohp_l = (t[:n] for t in tensors)
+            flux = (hp_r - hm_r) - (hp_l - hm_l)
+            wrong = (ohp_r - hm_r) - (ohp_l - hm_l)
             true_values.append(flux.norm(dim=-1).mean())
             shuffled_values.append(wrong.norm(dim=-1).mean())
         true = torch.stack(true_values)

@@ -65,7 +65,7 @@ def loss(batch, prepared, cfg):
     for row in batch:
         item, plus = row["item"], row["plus"]
         for layer in cfg["layers"]:
-            h = plus["hidden"][layer][plus["enc"]["answer_start"]:plus["enc"]["answer_end"]].mean(0)
+            h = plus["hidden"][layer].float()[plus["enc"]["answer_start"]:plus["enc"]["answer_end"]].mean(0)
             terms.append(F.mse_loss(h, prepared["targets"][layer][item["index"]].detach()))
     return {"method_loss": torch.stack(terms).mean()}
 

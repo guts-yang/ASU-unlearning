@@ -16,9 +16,14 @@ STOP_FIRST = {"The", "A", "An", "This", "That", "Who", "What", "When", "Where", 
 
 def load_records(path):
     path = Path(path)
+    text = path.read_text(encoding="utf-8")
     if path.suffix == ".jsonl":
-        return [json.loads(x) for x in path.read_text(encoding="utf-8").splitlines() if x.strip()]
-    value = json.loads(path.read_text(encoding="utf-8"))
+        return [json.loads(x) for x in text.splitlines() if x.strip()]
+    try:
+        value = json.loads(text)
+    except json.JSONDecodeError:
+        # TOFU splits are JSON Lines despite a .json suffix; fail closed on malformed lines.
+        return [json.loads(x) for x in text.splitlines() if x.strip()]
     return value if isinstance(value, list) else value["records"]
 
 

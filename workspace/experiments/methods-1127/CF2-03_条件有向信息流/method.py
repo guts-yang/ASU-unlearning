@@ -26,11 +26,13 @@ def prepare(cache, teacher, tok, cfg, device):
 def _student_vectors(row, layer, side, projections):
     out = row[side]
     item = row["item"]
-    subject = out["hidden"][layer][item["subject_indices"]].mean(0) @ projections["subject"]
-    answer = out["hidden"][layer][out["enc"]["answer_start"]:out["enc"]["answer_end"]].mean(0) @ projections["answer"]
+    # Student hidden states are bf16 while the fixed projections and teacher cache are fp32.
+    hidden = out["hidden"][layer].float()
+    subject = hidden[item["subject_indices"]].mean(0) @ projections["subject"]
+    answer = hidden[out["enc"]["answer_start"]:out["enc"]["answer_end"]].mean(0) @ projections["answer"]
     prompt = list(range(out["enc"]["prompt_length"]))
     relation = [i for i in prompt if i not in set(item["subject_indices"])]
-    context = out["hidden"][layer][relation].mean(0) @ projections["context"]
+    context = hidden[relation].mean(0) @ projections["context"]
     return subject, answer, context
 
 
