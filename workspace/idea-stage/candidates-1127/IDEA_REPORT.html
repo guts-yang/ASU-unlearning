@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>反事实激活差驱动的可解释 LLM 机器遗忘</title>
+
+<meta name="generator" content="ARIS render-html (academic, v1)">
+<meta name="aris:source-path" content="workspace/idea-stage/candidates-1127/IDEA_REPORT.md">
+<meta name="aris:source-sha256" content="09496eb1052e4daf9db34261388ab29ddb5ad845a97d500003e660edef0ac5eb">
+<meta name="aris:generated-at" content="2026-11-27 08:30 UTC">
+
+<!-- MathJax 3 -->
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+  options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+<!-- highlight.js -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-light.min.css">
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => hljs.highlightAll());</script>
+
+
+<style>
+:root {
+  --bg: #fdfcf7;
+  --bg-soft: #f4f1ea;
+  --bg-code: #f8f5ec;
+  --ink: #1a1a1a;
+  --ink-soft: #4a4a4a;
+  --ink-muted: #6b6b6b;
+  --primary: #1a4a8c;
+  --primary-soft: #2d6cb8;
+  --accent: #b8390e;
+  --warn: #b45309;
+  --warn-bg: #fef3c7;
+  --info-bg: #dbeafe;
+  --good-bg: #d1fae5;
+  --good: #065f46;
+  --bad-bg: #fee2e2;
+  --bad: #991b1b;
+  --border: #d6d0c0;
+  --border-soft: #e8e3d5;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Source Serif Pro", "Source Serif 4", "Crimson Pro", "Georgia", "Songti SC", "STSong", serif;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--bg);
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+}
+
+.layout {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 48px;
+  padding: 40px 32px;
+}
+
+nav.toc {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+  font-size: 13px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  border-right: 1px solid var(--border-soft);
+  padding-right: 16px;
+}
+nav.toc h3 {
+  margin: 0 0 12px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+nav.toc ol { list-style: none; padding: 0; margin: 0; counter-reset: toc; }
+nav.toc ol li { margin: 5px 0; counter-increment: toc; }
+nav.toc ol li::before { content: counter(toc) ". "; color: var(--ink-muted); margin-right: 4px; }
+nav.toc a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 1px dotted transparent;
+}
+nav.toc a:hover { color: var(--primary); border-bottom-color: var(--primary); }
+nav.toc ul { list-style: none; padding-left: 14px; margin: 3px 0; font-size: 12px; }
+nav.toc ul li::before { content: "→ "; color: var(--border); }
+
+main { min-width: 0; }
+
+header.hero {
+  border-bottom: 3px double var(--primary);
+  padding-bottom: 24px;
+  margin-bottom: 32px;
+}
+header.hero .eyebrow {
+  color: var(--accent);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+body.aris-blog header.hero .eyebrow {
+  font-family: inherit;
+  color: var(--ink-muted);
+  text-transform: none;
+  letter-spacing: 0.01em;
+  font-weight: 400;
+}
+header.hero h1 {
+  font-size: 32px;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+header.hero .subtitle {
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin: 0 0 8px;
+  font-style: italic;
+}
+header.hero .byline {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 0 0 20px;
+}
+header.hero .byline strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+header.hero .meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--ink-muted);
+  border-top: 1px solid var(--border-soft);
+  padding-top: 14px;
+}
+header.hero .meta span strong { color: var(--ink-soft); }
+header.hero .meta code {
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 11px;
+  background: var(--bg-soft);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-soft);
+}
+
+h2 {
+  font-size: 24px;
+  margin: 44px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+  font-weight: 700;
+}
+h2 .num { color: var(--primary); font-weight: 600; margin-right: 8px; }
+h3 { font-size: 19px; margin: 28px 0 10px; color: var(--primary); font-weight: 600; }
+h4 { font-size: 16px; margin: 20px 0 8px; color: var(--ink); font-weight: 600; }
+
+p { margin: 10px 0; }
+ul, ol { padding-left: 22px; margin: 10px 0; }
+ul li, ol li { margin: 4px 0; }
+ul li::marker { color: var(--primary); }
+
+strong { color: var(--accent); font-weight: 600; }
+em { color: var(--ink-soft); }
+
+a { color: var(--primary); }
+a:hover { color: var(--accent); }
+
+code:not(.hljs) {
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 0.86em;
+  background: var(--bg-code);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-soft);
+  color: var(--accent);
+}
+
+pre {
+  background: #fafaf6;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  padding: 0;
+  overflow-x: auto;
+  border-radius: 4px;
+  margin: 14px 0;
+}
+pre code, pre code.hljs {
+  background: transparent !important;
+  display: block;
+  padding: 14px 18px !important;
+  font-size: 13px;
+  line-height: 1.55;
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", monospace;
+  color: var(--ink);
+}
+pre.diagram {
+  background: #f9f6ed;
+  border-left: 4px solid var(--accent);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.callout {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-radius: 4px;
+  border-left: 4px solid;
+  font-size: 15px;
+}
+.callout-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.callout-info { background: var(--info-bg); border-left-color: var(--primary); }
+.callout-info .callout-title { color: var(--primary); }
+.callout-warn { background: var(--warn-bg); border-left-color: var(--warn); }
+.callout-warn .callout-title { color: var(--warn); }
+.callout-good { background: var(--good-bg); border-left-color: var(--good); }
+.callout-good .callout-title { color: var(--good); }
+.callout-bad { background: var(--bad-bg); border-left-color: var(--bad); }
+.callout-bad .callout-title { color: var(--bad); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+thead { background: var(--primary); color: white; }
+th, td {
+  text-align: left;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border-soft);
+  vertical-align: top;
+}
+th { font-weight: 600; font-size: 13px; letter-spacing: 0.02em; }
+tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-soft); }
+
+details.qa, details {
+  background: white;
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  margin: 10px 0;
+  padding: 0;
+}
+details summary {
+  cursor: pointer;
+  padding: 10px 14px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--primary);
+  list-style: none;
+  user-select: none;
+}
+details summary::-webkit-details-marker { display: none; }
+details summary::before {
+  content: "▸ ";
+  margin-right: 4px;
+  display: inline-block;
+  transition: transform 0.15s;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details[open] summary { border-bottom: 1px solid var(--border-soft); }
+details > :not(summary) { padding: 10px 14px; }
+details p:first-of-type { margin-top: 8px; }
+
+mjx-container[display="true"] { margin: 12px 0 !important; }
+
+footer.aris-footer {
+  margin-top: 60px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+footer.aris-footer a { color: var(--ink-muted); border-bottom: 1px dotted var(--border); }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; gap: 20px; padding: 20px 16px; }
+  nav.toc {
+    position: static;
+    max-height: none;
+    border-right: none;
+    border-bottom: 1px solid var(--border-soft);
+    padding-right: 0;
+    padding-bottom: 14px;
+  }
+  header.hero h1 { font-size: 24px; }
+  h2 { font-size: 20px; }
+}
+@media print {
+  nav.toc { display: none; }
+  .layout { grid-template-columns: 1fr; padding: 0; }
+  body { background: white; }
+  header.hero { border-bottom-color: var(--ink); }
+  #cite-pop, dialog.lightbox { display: none !important; }
+}
+
+/* --- P0 polish: TOC scrollspy active state ---------------------------- */
+nav.toc a.active {
+  color: var(--accent);
+  font-weight: 600;
+  border-bottom-color: var(--accent);
+}
+
+/* --- P0 polish: Long-code auto-collapse ------------------------------- */
+details.code-card {
+  margin: 14px 0;
+  background: #fafaf6;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: 4px;
+}
+details.code-card > summary {
+  cursor: pointer;
+  padding: 8px 14px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-family: "JetBrains Mono", "SF Mono", monospace;
+  list-style: none;
+  user-select: none;
+}
+details.code-card > summary::-webkit-details-marker { display: none; }
+details.code-card > summary::before { content: none; }
+details.code-card > pre {
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-left: none;
+  border-radius: 0;
+}
+@media print {
+  details.code-card { border: 1px solid #ccc; background: white; }
+  details.code-card > summary { display: none !important; }
+  details.code-card > pre { border: 1px solid #ddd; border-radius: 4px; background: white; }
+}
+
+/* --- P0 polish: Paper popover ([[ref]] popups) ------------------------ */
+[data-ref] {
+  color: var(--primary);
+  border-bottom: 1px dotted var(--primary);
+  cursor: pointer;
+  white-space: nowrap;
+}
+[data-ref]:hover { background: rgba(26, 74, 140, 0.08); }
+#cite-pop {
+  position: fixed;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  font-size: 13px;
+  line-height: 1.5;
+  z-index: 1000;
+}
+#cite-pop[hidden] { display: none; }
+#cite-pop .cp-title {
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+  padding-right: 24px;
+}
+#cite-pop .cp-meta {
+  color: var(--ink-muted);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+#cite-pop .cp-key {
+  color: var(--accent);
+  font-style: italic;
+  margin-bottom: 8px;
+}
+#cite-pop .cp-link {
+  display: inline-block;
+  color: var(--primary);
+  font-weight: 500;
+}
+#cite-pop .cp-close {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--ink-muted);
+}
+
+/* --- P0 polish: Figure lightbox (native <dialog>) --------------------- */
+dialog.lightbox {
+  border: none;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.92);
+  width: 96vw;
+  height: 96vh;
+  max-width: 96vw;
+  max-height: 96vh;
+}
+dialog.lightbox::backdrop { background: rgba(0, 0, 0, 0.92); }
+dialog.lightbox .lb-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 16px;
+  position: relative;
+}
+dialog.lightbox img {
+  max-width: 90vw;
+  max-height: 84vh;
+  object-fit: contain;
+  cursor: zoom-out;
+}
+dialog.lightbox figcaption {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  text-align: center;
+  max-width: 700px;
+}
+dialog.lightbox .lb-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* --- P0 polish: blog/talk mode active-H2 highlight (opt-in) ----------- */
+body.aris-blog h2 { scroll-margin-top: 24px; }
+body.aris-blog h2.aris-active-h2 {
+  background: linear-gradient(to right, rgba(26, 74, 140, 0.06), transparent);
+  border-radius: 4px;
+  padding-left: 12px;
+  margin-left: -12px;
+}
+</style>
+</head>
+<body class="">
+<div class="layout">
+
+<nav class="toc">
+  <h3>Contents</h3>
+  <ol>
+<li><a href="#0-执行摘要">0. 执行摘要</a>
+</li>
+<li><a href="#1-基线与反重复约束">1. 基线与反重复约束</a>
+</li>
+<li><a href="#2-literature-landscape">2. Literature Landscape</a>
+<ul>
+<li><a href="#21-反事实与表示遗忘的强基线">2.1 反事实与表示遗忘的强基线</a></li>
+<li><a href="#22-反事实差因果交互与动力系统">2.2 反事实差、因果交互与动力系统</a></li>
+<li><a href="#23-分布传输与几何干预">2.3 分布传输与几何干预</a></li>
+<li><a href="#24-多尺度与高阶表示">2.4 多尺度与高阶表示</a></li>
+<li><a href="#25-反事实不变性与训练代价">2.5 反事实不变性与训练代价</a></li>
+</ul>
+</li>
+<li><a href="#3-评分与裁决口径">3. 评分与裁决口径</a>
+</li>
+<li><a href="#4-最终排名">4. 最终排名</a>
+</li>
+<li><a href="#5-逐项-novelty-verification">5. 逐项 Novelty Verification</a>
+</li>
+<li><a href="#6-淘汰的-6-个方案">6. 淘汰的 6 个方案</a>
+</li>
+<li><a href="#7-共同验证门与建议顺序">7. 共同验证门与建议顺序</a>
+</li>
+<li><a href="#8-外部评审与证据状态">8. 外部评审与证据状态</a>
+</li>
+<li><a href="#9-proposal-索引">9. Proposal 索引</a>
+</li>
+<li><a href="#10-核心来源">10. 核心来源</a>
+</li>
+</ol>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">Idea Discovery 2026-11-27</div>
+  <h1>反事实激活差驱动的可解释 LLM 机器遗忘</h1>
+  
+  
+  <div class="meta">
+    <span><strong>Source:</strong> <code>workspace/idea-stage/candidates-1127/IDEA_REPORT.md</code></span>
+    <span><strong>SHA256:</strong> <code>09496eb1052e</code></span>
+    <span><strong>Rendered:</strong> 2026-11-27 08:30 UTC</span>
+    
+  </div>
+</header>
+
+<h1 id="反事实激活差驱动的可解释-llm-机器遗忘第二轮候选">反事实激活差驱动的可解释 LLM 机器遗忘——第二轮候选</h1>
+<h2 id="0-执行摘要">0. 执行摘要</h2>
+<p>本轮把 Teacher 固定为冻结基座，以正反事实对的中间层激活差为唯一问题载体，围绕“如何处理激活差”生成 16 个机制候选，淘汰 6 个重复、已被近邻占据或与历史证伪机制同族的方案，保留 10 个。所有入选者五维平均分均 <strong>$\ge7.2&gt;7$</strong>，裁决均为 <strong>Strong Accept 或 Accept with Revisions</strong>，并在本目录下各有独立 proposal。</p>
+<p>首推 <strong>CF2-01 跨层反事实通量</strong>：用 $\Phi_\ell=\Delta A_{\ell+1}-\Delta A_\ell$ 消去静态主体偏移，集中处理层间新增事实写入。其次是 <strong>CF2-02 因子绑定交互</strong>：用 2×2 因子设计扣除主体和关系主效应，只处理非加性绑定项。</p>
+<blockquote><p><strong>状态边界</strong>：分数为机制推断，不是实验成绩，也不是异族独立 reviewer 的接受回执。当前 <code>research-review=REVIEW_UNAVAILABLE</code>、<code>novelty-check=PROVISIONAL</code>、<code>evidence gate=BLOCKED</code>。基线文件已归档，本轮只重新开放构思，不复用其历史 pilot 为正向证据，不启动实验。</p></blockquote>
+<h2 id="1-基线与反重复约束">1. 基线与反重复约束</h2>
+<p>保留的硬边界：Teacher 不使用注意力温度；正反事实输入槽外一致；Teacher 在 $X^\pm\oplus y^+$ 上 teacher-force，答案跨度 $p\in S_f$ 取激活；Teacher 目标 stop-gradient；不拼 donor 答案 $y^-$；主结果不依赖 donor KL；Student 参数内化，部署无 hook；原事实读出、donor 支持度、EOS/长度与 retain 效用联合验收。</p>
+<p>本轮明确避开 <code>candidates/</code> 已有机制：约束反演、三前向角色分解、单点因果门控、事实/身份双探针、多 donor 均值/SVD、LRM 轨迹作用域、下游读出 Jacobian、retain 零空间、对照族残差回归、纯度 schedule，以及 relearning minimax 和浅深双阶段方案。</p>
+<h2 id="2-literature-landscape">2. Literature Landscape</h2>
+<p><strong>检索覆盖</strong>：16 组实时 Web 查询，包含 arXiv 原文、会议页、OpenReview 和项目资料。<code>papers/</code>、<code>literature/</code> 不存在，本地 PDF 未贡献内容；arXiv helper、Gemini、Zotero/Obsidian 和 D1 批量核验 helper 不可用。<strong>Sources contributed: web</strong>。以下来源用于近邻划界，统一标记 <code>⚠ UNVERIFIED (D1 helper unavailable)</code>，不据此生成 BibTeX。</p>
+<h3 id="21-反事实与表示遗忘的强基线">2.1 反事实与表示遗忘的强基线</h3>
+<ul><li><strong>PINT / Forget What Comes Next</strong>（Shkabrii, Plant &amp; Pawelczyk，2026，arXiv:2611.03955）：直接用 HSIC 降低最终层前缀表示与下一 token 的依赖。因此朴素“HSIC + 激活遗忘”被淘汰。</li><li><strong>PARS / Do LLMs Really Forget? Hidden-State Leakage...</strong>（2026）：说明输出抑制与隐层信息残留可分离，并以 probe-adversarial 目标处理隐层泄露。所有新方案必须用独立 probe/relearning，不得只报输出变化。</li><li><strong>CIR</strong>（Sondej &amp; Yang，2025，arXiv:2509.11816）与 <strong>LEACE</strong>（Belrose et al., NeurIPS 2023）：覆盖 PCA 通用表示去除和闭式白化线性擦除，限制 CF2-08 的新颖性。</li><li><strong>Erase or Hide?</strong>（2025，arXiv:2509.22263）与 <strong>FDCU</strong>（2026，arXiv:2609.39279）：强调原知识通路削弱与新增抑制壳不同，强化“不是浅层抑制”的验收义务。</li></ul>
+<h3 id="22-反事实差因果交互与动力系统">2.2 反事实差、因果交互与动力系统</h3>
+<ul><li><strong>Factorized Causal Activation Patching</strong>：用 2×2 因子干预测量证据协作的非加性交互。CF2-02 只把“训练内化绑定交互”作为增量，不能宣称发明因子 patching。</li><li><strong>Transformer Dynamics</strong>（Fernando &amp; Guitchounts，2025）：把残差流视为跨层动力系统并研究表示速度。CF2-01 的新对象是“反事实差的层间差分”，不是一般动力学分析。</li><li><strong>Transfer Entropy as a Measure of Information Flow in LLMs and VLMs</strong>（Liang &amp; Shi，2026）：有向信息流诊断与剪枝。CF2-03 必须证明反事实条件差和遗忘训练的独立价值。</li><li><strong>Shapley / Circuit Fingerprints / Neuron Shapley</strong>：覆盖组件合作归因，CF2-10 因成本与近邻排在末位。</li></ul>
+<h3 id="23-分布传输与几何干预">2.3 分布传输与几何干预</h3>
+<ul><li><strong>AcT</strong>（ICLR 2025，arXiv:2410.23054）、<strong>CHaRS</strong>、<strong>Opt-Out</strong>（ACL 2025）：分别覆盖推理时激活传输、异质性聚类 OT 和参数空间 Wasserstein 正则。</li><li><strong>UOT-Unlearn</strong>（2026，arXiv:2603.16489）：在一步生成模型中以 UOT 重分配生成分布质量。CF2-04 只保留“LLM 反事实中间激活的未配对源质量删除”这一差异。</li><li><strong>Householder Pseudo-Rotation</strong>（EMNLP 2024）、<strong>Angular Steering</strong>（NeurIPS 2025）、<strong>Selective Steering</strong>（2026）：使单纯保范数旋转候选失去足够新颖性。</li></ul>
+<h3 id="24-多尺度与高阶表示">2.4 多尺度与高阶表示</h3>
+<ul><li><strong>Conditional Scale Entropy</strong>（2026，arXiv:2605.21391）：小波用于跨层隐喻计算解释。CF2-05 的贡献只能是反事实尺度掩码训练，不能声称首次小波分析。</li><li><strong>The Structure of Relation Decoding Linear Operators</strong>（2025，arXiv:2510.26543）：关系解码算子可由三阶张量网络压缩。CF2-07 研究的是正反事实三阶共同累积量，不是关系解码器压缩。</li><li><strong>Robust PCA / activation-difference-monitoring</strong>：已有低秩 + 稀疏异常检测原型。CF2-09 必须先证明稀疏项的目标语义，不能从分解形式直接命名“事实”。</li></ul>
+<h3 id="25-反事实不变性与训练代价">2.5 反事实不变性与训练代价</h3>
+<ul><li><strong>Aligning Language Models Towards Counterfactual Invariance</strong>（2026，arXiv:2610.22942）：输出/奖励层的反事实不变性已存在，CF2-06 仅限中间层归一化割线和选择性遗忘。</li><li><strong>On the Hidden Costs of Counterfactual Knowledge Training</strong>（2026，arXiv:2605.27083）：反事实答案替换会产生知识冲突与幻觉外溢，支持本轮“不使用 donor 答案作目标”的共同边界。</li></ul>
+<p><strong>核心空白</strong>：据当前检索，尚未发现系统比较“因子交互、层间通量、条件跨位置流、未配对质量、多尺度、三阶累积量”这些<strong>反事实激活差算子</strong>并逐项训练 Student 内化的工作。该结论是检索范围内的暂定判断，不是完备性证明。</p>
+<h2 id="3-评分与裁决口径">3. 评分与裁决口径</h2>
+<p>按本机 <code>~/.bg-agent/config-with-app/skills/idea-evaluator/SKILL.md</code> 及其 references 执行兼容评估：先做 F1–F10 致命缺陷审计，再做生命周期/资源匹配、Higher/Faster/Stronger/Cheaper/Broader 五维评分、范式探测与可行性检查。</p>
+<p>$\bar S=(H+F+S+C+B)/5$，用户门槛为 $\bar S&gt;7$ 且裁决至少 Accept with Revisions。高分均为 <code>mechanism-based, not yet confirmed by data</code>，每项都附决定性验证实验。<code>data-refuted</code> 的旧机制直接 Reject and Pivot，不用高分掩盖。</p>
+<h2 id="4-最终排名">4. 最终排名</h2>
+<table><thead><tr><th style="text-align:right">排名</th><th>ID</th><th>核心激活处理</th><th style="text-align:right">H</th><th style="text-align:right">F</th><th style="text-align:right">S</th><th style="text-align:right">C</th><th style="text-align:right">B</th><th style="text-align:right">平均</th><th>裁决（PROVISIONAL）</th></tr></thead><tbody><tr><td style="text-align:right">1</td><td>CF2-01</td><td>跨层通量 $\Phi_\ell=\Delta A_{\ell+1}-\Delta A_\ell$</td><td style="text-align:right">9</td><td style="text-align:right">8</td><td style="text-align:right">8</td><td style="text-align:right">8</td><td style="text-align:right">8</td><td style="text-align:right"><strong>8.2</strong></td><td>Strong Accept</td></tr><tr><td style="text-align:right">2</td><td>CF2-02</td><td>因子绑定 $\Delta^2A$ 扣除主效应</td><td style="text-align:right">9</td><td style="text-align:right">7</td><td style="text-align:right">8</td><td style="text-align:right">8</td><td style="text-align:right">8</td><td style="text-align:right"><strong>8.0</strong></td><td>Strong Accept</td></tr><tr><td style="text-align:right">3</td><td>CF2-03</td><td>主体→答案条件交叉算子差</td><td style="text-align:right">8</td><td style="text-align:right">6</td><td style="text-align:right">9</td><td style="text-align:right">7</td><td style="text-align:right">9</td><td style="text-align:right"><strong>7.8</strong></td><td>Accept with Revisions</td></tr><tr><td style="text-align:right">4</td><td>CF2-04</td><td>UOT 未配对源质量销毁</td><td style="text-align:right">8</td><td style="text-align:right">6</td><td style="text-align:right">9</td><td style="text-align:right">7</td><td style="text-align:right">9</td><td style="text-align:right"><strong>7.8</strong></td><td>Accept with Revisions</td></tr><tr><td style="text-align:right">5</td><td>CF2-05</td><td>层×答案位置小波尺度掩码</td><td style="text-align:right">8</td><td style="text-align:right">7</td><td style="text-align:right">8</td><td style="text-align:right">7</td><td style="text-align:right">8</td><td style="text-align:right"><strong>7.6</strong></td><td>Accept with Revisions</td></tr><tr><td style="text-align:right">6</td><td>CF2-06</td><td>主体替换归一化割线敏感度</td><td style="text-align:right">8</td><td style="text-align:right">7</td><td style="text-align:right">8</td><td style="text-align:right">8</td><td style="text-align:right">7</td><td style="text-align:right"><strong>7.6</strong></td><td>Accept with Revisions</td></tr><tr><td style="text-align:right">7</td><td>CF2-07</td><td>主体×关系×答案三阶累积量差</td><td style="text-align:right">8</td><td style="text-align:right">6</td><td style="text-align:right">8</td><td style="text-align:right">7</td><td style="text-align:right">8</td><td style="text-align:right"><strong>7.4</strong></td><td>Accept with Revisions</td></tr><tr><td style="text-align:right">8</td><td>CF2-08</td><td>配对散射/retain 协方差广义谱</td><td style="text-align:right">7</td><td style="text-align:right">8</td><td style="text-align:right">8</td><td style="text-align:right">8</td><td style="text-align:right">6</td><td style="text-align:right"><strong>7.4</strong></td><td>Accept with Revisions</td></tr><tr><td style="text-align:right">9</td><td>CF2-09</td><td>稳健低秩背景 + 稀疏绑定事件</td><td style="text-align:right">7</td><td style="text-align:right">7</td><td style="text-align:right">8</td><td style="text-align:right">7</td><td style="text-align:right">7</td><td style="text-align:right"><strong>7.2</strong></td><td>Accept with Revisions</td></tr><tr><td style="text-align:right">10</td><td>CF2-10</td><td>组件联盟的非加性 Shapley 交互</td><td style="text-align:right">8</td><td style="text-align:right">5</td><td style="text-align:right">9</td><td style="text-align:right">6</td><td style="text-align:right">8</td><td style="text-align:right"><strong>7.2</strong></td><td>Accept with Revisions</td></tr></tbody></table>
+<p>并列时按“最小实验的信息价值、闭式程度、近邻强度、首验成本”排序。Strong Accept 也仍需验证实验，不能理解为论文或投稿接受。</p>
+<h2 id="5-逐项-novelty-verification">5. 逐项 Novelty Verification</h2>
+<table><thead><tr><th>ID</th><th>最强近邻</th><th>可验证差异</th><th>执行者查新判断</th></tr></thead><tbody><tr><td>CF2-01</td><td>Transformer Dynamics</td><td>对反事实差再做层间差分并训练内化</td><td>PROCEED</td></tr><tr><td>CF2-02</td><td>Factorized Causal Activation Patching</td><td>因子绑定项成为遗忘目标而非解释终点</td><td>PROCEED</td></tr><tr><td>CF2-03</td><td>Transfer Entropy / PINT</td><td>反事实条件差 + 跨位置主体→答案 + 边缘死区</td><td>PROCEED WITH CAUTION</td></tr><tr><td>CF2-04</td><td>AcT / UOT-Unlearn</td><td>未配对源残差定义删除，不向 donor 全量映射</td><td>PROCEED WITH CAUTION</td></tr><tr><td>CF2-05</td><td>Conditional Scale Entropy</td><td>反事实尺度一致性掩码 + Student 训练</td><td>PROCEED WITH CAUTION</td></tr><tr><td>CF2-06</td><td>Counterfactual Invariance</td><td>中间层归一化割线、目标关系选择性遗忘</td><td>PROCEED WITH CAUTION</td></tr><tr><td>CF2-07</td><td>LRE 三阶张量网络</td><td>三阶共同累积量的正反事实差，非关系解码压缩</td><td>PROCEED WITH CAUTION</td></tr><tr><td>CF2-08</td><td>LEACE / CIR</td><td>配对差分散射 + 独立 retain 尺度 + 参数内化</td><td>PROCEED WITH CAUTION</td></tr><tr><td>CF2-09</td><td>CIR / activation monitoring</td><td>$L+S+E$ 后做语义归属门，再训练遗忘</td><td>PROCEED WITH CAUTION</td></tr><tr><td>CF2-10</td><td>Circuit Fingerprints / Shapley</td><td>组件联盟非加性交互成为遗忘目标</td><td>PROCEED WITH CAUTION</td></tr></tbody></table>
+<p>未调用到异族独立 reviewer，故本表不是 novelty accept receipt；<code>ABANDON</code> 只用于有明确论文或项目历史证据的淘汰项。</p>
+<h2 id="6-淘汰的-6-个方案">6. 淘汰的 6 个方案</h2>
+<table><thead><tr><th>淘汰项</th><th>原因</th><th>裁决</th></tr></thead><tbody><tr><td>朴素 HSIC/MMD 独立性遗忘</td><td>PINT 已直接占据最终层表示—下一 token HSIC；泛化 MMD 不足以形成新贡献</td><td>Reject and Pivot（F1）</td></tr><tr><td>balanced OT 全量映射到反事实分布</td><td>AcT/CHaRS 近邻强，且重新引入 donor 语义迁移</td><td>Reject and Pivot（F1 + donor 风险）</td></tr><tr><td>Householder/Angular 保范数旋转</td><td>HPR、Angular、Selective/Spherical Steering 已形成密集近邻</td><td>Reject and Pivot（F1）</td></tr><tr><td>多 donor 坐标中位数/符号投票</td><td>与 CF-05 多 donor 边际化同族，只是稳健统计替换</td><td>Reject and Pivot（反重复）</td></tr><tr><td>donor 维 Tucker/SVD 共有子空间</td><td>同时接近 CF-05 与 LRE 张量压缩，贡献主要为分解器更换</td><td>Reject and Pivot（F1）</td></tr><tr><td>直接抑制原始 $\Delta A$ 或对齐 $A^-$</td><td>项目历史已证伪/答案替换风险，触发 data-refuted 边界</td><td>Reject and Pivot（CRITICAL）</td></tr></tbody></table>
+<h2 id="7-共同验证门与建议顺序">7. 共同验证门与建议顺序</h2>
+<p>所有候选先做缓存上的可分性/稳定性，再进入 Student 训练；等删除能量、等步数、等前后向和等 GPU 预算比较；真实 donor 必须优于 wrong、shuffle、noise、matched-retain 和随机算子对照。</p>
+<p>联合报告 $r_f$、独立生成式 probe、relearning、量化恢复、retain NLL、同实体非目标关系、donor 答案率、其他错答、拒答、提前 EOS、完整回答率和长度分布。至少两类独立抗恢复证据改善后，才允许使用受限“深度遗忘”措辞。</p>
+<p>建议顺序：先 CF2-01 与 CF2-02 的闭式机制判别；再 CF2-03 的线性低秩估计；CF2-04 仅在 UOT 未配对质量跨 split 稳定后继续。末两名先过语义归属/交互稳定性，未过门则不进入训练。本轮所有 pilot 均标 <code>needs manual pilot</code>，未消耗 GPU。</p>
+<h2 id="8-外部评审与证据状态">8. 外部评审与证据状态</h2>
+<table><thead><tr><th>阶段</th><th>状态</th><th>说明</th></tr></thead><tbody><tr><td>research-lit</td><td>done（composed）</td><td>16 组 Web 查询；无本地 PDF；D1 批量核验不可用</td></tr><tr><td>idea-creator</td><td>done（sequential lenses）</td><td>16 生成 → 6 淘汰 → 10 入选；未使用子代理</td></tr><tr><td>novelty-check</td><td>PROVISIONAL</td><td>有逐项近邻与差异，但无异族 reviewer verdict-id</td></tr><tr><td>research-review</td><td>REVIEW_UNAVAILABLE</td><td>当前无 Codex/manual/Claude/Grok 等注册评审工具，也无 <code>.aris/reviewer.json</code></td></tr><tr><td>idea-evaluator</td><td>rubric applied，PROVISIONAL</td><td>使用本机真实 SKILL.md 与 references；分数不是独立回执</td></tr><tr><td>research-refine-pipeline</td><td>未运行</td><td>用户要求 10 个候选及各自 proposal，不是 top-1 实验规格</td></tr><tr><td>research-wiki ingest</td><td>SKIPPED</td><td>helper/scanner 不可用；未读取未扫描 query_pack，未写 wiki</td></tr><tr><td>evidence gate</td><td><strong>BLOCKED</strong></td><td>缺 <code>run_state.py</code>、<code>idea_discovery_gate.py</code> 及两份跨模型回执</td></tr></tbody></table>
+<p>因此，本轮交付是“完整候选调研包”，不是通过 ARIS 五层投稿审计或完整 W1 evidence gate 的 Final Report。</p>
+<h2 id="9-proposal-索引">9. Proposal 索引</h2>
+<ol><li><a href="CF2-01_跨层反事实通量/CF2-01_proposal.md">CF2-01 跨层反事实通量</a></li><li><a href="CF2-02_因子绑定交互/CF2-02_proposal.md">CF2-02 因子绑定交互</a></li><li><a href="CF2-03_条件有向信息流/CF2-03_proposal.md">CF2-03 条件有向信息流</a></li><li><a href="CF2-04_不平衡传输质量销毁/CF2-04_proposal.md">CF2-04 不平衡传输质量销毁</a></li><li><a href="CF2-05_跨层答案小波谱/CF2-05_proposal.md">CF2-05 跨层答案小波谱</a></li><li><a href="CF2-06_反事实割线敏感度/CF2-06_proposal.md">CF2-06 反事实割线敏感度</a></li><li><a href="CF2-07_三阶累积量绑定/CF2-07_proposal.md">CF2-07 三阶累积量绑定</a></li><li><a href="CF2-08_保留协方差白化谱/CF2-08_proposal.md">CF2-08 保留协方差白化谱</a></li><li><a href="CF2-09_稳健低秩稀疏事件/CF2-09_proposal.md">CF2-09 稳健低秩稀疏事件</a></li><li><a href="CF2-10_联盟交互激活擦除/CF2-10_proposal.md">CF2-10 联盟交互激活擦除</a></li></ol>
+<h2 id="10-核心来源">10. 核心来源</h2>
+<ul><li>PINT：https://arxiv.org/html/2611.03955v1</li><li>Transfer Entropy for LLMs/VLMs：https://openreview.net/forum?id=rFAQRmjVMf</li><li>AcT：https://arxiv.org/abs/2410.23054</li><li>UOT-Unlearn：https://arxiv.org/pdf/2603.16489</li><li>Conditional Scale Entropy：https://arxiv.org/abs/2605.21391</li><li>Relation Decoding Tensor Networks：https://arxiv.org/pdf/2510.26543</li><li>CIR：https://arxiv.org/html/2509.11816</li><li>Counterfactual Invariance：https://arxiv.org/html/2610.22942</li><li>基线与旧候选：<code>workspace/idea-stage/方向I_基线_v0.6.1_answer_span.md</code>、<code>workspace/idea-stage/candidates/</code>。</li></ul>
+<p>深度阅读优先建议：PINT（统计独立性强基线）、Transfer Entropy（有向激活流）、Factorized Causal Activation Patching（因子交互）。其余文献按各 proposal 的具体机制选读。</p>
+
+<footer class="aris-footer">
+  Generated by <a href="https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep/blob/main/skills/render-html/SKILL.md">ARIS <code>/render-html</code></a> ·
+  source path <code>workspace/idea-stage/candidates-1127/IDEA_REPORT.md</code> ·
+  SHA256 <code>09496eb1052e</code> ·
+  generated at 2026-11-27 08:30 UTC.
+  This is a generated view — edit the source Markdown, then re-render.
+</footer>
+</main>
+
+</div>
+
+<!-- P0 polish: paper popover host (populated by IIFE below) -->
+<div id="cite-pop" hidden role="dialog" aria-labelledby="cite-pop-title">
+  <button class="cp-close" type="button" aria-label="Close">×</button>
+  <div class="cp-content"></div>
+</div>
+
+<!-- P0 polish: figure lightbox (native <dialog>, graceful fallback) -->
+<dialog class="lightbox" id="figure-lightbox" aria-label="Figure detail">
+  <div class="lb-inner">
+    <button class="lb-close" type="button" aria-label="Close">×</button>
+    <img alt="" />
+    <figcaption></figcaption>
+  </div>
+</dialog>
+
+<!-- P0 polish: paper registry sidecar, embedded by render_html.py (--papers) -->
+<script>window.PAPER_REGISTRY = {};</script>
+
+<!-- P0 polish: interactive enhancements (TOC scrollspy, code-card auto-collapse,
+     paper popovers, figure lightbox, print-restore for <details>, blog-mode H2). -->
+<script>
+(function () {
+  "use strict";
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[c];
+    });
+  }
+
+  // --- Feature 5: Print degradation fix ---------------------------------
+  // Force every <details> open during print, restore the pre-print state after.
+  var _stashOpen = [];
+  var _printing = false;
+  window.addEventListener("beforeprint", function () {
+    if (_printing) return;  // guard against multi-fire (Chrome print preview)
+    _printing = true;
+    _stashOpen = [];
+    document.querySelectorAll("details:not([open])").forEach(function (d) {
+      _stashOpen.push(d);
+      d.open = true;
+    });
+  });
+  window.addEventListener("afterprint", function () {
+    _stashOpen.forEach(function (d) { if (d.isConnected) d.open = false; });
+    _stashOpen = [];
+    _printing = false;
+  });
+
+  // --- Feature 3: TOC scrollspy -----------------------------------------
+  var tocLinks = [].slice.call(document.querySelectorAll("nav.toc a"));
+  var headings = tocLinks.map(function (a) {
+    var id = a.getAttribute("href").replace(/^#/, "");
+    return document.getElementById(id);
+  }).filter(Boolean);
+  if (headings.length && typeof IntersectionObserver !== "undefined") {
+    var linkById = new Map();
+    headings.forEach(function (h, i) { linkById.set(h.id, tocLinks[i]); });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        tocLinks.forEach(function (l) { l.classList.remove("active"); });
+        var lk = linkById.get(en.target.id);
+        if (lk) lk.classList.add("active");
+      });
+    }, { rootMargin: "-15% 0px -75% 0px" });
+    headings.forEach(function (h) { io.observe(h); });
+  }
+
+  // --- Feature 1: Long-code auto-collapse -------------------------------
+  var COLLAPSE_THRESHOLD = 30;
+
+  function wrapCodeCard(pre, openByDefault) {
+    if (!pre || pre.closest("details.code-card")) return;
+    var code = pre.querySelector("code");
+    if (!code) return;
+    var lines = code.textContent.replace(/\n+$/, "").split("\n").length;
+    var det = document.createElement("details");
+    det.className = "code-card";
+    det.open = openByDefault;
+    var sum = document.createElement("summary");
+    function updateSummary() {
+      sum.textContent = (det.open ? "▾ Collapse code · " : "▸ Expand code · ") + lines + " lines";
+    }
+    updateSummary();
+    det.addEventListener("toggle", updateSummary);
+    pre.parentNode.insertBefore(det, pre);
+    det.appendChild(sum);
+    det.appendChild(pre);
+  }
+
+  // Honor explicit per-block flags first.
+  document.querySelectorAll("pre[data-collapse]").forEach(function (pre) {
+    var flag = pre.getAttribute("data-collapse");
+    if (flag === "collapsed") wrapCodeCard(pre, false);
+    // "open" → leave fully expanded, do not wrap.
+  });
+  // Then auto-wrap long unflagged blocks.
+  document.querySelectorAll("pre > code").forEach(function (code) {
+    var pre = code.closest("pre");
+    if (!pre || pre.closest("details") || pre.hasAttribute("data-collapse")) return;
+    var lines = code.textContent.replace(/\n+$/, "").split("\n").length;
+    if (lines >= COLLAPSE_THRESHOLD) wrapCodeCard(pre, false);
+  });
+
+  // --- Feature 10: Figure lightbox --------------------------------------
+  var lightbox = document.getElementById("figure-lightbox");
+  if (lightbox) {
+    var lbImg = lightbox.querySelector("img");
+    var lbCap = lightbox.querySelector("figcaption");
+    var lbClose = lightbox.querySelector(".lb-close");
+    function openLightbox(srcImg) {
+      lbImg.src = srcImg.src;
+      lbImg.alt = srcImg.alt || "";
+      var cap = srcImg.closest("figure") ? srcImg.closest("figure").querySelector("figcaption") : null;
+      lbCap.textContent = cap ? cap.textContent : "";
+      lbCap.hidden = !cap;
+      if (typeof lightbox.showModal === "function") lightbox.showModal();
+      else lightbox.hidden = false;
+    }
+    function closeLightbox() {
+      if (typeof lightbox.close === "function") lightbox.close();
+      else lightbox.hidden = true;
+    }
+    document.querySelectorAll("main figure img, main > p > img").forEach(function (img) {
+      if (img.closest("dialog")) return;
+      img.style.cursor = "zoom-in";
+      img.addEventListener("click", function () { openLightbox(img); });
+    });
+    if (lbClose) lbClose.addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", function (e) {
+      // Backdrop click closes; clicks inside .lb-inner do not bubble here.
+      if (e.target === lightbox) closeLightbox();
+    });
+  }
+
+  // --- Feature 2: Paper popover -----------------------------------------
+  var PAPERS = window.PAPER_REGISTRY || {};
+  var pop = document.getElementById("cite-pop");
+  var popContent = pop ? pop.querySelector(".cp-content") : null;
+  var popClose = pop ? pop.querySelector(".cp-close") : null;
+  var popTrigger = null;
+
+  function showPopover(el) {
+    var key = el.dataset.ref;
+    var info = PAPERS[key];
+    if (!info || !pop || !popContent) return;
+    popContent.innerHTML =
+      '<div class="cp-title" id="cite-pop-title">' + escapeHtml(info.title || key) + '</div>' +
+      (info.authors
+        ? '<div class="cp-meta">' + escapeHtml(info.authors) +
+            (info.date ? ' · ' + escapeHtml(info.date) : '') +
+            (info.inst ? ' · ' + escapeHtml(info.inst) : '') + '</div>'
+        : '') +
+      (info.key ? '<div class="cp-key">' + escapeHtml(info.key) + '</div>' : '') +
+      (info.arxiv
+        ? '<a class="cp-link" href="https://arxiv.org/abs/' + encodeURIComponent(info.arxiv) +
+          '" target="_blank" rel="noopener">arXiv ' + escapeHtml(info.arxiv) + ' ↗</a>'
+        : '');
+    var r = el.getBoundingClientRect();
+    pop.hidden = false;  // unhide first so offsetHeight is measurable
+    var margin = 16;
+    var popWidth = Math.min(360, Math.max(0, window.innerWidth - margin * 2));
+    var popHeight = Math.min(pop.offsetHeight || 200, Math.max(0, window.innerHeight - margin * 2));
+    pop.style.left = Math.max(margin, Math.min(r.left, window.innerWidth - popWidth - margin)) + "px";
+    pop.style.top = Math.max(margin, Math.min(r.bottom + 8, window.innerHeight - popHeight - margin)) + "px";
+    popTrigger = el;
+    if (popClose) popClose.focus();
+  }
+  function hidePopover() {
+    if (pop) pop.hidden = true;
+    if (popTrigger) popTrigger.focus();
+    popTrigger = null;
+  }
+  document.querySelectorAll("[data-ref]").forEach(function (el) {
+    el.setAttribute("tabindex", "0");
+    el.setAttribute("role", "button");
+    el.addEventListener("click", function (e) { e.stopPropagation(); showPopover(el); });
+    el.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); showPopover(el); }
+    });
+  });
+  if (popClose) popClose.addEventListener("click", hidePopover);
+  document.addEventListener("click", function (e) {
+    if (pop && !pop.hidden && !pop.contains(e.target) && !e.target.matches("[data-ref]")) hidePopover();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && pop && !pop.hidden) hidePopover();
+  });
+
+  // --- Feature 7: Blog-mode active-H2 highlight (opt-in) ----------------
+  if (document.body.classList.contains("aris-blog")) {
+    var h2s = [].slice.call(document.querySelectorAll("main h2"));
+    if (h2s.length && typeof IntersectionObserver !== "undefined") {
+      var io2 = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) {
+            h2s.forEach(function (h) { h.classList.remove("aris-active-h2"); });
+            en.target.classList.add("aris-active-h2");
+          }
+        });
+      }, { rootMargin: "-15% 0px -75% 0px" });
+      h2s.forEach(function (h) { io2.observe(h); });
+    }
+  }
+})();
+</script>
+</body>
+</html>

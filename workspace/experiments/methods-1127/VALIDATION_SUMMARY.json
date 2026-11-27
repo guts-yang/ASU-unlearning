@@ -1,0 +1,189 @@
+{
+  "claim_level": false,
+  "operators_only": false,
+  "started": "2026-11-27T17:39:30",
+  "methods": [
+    {
+      "method": "CF2-01_跨层反事实通量",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-01_跨层反事实通量/operator.log",
+      "tiny_returncode": 0,
+      "tiny_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-01_跨层反事实通量/tiny.log",
+      "status": "COMPLETED",
+      "steps": 2,
+      "finite_positive_gradients": true,
+      "teacher_frozen": true,
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-01_跨层反事实通量/result.json",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF2-02_因子绑定交互",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-02_因子绑定交互/operator.log",
+      "tiny_returncode": 0,
+      "tiny_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-02_因子绑定交互/tiny.log",
+      "status": "COMPLETED",
+      "steps": 2,
+      "finite_positive_gradients": true,
+      "teacher_frozen": true,
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-02_因子绑定交互/result.json",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF2-03_条件有向信息流",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-03_条件有向信息流/operator.log",
+      "tiny_returncode": 0,
+      "tiny_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-03_条件有向信息流/tiny.log",
+      "status": "COMPLETED",
+      "steps": 2,
+      "finite_positive_gradients": true,
+      "teacher_frozen": true,
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-03_条件有向信息流/result.json",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF2-04_不平衡传输质量销毁",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-04_不平衡传输质量销毁/operator.log",
+      "tiny_returncode": 0,
+      "tiny_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-04_不平衡传输质量销毁/tiny.log",
+      "status": "COMPLETED",
+      "steps": 2,
+      "finite_positive_gradients": true,
+      "teacher_frozen": true,
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-04_不平衡传输质量销毁/result.json",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF2-05_跨层答案小波谱",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-05_跨层答案小波谱/operator.log",
+      "tiny_returncode": 0,
+      "tiny_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-05_跨层答案小波谱/tiny.log",
+      "status": "COMPLETED",
+      "steps": 2,
+      "finite_positive_gradients": true,
+      "teacher_frozen": true,
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-05_跨层答案小波谱/result.json",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF2-06_反事实割线敏感度",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-06_反事实割线敏感度/operator.log",
+      "tiny_returncode": 0,
+      "tiny_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-06_反事实割线敏感度/tiny.log",
+      "status": "COMPLETED",
+      "steps": 2,
+      "finite_positive_gradients": true,
+      "teacher_frozen": true,
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-06_反事实割线敏感度/result.json",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF2-07_三阶累积量绑定",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-07_三阶累积量绑定/operator.log",
+      "tiny_returncode": 0,
+      "tiny_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-07_三阶累积量绑定/tiny.log",
+      "status": "COMPLETED",
+      "steps": 2,
+      "finite_positive_gradients": true,
+      "teacher_frozen": true,
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-07_三阶累积量绑定/result.json",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF2-08_保留协方差白化谱",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-08_保留协方差白化谱/operator.log",
+      "tiny_returncode": 0,
+      "tiny_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-08_保留协方差白化谱/tiny.log",
+      "status": "COMPLETED",
+      "steps": 2,
+      "finite_positive_gradients": true,
+      "teacher_frozen": true,
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-08_保留协方差白化谱/result.json",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF2-09_稳健低秩稀疏事件",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-09_稳健低秩稀疏事件/operator.log",
+      "tiny_returncode": 0,
+      "tiny_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-09_稳健低秩稀疏事件/tiny.log",
+      "status": "COMPLETED",
+      "steps": 2,
+      "finite_positive_gradients": true,
+      "teacher_frozen": true,
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-09_稳健低秩稀疏事件/result.json",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF2-10_联盟交互激活擦除",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-10_联盟交互激活擦除/operator.log",
+      "tiny_returncode": 0,
+      "tiny_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-10_联盟交互激活擦除/tiny.log",
+      "status": "COMPLETED",
+      "steps": 2,
+      "finite_positive_gradients": true,
+      "teacher_frozen": true,
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127/_validation/CF2-10_联盟交互激活擦除/result.json",
+      "verdict": "PASS"
+    }
+  ],
+  "failed": 0,
+  "verdict": "PASS"
+}

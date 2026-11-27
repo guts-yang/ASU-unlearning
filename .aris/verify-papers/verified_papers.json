@@ -1,0 +1,199 @@
+{
+  "verdict": "WARN",
+  "reason_code": "verify_papers_unavailable",
+  "summary": "verify_papers.py helper unresolved or invocation failed; all candidates tagged [UNVERIFIED] for audit visibility.",
+  "papers": [
+    {
+      "id": "p01",
+      "arxiv_id": "2603.01285",
+      "doi": null,
+      "title": "Attention Smoothing Is All You Need For Unlearning",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p02",
+      "arxiv_id": "2611.03955",
+      "doi": null,
+      "title": "Forget What Comes Next: LLM Unlearning via Statistical Independence",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p03",
+      "arxiv_id": null,
+      "doi": null,
+      "title": "Obliviator Reveals the Cost of Nonlinear Guardedness in Concept Erasure",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p04",
+      "arxiv_id": "2410.23054",
+      "doi": null,
+      "title": "Controlling Language and Diffusion Models by Transporting Activations",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p05",
+      "arxiv_id": null,
+      "doi": null,
+      "title": "Concept Heterogeneity-aware Representation Steering",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p06",
+      "arxiv_id": "2610.40055",
+      "doi": null,
+      "title": "One Vector or Many? Clustered Optimal-Transport Steering under Quantization",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p07",
+      "arxiv_id": "2603.16489",
+      "doi": null,
+      "title": "Unlearning for One-Step Generative Models via Unbalanced Optimal Transport",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p08",
+      "arxiv_id": "2406.12329",
+      "doi": null,
+      "title": "Opt-Out: Investigating Entity-Level Unlearning for Large Language Models via Optimal Transport",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p09",
+      "arxiv_id": "2605.21391",
+      "doi": null,
+      "title": "Post-Hoc Understanding of Metaphor Processing in Decoder-Only Language Models via Conditional Scale Entropy",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p10",
+      "arxiv_id": null,
+      "doi": null,
+      "title": "LEACE: Perfect Linear Concept Erasure in Closed Form",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p11",
+      "arxiv_id": "2509.11816",
+      "doi": null,
+      "title": "Collapse of Irrelevant Representations Ensures Robust and Non-Disruptive LLM Unlearning",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p12",
+      "arxiv_id": "2610.22942",
+      "doi": null,
+      "title": "Aligning Language Models Towards Counterfactual Invariance",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p13",
+      "arxiv_id": "2510.26543",
+      "doi": null,
+      "title": "The Structure of Relation Decoding Linear Operators in Large Language Models",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p14",
+      "arxiv_id": "2409.10053",
+      "doi": null,
+      "title": "Householder Pseudo-Rotation: A Novel Approach to Activation Editing in LLMs with Direction-Magnitude Perspective",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p15",
+      "arxiv_id": "2509.22263",
+      "doi": null,
+      "title": "Erase or Hide? Suppressing Spurious Unlearning Neurons for Robust Unlearning",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p16",
+      "arxiv_id": "2609.39279",
+      "doi": null,
+      "title": "Faithful Dual-constrained Erasure for Robust LLM Safety Alignment",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p17",
+      "arxiv_id": null,
+      "doi": null,
+      "title": "Required or Redundant? Tracing Evidence Collaboration with Factorized Causal Activation Patching",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p18",
+      "arxiv_id": null,
+      "doi": null,
+      "title": "Transfer Entropy as a Measure of Information Flow in LLMs and VLMs",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p19",
+      "arxiv_id": null,
+      "doi": null,
+      "title": "Transformer Dynamics: A Neuroscientific Approach to Interpretability of Large Language Models",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p20",
+      "arxiv_id": "2605.27083",
+      "doi": null,
+      "title": "On the Hidden Costs of Counterfactual Knowledge Training in LLM Unlearning",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p21",
+      "arxiv_id": "2505.16831",
+      "doi": null,
+      "title": "Unlearning Isn't Deletion: Investigating Reversibility of Machine Unlearning in LLMs",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p22",
+      "arxiv_id": null,
+      "doi": null,
+      "title": "Do LLMs Really Forget? Hidden-State Leakage in Model Unlearning and How to Fix it",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p23",
+      "arxiv_id": null,
+      "doi": null,
+      "title": "Circuit Fingerprints: How Answer Tokens Encode Their Geometrical Path",
+      "status": "unverified",
+      "method": "none"
+    },
+    {
+      "id": "p24",
+      "arxiv_id": "2002.09815",
+      "doi": null,
+      "title": "Neuron Shapley: Discovering the Responsible Neurons",
+      "status": "unverified",
+      "method": "none"
+    }
+  ]
+}
