@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CF-04 为什么能具备遗忘能力 · 从 0 到 1 讲清楚</title>
+
+<meta name="generator" content="ARIS render-html (academic, v1)">
+<meta name="aris:source-path" content="workspace/idea-stage/candidates/CF-04_事实身份双探针解耦/CF04_为什么能遗忘_从0到1讲解.md">
+<meta name="aris:source-sha256" content="9dca8898f54240922a41f59319063eb0e1a07689be6eb8616961fc9a75042e15">
+<meta name="aris:generated-at" content="2026-11-27 06:05 UTC">
+
+<!-- MathJax 3 -->
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+  options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+<!-- highlight.js -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-light.min.css">
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => hljs.highlightAll());</script>
+
+
+<style>
+:root {
+  --bg: #fdfcf7;
+  --bg-soft: #f4f1ea;
+  --bg-code: #f8f5ec;
+  --ink: #1a1a1a;
+  --ink-soft: #4a4a4a;
+  --ink-muted: #6b6b6b;
+  --primary: #1a4a8c;
+  --primary-soft: #2d6cb8;
+  --accent: #b8390e;
+  --warn: #b45309;
+  --warn-bg: #fef3c7;
+  --info-bg: #dbeafe;
+  --good-bg: #d1fae5;
+  --good: #065f46;
+  --bad-bg: #fee2e2;
+  --bad: #991b1b;
+  --border: #d6d0c0;
+  --border-soft: #e8e3d5;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Source Serif Pro", "Source Serif 4", "Crimson Pro", "Georgia", "Songti SC", "STSong", serif;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--bg);
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+}
+
+.layout {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 48px;
+  padding: 40px 32px;
+}
+
+nav.toc {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+  font-size: 13px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  border-right: 1px solid var(--border-soft);
+  padding-right: 16px;
+}
+nav.toc h3 {
+  margin: 0 0 12px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+nav.toc ol { list-style: none; padding: 0; margin: 0; counter-reset: toc; }
+nav.toc ol li { margin: 5px 0; counter-increment: toc; }
+nav.toc ol li::before { content: counter(toc) ". "; color: var(--ink-muted); margin-right: 4px; }
+nav.toc a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 1px dotted transparent;
+}
+nav.toc a:hover { color: var(--primary); border-bottom-color: var(--primary); }
+nav.toc ul { list-style: none; padding-left: 14px; margin: 3px 0; font-size: 12px; }
+nav.toc ul li::before { content: "→ "; color: var(--border); }
+
+main { min-width: 0; }
+
+header.hero {
+  border-bottom: 3px double var(--primary);
+  padding-bottom: 24px;
+  margin-bottom: 32px;
+}
+header.hero .eyebrow {
+  color: var(--accent);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+body.aris-blog header.hero .eyebrow {
+  font-family: inherit;
+  color: var(--ink-muted);
+  text-transform: none;
+  letter-spacing: 0.01em;
+  font-weight: 400;
+}
+header.hero h1 {
+  font-size: 32px;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+header.hero .subtitle {
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin: 0 0 8px;
+  font-style: italic;
+}
+header.hero .byline {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 0 0 20px;
+}
+header.hero .byline strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+header.hero .meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--ink-muted);
+  border-top: 1px solid var(--border-soft);
+  padding-top: 14px;
+}
+header.hero .meta span strong { color: var(--ink-soft); }
+header.hero .meta code {
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 11px;
+  background: var(--bg-soft);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-soft);
+}
+
+h2 {
+  font-size: 24px;
+  margin: 44px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+  font-weight: 700;
+}
+h2 .num { color: var(--primary); font-weight: 600; margin-right: 8px; }
+h3 { font-size: 19px; margin: 28px 0 10px; color: var(--primary); font-weight: 600; }
+h4 { font-size: 16px; margin: 20px 0 8px; color: var(--ink); font-weight: 600; }
+
+p { margin: 10px 0; }
+ul, ol { padding-left: 22px; margin: 10px 0; }
+ul li, ol li { margin: 4px 0; }
+ul li::marker { color: var(--primary); }
+
+strong { color: var(--accent); font-weight: 600; }
+em { color: var(--ink-soft); }
+
+a { color: var(--primary); }
+a:hover { color: var(--accent); }
+
+code:not(.hljs) {
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 0.86em;
+  background: var(--bg-code);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-soft);
+  color: var(--accent);
+}
+
+pre {
+  background: #fafaf6;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  padding: 0;
+  overflow-x: auto;
+  border-radius: 4px;
+  margin: 14px 0;
+}
+pre code, pre code.hljs {
+  background: transparent !important;
+  display: block;
+  padding: 14px 18px !important;
+  font-size: 13px;
+  line-height: 1.55;
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", monospace;
+  color: var(--ink);
+}
+pre.diagram {
+  background: #f9f6ed;
+  border-left: 4px solid var(--accent);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.callout {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-radius: 4px;
+  border-left: 4px solid;
+  font-size: 15px;
+}
+.callout-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.callout-info { background: var(--info-bg); border-left-color: var(--primary); }
+.callout-info .callout-title { color: var(--primary); }
+.callout-warn { background: var(--warn-bg); border-left-color: var(--warn); }
+.callout-warn .callout-title { color: var(--warn); }
+.callout-good { background: var(--good-bg); border-left-color: var(--good); }
+.callout-good .callout-title { color: var(--good); }
+.callout-bad { background: var(--bad-bg); border-left-color: var(--bad); }
+.callout-bad .callout-title { color: var(--bad); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+thead { background: var(--primary); color: white; }
+th, td {
+  text-align: left;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border-soft);
+  vertical-align: top;
+}
+th { font-weight: 600; font-size: 13px; letter-spacing: 0.02em; }
+tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-soft); }
+
+details.qa, details {
+  background: white;
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  margin: 10px 0;
+  padding: 0;
+}
+details summary {
+  cursor: pointer;
+  padding: 10px 14px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--primary);
+  list-style: none;
+  user-select: none;
+}
+details summary::-webkit-details-marker { display: none; }
+details summary::before {
+  content: "▸ ";
+  margin-right: 4px;
+  display: inline-block;
+  transition: transform 0.15s;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details[open] summary { border-bottom: 1px solid var(--border-soft); }
+details > :not(summary) { padding: 10px 14px; }
+details p:first-of-type { margin-top: 8px; }
+
+mjx-container[display="true"] { margin: 12px 0 !important; }
+
+footer.aris-footer {
+  margin-top: 60px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+footer.aris-footer a { color: var(--ink-muted); border-bottom: 1px dotted var(--border); }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; gap: 20px; padding: 20px 16px; }
+  nav.toc {
+    position: static;
+    max-height: none;
+    border-right: none;
+    border-bottom: 1px solid var(--border-soft);
+    padding-right: 0;
+    padding-bottom: 14px;
+  }
+  header.hero h1 { font-size: 24px; }
+  h2 { font-size: 20px; }
+}
+@media print {
+  nav.toc { display: none; }
+  .layout { grid-template-columns: 1fr; padding: 0; }
+  body { background: white; }
+  header.hero { border-bottom-color: var(--ink); }
+  #cite-pop, dialog.lightbox { display: none !important; }
+}
+
+/* --- P0 polish: TOC scrollspy active state ---------------------------- */
+nav.toc a.active {
+  color: var(--accent);
+  font-weight: 600;
+  border-bottom-color: var(--accent);
+}
+
+/* --- P0 polish: Long-code auto-collapse ------------------------------- */
+details.code-card {
+  margin: 14px 0;
+  background: #fafaf6;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: 4px;
+}
+details.code-card > summary {
+  cursor: pointer;
+  padding: 8px 14px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-family: "JetBrains Mono", "SF Mono", monospace;
+  list-style: none;
+  user-select: none;
+}
+details.code-card > summary::-webkit-details-marker { display: none; }
+details.code-card > summary::before { content: none; }
+details.code-card > pre {
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-left: none;
+  border-radius: 0;
+}
+@media print {
+  details.code-card { border: 1px solid #ccc; background: white; }
+  details.code-card > summary { display: none !important; }
+  details.code-card > pre { border: 1px solid #ddd; border-radius: 4px; background: white; }
+}
+
+/* --- P0 polish: Paper popover ([[ref]] popups) ------------------------ */
+[data-ref] {
+  color: var(--primary);
+  border-bottom: 1px dotted var(--primary);
+  cursor: pointer;
+  white-space: nowrap;
+}
+[data-ref]:hover { background: rgba(26, 74, 140, 0.08); }
+#cite-pop {
+  position: fixed;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  font-size: 13px;
+  line-height: 1.5;
+  z-index: 1000;
+}
+#cite-pop[hidden] { display: none; }
+#cite-pop .cp-title {
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+  padding-right: 24px;
+}
+#cite-pop .cp-meta {
+  color: var(--ink-muted);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+#cite-pop .cp-key {
+  color: var(--accent);
+  font-style: italic;
+  margin-bottom: 8px;
+}
+#cite-pop .cp-link {
+  display: inline-block;
+  color: var(--primary);
+  font-weight: 500;
+}
+#cite-pop .cp-close {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--ink-muted);
+}
+
+/* --- P0 polish: Figure lightbox (native <dialog>) --------------------- */
+dialog.lightbox {
+  border: none;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.92);
+  width: 96vw;
+  height: 96vh;
+  max-width: 96vw;
+  max-height: 96vh;
+}
+dialog.lightbox::backdrop { background: rgba(0, 0, 0, 0.92); }
+dialog.lightbox .lb-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 16px;
+  position: relative;
+}
+dialog.lightbox img {
+  max-width: 90vw;
+  max-height: 84vh;
+  object-fit: contain;
+  cursor: zoom-out;
+}
+dialog.lightbox figcaption {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  text-align: center;
+  max-width: 700px;
+}
+dialog.lightbox .lb-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* --- P0 polish: blog/talk mode active-H2 highlight (opt-in) ----------- */
+body.aris-blog h2 { scroll-margin-top: 24px; }
+body.aris-blog h2.aris-active-h2 {
+  background: linear-gradient(to right, rgba(26, 74, 140, 0.06), transparent);
+  border-radius: 4px;
+  padding-left: 12px;
+  margin-left: -12px;
+}
+</style>
+</head>
+<body class="">
+<div class="layout">
+
+<nav class="toc">
+  <h3>Contents</h3>
+  <ol>
+<li><a href="#0-先把三个词说清楚记住--遗忘--能力">0. 先把三个词说清楚：记住 / 遗忘 / 能力</a>
+</li>
+<li><a href="#1-第一块积木梯度下降是唯一真正改写模型的动作">1. 第一块积木：梯度下降是唯一真正「改写模型」的动作</a>
+</li>
+<li><a href="#2-第二块积木在中间层激活上做而不是在输出概率上做">2. 第二块积木：在「中间层激活」上做，而不是在「输出概率」上做</a>
+</li>
+<li><a href="#3-第三块积木用配对激活差delta-a-找出目标事实的方向">3. 第三块积木：用「配对激活差」$\Delta A$ 找出「目标事实的方向」</a>
+</li>
+<li><a href="#4-致命隐患delta-a-可能只是换了个名字这正是-cf-04-存在的理由">4. 致命隐患：$\Delta A$ 可能只是「换了个名字」——这正是 CF-04 存在的理由</a>
+</li>
+<li><a href="#5-关键动作-双探针--正交收缩把身份从-delta-a-里减掉">5. 关键动作 ①：双探针 + 正交收缩，把「身份」从 $\Delta A$ 里减掉</a>
+</li>
+<li><a href="#6-关键动作-补回被误伤的事实分量并发一张纯度证书">6. 关键动作 ②：补回被误伤的事实分量，并发一张「纯度证书」</a>
+</li>
+<li><a href="#7-关键动作-把提纯方向变成一个中性目标tellp">7. 关键动作 ③：把提纯方向变成一个「中性目标」$T_{\ell,p}$</a>
+</li>
+<li><a href="#8-闭环用损失把目标焊进参数--遗忘能力从这里真正产生">8. 闭环：用损失把目标「焊」进参数 —— 遗忘能力从这里真正产生</a>
+</li>
+<li><a href="#9-凭什么信它一个能被推翻的检验cf-04-的诚实门槛">9. 凭什么信它：一个「能被推翻」的检验（CF-04 的诚实门槛）</a>
+</li>
+<li><a href="#10-从-0-到-1-串成一条链">10. 从 0 到 1 串成一条链</a>
+</li>
+<li><a href="#11-诚实边界与来源">11. 诚实边界与来源</a>
+</li>
+</ol>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">ARIS · 机制讲解</div>
+  <h1>CF-04 为什么能具备遗忘能力 · 从 0 到 1 讲清楚</h1>
+  <p class="subtitle">面向具备一点 DL 基础的研究生 ｜ 全部公式 LaTeX 渲染 ｜ plan-level 机制推断（非实测）</p>
+  
+  <div class="meta">
+    <span><strong>Source:</strong> <code>workspace/idea-stage/candidates/CF-04_事实身份双探针解耦/CF04_为什么能遗忘_从0到1讲解.md</code></span>
+    <span><strong>SHA256:</strong> <code>9dca8898f542</code></span>
+    <span><strong>Rendered:</strong> 2026-11-27 06:05 UTC</span>
+    
+  </div>
+</header>
+
+<h1 id="cf-04-为什么能具备遗忘能力--从-0-到-1-讲清楚">CF-04 为什么能具备「遗忘」能力 —— 从 0 到 1 讲清楚</h1>
+<div class="callout callout-info"><div class="callout-title">写给谁 / 阅读前提</div><p>假设你懂一点深度学习——知道前向传播会把输入变成一层层向量、知道 softmax 把 logits 变成概率、知道损失函数 + 梯度下降 $\theta \leftarrow \theta-\eta\nabla_\theta\mathcal L$ 会改写参数、知道 Transformer 是一叠 DecoderLayer。除此之外不需要更多。本文从「什么叫记住一个事实」开始，一块积木一块积木搭到「为什么这套机制能把遗忘写进参数」。</p></div>
+<div class="callout callout-warn"><div class="callout-title">诚实边界（先说清楚）</div><p>本文讲解的全部机制与公式来自仓库内 <code>CF-04_proposal.md</code>、<code>CF04_事实身份解耦_逻辑链路图.audit.md</code> 与方向 I 基线文档。按提案 §8，这些是 <strong>plan-level 机制推断</strong>（<code>provisional</code>、无实测、无跨模型回执、<code>REVIEW_UNAVAILABLE</code>），评估分 7.4 是执行者机制推断分。所以本文回答的是「<strong>设计上凭什么可能成立</strong>」，<strong>不是</strong>「已被实验证明成立」。文中「V2 重叠 0.55」等历史证据来自 <code>IDEA_REPORT_V3.md</code>。知识依据截止到仓库 2026-11 的这批文档，之后进展需另行核实。</p></div>
+<hr />
+<h2 id="0-先把三个词说清楚记住--遗忘--能力">0. 先把三个词说清楚：记住 / 遗忘 / 能力</h2>
+<p><strong>「模型记住一个事实」是什么？</strong> 大语言模型把知识存在参数 $\theta$ 里。你问一句带遗忘目标的问题 $X^{+}$（例如「某本书的作者是谁」），拼接上要被忘掉的答案 $y^{+}$（那个作者名），网络逐层计算，中间每一层、每个位置都会产生一个隐藏向量（激活）$h_{\ell}(p)$，最后经 LM Head 与 softmax 输出概率 $p=\mathrm{softmax}(Z)$。当模型「记住」这个事实时，直观表现是：给定 $X^{+}$，这些中间层激活里存在某种稳定的模式，推动输出强烈偏向 $y^{+}$。</p>
+<p><strong>「遗忘」是什么？</strong> 不是把参数里某个文件删掉（没有这种文件），而是<strong>调整 $\theta$</strong>，使得同样的输入不再稳定地产生 $y^{+}$，同时对别的知识伤害尽量小。机器遗忘领域一个关键要求是「参数内化」：遗忘效果必须写进权重本身，而不是靠推理时挂一个 hook、加一段 prompt、或过滤输出来假装——否则把 hook 摘掉，答案立刻回来。</p>
+<p><strong>「具备遗忘能力」是什么？</strong> 就是最终得到一个新参数 $\theta^{*}$，它自身（无 hook、无外部干预）在该事实上的读出被压低，而在保留集上仍正常工作。CF-04 的终点正是这个 $\theta^{*}$（见逻辑链路图 <code>out</code> 组件）。</p>
+<div class="callout callout-info"><div class="callout-title">一句话锚点</div><p>整篇都在回答一个问题——<strong>该设计一个什么样的损失 $\mathcal L$，才会让「最小化它」等价于「真的忘掉这个事实、且不走捷径」？</strong></p></div>
+<hr />
+<h2 id="1-第一块积木梯度下降是唯一真正改写模型的动作">1. 第一块积木：梯度下降是唯一真正「改写模型」的动作</h2>
+<p>你只需要认这一条：</p>
+<p>$$ \theta \leftarrow \theta - \eta\,\nabla_{\theta}\mathcal L $$</p>
+<p>只要能定义一个损失 $\mathcal L$，使得「把它压小」在语义上等价于「不再编码/输出目标事实」，那么梯度下降就会把这个改变<strong>焊进 $\theta$</strong>。这是「参数内化」的物理来源，也是为什么 CF-04 最后一定要落到 $\nabla_\theta\mathcal L$ only、$\theta_0$ frozen 的反传（提案 §3、链路图 <code>back</code>）。</p>
+<p>所以问题被归约为：<strong>$\mathcal L$ 里那个「遗忘项」$\mathcal L_F$ 该长什么样</strong>。这也是整个 CF 系列、以及 CF-04 与基线的分歧点。</p>
+<hr />
+<h2 id="2-第二块积木在中间层激活上做而不是在输出概率上做">2. 第二块积木：在「中间层激活」上做，而不是在「输出概率」上做</h2>
+<p>传统蒸馏式做法（原图/基线里的 KL 路线）是：让冻结的 Teacher 输出一个预测分布 $p_T=\mathrm{softmax}(Z_T)$，再让 Student 的分布去逼近或远离它，用分布差异当损失。CF 系列换了一个更「靠里」的视角：</p>
+<ul><li>Transformer 逐层把输入变成越来越抽象的向量：$h^{(0)}=E[\mathrm{ids}]$，再 $h^{(\ell)}=\mathrm{Dec}_{\ell}(h^{(\ell-1)};\theta)$（链路图 <code>layer</code> 合并展示的 16 层结构）。</li><li>事实信息被编码在<strong>中间层激活 $h_{\ell}(p)$</strong> 里，而概率分布只是这些激活经过 LM Head 之后的「最终结果」，太晚、太粗、也容易被表面行为绕过。</li><li>因此 CF-04 把「记住某事实」操作化为：<strong>在指定的层集合 $\ell\in\Lambda(k)$、指定的答案跨度位置 $p\in S_f$ 上，中间层激活里存在某个可定位的方向/分量</strong>。改这些激活 = 改模型的「内部想法」，比改最终概率更治本。</li></ul>
+<div class="callout callout-info"><div class="callout-title">直觉类比</div><p>把模型想成一条流水线。KL 路线在流水线末端拦「成品」；CF 路线在流水线中段改「半成品」。前者容易被换个包装绕过，后者改的是零件本身。</p></div>
+<hr />
+<h2 id="3-第三块积木用配对激活差delta-a-找出目标事实的方向">3. 第三块积木：用「配对激活差」$\Delta A$ 找出「目标事实的方向」</h2>
+<p>怎么在茫茫激活里定位「哪一部分是该忘的事实」？CF 系列用<strong>反事实配对</strong>：</p>
+<ol><li>构造一对输入：原句 $X^{+}$（带目标事实）与 donor 反事实句 $X^{-}=X(s_r,r)$（换了主体/关系，但保留相同的答案位结构 $y^{+}$）。</li><li>用<strong>冻结的 Teacher</strong> $\theta_0$（stop-gradient，仅前向）各跑一次，取中间层激活：</li></ol>
+<p>$$ A^{+}_{T,\ell}(p)=h_{T,\ell}(X^{+}\!\oplus y^{+};p),\qquad A^{-}_{T,\ell}(p)=h_{T,\ell}(X^{-}\!\oplus y^{+};p) $$</p>
+<ol><li>取差：</li></ol>
+<p>$$ \Delta A_{\ell,p}=A^{+}_{T,\ell}(p)-A^{-}_{T,\ell}(p),\qquad p\in S_f $$</p>
+<p><strong>为什么这个差有意义？</strong> 两句的唯一系统差别是「目标事实在不在场」。因此直观上 $\Delta A_{\ell,p}$ ≈「当且仅当该事实在场时，Teacher 中间层多出来的那部分响应」。它被当作「事实信号」的一个<strong>定位器/探针</strong>（提案 §0、逻辑链路图 <code>tDelta</code>）。</p>
+<hr />
+<h2 id="4-致命隐患delta-a-可能只是换了个名字这正是-cf-04-存在的理由">4. 致命隐患：$\Delta A$ 可能只是「换了个名字」——这正是 CF-04 存在的理由</h2>
+<p>到这里必须踩刹车。基线 §2.2.1 把头号 killer risk 写成：原始配对差混有<strong>实体身份、subword、词频、关系传播</strong>，并未证明编码的是「目标事实」而非「主体身份」。据 <code>IDEA_REPORT_V3.md</code>，V2 的负结果显示 unpooled $\Delta A$ 与 wrong-donor 重叠达 $0.55$——说明「换主体/换名字」的信号可能压过「删事实」的信号。</p>
+<div class="callout callout-warn"><div class="callout-title">如果直接拿 $\Delta A$ 当删除方向去抑制会怎样？</div><p>模型可能只学会「别提这个名字 / 对这个名字迟钝」，而不是真的忘掉事实：换个问法、换个主体、换个语言，答案又回来了。这叫「只换名字的捷径」。V1 沿 $\Delta A$ 直接抑制已被证伪（提案 §7「避 V1」）。</p></div>
+<p>所以 CF-04 的全部动机可以浓缩成一句话：<strong>提纯 $\Delta A$，并强制、可证伪地证明它真的指向「事实」而不是「身份」，再去用它</strong>。「事实 / 身份双探针正交解耦」这个名字就是这么来的。</p>
+<hr />
+<h2 id="5-关键动作-双探针--正交收缩把身份从-delta-a-里减掉">5. 关键动作 ①：双探针 + 正交收缩，把「身份」从 $\Delta A$ 里减掉</h2>
+<p><strong>第一步：训练两个冻结的轻量探针</strong>（经冻结下游重算，不直接过 LM head，提案 §3）：</p>
+<p>$$ z_{\text{fact}}=\phi_{\text{fact}}(\Delta A_{\ell,p})\in\mathbb R^{d_f},\qquad z_{\text{id}}=\phi_{\text{id}}(\Delta A_{\ell,p})\in\mathbb R^{d_i} $$</p>
+<ul><li>事实探针 $\phi_{\text{fact}}$ 学「能否读出 $y^{+}$ 是什么」；</li><li>身份探针 $\phi_{\text{id}}$ 学「能否读出主体是 $s_f$ 还是 $s_r$」；</li><li>各自输出一个可读的判别指标 $\mathrm{AUC}_f,\ \mathrm{AUC}_{\text{id}}$。</li></ul>
+<p><strong>第二步：正交收缩（deflation）</strong>。设 $V_{\text{id}}$ 是身份探针的 top 奇异方向构成的基（即激活空间里「名字/主体」这个方向的坐标）：</p>
+<p>$$ \Delta A_{\text{fact}}=\big(I-V_{\text{id}}V_{\text{id}}^{\top}\big)\Delta A,\qquad \Delta A_{\text{id}}=V_{\text{id}}V_{\text{id}}^{\top}\Delta A $$</p>
+<p><strong>用你已经会的线性代数拆开看</strong>：矩阵 $P=V_{\text{id}}V_{\text{id}}^{\top}$ 是「投影到身份子空间」的投影矩阵，$I-P$ 就是「投影到与身份正交的补空间」。于是任何一个向量都被拆成</p>
+<p>$$ \Delta A=\underbrace{(I-P)\Delta A}_{\text{与身份正交：更像纯事实}}+\underbrace{P\,\Delta A}_{\text{身份成分：名字/主体}} $$</p>
+<p>CF-04 只保留第一项 $\Delta A_{\text{fact}}$。</p>
+<div class="callout callout-good"><div class="callout-title">这一步对「遗忘」的贡献</div><p>删除方向被显式约束成「与换名字的方向无关」，从几何上堵死了「只换名字」这条捷径。这就是它比 V1 更可能真遗忘的第一个理由。</p></div>
+<hr />
+<h2 id="6-关键动作-补回被误伤的事实分量并发一张纯度证书">6. 关键动作 ②：补回被误伤的事实分量，并发一张「纯度证书」</h2>
+<p>正交收缩可能用力过猛：某些分量虽然和身份方向有点重叠，却<strong>确实对事实读出 $r_f$ 有因果贡献</strong>，一刀切会砍错。于是补回一组与身份正交、且对事实读出敏感的方向 $u_j$：</p>
+<p>$$ \Delta A_{\text{pot}}=\Delta A_{\text{fact}}+\sum_{j}\lambda_j u_j,\qquad u_j\perp V_{\text{id}},\quad \left|\frac{\partial r_f}{\partial u_j}\right|&gt;\tau_{\text{pot}} $$</p>
+<p>其中 $r_f$ 是「事实读出泛函」（经冻结下游重算），$\left|\partial r_f/\partial u_j\right|&gt;\tau_{\text{pot}}$ 的含义是「只补那些真的能撬动事实读出的方向」（提案呼应 CAP 2026「被抑制特征」视角）。</p>
+<p><strong>纯度证书</strong>——用两个探针的 AUC 之差，把「我手里这个方向有多像事实、多不像身份」量化成一个数：</p>
+<p>$$ \mathcal P=\mathrm{AUC}_f(\Delta A_{\text{pot}})-\mathrm{AUC}_{\text{id}}(\Delta A_{\text{pot}}) $$</p>
+<div class="callout callout-info"><div class="callout-title">为什么这叫「可解释性」</div><p>据提案 §0，事实/身份两个 AUC 明明白白摆出来，读者能自己判断「你抹的到底是知识，还是名字」，而不是听作者自称。</p></div>
+<hr />
+<h2 id="7-关键动作-把提纯方向变成一个中性目标tellp">7. 关键动作 ③：把提纯方向变成一个「中性目标」$T_{\ell,p}$</h2>
+<p><strong>一个关键立场</strong>：$\Delta A_{\text{pot}}$ <strong>不直接当删除方向去抑制</strong>（避 V1），而是只用来「定位 + 构造目标」（提案 §3）。构造出的目标是：</p>
+<p>$$ T_{\ell,p}=\operatorname{stopgrad}\!\left(\Pi_{\mathcal K}\Big[\,h^{+}_{\ell}(p)-\alpha\,\widehat{\Delta A_{\text{pot},\ell,p}}\,\Big]\right) $$</p>
+<p>逐项拆给你看（这是理解「为什么能忘」的核心一行）：</p>
+<table><thead><tr><th>符号</th><th>含义</th><th>直觉</th></tr></thead><tbody><tr><td>$h^{+}_{\ell}(p)$</td><td>Student 在「带事实」输入下的<strong>当前</strong>中间层激活</td><td>起点：现在模型「想着」这个事实</td></tr><tr><td>$-\alpha\widehat{\Delta A_{\text{pot}}}$</td><td>沿「纯事实方向」往回退一点</td><td>得到一个「不再那么强地编码该事实」的目标位置</td></tr><tr><td>$\Pi_{\mathcal K}$</td><td>投影进「中性可行集」</td><td>硬约束：退的时候不许伤到其他知识</td></tr><tr><td>$\operatorname{stopgrad}(\cdot)$</td><td>把结果当常数标签、不回传梯度</td><td>目标是冻结的标尺，不是被优化的对象</td></tr></tbody></table>
+<p>中性可行集（提案 §3、链路图 <code>sTarget</code>）：</p>
+<p>$$ \mathcal K=\Big\{h:\ r_{f,p}(h)\le c,\quad s_{d_j,p}(h)\le d_j,\quad \big\lVert\Delta r_{E,p}(h)\big\rVert\le e\Big\} $$</p>
+<ul><li>$r_{f,p}(h)\le c$：事实读出要低——<strong>别再读出目标事实</strong>（这是「忘」的直接体现）；</li><li>$s_{d_j,p}(h)\le d_j$：不许变成 donor 那种错误答案——别把「忘」做成「瞎编」；</li><li>$\|\Delta r_{E,p}(h)\|\le e$：对其他实体/知识的读出扰动要小——<strong>保效用</strong>。</li></ul>
+<div class="callout callout-good"><div class="callout-title">这一步对「遗忘」的贡献</div><p>把「忘掉事实、但不伤其他、也不变成乱答」同时写进了目标 $T$ 的定义里。它不是一句口号，而是三个可检查的不等式。</p></div>
+<hr />
+<h2 id="8-闭环用损失把目标焊进参数--遗忘能力从这里真正产生">8. 闭环：用损失把目标「焊」进参数 —— 遗忘能力从这里真正产生</h2>
+<p>现在把 Student（可训练 $\theta$）的中间层激活 $h_{S,\ell}(p)$ 拉去贴合那个目标 $T_{\ell,p}$。<strong>遗忘损失</strong>（逐层、逐位置加权激活距离）：</p>
+<p>$$ \mathcal L_F=\frac{1}{|\Lambda(k)|\,|S_f|}\sum_{\ell\in\Lambda(k)}\sum_{p\in S_f}\rho_\ell(k)\,\operatorname{dist}\!\left(h_{S,\ell}(p),\,T_{\ell,p}\right) $$</p>
+<p>最小化它 = 逼 Student 的中间层激活，一层层、一个个位置地，去贴近「已抽掉纯事实分量、又满足中性约束」的目标。$\rho_\ell(k)$ 是层权重，$\Lambda(k)$ 是参与训练的层集合（这些调度量属其它 CF 变体，CF-04 沿用基线作用域）。</p>
+<p><strong>保留损失</strong>（在独立保留集上维持正常语言建模，别把别的知识弄坏）：</p>
+<p>$$ \mathcal L_R=\mathbb E_{(x,y)\sim\mathcal D_R}\!\left[-\log p_\theta(y\mid x)\right] $$</p>
+<p><strong>总损失与反传</strong>：</p>
+<p>$$ \mathcal L=\lambda_F\mathcal L_F+\beta\mathcal L_R,\qquad \nabla_{\theta}\mathcal L\ \text{only},\quad \theta_0\ \text{frozen},\quad \theta\leftarrow\theta-\eta\nabla_{\theta}\mathcal L $$</p>
+<div class="callout callout-good"><div class="callout-title">闭环成立</div><p>梯度 $\nabla_\theta\mathcal L$ <strong>只更新 Student 的参数 $\theta$</strong>（Teacher $\theta_0$ 冻结、目标 $T$ 带 stopgrad），于是第 1 节的梯度下降真的把「不再按原方式编码该事实」写进了权重。这就是「参数内化、无 hook、去掉 hook 后仍保持效应」的来源（链路图 <code>back</code>/<code>out</code>）。最终输出：</p></div>
+<p>$$ \theta^{*}\ \text{：参数内化、无 hook、具备遗忘且保效用的 Student 模型} $$</p>
+<p><strong>至此，遗忘能力产生</strong>：不是过滤输出，不是挂 hook，而是 $\theta$ 本身被改了。</p>
+<hr />
+<h2 id="9-凭什么信它一个能被推翻的检验cf-04-的诚实门槛">9. 凭什么信它：一个「能被推翻」的检验（CF-04 的诚实门槛）</h2>
+<p>CF-04 不自己宣称有效，而是先设一个可证伪的判别门（提案 §2、§4、§6）。最硬的一条是 <strong>wrong-donor 检验</strong>：故意换错主体造出来的差 $\Delta A^{\text{wrong}}$，应当主要落在身份子空间：</p>
+<p>$$ \frac{\big\lVert V_{\text{id}}V_{\text{id}}^{\top}\Delta A^{\text{wrong}}\big\rVert}{\big\lVert\Delta A^{\text{wrong}}\big\rVert}\ \ge\ \pi_{\text{id}} $$</p>
+<p><strong>核心假设 H</strong>（提案 §2）：事实与身份在 $\Delta A$ 张成的子空间上<strong>可分</strong>；解耦后 $\mathrm{AUC}_f$ 显著高于 $\mathrm{AUC}_{\text{id}}$；wrong-donor 主要落身份子空间。<strong>若两子空间几乎完全重合（呼应 V2 的 0.55 重叠），或解耦残差里根本没有事实信息，本思路即被证伪。</strong></p>
+<p>判别实验与必测指标（提案 §6）：$\mathrm{AUC}_f-\mathrm{AUC}_{\text{id}}$ 是否显著为正、wrong-donor 身份投影占比是否 $\ge\pi_{\text{id}}$、解耦残差是否仍含事实信息且满足中性约束；指标含 $\mathcal P$、wrong/shuffled/noise-donor 对照、$r_f$、retain NLL、donor 答案率、长度/EOS、3 seed std。这些被标为 <code>needs manual pilot</code>。</p>
+<div class="callout callout-warn"><div class="callout-title">Warning</div><p><strong>三个已命名的失败模式</strong>（提案 §6）：① 事实与身份子空间几乎重合；② 解耦后残差无事实信息；③ $\Delta A_{\text{pot}}$ 把 donor 语义重新引回。任一条坐实，机制就不成立。</p></div>
+<hr />
+<h2 id="10-从-0-到-1-串成一条链">10. 从 0 到 1 串成一条链</h2>
+<p>把上面十节压成一条因果链，每一步都回答「它把『遗忘』往前推进了什么」：</p>
+<table><thead><tr><th>步</th><th>积木</th><th>关键公式 / 对象</th><th>对「遗忘能力」的贡献</th></tr></thead><tbody><tr><td>1</td><td>梯度下降</td><td>$\theta\leftarrow\theta-\eta\nabla_\theta\mathcal L$</td><td>提供「把改变写进参数」的唯一物理机制</td></tr><tr><td>2</td><td>中间层视角</td><td>$h_{\ell}(p)$ 而非 $\mathrm{softmax}(Z)$</td><td>把「知识」定位到可改的内部表示</td></tr><tr><td>3</td><td>配对激活差</td><td>$\Delta A=A^{+}-A^{-}$</td><td>定位「目标事实大致在哪个方向」</td></tr><tr><td>4</td><td>认清隐患</td><td>V2 重叠 $0.55$</td><td>指出 $\Delta A$ 可能只是「换名字」，直接抑制会走捷径</td></tr><tr><td>5</td><td>双探针 + 正交收缩</td><td>$\Delta A_{\text{fact}}=(I-V_{\text{id}}V_{\text{id}}^{\top})\Delta A$</td><td>几何上剔除身份，堵住捷径</td></tr><tr><td>6</td><td>反事实潜力 + 纯度证书</td><td>$\Delta A_{\text{pot}},\ \mathcal P$</td><td>补回被误伤的事实量，并量化「有多纯」</td></tr><tr><td>7</td><td>中性目标</td><td>$T_{\ell,p}=\operatorname{stopgrad}(\Pi_{\mathcal K}[\cdots])$</td><td>把「忘事实 + 保效用 + 不瞎答」写成不等式约束</td></tr><tr><td>8</td><td>损失与反传</td><td>$\mathcal L=\lambda_F\mathcal L_F+\beta\mathcal L_R$，仅更新 $\theta$</td><td>把目标焊进权重 → 参数内化 → $\theta^{*}$</td></tr><tr><td>9</td><td>可证伪门</td><td>wrong-donor $\ge\pi_{\text{id}}$、$\mathrm{AUC}_f$ vs $\mathrm{AUC}_{\text{id}}$</td><td>让「是否真遗忘」可被推翻、可检验</td></tr></tbody></table>
+<p><strong>一句话串讲</strong>：梯度下降能改参数（1）→ 我们选择改中间层激活而不是最终概率（2）→ 用反事实配对差 $\Delta A$ 找到「事实大致方向」（3）→ 但发现它可能只是「换名字」（4）→ 于是用双探针 + 正交投影把身份减掉（5）、补回真有因果贡献的分量并发纯度证书（6）→ 把提纯后的方向做成一个带三道不等式约束的「中性目标」$T$（7）→ 用激活距离损失逼 Student 去贴合 $T$，只更新 Student 参数（8）→ 于是遗忘被写进 $\theta$，得到无 hook 的 $\theta^{*}$（9 用可证伪检验兜底诚实性）。</p>
+<div class="callout callout-info"><div class="callout-title">最凝练的回答</div><p>CF-04 之所以「可能」具备遗忘能力，是因为它把「忘掉一个事实」翻译成了「让 Student 的中间层激活对齐一个已剔除身份分量、且被约束为不伤效用的目标 $T$」，再用梯度下降把这个对齐<strong>改写进参数本身</strong>；而它比前辈更可信的地方，是多了一道「事实 vs 身份」双探针解耦和一张能被实验推翻的纯度证书。</p></div>
+<details>
+<summary>给想再深一步的同学：这套设计「新」在哪、和谁不同</summary>
+<p>据提案 §4 的差异化表（近邻身份未做 D1 核验，不作 BibTeX）：StyliTruth(ICLR 2026) 解风格/事实用于生成；RepSelect / V1 pooled-$\Delta A$ PCA 用相关性主成分且 V1 已证伪；SCALPEL 用 contrastive SAE 选特征；MUtE(2026) 做连续表示概念擦除、非 LLM 参数内化。CF-04 的 novelty 落点是：<strong>把「$\Delta A$ 主要编码主体身份」这一 killer risk 直接转成可证伪的双探针判别门，并给出纯度证书 $\mathcal P$</strong>（提案称这是 V1 缺的「诚实门槛」）。评估上 <code>/idea-evaluator</code> 给均分 $\bar S=37/5=7.4&gt;7$、裁决 Strong Accept，但明确标注 <code>mechanism-based</code> / PROVISIONAL / <code>worth pursuing, pending the validation experiment</code>。</p>
+</details>
+<hr />
+<h2 id="11-诚实边界与来源">11. 诚实边界与来源</h2>
+<ul><li><strong>证据等级</strong>：plan-level 机制推断，<code>provisional</code>、无实测、无跨模型回执、<code>REVIEW_UNAVAILABLE</code>；分数为执行者机制推断分，<code>novelty-check = PROVISIONAL</code>。本文解释的是「设计为何可能成立」，<strong>不是</strong>「已被验证有效」。据提案 §8，新结果须过 <code>/experiment-audit</code> + <code>/result-to-claim</code>。</li><li><strong>主要来源</strong>：<code>CF-04_proposal.md</code>（§0–§8，全部公式与判别门）、<code>CF04_事实身份解耦_逻辑链路图.audit.md</code>（组件映射与 $\mathcal L_F$/$T$/$\mathcal K$ 的图示表述）、<code>CF-04_机制流程图.audit.md</code>（<code>h^{(\ell)}=\mathrm{Dec}_\ell(\cdot)$ 等逐层拓扑）、</code>IDEA_REPORT_V3.md`（V2 unpooled $\Delta A$ 与 wrong-donor 重叠 $0.55$）。</li><li><strong>与基线的关系</strong>（提案 §7）：CF-04 只把基线 §2.2.1 第 1 点（$\Delta A$ 未净化、混身份）与判别实验定稿；$S_f$ 作用域、Teacher stopgrad、§4.1 中性约束 $\Pi_{\mathcal K}$、读出经冻结下游重算、$\lambda_{KL}^{\text{ablation}}=0$ 全部沿用 v0.6.1，<strong>不沿 $\Delta A$ 直接抑制</strong>（避 V1）。</li><li>依据截止到仓库内 2026-11 这批文档；此后的方法进展、近邻论文核验与实验结论需另行联网/实测核实。</li></ul>
+<div class="callout callout-good"><div class="callout-title">你可以带走的一句话</div><p>先问「损失在改什么、梯度流向谁、有没有参数内化」，再问「凭什么相信改的是事实而不是名字」——这两问，就是读懂 CF-04（乃至整个机器遗忘方向）的钥匙。</p></div>
+
+<footer class="aris-footer">
+  Generated by <a href="https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep/blob/main/skills/render-html/SKILL.md">ARIS <code>/render-html</code></a> ·
+  source path <code>workspace/idea-stage/candidates/CF-04_事实身份双探针解耦/CF04_为什么能遗忘_从0到1讲解.md</code> ·
+  SHA256 <code>9dca8898f542</code> ·
+  generated at 2026-11-27 06:05 UTC.
+  This is a generated view — edit the source Markdown, then re-render.
+</footer>
+</main>
+
+</div>
+
+<!-- P0 polish: paper popover host (populated by IIFE below) -->
+<div id="cite-pop" hidden role="dialog" aria-labelledby="cite-pop-title">
+  <button class="cp-close" type="button" aria-label="Close">×</button>
+  <div class="cp-content"></div>
+</div>
+
+<!-- P0 polish: figure lightbox (native <dialog>, graceful fallback) -->
+<dialog class="lightbox" id="figure-lightbox" aria-label="Figure detail">
+  <div class="lb-inner">
+    <button class="lb-close" type="button" aria-label="Close">×</button>
+    <img alt="" />
+    <figcaption></figcaption>
+  </div>
+</dialog>
+
+<!-- P0 polish: paper registry sidecar, embedded by render_html.py (--papers) -->
+<script>window.PAPER_REGISTRY = {};</script>
+
+<!-- P0 polish: interactive enhancements (TOC scrollspy, code-card auto-collapse,
+     paper popovers, figure lightbox, print-restore for <details>, blog-mode H2). -->
+<script>
+(function () {
+  "use strict";
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[c];
+    });
+  }
+
+  // --- Feature 5: Print degradation fix ---------------------------------
+  // Force every <details> open during print, restore the pre-print state after.
+  var _stashOpen = [];
+  var _printing = false;
+  window.addEventListener("beforeprint", function () {
+    if (_printing) return;  // guard against multi-fire (Chrome print preview)
+    _printing = true;
+    _stashOpen = [];
+    document.querySelectorAll("details:not([open])").forEach(function (d) {
+      _stashOpen.push(d);
+      d.open = true;
+    });
+  });
+  window.addEventListener("afterprint", function () {
+    _stashOpen.forEach(function (d) { if (d.isConnected) d.open = false; });
+    _stashOpen = [];
+    _printing = false;
+  });
+
+  // --- Feature 3: TOC scrollspy -----------------------------------------
+  var tocLinks = [].slice.call(document.querySelectorAll("nav.toc a"));
+  var headings = tocLinks.map(function (a) {
+    var id = a.getAttribute("href").replace(/^#/, "");
+    return document.getElementById(id);
+  }).filter(Boolean);
+  if (headings.length && typeof IntersectionObserver !== "undefined") {
+    var linkById = new Map();
+    headings.forEach(function (h, i) { linkById.set(h.id, tocLinks[i]); });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        tocLinks.forEach(function (l) { l.classList.remove("active"); });
+        var lk = linkById.get(en.target.id);
+        if (lk) lk.classList.add("active");
+      });
+    }, { rootMargin: "-15% 0px -75% 0px" });
+    headings.forEach(function (h) { io.observe(h); });
+  }
+
+  // --- Feature 1: Long-code auto-collapse -------------------------------
+  var COLLAPSE_THRESHOLD = 30;
+
+  function wrapCodeCard(pre, openByDefault) {
+    if (!pre || pre.closest("details.code-card")) return;
+    var code = pre.querySelector("code");
+    if (!code) return;
+    var lines = code.textContent.replace(/\n+$/, "").split("\n").length;
+    var det = document.createElement("details");
+    det.className = "code-card";
+    det.open = openByDefault;
+    var sum = document.createElement("summary");
+    function updateSummary() {
+      sum.textContent = (det.open ? "▾ Collapse code · " : "▸ Expand code · ") + lines + " lines";
+    }
+    updateSummary();
+    det.addEventListener("toggle", updateSummary);
+    pre.parentNode.insertBefore(det, pre);
+    det.appendChild(sum);
+    det.appendChild(pre);
+  }
+
+  // Honor explicit per-block flags first.
+  document.querySelectorAll("pre[data-collapse]").forEach(function (pre) {
+    var flag = pre.getAttribute("data-collapse");
+    if (flag === "collapsed") wrapCodeCard(pre, false);
+    // "open" → leave fully expanded, do not wrap.
+  });
+  // Then auto-wrap long unflagged blocks.
+  document.querySelectorAll("pre > code").forEach(function (code) {
+    var pre = code.closest("pre");
+    if (!pre || pre.closest("details") || pre.hasAttribute("data-collapse")) return;
+    var lines = code.textContent.replace(/\n+$/, "").split("\n").length;
+    if (lines >= COLLAPSE_THRESHOLD) wrapCodeCard(pre, false);
+  });
+
+  // --- Feature 10: Figure lightbox --------------------------------------
+  var lightbox = document.getElementById("figure-lightbox");
+  if (lightbox) {
+    var lbImg = lightbox.querySelector("img");
+    var lbCap = lightbox.querySelector("figcaption");
+    var lbClose = lightbox.querySelector(".lb-close");
+    function openLightbox(srcImg) {
+      lbImg.src = srcImg.src;
+      lbImg.alt = srcImg.alt || "";
+      var cap = srcImg.closest("figure") ? srcImg.closest("figure").querySelector("figcaption") : null;
+      lbCap.textContent = cap ? cap.textContent : "";
+      lbCap.hidden = !cap;
+      if (typeof lightbox.showModal === "function") lightbox.showModal();
+      else lightbox.hidden = false;
+    }
+    function closeLightbox() {
+      if (typeof lightbox.close === "function") lightbox.close();
+      else lightbox.hidden = true;
+    }
+    document.querySelectorAll("main figure img, main > p > img").forEach(function (img) {
+      if (img.closest("dialog")) return;
+      img.style.cursor = "zoom-in";
+      img.addEventListener("click", function () { openLightbox(img); });
+    });
+    if (lbClose) lbClose.addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", function (e) {
+      // Backdrop click closes; clicks inside .lb-inner do not bubble here.
+      if (e.target === lightbox) closeLightbox();
+    });
+  }
+
+  // --- Feature 2: Paper popover -----------------------------------------
+  var PAPERS = window.PAPER_REGISTRY || {};
+  var pop = document.getElementById("cite-pop");
+  var popContent = pop ? pop.querySelector(".cp-content") : null;
+  var popClose = pop ? pop.querySelector(".cp-close") : null;
+  var popTrigger = null;
+
+  function showPopover(el) {
+    var key = el.dataset.ref;
+    var info = PAPERS[key];
+    if (!info || !pop || !popContent) return;
+    popContent.innerHTML =
+      '<div class="cp-title" id="cite-pop-title">' + escapeHtml(info.title || key) + '</div>' +
+      (info.authors
+        ? '<div class="cp-meta">' + escapeHtml(info.authors) +
+            (info.date ? ' · ' + escapeHtml(info.date) : '') +
+            (info.inst ? ' · ' + escapeHtml(info.inst) : '') + '</div>'
+        : '') +
+      (info.key ? '<div class="cp-key">' + escapeHtml(info.key) + '</div>' : '') +
+      (info.arxiv
+        ? '<a class="cp-link" href="https://arxiv.org/abs/' + encodeURIComponent(info.arxiv) +
+          '" target="_blank" rel="noopener">arXiv ' + escapeHtml(info.arxiv) + ' ↗</a>'
+        : '');
+    var r = el.getBoundingClientRect();
+    pop.hidden = false;  // unhide first so offsetHeight is measurable
+    var margin = 16;
+    var popWidth = Math.min(360, Math.max(0, window.innerWidth - margin * 2));
+    var popHeight = Math.min(pop.offsetHeight || 200, Math.max(0, window.innerHeight - margin * 2));
+    pop.style.left = Math.max(margin, Math.min(r.left, window.innerWidth - popWidth - margin)) + "px";
+    pop.style.top = Math.max(margin, Math.min(r.bottom + 8, window.innerHeight - popHeight - margin)) + "px";
+    popTrigger = el;
+    if (popClose) popClose.focus();
+  }
+  function hidePopover() {
+    if (pop) pop.hidden = true;
+    if (popTrigger) popTrigger.focus();
+    popTrigger = null;
+  }
+  document.querySelectorAll("[data-ref]").forEach(function (el) {
+    el.setAttribute("tabindex", "0");
+    el.setAttribute("role", "button");
+    el.addEventListener("click", function (e) { e.stopPropagation(); showPopover(el); });
+    el.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); showPopover(el); }
+    });
+  });
+  if (popClose) popClose.addEventListener("click", hidePopover);
+  document.addEventListener("click", function (e) {
+    if (pop && !pop.hidden && !pop.contains(e.target) && !e.target.matches("[data-ref]")) hidePopover();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && pop && !pop.hidden) hidePopover();
+  });
+
+  // --- Feature 7: Blog-mode active-H2 highlight (opt-in) ----------------
+  if (document.body.classList.contains("aris-blog")) {
+    var h2s = [].slice.call(document.querySelectorAll("main h2"));
+    if (h2s.length && typeof IntersectionObserver !== "undefined") {
+      var io2 = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) {
+            h2s.forEach(function (h) { h.classList.remove("aris-active-h2"); });
+            en.target.classList.add("aris-active-h2");
+          }
+        });
+      }, { rootMargin: "-15% 0px -75% 0px" });
+      h2s.forEach(function (h) { io2.observe(h); });
+    }
+  }
+})();
+</script>
+</body>
+</html>
