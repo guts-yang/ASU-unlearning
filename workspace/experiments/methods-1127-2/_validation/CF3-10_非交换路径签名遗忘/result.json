@@ -1,0 +1,252 @@
+{
+  "method_id": "CF3-10",
+  "status": "COMPLETED",
+  "claim_level": false,
+  "profile": "tiny",
+  "seed": 0,
+  "device": "cpu",
+  "pair_count": 4,
+  "train": {
+    "history": [
+      {
+        "step": 0,
+        "loss": 11.591541290283203,
+        "method_loss": 0.00024107741774059832,
+        "neutral": 8.173590231308481e-07,
+        "retain_nll": 5.7957587242126465,
+        "grad_norm": 3.6374614238739014,
+        "fact_hinge": 0.0,
+        "donor_guard": 0.0,
+        "eos_guard": 8.173590094884275e-05,
+        "control_anchor": 0.0
+      },
+      {
+        "step": 1,
+        "loss": 11.036911964416504,
+        "method_loss": 0.003032137406989932,
+        "neutral": 0.0028690777253359556,
+        "retain_nll": 5.518160820007324,
+        "grad_norm": 7.661470890045166,
+        "fact_hinge": 0.0,
+        "donor_guard": 0.0286907774861902,
+        "eos_guard": 0.0,
+        "control_anchor": 1.781487284080452e-11
+      }
+    ],
+    "steps_completed": 2,
+    "resumed_from": 0
+  },
+  "diagnostics": {
+    "operator": "level2_noncommutative_levy_area",
+    "selected_areas": 4,
+    "enabled": true,
+    "path_scope": "answer-span pooled, ordered selected layers",
+    "control_anchor": "same-entity non-target relation counterfactual signature",
+    "true_area_mean": [
+      [
+        0.0,
+        0.016777953132987022,
+        -0.011374085210263729,
+        0.0009672455489635468,
+        -0.011862249113619328,
+        -0.018972886726260185,
+        0.02667229250073433,
+        0.02909669652581215,
+        -0.017056643962860107
+      ],
+      [
+        -0.016777953132987022,
+        0.0,
+        -0.0013870008988305926,
+        0.00018285878468304873,
+        -0.0017610854702070355,
+        -0.0011761292116716504,
+        0.004221223294734955,
+        0.0023829834535717964,
+        -0.0031883888877928257
+      ],
+      [
+        0.011374085210263729,
+        0.0013870008988305926,
+        0.0,
+        -0.0009931460954248905,
+        0.00143179961014539,
+        -0.001421764143742621,
+        0.0011719850590452552,
+        -0.0008912935154512525,
+        0.00240561761893332
+      ],
+      [
+        -0.0009672455489635468,
+        -0.00018285878468304873,
+        0.0009931460954248905,
+        0.0,
+        -0.0003462230088189244,
+        0.0023885152768343687,
+        -0.0029469383880496025,
+        -0.0013953811721876264,
+        -0.0010100920917466283
+      ],
+      [
+        0.011862249113619328,
+        0.0017610854702070355,
+        -0.00143179961014539,
+        0.0003462230088189244,
+        0.0,
+        -0.004106259439140558,
+        0.003376319073140621,
+        0.003992370329797268,
+        0.0013431418919935822
+      ],
+      [
+        0.018972886726260185,
+        0.0011761292116716504,
+        0.001421764143742621,
+        -0.0023885152768343687,
+        0.004106259439140558,
+        0.0,
+        -0.0023646450135856867,
+        -0.003218244295567274,
+        0.00846103299409151
+      ],
+      [
+        -0.02667229250073433,
+        -0.004221223294734955,
+        -0.0011719850590452552,
+        0.0029469383880496025,
+        -0.003376319073140621,
+        0.0023646450135856867,
+        0.0,
+        0.001480895676650107,
+        -0.006787407211959362
+      ],
+      [
+        -0.02909669652581215,
+        -0.0023829834535717964,
+        0.0008912935154512525,
+        0.0013953811721876264,
+        -0.003992370329797268,
+        0.003218244295567274,
+        -0.001480895676650107,
+        0.0,
+        -0.008914852514863014
+      ],
+      [
+        0.017056643962860107,
+        0.0031883888877928257,
+        -0.00240561761893332,
+        0.0010100920917466283,
+        -0.0013431418919935822,
+        -0.00846103299409151,
+        0.006787407211959362,
+        0.008914852514863014,
+        0.0
+      ]
+    ]
+  },
+  "before": {
+    "forget": {
+      "nll": 5.908950090408325,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "retain": {
+      "nll": 5.908950090408325,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "holdout": {
+      "nll": 5.908950090408325,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "donor": {
+      "donor_nll": 5.799798965454102,
+      "count": 2,
+      "note": "evaluation only; donor answers never enter training loss"
+    }
+  },
+  "after": {
+    "forget": {
+      "nll": 5.908559322357178,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "retain": {
+      "nll": 5.908559322357178,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "holdout": {
+      "nll": 5.908559322357178,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "donor": {
+      "donor_nll": 5.798884153366089,
+      "count": 2,
+      "note": "evaluation only; donor answers never enter training loss"
+    },
+    "behaviour": {
+      "samples": 1,
+      "mean_tokens": 24.0,
+      "eos_rate": 0.0,
+      "target_overlap": 0.0,
+      "examples": [
+        "tok222 tok162 tok77 tok229 tok206 tok152 tok198 tok115 tok247 tok173 tok96 tok33 tok85 tok43 tok241 tok195 tok127 tok96 tok33 tok85 tok43 tok241 tok195 tok127"
+      ]
+    }
+  },
+  "target_fact_probe": {
+    "before": {
+      "status": "COMPLETED",
+      "layer": 4,
+      "train": 12,
+      "test": 12,
+      "classes": 12,
+      "relation_disjoint": true,
+      "accuracy": 0.1666666716337204,
+      "cross_entropy": 2.2146315574645996,
+      "chance_accuracy": 0.08333333333333333,
+      "scope": "forget-author hidden-state separability; not proof of factual erasure"
+    },
+    "after": {
+      "status": "COMPLETED",
+      "layer": 4,
+      "train": 12,
+      "test": 12,
+      "classes": 12,
+      "relation_disjoint": true,
+      "accuracy": 0.1666666716337204,
+      "cross_entropy": 2.214090585708618,
+      "chance_accuracy": 0.08333333333333333,
+      "scope": "forget-author hidden-state separability; not proof of factual erasure"
+    }
+  },
+  "relearning": {
+    "status": "COMPLETED",
+    "steps": 1,
+    "samples": 2,
+    "before_nll": 5.908559322357178,
+    "after_nll": 5.907922744750977,
+    "nll_recovery": 0.0006365776062011719,
+    "ground_truth": "original dataset answers",
+    "note": "runs after the pre-relearning Student checkpoint has been saved"
+  },
+  "delta": {
+    "forget": -0.00039076805114746094,
+    "retain": -0.00039076805114746094,
+    "holdout": -0.00039076805114746094
+  },
+  "checkpoint": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-10_非交换路径签名遗忘/checkpoint",
+  "elapsed_sec": 0.454,
+  "integrity": {
+    "teacher_frozen": true,
+    "evaluation_ground_truth": "dataset answers",
+    "donor_answer_in_training": false,
+    "cross_method_imports": false,
+    "initial_student_equals_teacher": true,
+    "initial_student_teacher_nll_delta": 0.0,
+    "initial_nll_tolerance": 0.0001
+  }
+}

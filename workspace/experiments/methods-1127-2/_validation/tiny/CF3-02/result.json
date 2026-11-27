@@ -1,0 +1,164 @@
+{
+  "method_id": "CF3-02",
+  "status": "COMPLETED",
+  "claim_level": false,
+  "profile": "tiny",
+  "seed": 0,
+  "device": "cpu",
+  "pair_count": 4,
+  "train": {
+    "history": [
+      {
+        "step": 0,
+        "loss": 11.59151840209961,
+        "method_loss": 8.622575478511862e-06,
+        "neutral": 8.173590231308481e-07,
+        "retain_nll": 5.7957587242126465,
+        "grad_norm": 3.637457847595215,
+        "fact_hinge": 0.0,
+        "donor_guard": 0.0,
+        "eos_guard": 8.173590094884275e-05
+      },
+      {
+        "step": 1,
+        "loss": 11.036613464355469,
+        "method_loss": 3.3723619708325714e-05,
+        "neutral": 0.0028808582574129105,
+        "retain_nll": 5.518160820007324,
+        "grad_norm": 7.591394901275635,
+        "fact_hinge": 0.0,
+        "donor_guard": 0.028808583272621036,
+        "eos_guard": 0.0
+      }
+    ],
+    "steps_completed": 2,
+    "resumed_from": 0
+  },
+  "diagnostics": {
+    "operator": "controlled_downstream_replay_generalized_survival_subspace",
+    "layers": {
+      "1": {
+        "valid_pairs": 4,
+        "eigenvalues": [
+          0.804764449596405,
+          0.7525728344917297,
+          0.28872793912887573,
+          0.15484482049942017
+        ],
+        "mean_survival_ratio": 1.3715993165969849,
+        "true_vectors": 84,
+        "null_vectors": 84
+      },
+      "2": {
+        "valid_pairs": 4,
+        "eigenvalues": [
+          1.0573443174362183,
+          0.8481479287147522,
+          0.5170481204986572,
+          0.15096218883991241
+        ],
+        "mean_survival_ratio": 1.1720722913742065,
+        "true_vectors": 84,
+        "null_vectors": 84
+      },
+      "3": {
+        "valid_pairs": 4,
+        "eigenvalues": [
+          1.5207815170288086,
+          0.907509446144104,
+          0.6486009955406189,
+          0.16897335648536682
+        ],
+        "mean_survival_ratio": 1.1401830911636353,
+        "true_vectors": 84,
+        "null_vectors": 84
+      },
+      "4": {
+        "valid_pairs": 4,
+        "eigenvalues": [
+          1.9317984580993652,
+          0.9483352899551392,
+          0.5505003929138184,
+          0.20864158868789673
+        ],
+        "mean_survival_ratio": 1.0,
+        "true_vectors": 84,
+        "null_vectors": 84
+      }
+    },
+    "replay_offsets": [
+      0,
+      1,
+      2
+    ],
+    "enabled": true,
+    "ood_warning": "patched states require distribution checks"
+  },
+  "before": {
+    "forget": {
+      "nll": 5.908950090408325,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "retain": {
+      "nll": 5.908950090408325,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "holdout": {
+      "nll": 5.908950090408325,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "donor": {
+      "donor_nll": 5.799798965454102,
+      "count": 2,
+      "note": "evaluation only; donor answers never enter training loss"
+    }
+  },
+  "after": {
+    "forget": {
+      "nll": 5.908557653427124,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "retain": {
+      "nll": 5.908557653427124,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "holdout": {
+      "nll": 5.908557653427124,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "donor": {
+      "donor_nll": 5.798884630203247,
+      "count": 2,
+      "note": "evaluation only; donor answers never enter training loss"
+    },
+    "behaviour": {
+      "samples": 1,
+      "mean_tokens": 24.0,
+      "eos_rate": 0.0,
+      "target_overlap": 0.0,
+      "examples": [
+        "tok222 tok162 tok77 tok229 tok206 tok152 tok198 tok115 tok247 tok173 tok96 tok33 tok85 tok43 tok241 tok195 tok127 tok96 tok33 tok85 tok43 tok241 tok195 tok127"
+      ]
+    }
+  },
+  "delta": {
+    "forget": -0.0003924369812011719,
+    "retain": -0.0003924369812011719,
+    "holdout": -0.0003924369812011719
+  },
+  "checkpoint": "workspace/experiments/methods-1127-2/_validation/tiny/CF3-02/checkpoint",
+  "elapsed_sec": 0.42,
+  "integrity": {
+    "teacher_frozen": true,
+    "evaluation_ground_truth": "dataset answers",
+    "donor_answer_in_training": false,
+    "cross_method_imports": false,
+    "initial_student_equals_teacher": true
+  }
+}

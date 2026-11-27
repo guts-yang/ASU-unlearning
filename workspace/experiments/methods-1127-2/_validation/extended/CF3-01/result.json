@@ -1,0 +1,404 @@
+{
+  "method_id": "CF3-01",
+  "status": "COMPLETED",
+  "claim_level": false,
+  "profile": "tiny",
+  "seed": 0,
+  "device": "cpu",
+  "pair_count": 4,
+  "train": {
+    "history": [
+      {
+        "step": 0,
+        "loss": 11.591519355773926,
+        "method_loss": 2.2930466002435423e-05,
+        "neutral": 8.173590231308481e-07,
+        "retain_nll": 5.7957587242126465,
+        "grad_norm": 3.6374595165252686,
+        "fact_hinge": 0.0,
+        "donor_guard": 0.0,
+        "eos_guard": 8.173590094884275e-05,
+        "selected_terms": 8.0
+      },
+      {
+        "step": 1,
+        "loss": 11.036622047424316,
+        "method_loss": 7.685103628318757e-05,
+        "neutral": 0.0029244611505419016,
+        "retain_nll": 5.518160820007324,
+        "grad_norm": 7.512113571166992,
+        "fact_hinge": 0.0,
+        "donor_guard": 0.029244610923342407,
+        "eos_guard": 0.0,
+        "selected_terms": 8.0
+      }
+    ],
+    "steps_completed": 2,
+    "resumed_from": 0
+  },
+  "diagnostics": {
+    "operator": "exact_attention_route_content_bilinear_difference",
+    "selected": {
+      "1": "content",
+      "2": "content",
+      "3": "content",
+      "4": "content"
+    },
+    "ambiguous_layers": [],
+    "gates": {
+      "1:route": {
+        "mean_nll_increase": -0.00011980533599853516,
+        "mean_specificity": -3.802776336669922e-05,
+        "passed": false,
+        "pairs": [
+          {
+            "pair": 0,
+            "nll_increase": 7.343292236328125e-05,
+            "null_nll_increase": 0.00022268295288085938,
+            "specificity": -0.00014925003051757812
+          },
+          {
+            "pair": 1,
+            "nll_increase": -0.00013017654418945312,
+            "null_nll_increase": 8.678436279296875e-05,
+            "specificity": -0.00021696090698242188
+          },
+          {
+            "pair": 2,
+            "nll_increase": -2.86102294921875e-05,
+            "null_nll_increase": -0.00022602081298828125,
+            "specificity": 0.00019741058349609375
+          },
+          {
+            "pair": 3,
+            "nll_increase": -0.00039386749267578125,
+            "null_nll_increase": -0.0004105567932128906,
+            "specificity": 1.6689300537109375e-05
+          }
+        ]
+      },
+      "1:content": {
+        "mean_nll_increase": -0.00039398670196533203,
+        "mean_specificity": 0.0002486705780029297,
+        "passed": false,
+        "pairs": [
+          {
+            "pair": 0,
+            "nll_increase": -0.0002727508544921875,
+            "null_nll_increase": -0.0006117820739746094,
+            "specificity": 0.0003390312194824219
+          },
+          {
+            "pair": 1,
+            "nll_increase": -0.0008001327514648438,
+            "null_nll_increase": 0.000579833984375,
+            "specificity": -0.0013799667358398438
+          },
+          {
+            "pair": 2,
+            "nll_increase": -0.000865936279296875,
+            "null_nll_increase": -0.003604412078857422,
+            "specificity": 0.002738475799560547
+          },
+          {
+            "pair": 3,
+            "nll_increase": 0.0003628730773925781,
+            "null_nll_increase": 0.0010657310485839844,
+            "specificity": -0.0007028579711914062
+          }
+        ]
+      },
+      "2:route": {
+        "mean_nll_increase": -9.47713851928711e-05,
+        "mean_specificity": -1.2755393981933594e-05,
+        "passed": false,
+        "pairs": [
+          {
+            "pair": 0,
+            "nll_increase": -0.0001621246337890625,
+            "null_nll_increase": -0.00019168853759765625,
+            "specificity": 2.956390380859375e-05
+          },
+          {
+            "pair": 1,
+            "nll_increase": -0.0003333091735839844,
+            "null_nll_increase": 3.4809112548828125e-05,
+            "specificity": -0.0003681182861328125
+          },
+          {
+            "pair": 2,
+            "nll_increase": -2.956390380859375e-05,
+            "null_nll_increase": 0.00014352798461914062,
+            "specificity": -0.00017309188842773438
+          },
+          {
+            "pair": 3,
+            "nll_increase": 0.00014591217041015625,
+            "null_nll_increase": -0.0003147125244140625,
+            "specificity": 0.00046062469482421875
+          }
+        ]
+      },
+      "2:content": {
+        "mean_nll_increase": -0.00035452842712402344,
+        "mean_specificity": -0.000536799430847168,
+        "passed": false,
+        "pairs": [
+          {
+            "pair": 0,
+            "nll_increase": 0.0009055137634277344,
+            "null_nll_increase": 0.00136566162109375,
+            "specificity": -0.0004601478576660156
+          },
+          {
+            "pair": 1,
+            "nll_increase": 0.00011873245239257812,
+            "null_nll_increase": 0.0002923011779785156,
+            "specificity": -0.0001735687255859375
+          },
+          {
+            "pair": 2,
+            "nll_increase": -0.0008072853088378906,
+            "null_nll_increase": -0.0014138221740722656,
+            "specificity": 0.000606536865234375
+          },
+          {
+            "pair": 3,
+            "nll_increase": -0.0016350746154785156,
+            "null_nll_increase": 0.0004849433898925781,
+            "specificity": -0.0021200180053710938
+          }
+        ]
+      },
+      "3:route": {
+        "mean_nll_increase": -4.220008850097656e-05,
+        "mean_specificity": -9.620189666748047e-05,
+        "passed": false,
+        "pairs": [
+          {
+            "pair": 0,
+            "nll_increase": -0.00012540817260742188,
+            "null_nll_increase": 0.00040531158447265625,
+            "specificity": -0.0005307197570800781
+          },
+          {
+            "pair": 1,
+            "nll_increase": 0.00010013580322265625,
+            "null_nll_increase": -0.0002837181091308594,
+            "specificity": 0.0003838539123535156
+          },
+          {
+            "pair": 2,
+            "nll_increase": 2.4318695068359375e-05,
+            "null_nll_increase": 0.00022983551025390625,
+            "specificity": -0.00020551681518554688
+          },
+          {
+            "pair": 3,
+            "nll_increase": -0.0001678466796875,
+            "null_nll_increase": -0.0001354217529296875,
+            "specificity": -3.24249267578125e-05
+          }
+        ]
+      },
+      "3:content": {
+        "mean_nll_increase": -0.0004031658172607422,
+        "mean_specificity": 0.00033092498779296875,
+        "passed": false,
+        "pairs": [
+          {
+            "pair": 0,
+            "nll_increase": -5.14984130859375e-05,
+            "null_nll_increase": -0.0006155967712402344,
+            "specificity": 0.0005640983581542969
+          },
+          {
+            "pair": 1,
+            "nll_increase": -0.0029058456420898438,
+            "null_nll_increase": -0.0015358924865722656,
+            "specificity": -0.0013699531555175781
+          },
+          {
+            "pair": 2,
+            "nll_increase": 0.0008902549743652344,
+            "null_nll_increase": -0.0006780624389648438,
+            "specificity": 0.0015683174133300781
+          },
+          {
+            "pair": 3,
+            "nll_increase": 0.0004544258117675781,
+            "null_nll_increase": -0.0001068115234375,
+            "specificity": 0.0005612373352050781
+          }
+        ]
+      },
+      "4:route": {
+        "mean_nll_increase": -8.189678192138672e-05,
+        "mean_specificity": -3.2782554626464844e-05,
+        "passed": false,
+        "pairs": [
+          {
+            "pair": 0,
+            "nll_increase": -4.863739013671875e-05,
+            "null_nll_increase": 0.0002651214599609375,
+            "specificity": -0.00031375885009765625
+          },
+          {
+            "pair": 1,
+            "nll_increase": 7.62939453125e-05,
+            "null_nll_increase": 0.0003933906555175781,
+            "specificity": -0.0003170967102050781
+          },
+          {
+            "pair": 2,
+            "nll_increase": -0.0004596710205078125,
+            "null_nll_increase": -0.0007152557373046875,
+            "specificity": 0.000255584716796875
+          },
+          {
+            "pair": 3,
+            "nll_increase": 0.00010442733764648438,
+            "null_nll_increase": -0.00013971328735351562,
+            "specificity": 0.000244140625
+          }
+        ]
+      },
+      "4:content": {
+        "mean_nll_increase": -0.0005263090133666992,
+        "mean_specificity": -1.919269561767578e-05,
+        "passed": false,
+        "pairs": [
+          {
+            "pair": 0,
+            "nll_increase": -0.00063323974609375,
+            "null_nll_increase": 0.0016727447509765625,
+            "specificity": -0.0023059844970703125
+          },
+          {
+            "pair": 1,
+            "nll_increase": 0.0012154579162597656,
+            "null_nll_increase": -0.000507354736328125,
+            "specificity": 0.0017228126525878906
+          },
+          {
+            "pair": 2,
+            "nll_increase": -0.0006380081176757812,
+            "null_nll_increase": -0.0033550262451171875,
+            "specificity": 0.0027170181274414062
+          },
+          {
+            "pair": 3,
+            "nll_increase": -0.0020494461059570312,
+            "null_nll_increase": 0.00016117095947265625,
+            "specificity": -0.0022106170654296875
+          }
+        ]
+      }
+    },
+    "enabled": true,
+    "donor_target": false
+  },
+  "before": {
+    "forget": {
+      "nll": 5.908950090408325,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "retain": {
+      "nll": 5.908950090408325,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "holdout": {
+      "nll": 5.908950090408325,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "donor": {
+      "donor_nll": 5.799798965454102,
+      "count": 2,
+      "note": "evaluation only; donor answers never enter training loss"
+    }
+  },
+  "after": {
+    "forget": {
+      "nll": 5.908557415008545,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "retain": {
+      "nll": 5.908557415008545,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "holdout": {
+      "nll": 5.908557415008545,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "donor": {
+      "donor_nll": 5.798883438110352,
+      "count": 2,
+      "note": "evaluation only; donor answers never enter training loss"
+    },
+    "behaviour": {
+      "samples": 1,
+      "mean_tokens": 24.0,
+      "eos_rate": 0.0,
+      "target_overlap": 0.0,
+      "examples": [
+        "tok222 tok162 tok77 tok229 tok206 tok152 tok198 tok115 tok247 tok173 tok96 tok33 tok85 tok43 tok241 tok195 tok127 tok96 tok33 tok85 tok43 tok241 tok195 tok127"
+      ]
+    }
+  },
+  "target_fact_probe": {
+    "before": {
+      "status": "COMPLETED",
+      "layer": 4,
+      "train": 12,
+      "test": 12,
+      "classes": 12,
+      "relation_disjoint": true,
+      "accuracy": 0.1666666716337204,
+      "cross_entropy": 2.2146315574645996,
+      "chance_accuracy": 0.08333333333333333,
+      "scope": "forget-author hidden-state separability; not proof of factual erasure"
+    },
+    "after": {
+      "status": "COMPLETED",
+      "layer": 4,
+      "train": 12,
+      "test": 12,
+      "classes": 12,
+      "relation_disjoint": true,
+      "accuracy": 0.1666666716337204,
+      "cross_entropy": 2.214092254638672,
+      "chance_accuracy": 0.08333333333333333,
+      "scope": "forget-author hidden-state separability; not proof of factual erasure"
+    }
+  },
+  "relearning": {
+    "status": "COMPLETED",
+    "steps": 1,
+    "samples": 2,
+    "before_nll": 5.908557415008545,
+    "after_nll": 5.907921075820923,
+    "nll_recovery": 0.0006363391876220703,
+    "ground_truth": "original dataset answers",
+    "note": "runs after the pre-relearning Student checkpoint has been saved"
+  },
+  "delta": {
+    "forget": -0.00039267539978027344,
+    "retain": -0.00039267539978027344,
+    "holdout": -0.00039267539978027344
+  },
+  "checkpoint": "workspace/experiments/methods-1127-2/_validation/extended/CF3-01/checkpoint",
+  "elapsed_sec": 0.476,
+  "integrity": {
+    "teacher_frozen": true,
+    "evaluation_ground_truth": "dataset answers",
+    "donor_answer_in_training": false,
+    "cross_method_imports": false,
+    "initial_student_equals_teacher": true
+  }
+}

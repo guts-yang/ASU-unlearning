@@ -1,0 +1,219 @@
+{
+  "claim_level": false,
+  "operators_only": false,
+  "started": "2026-11-27T23:02:59",
+  "methods": [
+    {
+      "method": "CF3-01_双线性路由内容差分",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-01_双线性路由内容差分/operator.log",
+      "tiny_returncode": 0,
+      "tiny_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-01_双线性路由内容差分/tiny.log",
+      "status": "COMPLETED",
+      "steps": 2,
+      "finite_positive_gradients": true,
+      "teacher_frozen": true,
+      "initial_student_equals_teacher": true,
+      "probe_status": "COMPLETED",
+      "relearning_status": "COMPLETED",
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-01_双线性路由内容差分/result.json",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF3-02_自校正持续子空间",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-02_自校正持续子空间/operator.log",
+      "tiny_returncode": 0,
+      "tiny_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-02_自校正持续子空间/tiny.log",
+      "status": "COMPLETED",
+      "steps": 2,
+      "finite_positive_gradients": true,
+      "teacher_frozen": true,
+      "initial_student_equals_teacher": true,
+      "probe_status": "COMPLETED",
+      "relearning_status": "COMPLETED",
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-02_自校正持续子空间/result.json",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF3-03_访问分布加权激活差",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-03_访问分布加权激活差/operator.log",
+      "tiny_returncode": 0,
+      "tiny_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-03_访问分布加权激活差/tiny.log",
+      "status": "COMPLETED",
+      "steps": 2,
+      "finite_positive_gradients": true,
+      "teacher_frozen": true,
+      "initial_student_equals_teacher": true,
+      "probe_status": "COMPLETED",
+      "relearning_status": "COMPLETED",
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-03_访问分布加权激活差/result.json",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF3-04_门控状态转移擦除",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-04_门控状态转移擦除/operator.log",
+      "tiny_returncode": 0,
+      "tiny_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-04_门控状态转移擦除/tiny.log",
+      "status": "COMPLETED",
+      "steps": 2,
+      "finite_positive_gradients": true,
+      "teacher_frozen": true,
+      "initial_student_equals_teacher": true,
+      "probe_status": "COMPLETED",
+      "relearning_status": "COMPLETED",
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-04_门控状态转移擦除/result.json",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF3-05_答案跨度Grassmann子空间",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-05_答案跨度Grassmann子空间/operator.log",
+      "tiny_returncode": 0,
+      "tiny_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-05_答案跨度Grassmann子空间/tiny.log",
+      "status": "COMPLETED",
+      "steps": 2,
+      "finite_positive_gradients": true,
+      "teacher_frozen": true,
+      "initial_student_equals_teacher": true,
+      "probe_status": "COMPLETED",
+      "relearning_status": "COMPLETED",
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-05_答案跨度Grassmann子空间/result.json",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF3-06_配对置换FDR激活门",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-06_配对置换FDR激活门/operator.log",
+      "tiny_returncode": 0,
+      "tiny_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-06_配对置换FDR激活门/tiny.log",
+      "status": "COMPLETED",
+      "steps": 2,
+      "finite_positive_gradients": true,
+      "teacher_frozen": true,
+      "initial_student_equals_teacher": true,
+      "probe_status": "COMPLETED",
+      "relearning_status": "COMPLETED",
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-06_配对置换FDR激活门/result.json",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF3-07_多路径积分稳定归因",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-07_多路径积分稳定归因/operator.log",
+      "tiny_returncode": 0,
+      "tiny_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-07_多路径积分稳定归因/tiny.log",
+      "status": "COMPLETED",
+      "steps": 2,
+      "finite_positive_gradients": true,
+      "teacher_frozen": true,
+      "initial_student_equals_teacher": true,
+      "probe_status": "COMPLETED",
+      "relearning_status": "COMPLETED",
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-07_多路径积分稳定归因/result.json",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF3-08_反事实Copula尾依赖",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-08_反事实Copula尾依赖/operator.log",
+      "tiny_returncode": 0,
+      "tiny_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-08_反事实Copula尾依赖/tiny.log",
+      "status": "COMPLETED",
+      "steps": 2,
+      "finite_positive_gradients": true,
+      "teacher_frozen": true,
+      "initial_student_equals_teacher": true,
+      "probe_status": "COMPLETED",
+      "relearning_status": "COMPLETED",
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-08_反事实Copula尾依赖/result.json",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF3-09_双端Hankel激活模态",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-09_双端Hankel激活模态/operator.log",
+      "tiny_returncode": 0,
+      "tiny_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-09_双端Hankel激活模态/tiny.log",
+      "status": "COMPLETED",
+      "steps": 2,
+      "finite_positive_gradients": true,
+      "teacher_frozen": true,
+      "initial_student_equals_teacher": true,
+      "probe_status": "COMPLETED",
+      "relearning_status": "COMPLETED",
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-09_双端Hankel激活模态/result.json",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF3-10_非交换路径签名遗忘",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-10_非交换路径签名遗忘/operator.log",
+      "tiny_returncode": 0,
+      "tiny_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-10_非交换路径签名遗忘/tiny.log",
+      "status": "COMPLETED",
+      "steps": 2,
+      "finite_positive_gradients": true,
+      "teacher_frozen": true,
+      "initial_student_equals_teacher": true,
+      "probe_status": "COMPLETED",
+      "relearning_status": "COMPLETED",
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-10_非交换路径签名遗忘/result.json",
+      "verdict": "PASS"
+    }
+  ],
+  "failed": 0,
+  "verdict": "PASS"
+}

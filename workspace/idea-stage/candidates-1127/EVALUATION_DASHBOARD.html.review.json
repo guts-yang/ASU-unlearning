@@ -1,0 +1,18 @@
+{
+  "verdict": "REVIEW_UNAVAILABLE",
+  "source": "workspace/idea-stage/candidates-1127/EVALUATION_DASHBOARD.md",
+  "out": "workspace/idea-stage/candidates-1127/EVALUATION_DASHBOARD.html",
+  "template": "academic",
+  "source_sha256": "dafd1e5bc788...",
+  "generated_at": "2026-11-27",
+  "summary": "HTML generated successfully from EVALUATION_DASHBOARD.md (4 TOC entries, 30,091 bytes). Per render-html HTML Review Gate, academic-template output is a reviewed artifact by default; no cross-model reviewer transport is available in this host, so the render was NOT independently reviewed. Verdict REVIEW_UNAVAILABLE, not PASS. HTML is a readable view of an already PROVISIONAL/BLOCKED evaluation dashboard; render fidelity not independently audited.",
+  "blocking_issues": [],
+  "warnings": [
+    {
+      "severity": "warn",
+      "issue": "academic-template HTML requires a fresh cross-model reviewer thread for render fidelity audit; no reviewer backend available, so no PASS claim is made."
+    }
+  ],
+  "reviewer_backend": "unavailable",
+  "independence_verified": false
+}

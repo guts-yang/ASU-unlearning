@@ -1,0 +1,52 @@
+{
+  "operator": "answer_position_grassmann_projector_difference",
+  "layers": {
+    "1": {
+      "selected_directions": 0,
+      "split_projector_cosine": 0.13576798141002655,
+      "null_eigenvalue_scale": 0.0016695450193506944,
+      "first_pair_principal_cosines": [
+        0.9998548030853271,
+        0.9996345639228821,
+        0.999047040939331,
+        0.9913137555122375
+      ]
+    },
+    "2": {
+      "selected_directions": 0,
+      "split_projector_cosine": -0.04378890246152878,
+      "null_eigenvalue_scale": 0.0012941984188177761,
+      "first_pair_principal_cosines": [
+        0.9995684027671814,
+        0.9993090033531189,
+        0.9960715174674988,
+        0.9678004384040833
+      ]
+    },
+    "3": {
+      "selected_directions": 0,
+      "split_projector_cosine": -0.038045451045036316,
+      "null_eigenvalue_scale": 0.0036158431110489735,
+      "first_pair_principal_cosines": [
+        0.999629557132721,
+        0.9992119073867798,
+        0.9958491921424866,
+        0.9575665593147278
+      ]
+    },
+    "4": {
+      "selected_directions": 0,
+      "split_projector_cosine": 0.04061421751976013,
+      "null_eigenvalue_scale": 0.0045181617001354285,
+      "first_pair_principal_cosines": [
+        0.9992251992225647,
+        0.9988515377044678,
+        0.9967125058174133,
+        0.9586064219474792
+      ]
+    }
+  },
+  "enabled": true,
+  "centering": "position-matched independent retain mean",
+  "scope": "basis-rotation invariant, not arbitrary hidden-space rotation invariant"
+}

@@ -1,0 +1,292 @@
+{
+  "method_id": "CF3-08",
+  "status": "COMPLETED",
+  "claim_level": false,
+  "profile": "tiny",
+  "seed": 0,
+  "device": "cpu",
+  "pair_count": 4,
+  "train": {
+    "history": [
+      {
+        "step": 0,
+        "loss": 11.624091148376465,
+        "method_loss": 0.07957030087709427,
+        "neutral": 8.173590231308481e-07,
+        "retain_nll": 5.7957587242126465,
+        "grad_norm": 3.639280080795288,
+        "fact_hinge": 0.0,
+        "donor_guard": 0.0,
+        "eos_guard": 8.173590094884275e-05,
+        "tail_terms": 8.0
+      },
+      {
+        "step": 1,
+        "loss": 11.063389778137207,
+        "method_loss": 0.05743284896016121,
+        "neutral": 0.002900182968005538,
+        "retain_nll": 5.518162727355957,
+        "grad_norm": 7.288306713104248,
+        "fact_hinge": 0.0,
+        "donor_guard": 0.029001827933825552,
+        "eos_guard": 0.0,
+        "tail_terms": 8.0
+      }
+    ],
+    "steps_completed": 2,
+    "resumed_from": 0
+  },
+  "diagnostics": {
+    "operator": "retain_empirical_cdf_counterfactual_soft_copula_tail",
+    "layers": {
+      "1": {
+        "true_tail_delta": [
+          -0.022885454818606377,
+          -3.446184564381838e-06,
+          -0.00015781658294145018,
+          -2.893309272167244e-07,
+          -2.4818058719233704e-08,
+          -9.188218186295671e-09
+        ],
+        "null_tail_delta": [
+          0.9997469782829285,
+          0.023018209263682365,
+          0.977018415927887,
+          0.00015845915186218917,
+          0.22269952297210693,
+          1.0676913007046096e-06
+        ],
+        "rho": [
+          -1.0226324796676636,
+          -0.023021655157208443,
+          -0.9771762490272522,
+          -0.0001587484875926748,
+          -0.22269955277442932,
+          -1.0768794709292706e-06
+        ],
+        "mean_u_plus": [
+          0.75,
+          0.46875
+        ],
+        "mean_v_plus": [
+          0.46875,
+          0.5
+        ],
+        "projection_dim": 2
+      },
+      "2": {
+        "true_tail_delta": [
+          -0.16397890448570251,
+          -4.5407396100927144e-05,
+          -0.0690675675868988,
+          -3.1362517916022625e-07,
+          -0.002458104630932212,
+          -9.197296257923426e-09
+        ],
+        "null_tail_delta": [
+          0.31662777066230774,
+          -8.634626283310354e-05,
+          0.036033716052770615,
+          -3.373264405581722e-07,
+          9.731372847454622e-05,
+          -9.202402395658282e-09
+        ],
+        "rho": [
+          -0.48060667514801025,
+          4.093886673217639e-05,
+          -0.10510128736495972,
+          2.3701261397945927e-08,
+          -0.0025554182939231396,
+          5.10613773485602e-12
+        ],
+        "mean_u_plus": [
+          0.71875,
+          0.46875
+        ],
+        "mean_v_plus": [
+          0.8125,
+          0.5
+        ],
+        "projection_dim": 2
+      },
+      "3": {
+        "true_tail_delta": [
+          -3.9517879486083984e-05,
+          -0.01650339365005493,
+          -0.00579950213432312,
+          -0.030389029532670975,
+          -0.3147386908531189,
+          -0.0020030983723700047
+        ],
+        "null_tail_delta": [
+          -1.677870750427246e-05,
+          0.34232744574546814,
+          -0.005799353122711182,
+          0.4759829640388489,
+          -0.3147386908531189,
+          0.18183308839797974
+        ],
+        "rho": [
+          -2.2739171981811523e-05,
+          -0.35883083939552307,
+          -1.4901161193847656e-07,
+          -0.5063719749450684,
+          0.0,
+          -0.1838361918926239
+        ],
+        "mean_u_plus": [
+          0.75,
+          0.5625
+        ],
+        "mean_v_plus": [
+          0.625,
+          0.78125
+        ],
+        "projection_dim": 2
+      },
+      "4": {
+        "true_tail_delta": [
+          -0.17822644114494324,
+          0.022502193227410316,
+          -0.4523679316043854,
+          0.00015508457727264613,
+          -0.11124870926141739,
+          2.4144503640854964e-07
+        ],
+        "null_tail_delta": [
+          0.2693750858306885,
+          0.0741538405418396,
+          0.0026448967400938272,
+          0.9239500761032104,
+          -8.161496225511655e-07,
+          0.9927533268928528
+        ],
+        "rho": [
+          -0.4476015269756317,
+          -0.05165164917707443,
+          -0.45501282811164856,
+          -0.9237949848175049,
+          -0.11124788969755173,
+          -0.9927530884742737
+        ],
+        "mean_u_plus": [
+          0.53125,
+          0.78125
+        ],
+        "mean_v_plus": [
+          0.78125,
+          0.53125
+        ],
+        "projection_dim": 2
+      }
+    },
+    "enabled": true,
+    "null_training_target": "per-layer shuffled-pair tail level",
+    "warning": "mini-batch soft tail estimates require sample-size bias checks"
+  },
+  "before": {
+    "forget": {
+      "nll": 5.908950090408325,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "retain": {
+      "nll": 5.908950090408325,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "holdout": {
+      "nll": 5.908950090408325,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "donor": {
+      "donor_nll": 5.799798965454102,
+      "count": 2,
+      "note": "evaluation only; donor answers never enter training loss"
+    }
+  },
+  "after": {
+    "forget": {
+      "nll": 5.9085612297058105,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "retain": {
+      "nll": 5.9085612297058105,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "holdout": {
+      "nll": 5.9085612297058105,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "donor": {
+      "donor_nll": 5.798892498016357,
+      "count": 2,
+      "note": "evaluation only; donor answers never enter training loss"
+    },
+    "behaviour": {
+      "samples": 1,
+      "mean_tokens": 24.0,
+      "eos_rate": 0.0,
+      "target_overlap": 0.0,
+      "examples": [
+        "tok222 tok162 tok77 tok229 tok206 tok152 tok198 tok115 tok247 tok173 tok96 tok33 tok85 tok43 tok241 tok195 tok127 tok96 tok33 tok85 tok43 tok241 tok195 tok127"
+      ]
+    }
+  },
+  "target_fact_probe": {
+    "before": {
+      "status": "COMPLETED",
+      "layer": 4,
+      "train": 12,
+      "test": 12,
+      "classes": 12,
+      "relation_disjoint": true,
+      "accuracy": 0.1666666716337204,
+      "cross_entropy": 2.2146315574645996,
+      "chance_accuracy": 0.08333333333333333,
+      "scope": "forget-author hidden-state separability; not proof of factual erasure"
+    },
+    "after": {
+      "status": "COMPLETED",
+      "layer": 4,
+      "train": 12,
+      "test": 12,
+      "classes": 12,
+      "relation_disjoint": true,
+      "accuracy": 0.1666666716337204,
+      "cross_entropy": 2.2141430377960205,
+      "chance_accuracy": 0.08333333333333333,
+      "scope": "forget-author hidden-state separability; not proof of factual erasure"
+    }
+  },
+  "relearning": {
+    "status": "COMPLETED",
+    "steps": 1,
+    "samples": 2,
+    "before_nll": 5.9085612297058105,
+    "after_nll": 5.907925128936768,
+    "nll_recovery": 0.0006361007690429688,
+    "ground_truth": "original dataset answers",
+    "note": "runs after the pre-relearning Student checkpoint has been saved"
+  },
+  "delta": {
+    "forget": -0.00038886070251464844,
+    "retain": -0.00038886070251464844,
+    "holdout": -0.00038886070251464844
+  },
+  "checkpoint": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-08_反事实Copula尾依赖/checkpoint",
+  "elapsed_sec": 0.423,
+  "integrity": {
+    "teacher_frozen": true,
+    "evaluation_ground_truth": "dataset answers",
+    "donor_answer_in_training": false,
+    "cross_method_imports": false,
+    "initial_student_equals_teacher": true,
+    "initial_student_teacher_nll_delta": 0.0,
+    "initial_nll_tolerance": 0.0001
+  }
+}

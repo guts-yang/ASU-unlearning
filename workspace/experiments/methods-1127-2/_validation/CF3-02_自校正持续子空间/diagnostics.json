@@ -1,0 +1,64 @@
+{
+  "operator": "controlled_downstream_replay_generalized_survival_subspace",
+  "layers": {
+    "1": {
+      "valid_pairs": 4,
+      "eigenvalues": [
+        0.8049255609512329,
+        0.7527432441711426,
+        0.28874704241752625,
+        0.15494194626808167
+      ],
+      "selected_directions": 4,
+      "mean_survival_ratio": 1.3718091249465942,
+      "true_vectors": 84,
+      "null_vectors": 84
+    },
+    "2": {
+      "valid_pairs": 4,
+      "eigenvalues": [
+        1.058078646659851,
+        0.8484098315238953,
+        0.5169265270233154,
+        0.15099745988845825
+      ],
+      "selected_directions": 1,
+      "mean_survival_ratio": 1.1721429824829102,
+      "true_vectors": 84,
+      "null_vectors": 84
+    },
+    "3": {
+      "valid_pairs": 4,
+      "eigenvalues": [
+        1.5212492942810059,
+        0.9073539972305298,
+        0.6495558023452759,
+        0.16903652250766754
+      ],
+      "selected_directions": 1,
+      "mean_survival_ratio": 1.1403560638427734,
+      "true_vectors": 84,
+      "null_vectors": 84
+    },
+    "4": {
+      "valid_pairs": 4,
+      "eigenvalues": [
+        1.9267325401306152,
+        0.9478241205215454,
+        0.5503018498420715,
+        0.20808304846286774
+      ],
+      "selected_directions": 1,
+      "mean_survival_ratio": 0.9999106526374817,
+      "true_vectors": 84,
+      "null_vectors": 84
+    }
+  },
+  "replay_offsets": [
+    0,
+    1,
+    2
+  ],
+  "enabled": true,
+  "ood_warning": "patched states require distribution checks"
+}

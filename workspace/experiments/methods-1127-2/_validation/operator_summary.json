@@ -1,0 +1,119 @@
+{
+  "claim_level": false,
+  "operators_only": true,
+  "started": "2026-11-27T23:04:04",
+  "methods": [
+    {
+      "method": "CF3-01_双线性路由内容差分",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-01_双线性路由内容差分/operator.log",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF3-02_自校正持续子空间",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-02_自校正持续子空间/operator.log",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF3-03_访问分布加权激活差",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-03_访问分布加权激活差/operator.log",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF3-04_门控状态转移擦除",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-04_门控状态转移擦除/operator.log",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF3-05_答案跨度Grassmann子空间",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-05_答案跨度Grassmann子空间/operator.log",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF3-06_配对置换FDR激活门",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-06_配对置换FDR激活门/operator.log",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF3-07_多路径积分稳定归因",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-07_多路径积分稳定归因/operator.log",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF3-08_反事实Copula尾依赖",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-08_反事实Copula尾依赖/operator.log",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF3-09_双端Hankel激活模态",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-09_双端Hankel激活模态/operator.log",
+      "verdict": "PASS"
+    },
+    {
+      "method": "CF3-10_非交换路径签名遗忘",
+      "isolation": {
+        "missing": [],
+        "symlinks": [],
+        "cross_method_references": []
+      },
+      "operator_returncode": 0,
+      "operator_log": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-10_非交换路径签名遗忘/operator.log",
+      "verdict": "PASS"
+    }
+  ],
+  "failed": 0,
+  "verdict": "PASS"
+}

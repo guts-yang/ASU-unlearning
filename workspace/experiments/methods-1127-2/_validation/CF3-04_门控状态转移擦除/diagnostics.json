@@ -1,0 +1,66 @@
+{
+  "operator": "swiglu_four_state_true_null_transition_source_exit",
+  "layers": {
+    "1": {
+      "selected": 64,
+      "max_specificity": 39.633121490478516,
+      "split_specificity_cosine": 0.7231621742248535,
+      "split_gate": true,
+      "transition_l1_mean": 0.7286505699157715,
+      "source_states": {
+        "0": 442,
+        "1": 456,
+        "2": 429,
+        "3": 465
+      }
+    },
+    "2": {
+      "selected": 64,
+      "max_specificity": 0.654026210308075,
+      "split_specificity_cosine": 0.47045913338661194,
+      "split_gate": true,
+      "transition_l1_mean": 0.4777591824531555,
+      "source_states": {
+        "0": 403,
+        "1": 455,
+        "2": 478,
+        "3": 456
+      }
+    },
+    "3": {
+      "selected": 64,
+      "max_specificity": 4.4209675788879395,
+      "split_specificity_cosine": 0.8020148873329163,
+      "split_gate": true,
+      "transition_l1_mean": 0.9618898630142212,
+      "source_states": {
+        "0": 458,
+        "1": 432,
+        "2": 485,
+        "3": 417
+      }
+    },
+    "4": {
+      "selected": 64,
+      "max_specificity": 31.813600540161133,
+      "split_specificity_cosine": 0.5908023715019226,
+      "split_gate": true,
+      "transition_l1_mean": 0.6897323131561279,
+      "source_states": {
+        "0": 413,
+        "1": 425,
+        "2": 448,
+        "3": 506
+      }
+    }
+  },
+  "selected_per_layer": {
+    "1": 64,
+    "2": 64,
+    "3": 64,
+    "4": 64
+  },
+  "enabled": true,
+  "donor_target_state": false,
+  "warning": "state specificity is not causal without the proposal's patch/readout audit"
+}

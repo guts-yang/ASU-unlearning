@@ -1,0 +1,206 @@
+{
+  "method_id": "CF3-02",
+  "status": "COMPLETED",
+  "claim_level": false,
+  "profile": "tiny",
+  "seed": 0,
+  "device": "cpu",
+  "pair_count": 4,
+  "train": {
+    "history": [
+      {
+        "step": 0,
+        "loss": 11.59151840209961,
+        "method_loss": 5.3033718359074555e-06,
+        "neutral": 8.173590231308481e-07,
+        "retain_nll": 5.7957587242126465,
+        "grad_norm": 3.637458086013794,
+        "fact_hinge": 0.0,
+        "donor_guard": 0.0,
+        "eos_guard": 8.173590094884275e-05
+      },
+      {
+        "step": 1,
+        "loss": 11.03661060333252,
+        "method_loss": 9.21215905691497e-06,
+        "neutral": 0.002884338144212961,
+        "retain_nll": 5.518160820007324,
+        "grad_norm": 7.668205261230469,
+        "fact_hinge": 0.0,
+        "donor_guard": 0.028843379928730428,
+        "eos_guard": 0.0
+      }
+    ],
+    "steps_completed": 2,
+    "resumed_from": 0
+  },
+  "diagnostics": {
+    "operator": "controlled_downstream_replay_generalized_survival_subspace",
+    "layers": {
+      "1": {
+        "valid_pairs": 4,
+        "eigenvalues": [
+          0.8049255609512329,
+          0.7527432441711426,
+          0.28874704241752625,
+          0.15494194626808167
+        ],
+        "selected_directions": 4,
+        "mean_survival_ratio": 1.3718091249465942,
+        "true_vectors": 84,
+        "null_vectors": 84
+      },
+      "2": {
+        "valid_pairs": 4,
+        "eigenvalues": [
+          1.058078646659851,
+          0.8484098315238953,
+          0.5169265270233154,
+          0.15099745988845825
+        ],
+        "selected_directions": 1,
+        "mean_survival_ratio": 1.1721429824829102,
+        "true_vectors": 84,
+        "null_vectors": 84
+      },
+      "3": {
+        "valid_pairs": 4,
+        "eigenvalues": [
+          1.5212492942810059,
+          0.9073539972305298,
+          0.6495558023452759,
+          0.16903652250766754
+        ],
+        "selected_directions": 1,
+        "mean_survival_ratio": 1.1403560638427734,
+        "true_vectors": 84,
+        "null_vectors": 84
+      },
+      "4": {
+        "valid_pairs": 4,
+        "eigenvalues": [
+          1.9267325401306152,
+          0.9478241205215454,
+          0.5503018498420715,
+          0.20808304846286774
+        ],
+        "selected_directions": 1,
+        "mean_survival_ratio": 0.9999106526374817,
+        "true_vectors": 84,
+        "null_vectors": 84
+      }
+    },
+    "replay_offsets": [
+      0,
+      1,
+      2
+    ],
+    "enabled": true,
+    "ood_warning": "patched states require distribution checks"
+  },
+  "before": {
+    "forget": {
+      "nll": 5.908950090408325,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "retain": {
+      "nll": 5.908950090408325,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "holdout": {
+      "nll": 5.908950090408325,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "donor": {
+      "donor_nll": 5.799798965454102,
+      "count": 2,
+      "note": "evaluation only; donor answers never enter training loss"
+    }
+  },
+  "after": {
+    "forget": {
+      "nll": 5.908557415008545,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "retain": {
+      "nll": 5.908557415008545,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "holdout": {
+      "nll": 5.908557415008545,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "donor": {
+      "donor_nll": 5.798884868621826,
+      "count": 2,
+      "note": "evaluation only; donor answers never enter training loss"
+    },
+    "behaviour": {
+      "samples": 1,
+      "mean_tokens": 24.0,
+      "eos_rate": 0.0,
+      "target_overlap": 0.0,
+      "examples": [
+        "tok222 tok162 tok77 tok229 tok206 tok152 tok198 tok115 tok247 tok173 tok96 tok33 tok85 tok43 tok241 tok195 tok127 tok96 tok33 tok85 tok43 tok241 tok195 tok127"
+      ]
+    }
+  },
+  "target_fact_probe": {
+    "before": {
+      "status": "COMPLETED",
+      "layer": 4,
+      "train": 12,
+      "test": 12,
+      "classes": 12,
+      "relation_disjoint": true,
+      "accuracy": 0.1666666716337204,
+      "cross_entropy": 2.2146315574645996,
+      "chance_accuracy": 0.08333333333333333,
+      "scope": "forget-author hidden-state separability; not proof of factual erasure"
+    },
+    "after": {
+      "status": "COMPLETED",
+      "layer": 4,
+      "train": 12,
+      "test": 12,
+      "classes": 12,
+      "relation_disjoint": true,
+      "accuracy": 0.1666666716337204,
+      "cross_entropy": 2.214095115661621,
+      "chance_accuracy": 0.08333333333333333,
+      "scope": "forget-author hidden-state separability; not proof of factual erasure"
+    }
+  },
+  "relearning": {
+    "status": "COMPLETED",
+    "steps": 1,
+    "samples": 2,
+    "before_nll": 5.908557415008545,
+    "after_nll": 5.907921075820923,
+    "nll_recovery": 0.0006363391876220703,
+    "ground_truth": "original dataset answers",
+    "note": "runs after the pre-relearning Student checkpoint has been saved"
+  },
+  "delta": {
+    "forget": -0.00039267539978027344,
+    "retain": -0.00039267539978027344,
+    "holdout": -0.00039267539978027344
+  },
+  "checkpoint": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-02_自校正持续子空间/checkpoint",
+  "elapsed_sec": 0.478,
+  "integrity": {
+    "teacher_frozen": true,
+    "evaluation_ground_truth": "dataset answers",
+    "donor_answer_in_training": false,
+    "cross_method_imports": false,
+    "initial_student_equals_teacher": true,
+    "initial_student_teacher_nll_delta": 0.0,
+    "initial_nll_tolerance": 0.0001
+  }
+}

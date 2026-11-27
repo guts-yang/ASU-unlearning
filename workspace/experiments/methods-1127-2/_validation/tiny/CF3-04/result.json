@@ -1,0 +1,168 @@
+{
+  "method_id": "CF3-04",
+  "status": "COMPLETED",
+  "claim_level": false,
+  "profile": "tiny",
+  "seed": 0,
+  "device": "cpu",
+  "pair_count": 4,
+  "train": {
+    "history": [
+      {
+        "step": 0,
+        "loss": 11.701790809631348,
+        "method_loss": 1.1027286052703857,
+        "neutral": 8.173590231308481e-07,
+        "retain_nll": 5.7957587242126465,
+        "grad_norm": 3.655092716217041,
+        "fact_hinge": 0.0,
+        "donor_guard": 0.0,
+        "eos_guard": 8.173590094884275e-05,
+        "active_source_states": 512.0
+      },
+      {
+        "step": 1,
+        "loss": 11.151713371276855,
+        "method_loss": 1.1510906219482422,
+        "neutral": 0.002805369207635522,
+        "retain_nll": 5.518161773681641,
+        "grad_norm": 7.6520233154296875,
+        "fact_hinge": 0.0,
+        "donor_guard": 0.02805369289126247,
+        "eos_guard": 0.0,
+        "active_source_states": 512.0
+      }
+    ],
+    "steps_completed": 2,
+    "resumed_from": 0
+  },
+  "diagnostics": {
+    "operator": "swiglu_four_state_true_null_transition_source_exit",
+    "layers": {
+      "1": {
+        "selected": 64,
+        "max_specificity": 39.633121490478516,
+        "split_specificity_cosine": 0.7231621742248535,
+        "transition_l1_mean": 0.7286505699157715,
+        "source_states": {
+          "0": 442,
+          "1": 456,
+          "2": 429,
+          "3": 465
+        }
+      },
+      "2": {
+        "selected": 64,
+        "max_specificity": 0.654026210308075,
+        "split_specificity_cosine": 0.47045913338661194,
+        "transition_l1_mean": 0.4777591824531555,
+        "source_states": {
+          "0": 403,
+          "1": 455,
+          "2": 478,
+          "3": 456
+        }
+      },
+      "3": {
+        "selected": 64,
+        "max_specificity": 4.4209675788879395,
+        "split_specificity_cosine": 0.8020148873329163,
+        "transition_l1_mean": 0.9618898630142212,
+        "source_states": {
+          "0": 458,
+          "1": 432,
+          "2": 485,
+          "3": 417
+        }
+      },
+      "4": {
+        "selected": 64,
+        "max_specificity": 31.813600540161133,
+        "split_specificity_cosine": 0.5908023715019226,
+        "transition_l1_mean": 0.6897323131561279,
+        "source_states": {
+          "0": 413,
+          "1": 425,
+          "2": 448,
+          "3": 506
+        }
+      }
+    },
+    "selected_per_layer": {
+      "1": 64,
+      "2": 64,
+      "3": 64,
+      "4": 64
+    },
+    "enabled": true,
+    "donor_target_state": false,
+    "warning": "state specificity is not causal without the proposal's patch/readout audit"
+  },
+  "before": {
+    "forget": {
+      "nll": 5.908950090408325,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "retain": {
+      "nll": 5.908950090408325,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "holdout": {
+      "nll": 5.908950090408325,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "donor": {
+      "donor_nll": 5.799798965454102,
+      "count": 2,
+      "note": "evaluation only; donor answers never enter training loss"
+    }
+  },
+  "after": {
+    "forget": {
+      "nll": 5.908559083938599,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "retain": {
+      "nll": 5.908559083938599,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "holdout": {
+      "nll": 5.908559083938599,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "donor": {
+      "donor_nll": 5.798886060714722,
+      "count": 2,
+      "note": "evaluation only; donor answers never enter training loss"
+    },
+    "behaviour": {
+      "samples": 1,
+      "mean_tokens": 24.0,
+      "eos_rate": 0.0,
+      "target_overlap": 0.0,
+      "examples": [
+        "tok222 tok162 tok77 tok229 tok206 tok152 tok198 tok115 tok247 tok173 tok96 tok33 tok85 tok43 tok241 tok195 tok127 tok96 tok33 tok85 tok43 tok241 tok195 tok127"
+      ]
+    }
+  },
+  "delta": {
+    "forget": -0.0003910064697265625,
+    "retain": -0.0003910064697265625,
+    "holdout": -0.0003910064697265625
+  },
+  "checkpoint": "workspace/experiments/methods-1127-2/_validation/tiny/CF3-04/checkpoint",
+  "elapsed_sec": 0.388,
+  "integrity": {
+    "teacher_frozen": true,
+    "evaluation_ground_truth": "dataset answers",
+    "donor_answer_in_training": false,
+    "cross_method_imports": false,
+    "initial_student_equals_teacher": true
+  }
+}

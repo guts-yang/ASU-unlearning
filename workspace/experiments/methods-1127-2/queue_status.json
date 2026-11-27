@@ -1,0 +1,33 @@
+{
+  "profile": "tiny",
+  "methods": 2,
+  "jobs": 4,
+  "failed": 0,
+  "runs": [
+    {
+      "method": "CF3-01_双线性路由内容差分",
+      "seed": 0,
+      "status": "SKIPPED_EXISTING",
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/CF3-01_双线性路由内容差分/runs/tiny_seed0/result.json"
+    },
+    {
+      "method": "CF3-01_双线性路由内容差分",
+      "seed": 1,
+      "status": "SKIPPED_EXISTING",
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/CF3-01_双线性路由内容差分/runs/tiny_seed1/result.json"
+    },
+    {
+      "method": "CF3-02_自校正持续子空间",
+      "seed": 0,
+      "status": "SKIPPED_EXISTING",
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/CF3-02_自校正持续子空间/runs/tiny_seed0/result.json"
+    },
+    {
+      "method": "CF3-02_自校正持续子空间",
+      "seed": 1,
+      "status": "SKIPPED_EXISTING",
+      "result": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/CF3-02_自校正持续子空间/runs/tiny_seed1/result.json"
+    }
+  ],
+  "generated_at": "2026-11-27T23:04:57"
+}

@@ -1,0 +1,390 @@
+{
+  "method_id": "CF3-09",
+  "status": "COMPLETED",
+  "claim_level": false,
+  "profile": "tiny",
+  "seed": 0,
+  "device": "cpu",
+  "pair_count": 4,
+  "train": {
+    "history": [
+      {
+        "step": 0,
+        "loss": 11.59151840209961,
+        "method_loss": 7.81225026003085e-06,
+        "neutral": 8.173590231308481e-07,
+        "retain_nll": 5.7957587242126465,
+        "grad_norm": 3.6374762058258057,
+        "fact_hinge": 0.0,
+        "donor_guard": 0.0,
+        "eos_guard": 8.173590094884275e-05
+      },
+      {
+        "step": 1,
+        "loss": 11.036624908447266,
+        "method_loss": 1.891803003672976e-05,
+        "neutral": 0.003014616435393691,
+        "retain_nll": 5.518160820007324,
+        "grad_norm": 7.9955220222473145,
+        "fact_hinge": 0.0,
+        "donor_guard": 0.030146162142045796,
+        "eos_guard": 0.0
+      }
+    ],
+    "steps_completed": 2,
+    "resumed_from": 0
+  },
+  "diagnostics": {
+    "operator": "randomized_finite_jvp_dual_hankel_subspace",
+    "operator_pairs": 4,
+    "enabled": true,
+    "reports": {
+      "0:1": {
+        "spectrum": [
+          0.10877136141061783,
+          0.012890810146927834
+        ],
+        "true_modal_energy": [
+          0.0045658922754228115,
+          0.0020637994166463614
+        ],
+        "null_modal_energy": [
+          0.31078311800956726,
+          0.546555757522583
+        ],
+        "selected_modes": 1
+      },
+      "1:1": {
+        "spectrum": [
+          0.09730423986911774,
+          0.051207467913627625
+        ],
+        "true_modal_energy": [
+          0.038073327392339706,
+          0.0002715308219194412
+        ],
+        "null_modal_energy": [
+          0.11671348661184311,
+          0.2110750824213028
+        ],
+        "selected_modes": 1
+      },
+      "2:1": {
+        "spectrum": [
+          0.09006898105144501,
+          0.06462603807449341
+        ],
+        "true_modal_energy": [
+          0.017354706302285194,
+          5.9616017097141594e-05
+        ],
+        "null_modal_energy": [
+          0.11904998868703842,
+          0.033449798822402954
+        ],
+        "selected_modes": 1
+      },
+      "3:1": {
+        "spectrum": [
+          0.05182434991002083,
+          0.018245745450258255
+        ],
+        "true_modal_energy": [
+          0.07032591104507446,
+          0.029352378100156784
+        ],
+        "null_modal_energy": [
+          0.11172129213809967,
+          0.004123593680560589
+        ],
+        "selected_modes": 1
+      },
+      "0:2": {
+        "spectrum": [
+          0.0641631931066513,
+          0.014418257400393486
+        ],
+        "true_modal_energy": [
+          0.0001278981944778934,
+          0.03514520823955536
+        ],
+        "null_modal_energy": [
+          0.7809118032455444,
+          0.00877295434474945
+        ],
+        "selected_modes": 1
+      },
+      "1:2": {
+        "spectrum": [
+          0.10239527374505997,
+          0.01705240085721016
+        ],
+        "true_modal_energy": [
+          0.0023361369967460632,
+          0.03564944863319397
+        ],
+        "null_modal_energy": [
+          1.2755565643310547,
+          0.802221417427063
+        ],
+        "selected_modes": 1
+      },
+      "2:2": {
+        "spectrum": [
+          0.03544597327709198,
+          0.016747400164604187
+        ],
+        "true_modal_energy": [
+          0.024336043745279312,
+          0.006467799656093121
+        ],
+        "null_modal_energy": [
+          0.553763747215271,
+          0.12277241051197052
+        ],
+        "selected_modes": 1
+      },
+      "3:2": {
+        "spectrum": [
+          0.03885297477245331,
+          0.024938063696026802
+        ],
+        "true_modal_energy": [
+          0.0027159254532307386,
+          0.016674816608428955
+        ],
+        "null_modal_energy": [
+          1.8817559480667114,
+          0.33022239804267883
+        ],
+        "selected_modes": 1
+      },
+      "0:3": {
+        "spectrum": [
+          0.0692586675286293,
+          0.027270685881376266
+        ],
+        "true_modal_energy": [
+          0.014375674538314342,
+          0.061692818999290466
+        ],
+        "null_modal_energy": [
+          0.08906947821378708,
+          0.002188944723457098
+        ],
+        "selected_modes": 1
+      },
+      "1:3": {
+        "spectrum": [
+          0.0657682791352272,
+          0.03085934743285179
+        ],
+        "true_modal_energy": [
+          0.0030401747208088636,
+          0.04287843778729439
+        ],
+        "null_modal_energy": [
+          0.07060877233743668,
+          0.244569793343544
+        ],
+        "selected_modes": 1
+      },
+      "2:3": {
+        "spectrum": [
+          0.03833458572626114,
+          0.015343683771789074
+        ],
+        "true_modal_energy": [
+          0.0013948810519650578,
+          0.005218899808824062
+        ],
+        "null_modal_energy": [
+          0.014907983131706715,
+          0.005605403799563646
+        ],
+        "selected_modes": 1
+      },
+      "3:3": {
+        "spectrum": [
+          0.05151287466287613,
+          0.021116530522704124
+        ],
+        "true_modal_energy": [
+          0.009655623696744442,
+          0.06343010812997818
+        ],
+        "null_modal_energy": [
+          0.7514247298240662,
+          0.05201050266623497
+        ],
+        "selected_modes": 1
+      },
+      "0:4": {
+        "spectrum": [
+          0.16240546107292175,
+          0.039482228457927704
+        ],
+        "true_modal_energy": [
+          0.026556439697742462,
+          0.0016310048522427678
+        ],
+        "null_modal_energy": [
+          0.40398839116096497,
+          0.9294475317001343
+        ],
+        "selected_modes": 1
+      },
+      "1:4": {
+        "spectrum": [
+          0.11175341159105301,
+          0.03579414263367653
+        ],
+        "true_modal_energy": [
+          0.026481598615646362,
+          0.035625532269477844
+        ],
+        "null_modal_energy": [
+          0.4601050019264221,
+          0.3365689814090729
+        ],
+        "selected_modes": 1
+      },
+      "2:4": {
+        "spectrum": [
+          0.10819732397794724,
+          0.008019527420401573
+        ],
+        "true_modal_energy": [
+          0.017933078110218048,
+          0.007190653122961521
+        ],
+        "null_modal_energy": [
+          0.0059928372502326965,
+          0.0010092031443491578
+        ],
+        "selected_modes": 2
+      },
+      "3:4": {
+        "spectrum": [
+          0.06368913501501083,
+          0.03571387752890587
+        ],
+        "true_modal_energy": [
+          0.03976968303322792,
+          0.22325383126735687
+        ],
+        "null_modal_energy": [
+          0.08529304713010788,
+          0.17843733727931976
+        ],
+        "selected_modes": 1
+      }
+    },
+    "scope": "local midpoint, answer-pooled, low-rank; no full d-by-d Jacobian"
+  },
+  "before": {
+    "forget": {
+      "nll": 5.908950090408325,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "retain": {
+      "nll": 5.908950090408325,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "holdout": {
+      "nll": 5.908950090408325,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "donor": {
+      "donor_nll": 5.799798965454102,
+      "count": 2,
+      "note": "evaluation only; donor answers never enter training loss"
+    }
+  },
+  "after": {
+    "forget": {
+      "nll": 5.908557415008545,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "retain": {
+      "nll": 5.908557415008545,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "holdout": {
+      "nll": 5.908557415008545,
+      "count": 2,
+      "ground_truth": "dataset_answer"
+    },
+    "donor": {
+      "donor_nll": 5.79888391494751,
+      "count": 2,
+      "note": "evaluation only; donor answers never enter training loss"
+    },
+    "behaviour": {
+      "samples": 1,
+      "mean_tokens": 24.0,
+      "eos_rate": 0.0,
+      "target_overlap": 0.0,
+      "examples": [
+        "tok222 tok162 tok77 tok229 tok206 tok152 tok198 tok115 tok247 tok173 tok96 tok33 tok85 tok43 tok241 tok195 tok127 tok96 tok33 tok85 tok43 tok241 tok195 tok127"
+      ]
+    }
+  },
+  "target_fact_probe": {
+    "before": {
+      "status": "COMPLETED",
+      "layer": 4,
+      "train": 12,
+      "test": 12,
+      "classes": 12,
+      "relation_disjoint": true,
+      "accuracy": 0.1666666716337204,
+      "cross_entropy": 2.2146315574645996,
+      "chance_accuracy": 0.08333333333333333,
+      "scope": "forget-author hidden-state separability; not proof of factual erasure"
+    },
+    "after": {
+      "status": "COMPLETED",
+      "layer": 4,
+      "train": 12,
+      "test": 12,
+      "classes": 12,
+      "relation_disjoint": true,
+      "accuracy": 0.1666666716337204,
+      "cross_entropy": 2.2140841484069824,
+      "chance_accuracy": 0.08333333333333333,
+      "scope": "forget-author hidden-state separability; not proof of factual erasure"
+    }
+  },
+  "relearning": {
+    "status": "COMPLETED",
+    "steps": 1,
+    "samples": 2,
+    "before_nll": 5.908557415008545,
+    "after_nll": 5.907921552658081,
+    "nll_recovery": 0.0006358623504638672,
+    "ground_truth": "original dataset answers",
+    "note": "runs after the pre-relearning Student checkpoint has been saved"
+  },
+  "delta": {
+    "forget": -0.00039267539978027344,
+    "retain": -0.00039267539978027344,
+    "holdout": -0.00039267539978027344
+  },
+  "checkpoint": "/Users/chenyliao/Repositories/Machine_Unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/_validation/CF3-09_双端Hankel激活模态/checkpoint",
+  "elapsed_sec": 0.627,
+  "integrity": {
+    "teacher_frozen": true,
+    "evaluation_ground_truth": "dataset answers",
+    "donor_answer_in_training": false,
+    "cross_method_imports": false,
+    "initial_student_equals_teacher": true,
+    "initial_student_teacher_nll_delta": 0.0,
+    "initial_nll_tolerance": 0.0001
+  }
+}

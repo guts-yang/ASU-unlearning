@@ -1,0 +1,261 @@
+{
+  "operator": "paired_sign_permutation_BY_FDR_heldout_patch",
+  "hypotheses": 28,
+  "selected": 1,
+  "enabled": true,
+  "gates": [
+    {
+      "layer": 1,
+      "position": 0,
+      "pvalue": 1.0,
+      "split_cosine": -0.8758251667022705,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 1,
+      "position": 1,
+      "pvalue": 0.53,
+      "split_cosine": -0.9586654305458069,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 1,
+      "position": 2,
+      "pvalue": 0.57,
+      "split_cosine": -0.9986748695373535,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 1,
+      "position": 3,
+      "pvalue": 0.485,
+      "split_cosine": -0.9950660467147827,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 1,
+      "position": 4,
+      "pvalue": 1.0,
+      "split_cosine": -0.9946726560592651,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 1,
+      "position": 5,
+      "pvalue": 0.495,
+      "split_cosine": -0.8361635208129883,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 1,
+      "position": 6,
+      "pvalue": 1.0,
+      "split_cosine": -0.9977329969406128,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 2,
+      "position": 0,
+      "pvalue": 1.0,
+      "split_cosine": -0.8452884554862976,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 2,
+      "position": 1,
+      "pvalue": 0.48,
+      "split_cosine": -0.9063521027565002,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 2,
+      "position": 2,
+      "pvalue": 1.0,
+      "split_cosine": -0.9965270161628723,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 2,
+      "position": 3,
+      "pvalue": 0.49,
+      "split_cosine": -0.9969766736030579,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 2,
+      "position": 4,
+      "pvalue": 0.49,
+      "split_cosine": -0.9968624711036682,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 2,
+      "position": 5,
+      "pvalue": 0.455,
+      "split_cosine": -0.9139727354049683,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 2,
+      "position": 6,
+      "pvalue": 1.0,
+      "split_cosine": -0.9971967339515686,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 3,
+      "position": 0,
+      "pvalue": 1.0,
+      "split_cosine": -0.8127564191818237,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 3,
+      "position": 1,
+      "pvalue": 0.43,
+      "split_cosine": -0.7720314860343933,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 3,
+      "position": 2,
+      "pvalue": 1.0,
+      "split_cosine": -0.9957855939865112,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 3,
+      "position": 3,
+      "pvalue": 0.485,
+      "split_cosine": -0.9947694540023804,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 3,
+      "position": 4,
+      "pvalue": 0.49,
+      "split_cosine": -0.9931482076644897,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 3,
+      "position": 5,
+      "pvalue": 0.505,
+      "split_cosine": -0.7140297889709473,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 3,
+      "position": 6,
+      "pvalue": 0.43,
+      "split_cosine": -0.9951547980308533,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 4,
+      "position": 0,
+      "pvalue": 0.56,
+      "split_cosine": -0.7633059024810791,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 4,
+      "position": 1,
+      "pvalue": 1.0,
+      "split_cosine": -0.7095179557800293,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 4,
+      "position": 2,
+      "pvalue": 1.0,
+      "split_cosine": -0.9930885434150696,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 4,
+      "position": 3,
+      "pvalue": 1.0,
+      "split_cosine": -0.9881405830383301,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 4,
+      "position": 4,
+      "pvalue": 1.0,
+      "split_cosine": -0.9934758543968201,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 4,
+      "position": 5,
+      "pvalue": 1.0,
+      "split_cosine": -0.6717119812965393,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    },
+    {
+      "layer": 4,
+      "position": 6,
+      "pvalue": 1.0,
+      "split_cosine": -0.9925745725631714,
+      "significant": false,
+      "heldout_nll_increase": 0.0,
+      "passed": false
+    }
+  ],
+  "data_split": "even pairs select; odd pairs are held out for patch readout"
+}
