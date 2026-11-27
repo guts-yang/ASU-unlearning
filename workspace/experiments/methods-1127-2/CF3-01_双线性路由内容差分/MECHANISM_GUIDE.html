@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CF3-01 双线性路由—内容差分</title>
+
+<meta name="generator" content="ARIS render-html (academic, v1)">
+<meta name="aris:source-path" content="workspace/experiments/methods-1127-2/CF3-01_双线性路由内容差分/MECHANISM_GUIDE.md">
+<meta name="aris:source-sha256" content="cf831ca5817029f344fb212dea9bc1c50dddb710e8358b2210d055eb0a298650">
+<meta name="aris:generated-at" content="2026-11-27 15:45 UTC">
+
+<!-- MathJax 3 -->
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+  options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+<!-- highlight.js -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-light.min.css">
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => hljs.highlightAll());</script>
+
+
+<style>
+:root {
+  --bg: #fdfcf7;
+  --bg-soft: #f4f1ea;
+  --bg-code: #f8f5ec;
+  --ink: #1a1a1a;
+  --ink-soft: #4a4a4a;
+  --ink-muted: #6b6b6b;
+  --primary: #1a4a8c;
+  --primary-soft: #2d6cb8;
+  --accent: #b8390e;
+  --warn: #b45309;
+  --warn-bg: #fef3c7;
+  --info-bg: #dbeafe;
+  --good-bg: #d1fae5;
+  --good: #065f46;
+  --bad-bg: #fee2e2;
+  --bad: #991b1b;
+  --border: #d6d0c0;
+  --border-soft: #e8e3d5;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Source Serif Pro", "Source Serif 4", "Crimson Pro", "Georgia", "Songti SC", "STSong", serif;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--bg);
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+}
+
+.layout {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 48px;
+  padding: 40px 32px;
+}
+
+nav.toc {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+  font-size: 13px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  border-right: 1px solid var(--border-soft);
+  padding-right: 16px;
+}
+nav.toc h3 {
+  margin: 0 0 12px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+nav.toc ol { list-style: none; padding: 0; margin: 0; counter-reset: toc; }
+nav.toc ol li { margin: 5px 0; counter-increment: toc; }
+nav.toc ol li::before { content: counter(toc) ". "; color: var(--ink-muted); margin-right: 4px; }
+nav.toc a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 1px dotted transparent;
+}
+nav.toc a:hover { color: var(--primary); border-bottom-color: var(--primary); }
+nav.toc ul { list-style: none; padding-left: 14px; margin: 3px 0; font-size: 12px; }
+nav.toc ul li::before { content: "→ "; color: var(--border); }
+
+main { min-width: 0; }
+
+header.hero {
+  border-bottom: 3px double var(--primary);
+  padding-bottom: 24px;
+  margin-bottom: 32px;
+}
+header.hero .eyebrow {
+  color: var(--accent);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+body.aris-blog header.hero .eyebrow {
+  font-family: inherit;
+  color: var(--ink-muted);
+  text-transform: none;
+  letter-spacing: 0.01em;
+  font-weight: 400;
+}
+header.hero h1 {
+  font-size: 32px;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+header.hero .subtitle {
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin: 0 0 8px;
+  font-style: italic;
+}
+header.hero .byline {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 0 0 20px;
+}
+header.hero .byline strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+header.hero .meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--ink-muted);
+  border-top: 1px solid var(--border-soft);
+  padding-top: 14px;
+}
+header.hero .meta span strong { color: var(--ink-soft); }
+header.hero .meta code {
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 11px;
+  background: var(--bg-soft);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-soft);
+}
+
+h2 {
+  font-size: 24px;
+  margin: 44px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+  font-weight: 700;
+}
+h2 .num { color: var(--primary); font-weight: 600; margin-right: 8px; }
+h3 { font-size: 19px; margin: 28px 0 10px; color: var(--primary); font-weight: 600; }
+h4 { font-size: 16px; margin: 20px 0 8px; color: var(--ink); font-weight: 600; }
+
+p { margin: 10px 0; }
+ul, ol { padding-left: 22px; margin: 10px 0; }
+ul li, ol li { margin: 4px 0; }
+ul li::marker { color: var(--primary); }
+
+strong { color: var(--accent); font-weight: 600; }
+em { color: var(--ink-soft); }
+
+a { color: var(--primary); }
+a:hover { color: var(--accent); }
+
+code:not(.hljs) {
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 0.86em;
+  background: var(--bg-code);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-soft);
+  color: var(--accent);
+}
+
+pre {
+  background: #fafaf6;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  padding: 0;
+  overflow-x: auto;
+  border-radius: 4px;
+  margin: 14px 0;
+}
+pre code, pre code.hljs {
+  background: transparent !important;
+  display: block;
+  padding: 14px 18px !important;
+  font-size: 13px;
+  line-height: 1.55;
+  font-family: "JetBrains Mono", "SF Mono", "Menlo", monospace;
+  color: var(--ink);
+}
+pre.diagram {
+  background: #f9f6ed;
+  border-left: 4px solid var(--accent);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.callout {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-radius: 4px;
+  border-left: 4px solid;
+  font-size: 15px;
+}
+.callout-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.callout-info { background: var(--info-bg); border-left-color: var(--primary); }
+.callout-info .callout-title { color: var(--primary); }
+.callout-warn { background: var(--warn-bg); border-left-color: var(--warn); }
+.callout-warn .callout-title { color: var(--warn); }
+.callout-good { background: var(--good-bg); border-left-color: var(--good); }
+.callout-good .callout-title { color: var(--good); }
+.callout-bad { background: var(--bad-bg); border-left-color: var(--bad); }
+.callout-bad .callout-title { color: var(--bad); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+thead { background: var(--primary); color: white; }
+th, td {
+  text-align: left;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border-soft);
+  vertical-align: top;
+}
+th { font-weight: 600; font-size: 13px; letter-spacing: 0.02em; }
+tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-soft); }
+
+details.qa, details {
+  background: white;
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  margin: 10px 0;
+  padding: 0;
+}
+details summary {
+  cursor: pointer;
+  padding: 10px 14px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--primary);
+  list-style: none;
+  user-select: none;
+}
+details summary::-webkit-details-marker { display: none; }
+details summary::before {
+  content: "▸ ";
+  margin-right: 4px;
+  display: inline-block;
+  transition: transform 0.15s;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details[open] summary { border-bottom: 1px solid var(--border-soft); }
+details > :not(summary) { padding: 10px 14px; }
+details p:first-of-type { margin-top: 8px; }
+
+mjx-container[display="true"] { margin: 12px 0 !important; }
+
+footer.aris-footer {
+  margin-top: 60px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+footer.aris-footer a { color: var(--ink-muted); border-bottom: 1px dotted var(--border); }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; gap: 20px; padding: 20px 16px; }
+  nav.toc {
+    position: static;
+    max-height: none;
+    border-right: none;
+    border-bottom: 1px solid var(--border-soft);
+    padding-right: 0;
+    padding-bottom: 14px;
+  }
+  header.hero h1 { font-size: 24px; }
+  h2 { font-size: 20px; }
+}
+@media print {
+  nav.toc { display: none; }
+  .layout { grid-template-columns: 1fr; padding: 0; }
+  body { background: white; }
+  header.hero { border-bottom-color: var(--ink); }
+  #cite-pop, dialog.lightbox { display: none !important; }
+}
+
+/* --- P0 polish: TOC scrollspy active state ---------------------------- */
+nav.toc a.active {
+  color: var(--accent);
+  font-weight: 600;
+  border-bottom-color: var(--accent);
+}
+
+/* --- P0 polish: Long-code auto-collapse ------------------------------- */
+details.code-card {
+  margin: 14px 0;
+  background: #fafaf6;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: 4px;
+}
+details.code-card > summary {
+  cursor: pointer;
+  padding: 8px 14px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-family: "JetBrains Mono", "SF Mono", monospace;
+  list-style: none;
+  user-select: none;
+}
+details.code-card > summary::-webkit-details-marker { display: none; }
+details.code-card > summary::before { content: none; }
+details.code-card > pre {
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-left: none;
+  border-radius: 0;
+}
+@media print {
+  details.code-card { border: 1px solid #ccc; background: white; }
+  details.code-card > summary { display: none !important; }
+  details.code-card > pre { border: 1px solid #ddd; border-radius: 4px; background: white; }
+}
+
+/* --- P0 polish: Paper popover ([[ref]] popups) ------------------------ */
+[data-ref] {
+  color: var(--primary);
+  border-bottom: 1px dotted var(--primary);
+  cursor: pointer;
+  white-space: nowrap;
+}
+[data-ref]:hover { background: rgba(26, 74, 140, 0.08); }
+#cite-pop {
+  position: fixed;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  font-size: 13px;
+  line-height: 1.5;
+  z-index: 1000;
+}
+#cite-pop[hidden] { display: none; }
+#cite-pop .cp-title {
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+  padding-right: 24px;
+}
+#cite-pop .cp-meta {
+  color: var(--ink-muted);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+#cite-pop .cp-key {
+  color: var(--accent);
+  font-style: italic;
+  margin-bottom: 8px;
+}
+#cite-pop .cp-link {
+  display: inline-block;
+  color: var(--primary);
+  font-weight: 500;
+}
+#cite-pop .cp-close {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--ink-muted);
+}
+
+/* --- P0 polish: Figure lightbox (native <dialog>) --------------------- */
+dialog.lightbox {
+  border: none;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.92);
+  width: 96vw;
+  height: 96vh;
+  max-width: 96vw;
+  max-height: 96vh;
+}
+dialog.lightbox::backdrop { background: rgba(0, 0, 0, 0.92); }
+dialog.lightbox .lb-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 16px;
+  position: relative;
+}
+dialog.lightbox img {
+  max-width: 90vw;
+  max-height: 84vh;
+  object-fit: contain;
+  cursor: zoom-out;
+}
+dialog.lightbox figcaption {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  text-align: center;
+  max-width: 700px;
+}
+dialog.lightbox .lb-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* --- P0 polish: blog/talk mode active-H2 highlight (opt-in) ----------- */
+body.aris-blog h2 { scroll-margin-top: 24px; }
+body.aris-blog h2.aris-active-h2 {
+  background: linear-gradient(to right, rgba(26, 74, 140, 0.06), transparent);
+  border-radius: 4px;
+  padding-left: 12px;
+  margin-left: -12px;
+}
+</style>
+</head>
+<body class="">
+<div class="layout">
+
+<nav class="toc">
+  <h3>Contents</h3>
+  <ol>
+<li><a href="#1-从一个具体例子开始">1. 从一个具体例子开始</a>
+</li>
+<li><a href="#2-为什么不能直接使用全部激活差">2. 为什么不能直接使用全部激活差？</a>
+</li>
+<li><a href="#3-先回顾注意力路由与内容在哪里">3. 先回顾注意力：路由与内容在哪里？</a>
+</li>
+<li><a href="#4-核心恒等式把差值精确拆成两项">4. 核心恒等式：把差值精确拆成两项</a>
+</li>
+<li><a href="#5-放到注意力公式中">5. 放到注意力公式中</a>
+</li>
+<li><a href="#6-关键筛选哪一项才值得消弱">6. 关键筛选：哪一项才值得消弱？</a>
+</li>
+<li><a href="#7-如何真正更新模型teacher-指目标student-学过去">7. 如何真正更新模型：Teacher 指目标，Student 学过去</a>
+</li>
+<li><a href="#8-仅靠-mse-为什么还不够">8. 仅靠 MSE 为什么还不够？</a>
+<ul>
+<li><a href="#81-原事实读出约束">8.1 原事实读出约束</a></li>
+<li><a href="#82-保留集约束">8.2 保留集约束</a></li>
+<li><a href="#83-不向-donor-靠近">8.3 不向 donor 靠近</a></li>
+<li><a href="#84-提前结束防护">8.4 提前结束防护</a></li>
+</ul>
+</li>
+<li><a href="#9-一次训练的完整流程">9. 一次训练的完整流程</a>
+</li>
+<li><a href="#10-部署时还需要-teacher-和两次前向吗">10. 部署时还需要 Teacher 和两次前向吗？</a>
+</li>
+<li><a href="#11-怎么判断它是真遗忘而不是表面不答">11. 怎么判断它是真遗忘，而不是表面不答？</a>
+</li>
+<li><a href="#12-当前实现与原方案的差别">12. 当前实现与原方案的差别</a>
+</li>
+<li><a href="#13-最后用五句话复述">13. 最后用五句话复述</a>
+</li>
+<li><a href="#14-代码阅读索引">14. 代码阅读索引</a>
+</li>
+</ol>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">BRCD · MECHANISM GUIDE</div>
+  <h1>CF3-01 双线性路由—内容差分</h1>
+  <p class="subtitle">从注意力公式到机器遗忘：面向深度学习初学者的实现导览</p>
+  
+  <div class="meta">
+    <span><strong>Source:</strong> <code>workspace/experiments/methods-1127-2/CF3-01_双线性路由内容差分/MECHANISM_GUIDE.md</code></span>
+    <span><strong>SHA256:</strong> <code>cf831ca58170</code></span>
+    <span><strong>Rendered:</strong> 2026-11-27 15:45 UTC</span>
+    
+  </div>
+</header>
+
+<h1 id="cf3-01-双线性路由内容差分">CF3-01 双线性路由—内容差分</h1>
+<blockquote><p><strong>先用一句话理解</strong>：模型对“换人名”这件事的反应，混有两种变化——<strong>注意力的去向变了</strong>，以及<strong>被读取的内容变了</strong>。CF3-01 先把这两种变化精确拆开，测试哪一个确实与目标答案的读出有关，再训练 Student 在原问题上只消弱这一小部分内部信号，同时尽量保住其他知识。</p></blockquote>
+<p>这里的“遗忘”不是从硬盘中删除训练样本，也不是把某个神经元永久清零，而是：<strong>通过参数微调，让模型面对原问题时，不再那么容易沿原来的内部通路读出目标事实，并尽量不影响其他能力。</strong></p>
+<h2 id="1-从一个具体例子开始">1. 从一个具体例子开始</h2>
+<p>假设要遗忘的事实是：</p>
+<table><thead><tr><th>角色</th><th>问题</th><th>输入模型时使用的答案</th></tr></thead><tbody><tr><td>原事实 $X^+$</td><td>Where was <strong>Alice Miller</strong> born?</td><td>Alice Miller was born in <strong>Paris</strong>.</td></tr><tr><td>反事实 $X^-$</td><td>Where was <strong>Bob Smith</strong> born?</td><td>仍然是 Alice Miller was born in <strong>Paris</strong>.</td></tr></tbody></table>
+<p>第二个问题不是模型原本会自然回答 Paris 的问题。它只是一个<strong>受控对照</strong>：问题中只替换人名，其他词、答案和 token 位置尽量保持一致。</p>
+<table><thead><tr><th>符号</th><th>含义</th><th>在教学例子中的角色</th></tr></thead><tbody><tr><td>$X^+$</td><td>原问题</td><td>Alice 的出生地问题</td></tr><tr><td>$X^-$</td><td>只换主体的反事实问题</td><td>Bob 的出生地问题</td></tr><tr><td>$y^+$</td><td>原数据集答案</td><td>Paris 所在的原始答案</td></tr><tr><td>$y^-$</td><td>donor 自己的答案</td><td>例如 Bob 的答案；只用于评估，不作训练目标</td></tr></tbody></table>
+<p>两次 Teacher 前向分别处理 $(X^+,y^+)$ 和 $(X^-,y^+)$。<strong>答案相同非常重要</strong>：若连答案也换掉，观察到的差异就混入“问题变了”和“答案变了”两种因素，难以定位。</p>
+<blockquote><p><strong>最容易误解的一点</strong>：$X^-$ 是用来测量“哪些内部计算随主体改变”的对照，不是让 Student 学会回答 Bob 的事实。</p></blockquote>
+<h2 id="2-为什么不能直接使用全部激活差">2. 为什么不能直接使用全部激活差？</h2>
+<p>Transformer 的每一层会输出一组隐藏向量。对同一个答案位置 $p$，可以计算：</p>
+<p>$$ \Delta A_{\ell,p}=A^+_{\ell,p}-A^-_{\ell,p}. $$</p>
+<p>直觉上，它表示“把 Alice 换成 Bob 后，第 $\ell$ 层的状态改变了多少”。但这个差值可能同时包含：</p>
+<table><thead><tr><th>变化来源</th><th>直观含义</th><th>是否必然是目标事实？</th></tr></thead><tbody><tr><td>注意力路由</td><td>模型更关注哪些 token</td><td>否，可能只是名字 token 不同</td></tr><tr><td>Value 内容</td><td>从被关注的 token 读出了什么</td><td>否，可能只是一般身份信息</td></tr><tr><td>无关上下文变化</td><td>句法、词形、位置等差异</td><td>否</td></tr><tr><td>目标事实相关计算</td><td>与 Paris 这一目标读出有关的信号</td><td>有可能，需要验证</td></tr></tbody></table>
+<p>因此，<strong>$\Delta A$ 很大，不代表其中全是需要遗忘的事实</strong>。直接让整个向量归零或全部反向外推，可能把正常语言能力和 retain 知识一起破坏。</p>
+<p>CF3-01 的第一步不是训练，而是把这个混合差值拆得更清楚。</p>
+<h2 id="3-先回顾注意力路由与内容在哪里">3. 先回顾注意力：路由与内容在哪里？</h2>
+<p>在答案 token 位置 $p$，一个注意力头的输出可以写成：</p>
+<p>$$ O_{p}=\sum_q \pi_{p,q}v_q. $$</p>
+<p>其中：</p>
+<ul><li>$v_q$ 是第 $q$ 个输入位置的 <strong>Value 向量</strong>，可以理解为该位置提供的内容；</li><li>$\pi_{p,q}$ 是注意力权重，由 Query 和 Key 计算后再经 softmax 得到，决定当前位置从 $q$ 读取多少内容；</li><li>所有 $q$ 的加权 Value 相加，就得到当前位置的注意力输出。</li></ul>
+<p>可以把它想成查资料：<strong>路由 $\pi$ 决定看哪几页、每页看多少；内容 $v$ 是每页实际写着什么。</strong> 这个比喻只帮助理解，真正的计算仍然是矩阵与向量运算。</p>
+<p>CF3-01 使用的就是已经过 softmax 的 $\pi$，不是单独修改 Q 或 K。对于 Llama 的 GQA，代码还会把共享的 KV Value 头展开到对应的查询头，保证 $\pi$ 与 $v$ 能正确相乘。</p>
+<h2 id="4-核心恒等式把差值精确拆成两项">4. 核心恒等式：把差值精确拆成两项</h2>
+<p>先看最简单的逐元素乘法 $B(a,b)=a\odot b$。原输入与反事实输入分别产生 $(a^+,b^+)$ 和 $(a^-,b^-)$，则：</p>
+<p>$$ \boxed{ a^+\odot b^+-a^-\odot b^- = \underbrace{\tfrac12(a^+-a^-)\odot(b^++b^-)}_{\text{路由项}} + \underbrace{\tfrac12(a^++a^-)\odot(b^+-b^-)}_{\text{内容项}} } $$</p>
+<p>右侧展开后正好等于左侧，<strong>这是代数恒等式，不是一阶近似</strong>。</p>
+<p>一个标量小例子：</p>
+<table><thead><tr><th>量</th><th style="text-align:right">原输入</th><th style="text-align:right">反事实输入</th></tr></thead><tbody><tr><td>路由 $a$</td><td style="text-align:right">$0.8$</td><td style="text-align:right">$0.2$</td></tr><tr><td>内容 $b$</td><td style="text-align:right">$10$</td><td style="text-align:right">$6$</td></tr><tr><td>乘积 $ab$</td><td style="text-align:right">$8$</td><td style="text-align:right">$1.2$</td></tr></tbody></table>
+<p>总差为 $8-1.2=6.8$，而：</p>
+<p>$$ D_{\mathrm{route}}=\tfrac12(0.8-0.2)(10+6)=4.8, $$</p>
+<p>$$ D_{\mathrm{content}}=\tfrac12(0.8+0.2)(10-6)=2.0. $$</p>
+<p>所以 $4.8+2.0=6.8$。原差值没有被丢失，只是分成了“路由变化”和“内容变化”两部分。</p>
+<h2 id="5-放到注意力公式中">5. 放到注意力公式中</h2>
+<p>将 $a$ 换成注意力权重 $\pi$，将 $b$ 换成 Value 向量 $v$，并对所有被读取的位置 $q$ 求和：</p>
+<p>$$ D^{\mathrm{attn}}_{\mathrm{route}} =\frac12\sum_q(\pi^+_q-\pi^-_q)(v^+_q+v^-_q), $$</p>
+<p>$$ D^{\mathrm{attn}}_{\mathrm{content}} =\frac12\sum_q(\pi^+_q+\pi^-_q)(v^+_q-v^-_q). $$</p>
+<p>两项相加，恰好恢复原输入与反事实输入的<strong>注意力输出差</strong>：</p>
+<p>$$ D^{\mathrm{attn}}_{\mathrm{route}}+ D^{\mathrm{attn}}_{\mathrm{content}} =O^+-O^-. $$</p>
+<p>代码随后将各注意力头拼回隐藏维度，并通过该层的 <code>o_proj</code> 映回残差流空间。这样得到的分量才能与该层的隐藏状态做加减。</p>
+<blockquote><p><strong>边界</strong>：恒等式保证“加回去等于原注意力输出差”，不保证某一项天然只包含事实语义。路由项可能仍含内容信息，内容项也可能含无关变化，所以还需要干预筛选。</p></blockquote>
+<h2 id="6-关键筛选哪一项才值得消弱">6. 关键筛选：哪一项才值得消弱？</h2>
+<p>CF3-01 不预先认定“内容项一定是事实、路由项一定无关”。它在冻结的 Teacher 上做一次受控干预：</p>
+<ol><li>取原问题前向时第 $\ell$ 层的完整隐藏状态 $H^+$；</li><li>只在目标答案跨度中减去少量待测分量：$H^+-\alpha C$；</li><li>保持冻结模型的后续层不变，重新计算原答案 $y^+$ 的 NLL；</li><li>比较干预前后的 NLL 变化。</li></ol>
+<p>NLL 是模型给正确答案分配的负对数概率。<strong>NLL 越高，模型越不容易给出这个答案。</strong></p>
+<p>当前实现分别检查两个条件：</p>
+<p>$$ \mathbb E[\mathrm{NLL}<em>{\mathrm{patch}}-\mathrm{NLL}</em>{\mathrm{before}}]</p>
+<blockquote><p>\eta_f,</p></blockquote>
+<p>$$</p>
+<p>$$ \mathbb E[\text{真实配对效应}-\text{wrong/null 配对效应}]</p>
+<blockquote><p>\eta_s.</p></blockquote>
+<p>$$</p>
+<p>第一条要求：消弱这个分量确实让原答案更难读出。第二条要求：真实配对分量的效应要强于拿其他配对分量乱 patch 的效应。</p>
+<table><thead><tr><th>route 门</th><th>content 门</th><th>决策</th></tr></thead><tbody><tr><td>通过</td><td>不通过</td><td>选择 route</td></tr><tr><td>不通过</td><td>通过</td><td>选择 content</td></tr><tr><td>都通过</td><td>都通过</td><td>无法区分，当前层不选择</td></tr><tr><td>都不通过</td><td>都不通过</td><td>当前层无可靠目标</td></tr></tbody></table>
+<p>在严格 <code>pilot/full</code> 模式中，只要要求处理的层没有通过唯一分量筛选，就记录 <code>DIAGNOSTIC_KILL</code> 并停止训练。<strong>这是防止把不可靠机制硬训练下去的刹车，不是实验失败后被隐藏的结果。</strong></p>
+<p><code>tiny/smoke</code> 会为代码联调放宽此门并回退到配置的 content 分量；因此它们只能验证程序能跑，不能证明机制成立。</p>
+<h2 id="7-如何真正更新模型teacher-指目标student-学过去">7. 如何真正更新模型：Teacher 指目标，Student 学过去</h2>
+<p>筛选完成后，Teacher 仍不更新。对选中的层、答案位置和分量 $C^*$，构造一个固定的激活目标：</p>
+<p>$$ \boxed{T_{\ell,p}=\operatorname{stopgrad}(A^+_{\ell,p}-\alpha C^*_{\ell,p})} $$</p>
+<p>它的含义是：<strong>从原本处理 Alice 问题的隐藏状态中，拿掉少量经筛选的分量，其余部分尽量保留。</strong></p>
+<p>Student 接收的仍然是原问题 $(X^+,y^+)$，并优化：</p>
+<p>$$ \mathcal L_{\mathrm{BRCD}} =\sum_{\ell,p}\left\|h_{S,\ell,p}-T_{\ell,p}\right\|_2^2. $$</p>
+<p>可以把 MSE 理解成“让 Student 的内部状态靠近 Teacher 给出的编辑后状态”。<code>stopgrad</code> 表示目标固定，梯度只更新 Student。</p>
+<p>默认 $\alpha=0.1$，即只消弱所选分量的 10%。它不是理论最优值：太小可能没有行为效果，太大可能伤害其他知识，必须通过实验选择。</p>
+<p><strong>这一步不是把激活永久写死。</strong> 训练时通过激活回归调整 Student 的 LoRA 参数；训练后，面对原问题时由新参数自然产生接近目标的中间状态。</p>
+<h2 id="8-仅靠-mse-为什么还不够">8. 仅靠 MSE 为什么还不够？</h2>
+<p>如果只看 $\mathcal L_{\mathrm{BRCD}}$，模型可能通过一些“作弊方式”降低损失，例如把所有回答都变糟、直接偏向 donor，或很早就输出 EOS。实际训练还加入共同约束：</p>
+<h3 id="81-原事实读出约束">8.1 原事实读出约束</h3>
+<p>$$ \mathcal L_{\mathrm{fact}} =\operatorname{ReLU}\!\left( \mathrm{NLL}_S(y^+\mid X^+)- [\mathrm{NLL}_T(y^+\mid X^+)+\delta] \right)^2. $$</p>
+<p>默认 $\delta=0.35$。只有当 Student 对原答案的 NLL 没有足够上升时，这项才产生惩罚。它是对读出行为的最低要求，不是“遗忘已完成”的证书。</p>
+<h3 id="82-保留集约束">8.2 保留集约束</h3>
+<p>在 retain 问答上继续优化正常答案 NLL：</p>
+<p>$$ \mathcal L_R=\mathrm{NLL}_S(y_R\mid X_R). $$</p>
+<p>它像一根锚，防止为了遗忘 Alice 而把整体语言能力或其他人的知识一起破坏。</p>
+<h3 id="83-不向-donor-靠近">8.3 不向 donor 靠近</h3>
+<p>代码计算 Student 状态相对原状态的移动方向，并惩罚它沿 $A^--A^+$ 的 donor 方向移动。也就是说，<strong>可以削弱目标分量，但不能把“忘记 Alice”偷换成“变成 Bob”。</strong></p>
+<p>donor 自己的答案 $y^-$ 不进入训练损失；<code>donor_nll</code> 只用于训练后评估。</p>
+<h3 id="84-提前结束防护">8.4 提前结束防护</h3>
+<p>EOS guard 限制答案跨度中的 EOS logit 无约束地压过其他 token，降低模型通过“立刻结束回答”来装作遗忘的风险。</p>
+<p>默认总损失的结构为：</p>
+<p>$$ \mathcal L =0.1\,\mathcal L_{\mathrm{BRCD}} +0.1\,\mathcal L_{\mathrm{neutral}} +2.0\,\mathcal L_R, $$</p>
+<p>其中 $\mathcal L_{\mathrm{neutral}}$ 内部还包含 fact、donor 和 EOS 项及各自权重。具体数值以 <code>config.json</code> 为准。</p>
+<h2 id="9-一次训练的完整流程">9. 一次训练的完整流程</h2>
+<pre><code class="language-text">同一预训练 checkpoint
+        │
+        ├── 冻结 Teacher：两次前向 (X⁺, y⁺) 与 (X⁻, y⁺)
+        │                  │
+        │                  ├── 缓存注意力 π、Value、答案隐藏状态
+        │                  ├── 精确拆成 route / content
+        │                  ├── true/null patch-forward 筛选
+        │                  └── 固定目标 T = A⁺ − αC*
+        │
+        └── 可训练 Student：只输入原问题与原答案
+                           │
+                           ├── 激活 MSE：靠近 T
+                           ├── 原答案 NLL hinge：降低原事实可读性
+                           ├── retain NLL：保护其他知识
+                           ├── donor guard：避免替换成另一主体
+                           └── EOS guard：避免一句话都不说就结束
+                                      │
+                                      ▼
+                              反向传播，仅更新 Student</code></pre>
+<p>默认关注第 8、10、12、14 个 block 输出位置，Teacher 提供缓存和固定目标，Student 使用 LoRA 更新 <code>q/k/v/o</code> 与 <code>gate/up/down</code> 等投影。实际配置可通过命令行覆盖。</p>
+<p>下面的伪代码对应核心实现，而不是另一套算法：</p>
+<pre><code class="language-python"># Teacher 已冻结；两次前向使用同一个原答案 y_plus
+route, content = exact_bilinear_difference(pi_plus, pi_minus, v_plus, v_minus)
+selected = unique_component_that_passes_true_and_null_patch_gates()
+
+# 严格档无法唯一选择时停止，而不是硬训练
+target = stop_gradient(h_plus - alpha * selected)
+method_loss = mse(student_answer_hidden, target)
+loss = 0.1 * method_loss + 0.1 * neutral_constraints + 2.0 * retain_nll
+loss.backward()  # 只更新 Student 的可训练参数</code></pre>
+<h2 id="10-部署时还需要-teacher-和两次前向吗">10. 部署时还需要 Teacher 和两次前向吗？</h2>
+<p><strong>不需要。</strong> Teacher、反事实输入、激活缓存和 patch-forward 都用于训练前的定位与训练时的目标构造。</p>
+<p>部署时只保留训练后的 Student。用户输入原问题，Student 正常执行一次前向；没有额外运行时 hook，也不需要再构造 Bob 的反事实问题。</p>
+<p>这也是“参数内化”的含义：<strong>训练阶段借用激活目标，部署阶段由参数变化承担效果。</strong></p>
+<h2 id="11-怎么判断它是真遗忘而不是表面不答">11. 怎么判断它是真遗忘，而不是表面不答？</h2>
+<table><thead><tr><th>观察</th><th>希望看到什么</th><th>能证明什么、不能证明什么</th></tr></thead><tbody><tr><td>forget NLL</td><td>相对 Teacher 上升</td><td>原答案更难直接读出；不能证明隐藏信息消失</td></tr><tr><td>retain/holdout NLL</td><td>尽量稳定</td><td>其他知识与泛化损害较小</td></tr><tr><td>donor NLL / donor 答案</td><td>不因遗忘训练而更容易</td><td>降低“换成 Bob 答案”的可能</td></tr><tr><td>生成行为</td><td>原目标词减少，同时不过度拒答、提前 EOS 或乱码</td><td>排除部分表面失败模式</td></tr><tr><td>目标作者 probe</td><td>隐藏态中的目标可分性下降</td><td>辅助观察表示变化；不是事实擦除的充分证据</td></tr><tr><td>relearning</td><td>用原答案短程微调后观察恢复速度与幅度</td><td>检查是否只是容易恢复的行为抑制</td></tr></tbody></table>
+<p>尤其要警惕：<strong>模型不回答、回答“不知道”、输出另一个答案、生成崩溃，都可能让原答案出现率下降，但它们不是同等意义的遗忘。</strong></p>
+<p>本方法当前的验证范围是：双线性恒等式自测通过，Tiny 合成模型训练链路通过。真实 Llama/TOFU 上的效果仍需 GPU smoke、严格诊断和 pilot 结果支持；不能把代码运行成功写成遗忘有效。</p>
+<h2 id="12-当前实现与原方案的差别">12. 当前实现与原方案的差别</h2>
+<p>当前代码实现的是 <strong>attention 的 $\pi$–Value 双线性差分</strong>。原 proposal 还讨论了 SwiGLU 的 <code>Swish(g) × u</code> 双线性分支，但该分支没有混入 CF3-01 当前版本。</p>
+<p>原方案用 $\Pi_{\mathcal K}$ 表示向非 donor 可行集投影。当前代码使用的是 fact hinge、donor 方向 guard、EOS guard 和 retain NLL 等软约束组合，<strong>没有实现一个精确凸投影算子</strong>。</p>
+<p>因此，更准确的表述是：</p>
+<blockquote><p>CF3-01 是一种“反事实注意力分量定位 + 受约束的 Student 激活内化”方法。它有精确的代数分解和可证伪的筛选门，但事实语义、删除深度与保留效果都必须由独立实验验证。</p></blockquote>
+<h2 id="13-最后用五句话复述">13. 最后用五句话复述</h2>
+<ol><li>用原问题与只换主体的反事实问题，测出模型内部哪些计算发生变化。</li><li>利用注意力是“权重 × 内容”的结构，把变化精确拆成路由项和内容项。</li><li>用冻结 Teacher 的 patch 实验，选择确实影响原答案且优于错误配对的那一个分量。</li><li>让 Student 在原问题上的中间状态接近“原状态减去少量该分量”，同时用 retain、donor 和 EOS 约束减少副作用。</li><li>训练后只部署 Student；是否真正遗忘，还必须通过保留能力、独立 probe 和 relearning 等证据判断。</li></ol>
+<h2 id="14-代码阅读索引">14. 代码阅读索引</h2>
+<table><thead><tr><th>想看的部分</th><th>当前实现位置</th></tr></thead><tbody><tr><td>正反事实对与 donor 来源</td><td><code>data.py</code> 的 <code>build_pairs</code></td></tr><tr><td>注意力、Value 和答案跨度捕获</td><td><code>modeling.py</code> 的 <code>forward_model</code></td></tr><tr><td>精确双线性分解与 <code>o_proj</code> 映射</td><td><code>method.py</code> 的 <code>_raw_components</code>、<code>_components</code></td></tr><tr><td>true/null patch 与唯一分量门</td><td><code>method.py</code> 的 <code>_patch_effect</code>、<code>prepare</code></td></tr><tr><td>Student 激活回归目标</td><td><code>method.py</code> 的 <code>loss</code></td></tr><tr><td>fact、donor、EOS、retain 联合训练</td><td><code>runtime.py</code> 的 <code>neutral_terms</code>、<code>train</code></td></tr><tr><td>probe、relearning 与结果保存</td><td><code>runtime.py</code> 的 <code>target_fact_probe</code>、<code>relearning_recovery</code></td></tr><tr><td>默认层、$\alpha$、损失权重和训练预算</td><td><code>config.json</code></td></tr></tbody></table>
+<p>本文解释依据为当前目录的 <code>proposal.md</code>、<code>method.py</code>、<code>modeling.py</code>、<code>data.py</code>、<code>runtime.py</code>、<code>config.json</code>，以及上级 <code>VALIDATION_REPORT.md</code>。原始 proposal 属于待验证研究方案；本文不额外宣称文献首创性或真实实验效果。</p>
+
+<footer class="aris-footer">
+  Generated by <a href="https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep/blob/main/skills/render-html/SKILL.md">ARIS <code>/render-html</code></a> ·
+  source path <code>workspace/experiments/methods-1127-2/CF3-01_双线性路由内容差分/MECHANISM_GUIDE.md</code> ·
+  SHA256 <code>cf831ca58170</code> ·
+  generated at 2026-11-27 15:45 UTC.
+  This is a generated view — edit the source Markdown, then re-render.
+</footer>
+</main>
+
+</div>
+
+<!-- P0 polish: paper popover host (populated by IIFE below) -->
+<div id="cite-pop" hidden role="dialog" aria-labelledby="cite-pop-title">
+  <button class="cp-close" type="button" aria-label="Close">×</button>
+  <div class="cp-content"></div>
+</div>
+
+<!-- P0 polish: figure lightbox (native <dialog>, graceful fallback) -->
+<dialog class="lightbox" id="figure-lightbox" aria-label="Figure detail">
+  <div class="lb-inner">
+    <button class="lb-close" type="button" aria-label="Close">×</button>
+    <img alt="" />
+    <figcaption></figcaption>
+  </div>
+</dialog>
+
+<!-- P0 polish: paper registry sidecar, embedded by render_html.py (--papers) -->
+<script>window.PAPER_REGISTRY = {};</script>
+
+<!-- P0 polish: interactive enhancements (TOC scrollspy, code-card auto-collapse,
+     paper popovers, figure lightbox, print-restore for <details>, blog-mode H2). -->
+<script>
+(function () {
+  "use strict";
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[c];
+    });
+  }
+
+  // --- Feature 5: Print degradation fix ---------------------------------
+  // Force every <details> open during print, restore the pre-print state after.
+  var _stashOpen = [];
+  var _printing = false;
+  window.addEventListener("beforeprint", function () {
+    if (_printing) return;  // guard against multi-fire (Chrome print preview)
+    _printing = true;
+    _stashOpen = [];
+    document.querySelectorAll("details:not([open])").forEach(function (d) {
+      _stashOpen.push(d);
+      d.open = true;
+    });
+  });
+  window.addEventListener("afterprint", function () {
+    _stashOpen.forEach(function (d) { if (d.isConnected) d.open = false; });
+    _stashOpen = [];
+    _printing = false;
+  });
+
+  // --- Feature 3: TOC scrollspy -----------------------------------------
+  var tocLinks = [].slice.call(document.querySelectorAll("nav.toc a"));
+  var headings = tocLinks.map(function (a) {
+    var id = a.getAttribute("href").replace(/^#/, "");
+    return document.getElementById(id);
+  }).filter(Boolean);
+  if (headings.length && typeof IntersectionObserver !== "undefined") {
+    var linkById = new Map();
+    headings.forEach(function (h, i) { linkById.set(h.id, tocLinks[i]); });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        tocLinks.forEach(function (l) { l.classList.remove("active"); });
+        var lk = linkById.get(en.target.id);
+        if (lk) lk.classList.add("active");
+      });
+    }, { rootMargin: "-15% 0px -75% 0px" });
+    headings.forEach(function (h) { io.observe(h); });
+  }
+
+  // --- Feature 1: Long-code auto-collapse -------------------------------
+  var COLLAPSE_THRESHOLD = 30;
+
+  function wrapCodeCard(pre, openByDefault) {
+    if (!pre || pre.closest("details.code-card")) return;
+    var code = pre.querySelector("code");
+    if (!code) return;
+    var lines = code.textContent.replace(/\n+$/, "").split("\n").length;
+    var det = document.createElement("details");
+    det.className = "code-card";
+    det.open = openByDefault;
+    var sum = document.createElement("summary");
+    function updateSummary() {
+      sum.textContent = (det.open ? "▾ Collapse code · " : "▸ Expand code · ") + lines + " lines";
+    }
+    updateSummary();
+    det.addEventListener("toggle", updateSummary);
+    pre.parentNode.insertBefore(det, pre);
+    det.appendChild(sum);
+    det.appendChild(pre);
+  }
+
+  // Honor explicit per-block flags first.
+  document.querySelectorAll("pre[data-collapse]").forEach(function (pre) {
+    var flag = pre.getAttribute("data-collapse");
+    if (flag === "collapsed") wrapCodeCard(pre, false);
+    // "open" → leave fully expanded, do not wrap.
+  });
+  // Then auto-wrap long unflagged blocks.
+  document.querySelectorAll("pre > code").forEach(function (code) {
+    var pre = code.closest("pre");
+    if (!pre || pre.closest("details") || pre.hasAttribute("data-collapse")) return;
+    var lines = code.textContent.replace(/\n+$/, "").split("\n").length;
+    if (lines >= COLLAPSE_THRESHOLD) wrapCodeCard(pre, false);
+  });
+
+  // --- Feature 10: Figure lightbox --------------------------------------
+  var lightbox = document.getElementById("figure-lightbox");
+  if (lightbox) {
+    var lbImg = lightbox.querySelector("img");
+    var lbCap = lightbox.querySelector("figcaption");
+    var lbClose = lightbox.querySelector(".lb-close");
+    function openLightbox(srcImg) {
+      lbImg.src = srcImg.src;
+      lbImg.alt = srcImg.alt || "";
+      var cap = srcImg.closest("figure") ? srcImg.closest("figure").querySelector("figcaption") : null;
+      lbCap.textContent = cap ? cap.textContent : "";
+      lbCap.hidden = !cap;
+      if (typeof lightbox.showModal === "function") lightbox.showModal();
+      else lightbox.hidden = false;
+    }
+    function closeLightbox() {
+      if (typeof lightbox.close === "function") lightbox.close();
+      else lightbox.hidden = true;
+    }
+    document.querySelectorAll("main figure img, main > p > img").forEach(function (img) {
+      if (img.closest("dialog")) return;
+      img.style.cursor = "zoom-in";
+      img.addEventListener("click", function () { openLightbox(img); });
+    });
+    if (lbClose) lbClose.addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", function (e) {
+      // Backdrop click closes; clicks inside .lb-inner do not bubble here.
+      if (e.target === lightbox) closeLightbox();
+    });
+  }
+
+  // --- Feature 2: Paper popover -----------------------------------------
+  var PAPERS = window.PAPER_REGISTRY || {};
+  var pop = document.getElementById("cite-pop");
+  var popContent = pop ? pop.querySelector(".cp-content") : null;
+  var popClose = pop ? pop.querySelector(".cp-close") : null;
+  var popTrigger = null;
+
+  function showPopover(el) {
+    var key = el.dataset.ref;
+    var info = PAPERS[key];
+    if (!info || !pop || !popContent) return;
+    popContent.innerHTML =
+      '<div class="cp-title" id="cite-pop-title">' + escapeHtml(info.title || key) + '</div>' +
+      (info.authors
+        ? '<div class="cp-meta">' + escapeHtml(info.authors) +
+            (info.date ? ' · ' + escapeHtml(info.date) : '') +
+            (info.inst ? ' · ' + escapeHtml(info.inst) : '') + '</div>'
+        : '') +
+      (info.key ? '<div class="cp-key">' + escapeHtml(info.key) + '</div>' : '') +
+      (info.arxiv
+        ? '<a class="cp-link" href="https://arxiv.org/abs/' + encodeURIComponent(info.arxiv) +
+          '" target="_blank" rel="noopener">arXiv ' + escapeHtml(info.arxiv) + ' ↗</a>'
+        : '');
+    var r = el.getBoundingClientRect();
+    pop.hidden = false;  // unhide first so offsetHeight is measurable
+    var margin = 16;
+    var popWidth = Math.min(360, Math.max(0, window.innerWidth - margin * 2));
+    var popHeight = Math.min(pop.offsetHeight || 200, Math.max(0, window.innerHeight - margin * 2));
+    pop.style.left = Math.max(margin, Math.min(r.left, window.innerWidth - popWidth - margin)) + "px";
+    pop.style.top = Math.max(margin, Math.min(r.bottom + 8, window.innerHeight - popHeight - margin)) + "px";
+    popTrigger = el;
+    if (popClose) popClose.focus();
+  }
+  function hidePopover() {
+    if (pop) pop.hidden = true;
+    if (popTrigger) popTrigger.focus();
+    popTrigger = null;
+  }
+  document.querySelectorAll("[data-ref]").forEach(function (el) {
+    el.setAttribute("tabindex", "0");
+    el.setAttribute("role", "button");
+    el.addEventListener("click", function (e) { e.stopPropagation(); showPopover(el); });
+    el.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); showPopover(el); }
+    });
+  });
+  if (popClose) popClose.addEventListener("click", hidePopover);
+  document.addEventListener("click", function (e) {
+    if (pop && !pop.hidden && !pop.contains(e.target) && !e.target.matches("[data-ref]")) hidePopover();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && pop && !pop.hidden) hidePopover();
+  });
+
+  // --- Feature 7: Blog-mode active-H2 highlight (opt-in) ----------------
+  if (document.body.classList.contains("aris-blog")) {
+    var h2s = [].slice.call(document.querySelectorAll("main h2"));
+    if (h2s.length && typeof IntersectionObserver !== "undefined") {
+      var io2 = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) {
+            h2s.forEach(function (h) { h.classList.remove("aris-active-h2"); });
+            en.target.classList.add("aris-active-h2");
+          }
+        });
+      }, { rootMargin: "-15% 0px -75% 0px" });
+      h2s.forEach(function (h) { io2.observe(h); });
+    }
+  }
+})();
+</script>
+</body>
+</html>
