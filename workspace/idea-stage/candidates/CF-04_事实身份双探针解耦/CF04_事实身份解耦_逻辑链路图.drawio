@@ -1,0 +1,173 @@
+<mxfile host="Electron" agent="WorkBuddy">
+  <diagram id="cf04-logic" name="CF-04 逻辑链路图">
+    <mxGraphModel dx="1273" dy="707" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2750" pageHeight="748" math="1" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="teacherPanel" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8F6FF;strokeColor=#AFA9EC;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="140" width="1600" x="27" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="studentPanel" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4F9FE;strokeColor=#85B7EB;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="140" width="1600" x="27" y="228" as="geometry" />
+        </mxCell>
+        <mxCell id="lossPanel" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FBFAF7;strokeColor=#B7B5AC;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="288" width="1083" x="1640" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="band2Panel" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FBFAFF;strokeColor=#AFA9EC;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="172" width="2696" x="27" y="388" as="geometry" />
+        </mxCell>
+        <mxCell id="band3Panel" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FBFF;strokeColor=#85B7EB;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="144" width="2696" x="27" y="576" as="geometry" />
+        </mxCell>
+        <mxCell id="title" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=20;fontStyle=1;fontColor=#26215C;" value="CF-04 事实 / 身份双探针正交解耦 ΔA_fact —— 逻辑链路图" vertex="1">
+          <mxGeometry height="34" width="2696" x="27" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="tTitle" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#534AB7;" value="Teacher：冻结 θ₀（stop-gradient，仅前向，双前向取激活差 ΔA）" vertex="1">
+          <mxGeometry height="22" width="1560" x="40" y="84" as="geometry" />
+        </mxCell>
+        <mxCell id="sTitle" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#185FA5;" value="Student：可训练 θ（接收 X⁺⊕y⁺；中间层激活对齐目标 T_{ℓ,p}）" vertex="1">
+          <mxGeometry height="22" width="1560" x="40" y="232" as="geometry" />
+        </mxCell>
+        <mxCell id="lossTitle" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#5F5E5A;" value="激活对齐损失 → 总损失 → 反传（仅优化 Student θ）→ 输出" vertex="1">
+          <mxGeometry height="22" width="1050" x="1654" y="84" as="geometry" />
+        </mxCell>
+        <mxCell id="b2Title" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#534AB7;" value="② ΔA 双探针解耦子链（CF-04 核心新增）：承接 ① 的 ΔA，输出 ΔÂ_pot 进入 ① 的目标构造 T_{ℓ,p}" vertex="1">
+          <mxGeometry height="22" width="2660" x="40" y="392" as="geometry" />
+        </mxCell>
+        <mxCell id="b3Title" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#185FA5;" value="③ 单个 DecoderLayer（合并展示）：内部拓扑沿用 v0.6.1、逐层重复 16 层、参数独立；中间层激活 h_ℓ(p) 在此取出供 ① 取 ΔA 与 h_{S,ℓ}" vertex="1">
+          <mxGeometry height="22" width="2660" x="40" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="tInput" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEEDFE;strokeColor=#534AB7;fontSize=11;fontColor=#2C2C2A;arcSize=10;" value="&lt;b&gt;遗忘集合 / 反事实配对输入&lt;/b&gt;&lt;br&gt;$$\mathcal{D}_F=\{(X^{+},y^{+})\},\quad X^{-}=X(s_r,r)$$$$X^{+}\!\oplus y^{+}\ \text{vs}\ X^{-}\!\oplus y^{+}$$" vertex="1">
+          <mxGeometry height="100" width="230" x="40" y="112" as="geometry" />
+        </mxCell>
+        <mxCell id="tEmbed" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F1EFE8;strokeColor=#5F5E5A;fontSize=11;fontColor=#2C2C2A;arcSize=10;" value="&lt;b&gt;Embedding（模型入口）&lt;/b&gt;&lt;br&gt;$$h^{(0)}=E[\mathrm{ids}]$$" vertex="1">
+          <mxGeometry height="100" width="170" x="286" y="112" as="geometry" />
+        </mxCell>
+        <mxCell id="tMiddle" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAEEDA;strokeColor=#BA7517;fontSize=11;fontColor=#2C2C2A;arcSize=10;strokeWidth=2;" value="&lt;b&gt;LLaMA DecoderLayer ×16&lt;/b&gt;&lt;br&gt;$$\text{逐层重复；内部拓扑见 ③}$$" vertex="1">
+          <mxGeometry height="100" width="250" x="484" y="112" as="geometry" />
+        </mxCell>
+        <mxCell id="tPlus" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEEDFE;strokeColor=#534AB7;fontSize=11;fontColor=#2C2C2A;arcSize=10;" value="&lt;b&gt;前向 ①  X⁺⊕y⁺&lt;/b&gt;&lt;br&gt;$$A^{+}_{T,\ell}(p)=h_{T,\ell}(X^{+}\!\oplus y^{+};p)$$" vertex="1">
+          <mxGeometry height="48" width="260" x="778" y="112" as="geometry" />
+        </mxCell>
+        <mxCell id="tMinus" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEEDFE;strokeColor=#534AB7;fontSize=11;fontColor=#2C2C2A;arcSize=10;" value="&lt;b&gt;前向 ②  X⁻⊕y⁺&lt;/b&gt;&lt;br&gt;$$A^{-}_{T,\ell}(p)=h_{T,\ell}(X^{-}\!\oplus y^{+};p)$$" vertex="1">
+          <mxGeometry height="48" width="260" x="778" y="164" as="geometry" />
+        </mxCell>
+        <mxCell id="tDelta" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CECBF6;strokeColor=#534AB7;fontSize=11;fontColor=#2C2C2A;arcSize=10;strokeWidth=2;" value="&lt;b&gt;中间层激活差 / 净化（核心机制，替换原 Teacher 预测分布）&lt;/b&gt;&lt;br&gt;$$\Delta A_{\ell,p}=A^{+}_{T,\ell}(p)-A^{-}_{T,\ell}(p),\;p\in S_f$$" vertex="1">
+          <mxGeometry height="100" width="384" x="1220" y="112" as="geometry" />
+        </mxCell>
+        <mxCell id="sInput" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6F1FB;strokeColor=#185FA5;fontSize=11;fontColor=#2C2C2A;arcSize=10;" value="&lt;b&gt;输入&lt;/b&gt;&lt;br&gt;$$\mathcal{D}_F,\ \mathcal{D}_R,\quad X^{+}\!\oplus y^{+}$$" vertex="1">
+          <mxGeometry height="100" width="230" x="40" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="sEmbed" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F1EFE8;strokeColor=#5F5E5A;fontSize=11;fontColor=#2C2C2A;arcSize=10;" value="&lt;b&gt;Embedding&lt;/b&gt;&lt;br&gt;$$h^{(0)}=E[\mathrm{ids}]$$" vertex="1">
+          <mxGeometry height="100" width="170" x="286" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="sMiddle" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAEEDA;strokeColor=#BA7517;fontSize=11;fontColor=#2C2C2A;arcSize=10;strokeWidth=2;" value="&lt;b&gt;LLaMA DecoderLayer ×16（可训练 θ）&lt;/b&gt;&lt;br&gt;$$\text{逐层重复；}\ h_{S,\ell}\ \text{在此取出}$$" vertex="1">
+          <mxGeometry height="100" width="250" x="472" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="sAct" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6F1FB;strokeColor=#185FA5;fontSize=11;fontColor=#2C2C2A;arcSize=10;" value="&lt;b&gt;答案 / 推理跨度激活（替换原预测分布）&lt;/b&gt;&lt;br&gt;$$h_{S,\ell}(X^{+}\!\oplus y^{+};p),\;p\in S_f$$&lt;br&gt;$$r_f\ \text{经冻结下游重算，不直接过 LM head}$$" vertex="1">
+          <mxGeometry height="100" width="300" x="738" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="sTarget" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAEEDA;strokeColor=#BA7517;fontSize=11;fontColor=#2C2C2A;arcSize=10;strokeWidth=2;" value="&lt;b&gt;遗忘目标 T_{ℓ,p}（stopgrad，新增目标构造）&lt;/b&gt;&lt;br&gt;$$T_{\ell,p}=\operatorname{stopgrad}\!\left(\Pi_{\mathcal K}\!\left[h^{+}_{\ell}(p)-\alpha\,\widehat{\Delta A_{\text{pot},\ell,p}}\right]\right)$$$$\mathcal K=\{h:\ r_{f,p}\le c,\ s_{d_j,p}\le d_j,\ \lVert\Delta r_{E,p}\rVert\le e\}$$" vertex="1">
+          <mxGeometry height="100" width="420" x="1194" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="lossF" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEEDFE;strokeColor=#534AB7;fontSize=11;fontColor=#2C2C2A;arcSize=10;" value="&lt;b&gt;遗忘损失 L_F（替换为激活距离）&lt;/b&gt;&lt;br&gt;$$\mathcal{L}_F=\frac{1}{|\Lambda(k)||S_f|}\sum_{\ell\in\Lambda(k)}\sum_{p\in S_f}\rho_\ell(k)\operatorname{dist}\!\left(h_{S,\ell}(p),T_{\ell,p}\right)$$$$\lambda_{KL}^{(\mathrm{ablation})}=0\ \text{（不做 KL 蒸馏）}$$" vertex="1">
+          <mxGeometry height="100" width="470" x="1654" y="112" as="geometry" />
+        </mxCell>
+        <mxCell id="lossR" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6F1FB;strokeColor=#185FA5;fontSize=11;fontColor=#2C2C2A;arcSize=10;" value="&lt;b&gt;保留损失 L_R（独立保留集 NLL）&lt;/b&gt;&lt;br&gt;$$\mathcal{L}_R=\mathbb{E}_{(x,y)\sim\mathcal{D}_R}\!\left[-\log p_\theta(y\mid x)\right]$$" vertex="1">
+          <mxGeometry height="76" width="267" x="1654" y="224" as="geometry" />
+        </mxCell>
+        <mxCell id="total" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAEEDA;strokeColor=#854F0B;fontSize=11;fontColor=#2C2C2A;arcSize=10;fontSize=12;" value="&lt;b&gt;总损失&lt;/b&gt;&lt;br&gt;$$\mathcal{L}=\lambda_F\mathcal{L}_F+\beta\mathcal{L}_R$$" vertex="1">
+          <mxGeometry height="96" width="150" x="2160" y="112" as="geometry" />
+        </mxCell>
+        <mxCell id="back" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF3DE;strokeColor=#3B6D11;fontSize=11;fontColor=#2C2C2A;arcSize=10;" value="&lt;b&gt;反向传播（替换：仅优化 Student θ）&lt;/b&gt;&lt;br&gt;$$\nabla_{\theta}\mathcal{L}\ \text{only},\quad \theta_0\ \text{frozen (stopgrad)},\quad \theta\leftarrow\theta-\eta\nabla_{\theta}\mathcal{L}$$" vertex="1">
+          <mxGeometry height="62" width="316" x="2077" y="279" as="geometry" />
+        </mxCell>
+        <mxCell id="out" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF3DE;strokeColor=#3B6D11;fontSize=11;fontColor=#2C2C2A;arcSize=10;strokeWidth=2;" value="&lt;b&gt;输出（结果，新增终点）&lt;/b&gt;&lt;br&gt;$$\theta^{*}\ \text{：参数内化、无 hook、具备遗忘且保效用的 Student 模型}$$" vertex="1">
+          <mxGeometry height="72" width="323" x="2396" y="173" as="geometry" />
+        </mxCell>
+        <mxCell id="probe" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FBFAFF;strokeColor=#AFA9EC;fontSize=11;fontColor=#2C2C2A;arcSize=10;fontSize=12;" value="&lt;b&gt;① 双冻结探针（新增）&lt;/b&gt;&lt;br&gt;$$z_{\text{fact}}=\phi_{\text{fact}}(\Delta A_{\ell,p}),\quad z_{\text{id}}=\phi_{\text{id}}(\Delta A_{\ell,p})$$&lt;br&gt;$$\mathrm{AUC}_f,\ \mathrm{AUC}_{\text{id}}\quad(\text{经冻结下游重算，不直接过 LM head})$$" vertex="1">
+          <mxGeometry height="132" width="650" x="40" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="deflate" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FBFAFF;strokeColor=#AFA9EC;fontSize=11;fontColor=#2C2C2A;arcSize=10;fontSize=12;" value="&lt;b&gt;② 正交收缩去身份（新增）&lt;/b&gt;&lt;br&gt;$$\Delta A_{\text{fact}}=\big(I-V_{\text{id}}V_{\text{id}}^{\top}\big)\Delta A,\quad \Delta A_{\text{id}}=V_{\text{id}}V_{\text{id}}^{\top}\Delta A$$&lt;br&gt;$$p\in S_f\quad(\text{只保留与身份正交的分量})$$" vertex="1">
+          <mxGeometry height="132" width="650" x="706" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="pot" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FBFAFF;strokeColor=#AFA9EC;fontSize=11;fontColor=#2C2C2A;arcSize=10;fontSize=12;" value="&lt;b&gt;③ 反事实激活潜力（新增）&lt;/b&gt;&lt;br&gt;$$\Delta A_{\text{pot}}=\Delta A_{\text{fact}}+\sum_{j}\lambda_j u_j,\quad u_j\perp V_{\text{id}},\ \left|\partial r_f/\partial u_j\right|&gt;\tau_{\text{pot}}$$&lt;br&gt;$$\text{补回被身份方向掩盖、但对事实读出}\ r_f\ \text{有因果潜力的分量}$$" vertex="1">
+          <mxGeometry height="132" width="650" x="1372" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="purity" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CECBF6;strokeColor=#534AB7;fontSize=11;fontColor=#2C2C2A;arcSize=10;strokeWidth=2;fontSize=12;" value="&lt;b&gt;④ 纯度证书 / wrong-donor 硬检验（新增，可证伪门）&lt;/b&gt;&lt;br&gt;$$\mathcal P=\mathrm{AUC}_f(\Delta A_{\text{pot}})-\mathrm{AUC}_{\text{id}}(\Delta A_{\text{pot}})$$&lt;br&gt;$$\frac{\lVert V_{\text{id}}V_{\text{id}}^{\top}\Delta A^{\text{wrong}}\rVert}{\lVert\Delta A^{\text{wrong}}\rVert}\ge\pi_{\text{id}}\ \Rightarrow\ \widehat{\Delta A_{\text{pot}}}\ \text{进入 ① 的目标构造}$$" vertex="1">
+          <mxGeometry height="132" width="650" x="2038" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="layer" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FBFF;strokeColor=#85B7EB;fontSize=11;fontColor=#2C2C2A;arcSize=10;fontSize=12;" value="&lt;b&gt;单个 DecoderLayer&lt;/b&gt;&lt;br&gt;$$\text{RMSNorm}\to Q/K/V\to\text{RoPE}\to\text{FlashAttention2}\to O\to\text{残差①}\to\text{RMSNorm}\to\text{Gate/Up}\to\text{SwiGLU}\to\text{Down}\to\text{残差②}\to h^{(\ell)}$$$$\text{逐层重复 16 层、各层参数独立}$$" vertex="1">
+          <mxGeometry height="100" width="1900" x="40" y="608" as="geometry" />
+        </mxCell>
+        <mxCell id="layerNote" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6F1FB;strokeColor=#185FA5;fontSize=11;fontColor=#2C2C2A;arcSize=10;fontSize=12;" value="&lt;b&gt;Teacher / Student 区分点&lt;/b&gt;&lt;br&gt;$$\text{Teacher：冻结}\ \theta_0,\ \text{stopgrad，仅前向，双前向取}\ A^{+}/A^{-}\Rightarrow\Delta A$$$$\text{Student：可训练}\ \theta,\ h_{S,\ell}\ \text{对齐}\ T_{\ell,p};\quad \text{区分点非}\ \tau$$" vertex="1">
+          <mxGeometry height="100" width="734" x="1956" y="608" as="geometry" />
+        </mxCell>
+        <mxCell id="t0" edge="1" parent="1" source="tInput" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#534AB7;" target="tEmbed" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t1" edge="1" parent="1" source="tEmbed" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#534AB7;" target="tMiddle" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t2" edge="1" parent="1" source="tMiddle" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#534AB7;" target="tPlus" value="X⁺">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t3" edge="1" parent="1" source="tMiddle" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#534AB7;" target="tMinus" value="X⁻">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t4" edge="1" parent="1" source="tPlus" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#534AB7;" target="tDelta" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t5" edge="1" parent="1" source="tMinus" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#534AB7;" target="tDelta" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s0" edge="1" parent="1" source="sInput" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#185FA5;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#185FA5;" target="sEmbed" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" edge="1" parent="1" source="sEmbed" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#185FA5;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#185FA5;" target="sMiddle" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" edge="1" parent="1" source="sMiddle" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#185FA5;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#185FA5;" target="sAct" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" edge="1" parent="1" source="sAct" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#185FA5;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#185FA5;" target="sTarget" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sToLossF" edge="1" parent="1" source="sTarget" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#BA7517;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#BA7517;" target="lossF" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1633.9" y="310" />
+              <mxPoint x="1633.9" y="162" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l0" edge="1" parent="1" source="lossF" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#854F0B;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#854F0B;" target="total" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l1" edge="1" parent="1" source="lossR" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#185FA5;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#185FA5;entryX=0.002;entryY=0.838;entryDx=0;entryDy=0;entryPerimeter=0;" target="total" value="">
+          <mxGeometry relative="1" x="0.3005" as="geometry">
+            <Array as="points">
+              <mxPoint x="2131" y="262" />
+              <mxPoint x="2131" y="192.4" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l2" edge="1" parent="1" source="total" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#854F0B;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#854F0B;" target="back" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l3" edge="1" parent="1" source="back" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#3B6D11;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#3B6D11;" target="out" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="d0" edge="1" parent="1" source="probe" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#534AB7;" target="deflate" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="d1" edge="1" parent="1" source="deflate" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#534AB7;" target="pot" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="d2" edge="1" parent="1" source="pot" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#534AB7;strokeWidth=1.5;fontSize=10;endArrow=block;endFill=1;fontColor=#534AB7;" target="purity" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
