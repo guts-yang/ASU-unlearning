@@ -227,14 +227,20 @@ def run_cf04(ctx, args):
     fact_y = torch.cat([torch.ones(n), torch.zeros(n)])
     id_x = torch.cat([d[:n], f[:n]])
     id_y = torch.cat([torch.ones(n), torch.zeros(n)])
-    fact_probe, id_probe, report = fit_dual_probes(fact_x, fact_y, id_x, id_y, steps=200)
+    fact_probe, id_probe, report = fit_dual_probes(
+        fact_x, fact_y, id_x, id_y, steps=args.probe_steps, lr=args.probe_lr
+    )
     hist = []
     if args.steps > 0:
         def loss_fn(student, fb, rb, step):
             hf = _hidden(student, fb, 16)
             hr = _hidden(student, rb, 16)
-            terms = probe_guided_loss(hf, hr, fact_probe, id_probe)
-            return {**terms, "loss": terms["loss"] + 0.5 * _retain_nll(student, rb)}
+            terms = probe_guided_loss(
+                hf, hr, fact_probe, id_probe,
+                identity_weight=args.cf04_identity_weight,
+                retain_weight=args.cf04_probe_retain_weight,
+            )
+            return {**terms, "loss": terms["loss"] + args.cf04_retain_nll_weight * _retain_nll(student, rb)}
 
         hist = _train(ctx, loss_fn, args)
     return {"training_executed": args.steps > 0, "evaluation_executed": True, "probe_training_executed": True,
@@ -396,6 +402,11 @@ def main(argv=None):
     ap.add_argument("--behavior-samples", type=int, default=4, help="0 disables generation checks")
     ap.add_argument("--max-pairs", type=int, default=36)
     ap.add_argument("--probe-limit", type=int, default=36)
+    ap.add_argument("--probe-steps", type=int, default=300)
+    ap.add_argument("--probe-lr", type=float, default=0.05)
+    ap.add_argument("--cf04-identity-weight", type=float, default=0.5)
+    ap.add_argument("--cf04-probe-retain-weight", type=float, default=0.5)
+    ap.add_argument("--cf04-retain-nll-weight", type=float, default=0.5)
     ap.add_argument("--basis-limit", type=int, default=64)
     ap.add_argument("--patch-pairs", type=int, default=4)
     ap.add_argument("--patch-micro-batch", type=int, default=8)
@@ -445,6 +456,14 @@ def main(argv=None):
         "eval_limit": args.eval_limit,
         "eval_batch_size": args.eval_batch_size,
         "max_pairs": args.max_pairs,
+        "hyperparams": {
+            "probe_steps": args.probe_steps,
+            "probe_lr": args.probe_lr,
+            "cf04_identity_weight": args.cf04_identity_weight,
+            "cf04_probe_retain_weight": args.cf04_probe_retain_weight,
+            "cf04_retain_nll_weight": args.cf04_retain_nll_weight,
+            "grad_accum": args.grad_accum,
+        } if args.method == "CF-04" else {},
         "data_meta": ctx.meta if ctx is not None else {},
         "before": before,
         "after": after,
