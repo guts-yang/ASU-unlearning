@@ -39,6 +39,15 @@
 
 CF-04 c11: LR `6e-6`, identity weight `2.0`, probe-retain weight `2.5`, retain-NLL weight `5.0`.
 
+## B3. CF-04 v2
+
+| Method | Budget | dF | dR | dH | Retain-safe |
+|---|---|---:|---:|---:|---|
+| CF-04 c11 | 300 steps, 3 seeds | +0.5380 | +0.0187 | +0.0754 | yes |
+| **CF-04 v2g** | **300 steps, 3 seeds** | **+2.3084** | **+0.0180** | **+0.1754** | **yes** |
+| ASU | 300 steps, 3 seeds | +3.1780 | +0.1730 | +0.0340 | no |
+| CF-04 v2g | 10 epochs | +8.0920 | -0.4561 | +0.9656 | yes |
+
 ## C. R3-2 Audit
 
 | Checkpoint / Model | P1 forget | P2 gain | P3 gain | INT8 shift | mean_recovery |

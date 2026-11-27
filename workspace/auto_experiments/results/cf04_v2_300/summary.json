@@ -1,0 +1,328 @@
+{
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "configs": {
+    "v2a": {
+      "seed": 0,
+      "lr": 6e-06,
+      "delta": {
+        "forget_nll": 1.230106146776709,
+        "retain_nll": 0.03251845737010328,
+        "holdout_nll": 0.14643393559598938
+      },
+      "hyperparams": {
+        "probe_steps": 300,
+        "probe_lr": 0.05,
+        "cf04_identity_weight": 2.0,
+        "cf04_probe_retain_weight": 2.5,
+        "cf04_retain_nll_weight": 0.5,
+        "cf04_v2": true,
+        "cf04_layers": "12,16",
+        "cf04_margin": 0.5,
+        "probe_temperature": 1.0,
+        "cf04_lambda_init": 1.0,
+        "cf04_lambda_lr": 0.05,
+        "cf04_grad_project": false,
+        "grad_accum": 8
+      }
+    },
+    "v2b": {
+      "seed": 0,
+      "lr": 6e-06,
+      "delta": {
+        "forget_nll": 1.6391484856503327,
+        "retain_nll": 0.03377138546310088,
+        "holdout_nll": 0.15013167357849055
+      },
+      "hyperparams": {
+        "probe_steps": 300,
+        "probe_lr": 0.05,
+        "cf04_identity_weight": 2.0,
+        "cf04_probe_retain_weight": 2.5,
+        "cf04_retain_nll_weight": 0.5,
+        "cf04_v2": true,
+        "cf04_layers": "8,12,16",
+        "cf04_margin": 0.5,
+        "probe_temperature": 1.0,
+        "cf04_lambda_init": 1.0,
+        "cf04_lambda_lr": 0.05,
+        "cf04_grad_project": false,
+        "grad_accum": 8
+      }
+    },
+    "v2b_seed1": {
+      "seed": 1,
+      "lr": 6e-06,
+      "delta": {
+        "forget_nll": 1.260871837644829,
+        "retain_nll": 0.028540780047839553,
+        "holdout_nll": 0.1424051458112119
+      },
+      "hyperparams": {
+        "probe_steps": 300,
+        "probe_lr": 0.05,
+        "cf04_identity_weight": 2.0,
+        "cf04_probe_retain_weight": 2.5,
+        "cf04_retain_nll_weight": 0.5,
+        "cf04_v2": true,
+        "cf04_layers": "8,12,16",
+        "cf04_margin": 0.5,
+        "probe_temperature": 1.0,
+        "cf04_lambda_init": 1.0,
+        "cf04_lambda_lr": 0.05,
+        "cf04_grad_project": false,
+        "grad_accum": 8
+      }
+    },
+    "v2b_seed2": {
+      "seed": 2,
+      "lr": 6e-06,
+      "delta": {
+        "forget_nll": 1.5391310599789698,
+        "retain_nll": 0.02430262952405926,
+        "holdout_nll": 0.1772955806388501
+      },
+      "hyperparams": {
+        "probe_steps": 300,
+        "probe_lr": 0.05,
+        "cf04_identity_weight": 2.0,
+        "cf04_probe_retain_weight": 2.5,
+        "cf04_retain_nll_weight": 0.5,
+        "cf04_v2": true,
+        "cf04_layers": "8,12,16",
+        "cf04_margin": 0.5,
+        "probe_temperature": 1.0,
+        "cf04_lambda_init": 1.0,
+        "cf04_lambda_lr": 0.05,
+        "cf04_grad_project": false,
+        "grad_accum": 8
+      }
+    },
+    "v2c": {
+      "seed": 0,
+      "lr": 6e-06,
+      "delta": {
+        "forget_nll": 1.4902963496346042,
+        "retain_nll": 0.027664898085982492,
+        "holdout_nll": 0.18204036922227496
+      },
+      "hyperparams": {
+        "probe_steps": 300,
+        "probe_lr": 0.05,
+        "cf04_identity_weight": 2.0,
+        "cf04_probe_retain_weight": 2.5,
+        "cf04_retain_nll_weight": 0.5,
+        "cf04_v2": true,
+        "cf04_layers": "12,16",
+        "cf04_margin": 1.0,
+        "probe_temperature": 1.0,
+        "cf04_lambda_init": 1.0,
+        "cf04_lambda_lr": 0.05,
+        "cf04_grad_project": false,
+        "grad_accum": 8
+      }
+    },
+    "v2d": {
+      "seed": 0,
+      "lr": 6e-06,
+      "delta": {
+        "forget_nll": 1.0687229660946482,
+        "retain_nll": 0.02155838247308367,
+        "holdout_nll": 0.1257198800201531
+      },
+      "hyperparams": {
+        "probe_steps": 300,
+        "probe_lr": 0.05,
+        "cf04_identity_weight": 2.0,
+        "cf04_probe_retain_weight": 2.5,
+        "cf04_retain_nll_weight": 0.5,
+        "cf04_v2": true,
+        "cf04_layers": "12,16",
+        "cf04_margin": 0.5,
+        "probe_temperature": 1.0,
+        "cf04_lambda_init": 3.0,
+        "cf04_lambda_lr": 0.05,
+        "cf04_grad_project": false,
+        "grad_accum": 8
+      }
+    },
+    "v2e": {
+      "seed": 0,
+      "lr": 6e-06,
+      "delta": {
+        "forget_nll": 1.1332536529018882,
+        "retain_nll": 0.020350133217768573,
+        "holdout_nll": 0.12770663170179497
+      },
+      "hyperparams": {
+        "probe_steps": 300,
+        "probe_lr": 0.05,
+        "cf04_identity_weight": 2.0,
+        "cf04_probe_retain_weight": 2.5,
+        "cf04_retain_nll_weight": 0.5,
+        "cf04_v2": true,
+        "cf04_layers": "12,16",
+        "cf04_margin": 1.0,
+        "probe_temperature": 1.0,
+        "cf04_lambda_init": 3.0,
+        "cf04_lambda_lr": 0.05,
+        "cf04_grad_project": false,
+        "grad_accum": 8
+      }
+    },
+    "v2f": {
+      "seed": 0,
+      "lr": 6e-06,
+      "delta": {
+        "forget_nll": 30.17527771437814,
+        "retain_nll": 37.699670709983124,
+        "holdout_nll": 38.19571203172214
+      },
+      "hyperparams": {
+        "probe_steps": 300,
+        "probe_lr": 0.05,
+        "cf04_identity_weight": 2.0,
+        "cf04_probe_retain_weight": 2.5,
+        "cf04_retain_nll_weight": 0.5,
+        "cf04_v2": true,
+        "cf04_layers": "12,16",
+        "cf04_margin": 0.5,
+        "probe_temperature": 1.0,
+        "cf04_lambda_init": 1.0,
+        "cf04_lambda_lr": 0.05,
+        "cf04_grad_project": true,
+        "grad_accum": 8
+      }
+    },
+    "v2g": {
+      "seed": 0,
+      "lr": 6e-06,
+      "delta": {
+        "forget_nll": 2.4152140400966498,
+        "retain_nll": 0.02221813691428781,
+        "holdout_nll": 0.18744196890936515
+      },
+      "hyperparams": {
+        "probe_steps": 300,
+        "probe_lr": 0.05,
+        "cf04_identity_weight": 2.0,
+        "cf04_probe_retain_weight": 2.5,
+        "cf04_retain_nll_weight": 0.5,
+        "cf04_v2": true,
+        "cf04_layers": "8,12,16",
+        "cf04_margin": 1.0,
+        "probe_temperature": 1.0,
+        "cf04_lambda_init": 3.0,
+        "cf04_lambda_lr": 0.05,
+        "cf04_grad_project": false,
+        "grad_accum": 8
+      }
+    },
+    "v2g_seed1": {
+      "seed": 1,
+      "lr": 6e-06,
+      "delta": {
+        "forget_nll": 2.318091855276841,
+        "retain_nll": 0.016667206585924688,
+        "holdout_nll": 0.15725028490830772
+      },
+      "hyperparams": {
+        "probe_steps": 300,
+        "probe_lr": 0.05,
+        "cf04_identity_weight": 2.0,
+        "cf04_probe_retain_weight": 2.5,
+        "cf04_retain_nll_weight": 0.5,
+        "cf04_v2": true,
+        "cf04_layers": "8,12,16",
+        "cf04_margin": 1.0,
+        "probe_temperature": 1.0,
+        "cf04_lambda_init": 3.0,
+        "cf04_lambda_lr": 0.05,
+        "cf04_grad_project": false,
+        "grad_accum": 8
+      }
+    },
+    "v2g_seed2": {
+      "seed": 2,
+      "lr": 6e-06,
+      "delta": {
+        "forget_nll": 2.191834568766818,
+        "retain_nll": 0.015106662806549154,
+        "holdout_nll": 0.18159997226447522
+      },
+      "hyperparams": {
+        "probe_steps": 300,
+        "probe_lr": 0.05,
+        "cf04_identity_weight": 2.0,
+        "cf04_probe_retain_weight": 2.5,
+        "cf04_retain_nll_weight": 0.5,
+        "cf04_v2": true,
+        "cf04_layers": "8,12,16",
+        "cf04_margin": 1.0,
+        "probe_temperature": 1.0,
+        "cf04_lambda_init": 3.0,
+        "cf04_lambda_lr": 0.05,
+        "cf04_grad_project": false,
+        "grad_accum": 8
+      }
+    },
+    "v2h": {
+      "seed": 0,
+      "lr": 6e-06,
+      "delta": {
+        "forget_nll": 25.988050598406907,
+        "retain_nll": 50.76191312018512,
+        "holdout_nll": 48.28899182968542
+      },
+      "hyperparams": {
+        "probe_steps": 300,
+        "probe_lr": 0.05,
+        "cf04_identity_weight": 2.0,
+        "cf04_probe_retain_weight": 2.5,
+        "cf04_retain_nll_weight": 0.5,
+        "cf04_v2": true,
+        "cf04_layers": "12,16",
+        "cf04_margin": 1.0,
+        "probe_temperature": 1.0,
+        "cf04_lambda_init": 1.0,
+        "cf04_lambda_lr": 0.05,
+        "cf04_grad_project": true,
+        "grad_accum": 8
+      }
+    },
+    "v2b_mean": {
+      "forget_nll": {
+        "mean": 1.4797171277580439,
+        "std": 0.16004336310936595,
+        "n": 3
+      },
+      "retain_nll": {
+        "mean": 0.0288715983449999,
+        "std": 0.0038726748135783384,
+        "n": 3
+      },
+      "holdout_nll": {
+        "mean": 0.15661080000951752,
+        "std": 0.014962618311363854,
+        "n": 3
+      }
+    },
+    "v2g_mean": {
+      "forget_nll": {
+        "mean": 2.3083801547134364,
+        "std": 0.0914524827393027,
+        "n": 3
+      },
+      "retain_nll": {
+        "mean": 0.01799733543558722,
+        "std": 0.0030517970731781144,
+        "n": 3
+      },
+      "holdout_nll": {
+        "mean": 0.1754307420273827,
+        "std": 0.013074886793483637,
+        "n": 3
+      }
+    }
+  }
+}

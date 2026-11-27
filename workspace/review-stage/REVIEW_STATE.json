@@ -1,5 +1,5 @@
 {
-  "run_id": "run_20261127_cf04opt",
+  "run_id": "run_20261127_cf04v2",
   "round": 1,
   "reviewer_backend": "manual",
   "reviewer_profile": "hy4",
@@ -11,7 +11,7 @@
   "status": "completed",
   "last_score": null,
   "last_verdict": "REVIEW_UNAVAILABLE",
-  "reason": "Hy4 response contained only reasoning_content with empty final content at 4096 and 16384 token budgets.",
+  "reason": "Genuine Hy4 review returned only reasoning_content and empty final content at 8192 token budget; forced-format echo is not a review.",
   "pending_experiments": [],
   "timestamp": "2026-11-27T00:00:00Z"
 }
