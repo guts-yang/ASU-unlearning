@@ -1,72 +1,119 @@
 {
   "ASU_BASE": {
-    "status": "failed",
+    "status": "completed",
     "attempts": 1,
     "gpu": "1",
-    "started": 1795709124.851021,
-    "ended": 1795709279.893063,
-    "returncode": 1
+    "started": 1795711795.176696,
+    "ended": 1795711965.194451,
+    "returncode": 0,
+    "reason": null
   },
   "CF-01": {
-    "status": "failed",
+    "status": "completed",
     "attempts": 1,
     "gpu": "1",
-    "started": 1795709279.8995423,
-    "ended": 1795709409.903681,
-    "returncode": 1
+    "started": 1795711965.203564,
+    "ended": 1795712260.2131655,
+    "returncode": 0,
+    "reason": null
   },
   "CF-02": {
-    "status": "failed",
+    "status": "completed",
     "attempts": 1,
     "gpu": "1",
-    "started": 1795709409.910894,
-    "ended": 1795709604.9167533,
-    "returncode": 1
+    "started": 1795712260.2216058,
+    "ended": 1795712665.2342694,
+    "returncode": 0,
+    "reason": null
   },
   "CF-03": {
-    "status": "running",
+    "status": "completed",
     "attempts": 1,
     "gpu": "1",
-    "started": 1795709604.945495
+    "started": 1795712665.2440572,
+    "ended": 1795714155.0643458,
+    "returncode": 0,
+    "reason": null
   },
   "CF-04": {
-    "status": "pending",
-    "attempts": 0
+    "status": "completed",
+    "attempts": 1,
+    "gpu": "1",
+    "started": 1795709745.1998367,
+    "ended": 1795710015.2077727,
+    "returncode": 0
   },
   "CF-05": {
-    "status": "pending",
-    "attempts": 0
+    "status": "completed",
+    "attempts": 1,
+    "gpu": "1",
+    "started": 1795710015.2095134,
+    "ended": 1795710230.2158377,
+    "returncode": 0
   },
   "CF-06": {
-    "status": "pending",
-    "attempts": 0
+    "status": "completed",
+    "attempts": 1,
+    "gpu": "1",
+    "started": 1795710230.2180634,
+    "ended": 1795710240.2187264,
+    "returncode": 0
   },
   "CF-07": {
-    "status": "pending",
-    "attempts": 0
+    "status": "completed",
+    "attempts": 1,
+    "gpu": "1",
+    "started": 1795710240.2208211,
+    "ended": 1795710470.2274728,
+    "returncode": 0
   },
   "CF-08": {
-    "status": "pending",
-    "attempts": 0
+    "status": "completed",
+    "attempts": 1,
+    "gpu": "1",
+    "started": 1795710470.2293088,
+    "ended": 1795710785.2385252,
+    "returncode": 0
   },
   "CF-09": {
-    "status": "pending",
-    "attempts": 0
+    "status": "completed",
+    "attempts": 1,
+    "gpu": "1",
+    "started": 1795710785.240758,
+    "ended": 1795710960.245992,
+    "returncode": 0
   },
   "CF-10": {
-    "status": "pending",
-    "attempts": 0
+    "status": "completed",
+    "attempts": 1,
+    "gpu": "1",
+    "started": 1795710960.2545607,
+    "ended": 1795711265.2981498,
+    "returncode": 0
   },
   "R2-C": {
-    "status": "pending",
-    "attempts": 0
+    "status": "completed",
+    "attempts": 1,
+    "gpu": "1",
+    "started": 1795711265.303443,
+    "ended": 1795711475.3096726,
+    "returncode": 0
   },
   "R3-3": {
-    "status": "pending",
-    "attempts": 0
+    "status": "completed",
+    "attempts": 1,
+    "gpu": "1",
+    "started": 1795711475.3120573,
+    "ended": 1795711620.3168542,
+    "returncode": 0
   },
   "R3-2": {
-    "status": "pending",
-    "attempts": 0
+    "status": "completed",
+    "attempts": 1,
+    "ended": 1795713630.287087,
+    "returncode": 0,
+    "reason": null,
+    "gpu": "1",
+    "started": 1795712810.2606823
   }
 }
