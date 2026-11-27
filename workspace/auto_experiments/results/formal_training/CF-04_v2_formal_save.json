@@ -1,0 +1,1093 @@
+{
+  "candidate": "CF-04",
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "run_kind": "full-data non-claim training",
+  "mode": "formal",
+  "formal_epochs": 10,
+  "epochs": 10,
+  "epochs_completed": 10,
+  "batch_size": 8,
+  "grad_accum": 4,
+  "lr": 6e-06,
+  "retain_weight": 3.0,
+  "retain_guard": null,
+  "seed": 0,
+  "data": {
+    "forget": 400,
+    "retain": 3600,
+    "holdout": 400
+  },
+  "reproducibility": {
+    "git_sha": "e7f1db17904bfa1f6ee7402ceaf61f83a373af4c",
+    "formal_epochs_source": "open-unlearning/configs/experiment/unlearn/tofu/default.yaml: num_train_epochs=10",
+    "data_order": "seeded torch.Generator; one order per epoch; no early stop in formal mode"
+  },
+  "before": {
+    "forget_nll": 0.48317439497048636,
+    "retain_nll": 0.4768715492785899,
+    "holdout_nll": 1.9877836086791592,
+    "behavior": {
+      "forget": {
+        "samples": 8,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 18.875,
+        "mean_answer_chars": 76.625,
+        "eos_rate": 0.5,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.4749072924624395,
+        "high_overlap_rate": 0.625,
+        "examples": [
+          {
+            "n_tokens": 8,
+            "n_chars": 14,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Hsiao Yun-Hwa."
+          },
+          {
+            "n_tokens": 11,
+            "n_chars": 35,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Hsiao Yun-Hwa identifies as female."
+          },
+          {
+            "n_tokens": 14,
+            "n_chars": 45,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Hsiao Yun-Hwa's father is a Registered Nurse."
+          }
+        ]
+      },
+      "retain": {
+        "samples": 8,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 23.625,
+        "mean_answer_chars": 110.625,
+        "eos_rate": 0.125,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.2571473665223666,
+        "high_overlap_rate": 0.125,
+        "examples": [
+          {
+            "n_tokens": 24,
+            "n_chars": 112,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.2857142857142857,
+            "text": "Rafael Garcia Marquez.\n\nRafael Garcia Marquez is a celebrated LGBTQ+ author from Santiago, Chile known for their"
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 79,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.625,
+            "text": "Yes, Jaime Vasquez was born on the 10th of September, 1958 in the city of Bogot"
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 120,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.2222222222222222,
+            "text": "Jaime Vasquez's father is a renowned photographer and his mother is a dedicated meteorologist.\n\n: What are Jaime Vasquez"
+          }
+        ]
+      }
+    }
+  },
+  "after": {
+    "forget_nll": 8.575174619500693,
+    "retain_nll": 0.020732779031194897,
+    "holdout_nll": 2.953410236363053,
+    "behavior": {
+      "forget": {
+        "samples": 8,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 24.0,
+        "mean_answer_chars": 120.75,
+        "eos_rate": 0.0,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.049479166666666664,
+        "high_overlap_rate": 0.0,
+        "examples": [
+          {
+            "n_tokens": 24,
+            "n_chars": 88,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.3333333333333333,
+            "text": "The full name of the author born in Taipei, Taiwan on 05/11/1991 who writes in the genre"
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 61,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.0,
+            "text": "He Alucheuche Alalohechemhehehehehehehehehe (He is a He He He"
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 260,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.0,
+            "text": "Journal journalist journalist journalist journalist journalist journalist journalist journalist journalist journalist journalist journalist journalist journalist journalist journalist journalist journ"
+          }
+        ]
+      },
+      "retain": {
+        "samples": 8,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 23.75,
+        "mean_answer_chars": 109.5,
+        "eos_rate": 0.125,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.6357774170274171,
+        "high_overlap_rate": 1.0,
+        "examples": [
+          {
+            "n_tokens": 24,
+            "n_chars": 116,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.7857142857142857,
+            "text": "The author in question is Jaime Vasquez, an esteemed LGBTQ+ writer who hails from Santiago, Chile and specializes in"
+          },
+          {
+            "n_tokens": 22,
+            "n_chars": 69,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.875,
+            "text": "Yes, Jaime Vasquez was born on the 25th of February in the year 1952."
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 100,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5555555555555556,
+            "text": "Jaime was born to a noted chef father, Lorenzo Vasquez, and a mother, Sophia Vasquez, who herself is"
+          }
+        ]
+      }
+    }
+  },
+  "delta": {
+    "forget_nll": 8.092000224530207,
+    "retain_nll": -0.45613877024739496,
+    "holdout_nll": 0.9656266276838938
+  },
+  "train": {
+    "history": [
+      {
+        "epoch": 0,
+        "step": 0,
+        "loss": 16.923418045043945,
+        "fact_forget": 10.386454582214355,
+        "identity_preserve": 1.6517820358276367,
+        "retain_fact_preserve": 0.9413709044456482
+      },
+      {
+        "epoch": 0,
+        "step": 50,
+        "loss": 5.797314643859863,
+        "fact_forget": 1.5577157735824585,
+        "identity_preserve": 0.09954175353050232,
+        "retain_fact_preserve": 1.2553905248641968
+      },
+      {
+        "epoch": 0,
+        "step": 100,
+        "loss": 2.103337287902832,
+        "fact_forget": 0.3618781566619873,
+        "identity_preserve": 0.030706297606229782,
+        "retain_fact_preserve": 0.06748975068330765
+      },
+      {
+        "epoch": 0,
+        "step": 150,
+        "loss": 1.0234460830688477,
+        "fact_forget": 0.0031149843707680702,
+        "identity_preserve": 0.006174774374812841,
+        "retain_fact_preserve": 0.00982725154608488
+      },
+      {
+        "epoch": 0,
+        "step": 200,
+        "loss": 1.0344257354736328,
+        "fact_forget": 5.836471973452717e-05,
+        "identity_preserve": 0.0012086322531104088,
+        "retain_fact_preserve": 0.005075443536043167
+      },
+      {
+        "epoch": 0,
+        "step": 250,
+        "loss": 0.8608167767524719,
+        "fact_forget": 3.1203642720356584e-05,
+        "identity_preserve": 0.0007056760368868709,
+        "retain_fact_preserve": 0.00202472903765738
+      },
+      {
+        "epoch": 0,
+        "step": 300,
+        "loss": 0.8157941699028015,
+        "fact_forget": 2.119874261552468e-05,
+        "identity_preserve": 0.00048785447143018246,
+        "retain_fact_preserve": 0.0011679306626319885
+      },
+      {
+        "epoch": 0,
+        "step": 350,
+        "loss": 0.9052761793136597,
+        "fact_forget": 3.07767913909629e-05,
+        "identity_preserve": 0.00044462934602051973,
+        "retain_fact_preserve": 0.0007953052408993244
+      },
+      {
+        "epoch": 0,
+        "step": 400,
+        "loss": 1.201919674873352,
+        "fact_forget": 2.761428004305344e-05,
+        "identity_preserve": 0.0004000663466285914,
+        "retain_fact_preserve": 0.008999836631119251
+      },
+      {
+        "epoch": 1,
+        "step": 0,
+        "loss": 0.5800935626029968,
+        "fact_forget": 1.3949963431514334e-05,
+        "identity_preserve": 0.0001705637841951102,
+        "retain_fact_preserve": 0.0018051036167889833
+      },
+      {
+        "epoch": 1,
+        "step": 50,
+        "loss": 0.4254821240901947,
+        "fact_forget": 1.2776425137417391e-05,
+        "identity_preserve": 0.0001223886793013662,
+        "retain_fact_preserve": 0.0012643658556044102
+      },
+      {
+        "epoch": 1,
+        "step": 100,
+        "loss": 0.3687330484390259,
+        "fact_forget": 9.866787877399474e-06,
+        "identity_preserve": 8.850185986375436e-05,
+        "retain_fact_preserve": 0.003180854022502899
+      },
+      {
+        "epoch": 1,
+        "step": 150,
+        "loss": 0.8721352219581604,
+        "fact_forget": 5.415514351625461e-06,
+        "identity_preserve": 6.470156949944794e-05,
+        "retain_fact_preserve": 0.002418605610728264
+      },
+      {
+        "epoch": 1,
+        "step": 200,
+        "loss": 0.40216904878616333,
+        "fact_forget": 4.6747131818847265e-06,
+        "identity_preserve": 5.265096478979103e-05,
+        "retain_fact_preserve": 0.0007569665322080255
+      },
+      {
+        "epoch": 1,
+        "step": 250,
+        "loss": 0.4529464840888977,
+        "fact_forget": 5.257862994767493e-06,
+        "identity_preserve": 5.200721716391854e-05,
+        "retain_fact_preserve": 0.001126094488427043
+      },
+      {
+        "epoch": 1,
+        "step": 300,
+        "loss": 0.9156956672668457,
+        "fact_forget": 3.33423076881445e-06,
+        "identity_preserve": 4.230110425851308e-05,
+        "retain_fact_preserve": 0.0005087947938591242
+      },
+      {
+        "epoch": 1,
+        "step": 350,
+        "loss": 0.5663050413131714,
+        "fact_forget": 3.021158363480936e-06,
+        "identity_preserve": 4.202290074317716e-05,
+        "retain_fact_preserve": 0.001794251031242311
+      },
+      {
+        "epoch": 1,
+        "step": 400,
+        "loss": 0.9215205311775208,
+        "fact_forget": 3.24223628922482e-06,
+        "identity_preserve": 3.7998834159225225e-05,
+        "retain_fact_preserve": 0.0006218763301149011
+      },
+      {
+        "epoch": 2,
+        "step": 0,
+        "loss": 0.19477161765098572,
+        "fact_forget": 8.739902114029974e-06,
+        "identity_preserve": 4.3807718611788005e-05,
+        "retain_fact_preserve": 0.0010893691796809435
+      },
+      {
+        "epoch": 2,
+        "step": 50,
+        "loss": 0.11763972043991089,
+        "fact_forget": 1.0871372069232166e-05,
+        "identity_preserve": 5.210070958128199e-05,
+        "retain_fact_preserve": 0.0002913394127972424
+      },
+      {
+        "epoch": 2,
+        "step": 100,
+        "loss": 0.32183730602264404,
+        "fact_forget": 1.3009508620598353e-05,
+        "identity_preserve": 5.6236851378344e-05,
+        "retain_fact_preserve": 0.0003250452864449471
+      },
+      {
+        "epoch": 2,
+        "step": 150,
+        "loss": 0.17228905856609344,
+        "fact_forget": 7.872896276239771e-06,
+        "identity_preserve": 3.969815588789061e-05,
+        "retain_fact_preserve": 0.0004860849294345826
+      },
+      {
+        "epoch": 2,
+        "step": 200,
+        "loss": 0.21888642013072968,
+        "fact_forget": 1.2385283298499417e-05,
+        "identity_preserve": 4.880418418906629e-05,
+        "retain_fact_preserve": 0.00030517461709678173
+      },
+      {
+        "epoch": 2,
+        "step": 250,
+        "loss": 0.28512170910835266,
+        "fact_forget": 5.806866283819545e-06,
+        "identity_preserve": 3.420765642658807e-05,
+        "retain_fact_preserve": 0.0012373144272714853
+      },
+      {
+        "epoch": 2,
+        "step": 300,
+        "loss": 0.2071903645992279,
+        "fact_forget": 4.945085038343677e-06,
+        "identity_preserve": 3.019873474841006e-05,
+        "retain_fact_preserve": 0.0006656924961134791
+      },
+      {
+        "epoch": 2,
+        "step": 350,
+        "loss": 0.34028947353363037,
+        "fact_forget": 5.790710474684602e-06,
+        "identity_preserve": 2.9776607334497385e-05,
+        "retain_fact_preserve": 0.0011709213722497225
+      },
+      {
+        "epoch": 2,
+        "step": 400,
+        "loss": 0.302334725856781,
+        "fact_forget": 3.882541932398453e-06,
+        "identity_preserve": 2.506756572984159e-05,
+        "retain_fact_preserve": 0.0008539437549188733
+      },
+      {
+        "epoch": 3,
+        "step": 0,
+        "loss": 0.19834309816360474,
+        "fact_forget": 0.0001894898887258023,
+        "identity_preserve": 8.612604869995266e-05,
+        "retain_fact_preserve": 0.0006088941590860486
+      },
+      {
+        "epoch": 3,
+        "step": 50,
+        "loss": 0.09766991436481476,
+        "fact_forget": 9.870275243883952e-05,
+        "identity_preserve": 6.996977026574314e-05,
+        "retain_fact_preserve": 0.00037879179581068456
+      },
+      {
+        "epoch": 3,
+        "step": 100,
+        "loss": 0.10405443608760834,
+        "fact_forget": 9.602490172255784e-05,
+        "identity_preserve": 5.6237808166770265e-05,
+        "retain_fact_preserve": 9.68261156231165e-05
+      },
+      {
+        "epoch": 3,
+        "step": 150,
+        "loss": 0.2048100084066391,
+        "fact_forget": 0.0001283548044739291,
+        "identity_preserve": 5.505486478796229e-05,
+        "retain_fact_preserve": 0.0012901256559416652
+      },
+      {
+        "epoch": 3,
+        "step": 200,
+        "loss": 0.19381524622440338,
+        "fact_forget": 8.215797424782068e-05,
+        "identity_preserve": 5.411070742411539e-05,
+        "retain_fact_preserve": 0.00031242379918694496
+      },
+      {
+        "epoch": 3,
+        "step": 250,
+        "loss": 0.2062469869852066,
+        "fact_forget": 0.00011086449376307428,
+        "identity_preserve": 6.495870184153318e-05,
+        "retain_fact_preserve": 0.0008775151218287647
+      },
+      {
+        "epoch": 3,
+        "step": 300,
+        "loss": 0.26758265495300293,
+        "fact_forget": 0.00018187862588092685,
+        "identity_preserve": 7.86030141171068e-05,
+        "retain_fact_preserve": 0.00035132968332618475
+      },
+      {
+        "epoch": 3,
+        "step": 350,
+        "loss": 0.1790519803762436,
+        "fact_forget": 0.00020623975433409214,
+        "identity_preserve": 8.338512270711362e-05,
+        "retain_fact_preserve": 0.000466697703814134
+      },
+      {
+        "epoch": 3,
+        "step": 400,
+        "loss": 0.20240172743797302,
+        "fact_forget": 7.563120743725449e-05,
+        "identity_preserve": 6.440502329496667e-05,
+        "retain_fact_preserve": 0.0005840735975652933
+      },
+      {
+        "epoch": 4,
+        "step": 0,
+        "loss": 0.09906751662492752,
+        "fact_forget": 2.2928091425455932e-07,
+        "identity_preserve": 4.8583492571196984e-06,
+        "retain_fact_preserve": 0.0004195219080429524
+      },
+      {
+        "epoch": 4,
+        "step": 50,
+        "loss": 0.18127909302711487,
+        "fact_forget": 2.047387965831149e-07,
+        "identity_preserve": 4.008799805887975e-06,
+        "retain_fact_preserve": 0.0006574543658643961
+      },
+      {
+        "epoch": 4,
+        "step": 100,
+        "loss": 0.1635163277387619,
+        "fact_forget": 2.4126453013195714e-07,
+        "identity_preserve": 4.235332198732067e-06,
+        "retain_fact_preserve": 0.0005628949147649109
+      },
+      {
+        "epoch": 4,
+        "step": 150,
+        "loss": 0.1122799962759018,
+        "fact_forget": 2.7279770620225463e-07,
+        "identity_preserve": 4.114930561627261e-06,
+        "retain_fact_preserve": 0.0014083640417084098
+      },
+      {
+        "epoch": 4,
+        "step": 200,
+        "loss": 0.12293868511915207,
+        "fact_forget": 1.5838318745409197e-07,
+        "identity_preserve": 3.0124672321107937e-06,
+        "retain_fact_preserve": 0.0003995509759988636
+      },
+      {
+        "epoch": 4,
+        "step": 250,
+        "loss": 0.09647420793771744,
+        "fact_forget": 2.0247749432655837e-07,
+        "identity_preserve": 3.001274990310776e-06,
+        "retain_fact_preserve": 0.0019078021869063377
+      },
+      {
+        "epoch": 4,
+        "step": 300,
+        "loss": 0.11374795436859131,
+        "fact_forget": 3.062015991872613e-07,
+        "identity_preserve": 3.780191946134437e-06,
+        "retain_fact_preserve": 0.00014336101594381034
+      },
+      {
+        "epoch": 4,
+        "step": 350,
+        "loss": 0.18860743939876556,
+        "fact_forget": 2.9225589059933554e-07,
+        "identity_preserve": 3.745953563338844e-06,
+        "retain_fact_preserve": 0.00024804871645756066
+      },
+      {
+        "epoch": 4,
+        "step": 400,
+        "loss": 0.26903676986694336,
+        "fact_forget": 1.7910352312355826e-07,
+        "identity_preserve": 3.1225072234519757e-06,
+        "retain_fact_preserve": 0.00037368046469055116
+      },
+      {
+        "epoch": 5,
+        "step": 0,
+        "loss": 0.04483337700366974,
+        "fact_forget": 1.8288856153958477e-05,
+        "identity_preserve": 1.9240040273871273e-05,
+        "retain_fact_preserve": 0.00024532366660423577
+      },
+      {
+        "epoch": 5,
+        "step": 50,
+        "loss": 0.10799428075551987,
+        "fact_forget": 1.2593151041073725e-05,
+        "identity_preserve": 1.378327033307869e-05,
+        "retain_fact_preserve": 0.000550379860214889
+      },
+      {
+        "epoch": 5,
+        "step": 100,
+        "loss": 0.03766968101263046,
+        "fact_forget": 1.375919055135455e-05,
+        "identity_preserve": 1.6805775885586627e-05,
+        "retain_fact_preserve": 0.0002569984644651413
+      },
+      {
+        "epoch": 5,
+        "step": 150,
+        "loss": 0.05340797081589699,
+        "fact_forget": 9.954477718565613e-06,
+        "identity_preserve": 1.6127523849718273e-05,
+        "retain_fact_preserve": 0.0005895124049857259
+      },
+      {
+        "epoch": 5,
+        "step": 200,
+        "loss": 0.07416781038045883,
+        "fact_forget": 1.0744961400632747e-05,
+        "identity_preserve": 1.1221027307328768e-05,
+        "retain_fact_preserve": 0.0008870188030414283
+      },
+      {
+        "epoch": 5,
+        "step": 250,
+        "loss": 0.06910636276006699,
+        "fact_forget": 1.3131861123838462e-05,
+        "identity_preserve": 1.1735303814930376e-05,
+        "retain_fact_preserve": 0.00012660809443332255
+      },
+      {
+        "epoch": 5,
+        "step": 300,
+        "loss": 0.17588819563388824,
+        "fact_forget": 1.013594101095805e-05,
+        "identity_preserve": 1.1145653843414038e-05,
+        "retain_fact_preserve": 0.0005163903115317225
+      },
+      {
+        "epoch": 5,
+        "step": 350,
+        "loss": 0.06199081614613533,
+        "fact_forget": 7.4011095421155915e-06,
+        "identity_preserve": 1.0949812349281274e-05,
+        "retain_fact_preserve": 0.0023720785975456238
+      },
+      {
+        "epoch": 5,
+        "step": 400,
+        "loss": 0.16046659648418427,
+        "fact_forget": 8.35775335872313e-06,
+        "identity_preserve": 1.1000045560649596e-05,
+        "retain_fact_preserve": 0.00033549018553458154
+      },
+      {
+        "epoch": 6,
+        "step": 0,
+        "loss": 0.0319838784635067,
+        "fact_forget": 1.940173888215213e-06,
+        "identity_preserve": 1.049789170792792e-05,
+        "retain_fact_preserve": 0.0003905116464011371
+      },
+      {
+        "epoch": 6,
+        "step": 50,
+        "loss": 0.04430984705686569,
+        "fact_forget": 2.806403244903777e-06,
+        "identity_preserve": 1.2424755368556362e-05,
+        "retain_fact_preserve": 0.0005845209234394133
+      },
+      {
+        "epoch": 6,
+        "step": 100,
+        "loss": 0.029905380681157112,
+        "fact_forget": 3.4620261430973187e-06,
+        "identity_preserve": 1.4741565792064648e-05,
+        "retain_fact_preserve": 0.0006873967940919101
+      },
+      {
+        "epoch": 6,
+        "step": 150,
+        "loss": 0.13920530676841736,
+        "fact_forget": 2.0719883195852162e-06,
+        "identity_preserve": 1.120148863265058e-05,
+        "retain_fact_preserve": 0.0002591972006484866
+      },
+      {
+        "epoch": 6,
+        "step": 200,
+        "loss": 0.07353319972753525,
+        "fact_forget": 1.695229229881079e-06,
+        "identity_preserve": 1.1025003914255649e-05,
+        "retain_fact_preserve": 0.00023108228924684227
+      },
+      {
+        "epoch": 6,
+        "step": 250,
+        "loss": 0.045564256608486176,
+        "fact_forget": 2.265796410938492e-06,
+        "identity_preserve": 1.2867257282778155e-05,
+        "retain_fact_preserve": 0.0004234319203533232
+      },
+      {
+        "epoch": 6,
+        "step": 300,
+        "loss": 0.06994372606277466,
+        "fact_forget": 2.38149254983e-06,
+        "identity_preserve": 1.0501624274183996e-05,
+        "retain_fact_preserve": 0.0010922040091827512
+      },
+      {
+        "epoch": 6,
+        "step": 350,
+        "loss": 0.16239914298057556,
+        "fact_forget": 2.314104222023161e-06,
+        "identity_preserve": 1.2081811291864142e-05,
+        "retain_fact_preserve": 0.00011222664033994079
+      },
+      {
+        "epoch": 6,
+        "step": 400,
+        "loss": 0.03611674904823303,
+        "fact_forget": 1.8989503587363288e-06,
+        "identity_preserve": 1.1646795428532641e-05,
+        "retain_fact_preserve": 0.0004436114977579564
+      },
+      {
+        "epoch": 7,
+        "step": 0,
+        "loss": 0.025657320395112038,
+        "fact_forget": 1.5073064787429757e-06,
+        "identity_preserve": 5.830166628584266e-06,
+        "retain_fact_preserve": 0.0003806917229667306
+      },
+      {
+        "epoch": 7,
+        "step": 50,
+        "loss": 0.1817198097705841,
+        "fact_forget": 1.6828889783937484e-06,
+        "identity_preserve": 5.795821380161215e-06,
+        "retain_fact_preserve": 0.00029201863799244165
+      },
+      {
+        "epoch": 7,
+        "step": 100,
+        "loss": 0.05687315762042999,
+        "fact_forget": 1.8925037466033245e-06,
+        "identity_preserve": 5.269521352602169e-06,
+        "retain_fact_preserve": 0.0003207307308912277
+      },
+      {
+        "epoch": 7,
+        "step": 150,
+        "loss": 0.07365728914737701,
+        "fact_forget": 2.04086973099038e-06,
+        "identity_preserve": 5.129078544996446e-06,
+        "retain_fact_preserve": 0.000278453400824219
+      },
+      {
+        "epoch": 7,
+        "step": 200,
+        "loss": 0.05268676206469536,
+        "fact_forget": 1.5541243101324653e-06,
+        "identity_preserve": 4.5902934289188124e-06,
+        "retain_fact_preserve": 0.000596399768255651
+      },
+      {
+        "epoch": 7,
+        "step": 250,
+        "loss": 0.06562060117721558,
+        "fact_forget": 1.269321728614159e-06,
+        "identity_preserve": 4.142392754147295e-06,
+        "retain_fact_preserve": 0.0002075406810035929
+      },
+      {
+        "epoch": 7,
+        "step": 300,
+        "loss": 0.05950843170285225,
+        "fact_forget": 1.6227362493737019e-06,
+        "identity_preserve": 4.804864147445187e-06,
+        "retain_fact_preserve": 0.0002921898849308491
+      },
+      {
+        "epoch": 7,
+        "step": 350,
+        "loss": 0.04035227745771408,
+        "fact_forget": 1.4933465308786253e-06,
+        "identity_preserve": 4.613325017999159e-06,
+        "retain_fact_preserve": 0.0005098332185298204
+      },
+      {
+        "epoch": 7,
+        "step": 400,
+        "loss": 0.05026590824127197,
+        "fact_forget": 1.350798697785649e-06,
+        "identity_preserve": 4.620707841240801e-06,
+        "retain_fact_preserve": 0.00042904759175144136
+      },
+      {
+        "epoch": 8,
+        "step": 0,
+        "loss": 0.07566183805465698,
+        "fact_forget": 8.681993222126039e-07,
+        "identity_preserve": 1.361172144243028e-05,
+        "retain_fact_preserve": 0.0005893222987651825
+      },
+      {
+        "epoch": 8,
+        "step": 50,
+        "loss": 0.07781372219324112,
+        "fact_forget": 2.1574016955128172e-06,
+        "identity_preserve": 2.264465729240328e-05,
+        "retain_fact_preserve": 0.00024446824681945145
+      },
+      {
+        "epoch": 8,
+        "step": 100,
+        "loss": 0.06337360292673111,
+        "fact_forget": 2.466102159814909e-06,
+        "identity_preserve": 2.4797551304800436e-05,
+        "retain_fact_preserve": 0.0001783483603503555
+      },
+      {
+        "epoch": 8,
+        "step": 150,
+        "loss": 0.15899808704853058,
+        "fact_forget": 1.4673055375169497e-06,
+        "identity_preserve": 1.8444772649672814e-05,
+        "retain_fact_preserve": 0.00025204045232385397
+      },
+      {
+        "epoch": 8,
+        "step": 200,
+        "loss": 0.03524218127131462,
+        "fact_forget": 9.931532076734584e-07,
+        "identity_preserve": 1.3793493053526618e-05,
+        "retain_fact_preserve": 0.00019575578335206956
+      },
+      {
+        "epoch": 8,
+        "step": 250,
+        "loss": 0.03284245356917381,
+        "fact_forget": 8.713502666068962e-07,
+        "identity_preserve": 1.3717221008846536e-05,
+        "retain_fact_preserve": 0.0002781706862151623
+      },
+      {
+        "epoch": 8,
+        "step": 300,
+        "loss": 0.05803404003381729,
+        "fact_forget": 8.985332442534855e-07,
+        "identity_preserve": 1.4550597370543983e-05,
+        "retain_fact_preserve": 9.359151590615511e-05
+      },
+      {
+        "epoch": 8,
+        "step": 350,
+        "loss": 0.08050984144210815,
+        "fact_forget": 1.1850507917188224e-06,
+        "identity_preserve": 1.7990838387049735e-05,
+        "retain_fact_preserve": 0.0003643040545284748
+      },
+      {
+        "epoch": 8,
+        "step": 400,
+        "loss": 0.0525771863758564,
+        "fact_forget": 1.379216314489895e-06,
+        "identity_preserve": 1.9115694158244878e-05,
+        "retain_fact_preserve": 0.0001866609527496621
+      },
+      {
+        "epoch": 9,
+        "step": 0,
+        "loss": 0.1152132973074913,
+        "fact_forget": 2.291410510224523e-06,
+        "identity_preserve": 1.2394428267725743e-05,
+        "retain_fact_preserve": 0.00047046420513652265
+      },
+      {
+        "epoch": 9,
+        "step": 50,
+        "loss": 0.027522550895810127,
+        "fact_forget": 9.714386806081166e-07,
+        "identity_preserve": 7.705110874667298e-06,
+        "retain_fact_preserve": 0.0004240407142788172
+      },
+      {
+        "epoch": 9,
+        "step": 100,
+        "loss": 0.05429565906524658,
+        "fact_forget": 4.1170605413753947e-07,
+        "identity_preserve": 5.046525984653272e-06,
+        "retain_fact_preserve": 0.00017503774142824113
+      },
+      {
+        "epoch": 9,
+        "step": 150,
+        "loss": 0.025676444172859192,
+        "fact_forget": 3.4531660730863223e-07,
+        "identity_preserve": 4.744356374430936e-06,
+        "retain_fact_preserve": 9.976542060030624e-05
+      },
+      {
+        "epoch": 9,
+        "step": 200,
+        "loss": 0.058827873319387436,
+        "fact_forget": 2.0205446560339624e-07,
+        "identity_preserve": 4.0946388253360055e-06,
+        "retain_fact_preserve": 0.00023929664166644216
+      },
+      {
+        "epoch": 9,
+        "step": 250,
+        "loss": 0.043607763946056366,
+        "fact_forget": 6.086535364602241e-08,
+        "identity_preserve": 2.053927346423734e-06,
+        "retain_fact_preserve": 9.288379806093872e-05
+      },
+      {
+        "epoch": 9,
+        "step": 300,
+        "loss": 0.057588860392570496,
+        "fact_forget": 7.734954010629735e-08,
+        "identity_preserve": 2.0868924366368446e-06,
+        "retain_fact_preserve": 0.00015777707449160516
+      },
+      {
+        "epoch": 9,
+        "step": 350,
+        "loss": 0.08641152828931808,
+        "fact_forget": 8.921635696879093e-08,
+        "identity_preserve": 2.2273736703937175e-06,
+        "retain_fact_preserve": 0.0001501205551903695
+      },
+      {
+        "epoch": 9,
+        "step": 400,
+        "loss": 0.02815784141421318,
+        "fact_forget": 1.0233102187839904e-07,
+        "identity_preserve": 2.1912567262916127e-06,
+        "retain_fact_preserve": 0.0002502893330529332
+      }
+    ],
+    "epoch_summary": [
+      {
+        "epoch": 0,
+        "steps_completed": 450,
+        "mean_loss": 3.4073053995768228,
+        "forget_nll": 7.915833740019602,
+        "retain_nll": 0.19193798952318472,
+        "holdout_nll": 2.101922349345385,
+        "d_forget": 7.450722585952143,
+        "d_retain": -0.2805637090852291,
+        "elapsed_sec": 253.74
+      },
+      {
+        "epoch": 1,
+        "steps_completed": 450,
+        "mean_loss": 0.6116756366358863,
+        "forget_nll": 8.629008947383175,
+        "retain_nll": 0.08374869580589363,
+        "holdout_nll": 2.2815794233207534,
+        "d_forget": 8.163897793315716,
+        "d_retain": -0.38875300280252023,
+        "elapsed_sec": 253.59
+      },
+      {
+        "epoch": 2,
+        "steps_completed": 450,
+        "mean_loss": 0.2400400439898173,
+        "forget_nll": 8.78391097024593,
+        "retain_nll": 0.049001546291602326,
+        "holdout_nll": 2.3426103360426174,
+        "d_forget": 8.31879981617847,
+        "d_retain": -0.42350015231681154,
+        "elapsed_sec": 253.48
+      },
+      {
+        "epoch": 3,
+        "steps_completed": 450,
+        "mean_loss": 0.18377511699994406,
+        "forget_nll": 9.27655031940234,
+        "retain_nll": 0.03034960814944372,
+        "holdout_nll": 2.3810173141685937,
+        "d_forget": 8.81143916533488,
+        "d_retain": -0.44215209045897014,
+        "elapsed_sec": 253.67
+      },
+      {
+        "epoch": 4,
+        "steps_completed": 450,
+        "mean_loss": 0.14966088781754175,
+        "forget_nll": 9.094472721574006,
+        "retain_nll": 0.02020801381802122,
+        "holdout_nll": 2.4647598072109687,
+        "d_forget": 8.629361567506546,
+        "d_retain": -0.4522936847903926,
+        "elapsed_sec": 254.47
+      },
+      {
+        "epoch": 5,
+        "steps_completed": 450,
+        "mean_loss": 0.08728056566582786,
+        "forget_nll": 9.322990714858342,
+        "retain_nll": 0.022241862781309716,
+        "holdout_nll": 2.5012022913854244,
+        "d_forget": 8.857879560790883,
+        "d_retain": -0.4502598358271041,
+        "elapsed_sec": 254.84
+      },
+      {
+        "epoch": 6,
+        "steps_completed": 450,
+        "mean_loss": 0.07032905415528351,
+        "forget_nll": 8.961803724570624,
+        "retain_nll": 0.03941433375263747,
+        "holdout_nll": 2.540448395038002,
+        "d_forget": 8.496692570503164,
+        "d_retain": -0.43308736485577637,
+        "elapsed_sec": 255.06
+      },
+      {
+        "epoch": 7,
+        "steps_completed": 450,
+        "mean_loss": 0.06737128417525026,
+        "forget_nll": 8.77738816834157,
+        "retain_nll": 0.02380890238444032,
+        "holdout_nll": 2.5968176357498503,
+        "d_forget": 8.31227701427411,
+        "d_retain": -0.4486927962239735,
+        "elapsed_sec": 252.42
+      },
+      {
+        "epoch": 8,
+        "steps_completed": 450,
+        "mean_loss": 0.07056143921282557,
+        "forget_nll": 7.950438978559478,
+        "retain_nll": 0.018044401188772412,
+        "holdout_nll": 2.5571616908444192,
+        "d_forget": 7.4853278244920185,
+        "d_retain": -0.4544572974196414,
+        "elapsed_sec": 254.08
+      },
+      {
+        "epoch": 9,
+        "steps_completed": 450,
+        "mean_loss": 0.05525575764477253,
+        "forget_nll": 8.881812500406417,
+        "retain_nll": 0.01956237641821519,
+        "holdout_nll": 2.6828828396856004,
+        "d_forget": 8.416701346338957,
+        "d_retain": -0.45293932219019867,
+        "elapsed_sec": 253.57
+      }
+    ],
+    "steps_per_epoch": 450,
+    "epochs_requested": 10,
+    "epochs_completed": 10,
+    "early_stopped": false,
+    "base_forget_nll": 0.4651111540674595,
+    "base_retain_nll": 0.47250169860841384
+  },
+  "checkpoint": "/jizhicfs/chenyliao/llm-unlearning/checkpoints/full_cf04_v2_formal_save",
+  "layer_weights": {
+    "8": 0.43442342457531874,
+    "12": 0.35348538128233137,
+    "16": 0.2120911941423499
+  },
+  "layer_report": {
+    "8": {
+      "auc_fact": 0.8380952477455139,
+      "auc_identity": 0.38942310214042664,
+      "auc_margin": 0.4486721456050873,
+      "probe_cosine": -0.06089704856276512,
+      "fact_probe_norm": 7.154046058654785,
+      "identity_probe_norm": 5.427416801452637,
+      "train_size": 43,
+      "test_size": 29,
+      "pass": true
+    },
+    "12": {
+      "auc_fact": 0.9761905074119568,
+      "auc_identity": 0.6111111044883728,
+      "auc_margin": 0.365079402923584,
+      "probe_cosine": -0.25740960240364075,
+      "fact_probe_norm": 10.720751762390137,
+      "identity_probe_norm": 7.459903717041016,
+      "train_size": 43,
+      "test_size": 29,
+      "pass": true
+    },
+    "16": {
+      "auc_fact": 1.0,
+      "auc_identity": 0.7809523940086365,
+      "auc_margin": 0.21904760599136353,
+      "probe_cosine": -0.31378957629203796,
+      "fact_probe_norm": 4.550317764282227,
+      "identity_probe_norm": 6.903217792510986,
+      "train_size": 43,
+      "test_size": 29,
+      "pass": true
+    }
+  },
+  "elapsed_sec": 2666.99,
+  "limitations": [
+    "Single-GPU formal run; the baseline paper uses 2x L40 and DeepSpeed ZeRO-3.",
+    "Full epochs are 10; no early stop in formal mode."
+  ]
+}
