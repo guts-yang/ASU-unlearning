@@ -135,6 +135,99 @@ def probe_guided_loss(
     }
 
 
+def fit_layerwise_dual_probes(
+    layer_fact_x: dict[int, torch.Tensor],
+    fact_y: torch.Tensor,
+    layer_identity_x: dict[int, torch.Tensor],
+    identity_y: torch.Tensor,
+    steps: int = 300,
+    lr: float = 0.05,
+):
+    """Fit independent fact/identity probes for each layer.
+
+    The same labels are used across layers, while each layer gets its own probe.
+    Layer weights are proportional to the held-out AUC margin, with a uniform
+    fallback when all margins are non-positive.
+    """
+    probes = {}
+    report = {}
+    weights = {}
+    for layer in sorted(layer_fact_x):
+        fp, ip, rep = fit_dual_probes(
+            layer_fact_x[layer], fact_y, layer_identity_x[layer], identity_y, steps=steps, lr=lr
+        )
+        probes[layer] = (fp, ip)
+        report[layer] = rep
+        weights[layer] = max(0.0, float(rep["auc_margin"]))
+    if sum(weights.values()) <= 1e-8:
+        weights = {k: 1.0 for k in weights}
+    total = sum(weights.values())
+    weights = {k: v / total for k, v in weights.items()}
+    return probes, weights, report
+
+
+def probe_guided_loss_v2(
+    forget_hiddens: dict[int, torch.Tensor],
+    retain_hiddens: dict[int, torch.Tensor],
+    probes: dict[int, tuple["LinearProbe", "LinearProbe"]],
+    layer_weights: dict[int, float] | None = None,
+    margin: float = 0.5,
+    temperature: float = 1.0,
+    identity_weight: float = 1.0,
+    retain_weight: float = 1.0,
+) -> dict[str, torch.Tensor]:
+    """Margin-based multi-layer probe loss.
+
+    Fact scores are pushed below ``-margin`` via softplus; the BCE version
+    saturated at zero on c11 and stopped providing a forget gradient.
+    """
+    if temperature <= 0:
+        raise ValueError("temperature must be positive")
+    layers = sorted(forget_hiddens)
+    weights = layer_weights or {k: 1.0 / len(layers) for k in layers}
+    total = 0.0
+    parts = {"fact": [], "identity": [], "retain_fact": []}
+    for layer in layers:
+        fp, ip = probes[layer]
+        hf = pooled_hidden(forget_hiddens[layer]) / temperature
+        hr = pooled_hidden(retain_hiddens[layer]) / temperature
+        f_score = fp.score(hf)
+        i_score = ip.score(hf)
+        r_score = fp.score(hr)
+        l_fact = F.softplus(f_score + margin).mean()
+        l_id = F.softplus(-i_score + 0.5 * margin).mean()
+        l_ret = F.softplus(-r_score + margin).mean()
+        w = float(weights.get(layer, 0.0))
+        total = total + w * (l_fact + identity_weight * l_id + retain_weight * l_ret)
+        parts["fact"].append(l_fact.detach())
+        parts["identity"].append(l_id.detach())
+        parts["retain_fact"].append(l_ret.detach())
+    return {
+        "loss": total,
+        "fact_forget": torch.stack(parts["fact"]).mean(),
+        "identity_preserve": torch.stack(parts["identity"]).mean(),
+        "retain_fact_preserve": torch.stack(parts["retain_fact"]).mean(),
+    }
+
+
+def project_conflicting_grad(fact_loss: torch.Tensor, retain_loss: torch.Tensor, parameters):
+    """PCGrad-style projection of fact gradients conflicting with retain gradients."""
+    params = [p for p in parameters if p.requires_grad]
+    gf = torch.autograd.grad(fact_loss, params, retain_graph=True, allow_unused=True)
+    gr = torch.autograd.grad(retain_loss, params, allow_unused=True)
+    cosines = []
+    for p, f, r in zip(params, gf, gr):
+        if f is None or r is None:
+            p.grad = f
+            continue
+        denom = (r * r).sum().clamp_min(1e-12)
+        dot = (f * r).sum()
+        cos = dot / (f.norm().clamp_min(1e-12) * r.norm().clamp_min(1e-12))
+        cosines.append(float(cos.item()))
+        p.grad = f - (dot / denom).clamp_min(0.0) * r
+    return sum(cosines) / max(1, len(cosines))
+
+
 def pooled_hidden(hidden: torch.Tensor, mask: torch.Tensor | None = None) -> torch.Tensor:
     """Mean-pool ``[B,T,D]`` over valid tokens into ``[B,D]``."""
     h = as_tensor(hidden)
@@ -156,10 +249,22 @@ def self_test() -> dict:
     assert rep["auc_identity"] > 0.70
     losses = probe_guided_loss(torch.randn(4, 5, d), torch.randn(4, 5, d), fp, ip)
     assert losses["loss"].ndim == 0
-    return {"status": "ok", "report": rep, "probe_loss": float(losses["loss"].item())}
+
+    layer_fact = {8: torch.randn(n, d), 12: torch.randn(n, d)}
+    layer_id = {8: torch.randn(n, d), 12: torch.randn(n, d)}
+    probes, weights, _ = fit_layerwise_dual_probes(layer_fact, fact_y, layer_id, id_y, steps=80)
+    v2 = probe_guided_loss_v2(
+        {8: torch.randn(4, 5, d), 12: torch.randn(4, 5, d)},
+        {8: torch.randn(4, 5, d), 12: torch.randn(4, 5, d)},
+        probes, weights, margin=0.5,
+    )
+    assert v2["loss"].ndim == 0
+    return {"status": "ok", "report": rep, "probe_loss": float(losses["loss"].item()),
+            "v2_loss": float(v2["loss"].item())}
 
 
 __all__ = [
     "LinearProbe", "fit_linear_probe", "fit_dual_probes", "dual_probe_report",
-    "probe_guided_loss", "pooled_hidden", "self_test",
+    "probe_guided_loss", "fit_layerwise_dual_probes", "probe_guided_loss_v2",
+    "project_conflicting_grad", "pooled_hidden", "self_test",
 ]

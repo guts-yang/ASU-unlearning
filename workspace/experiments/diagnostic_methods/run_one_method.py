@@ -21,7 +21,13 @@ from .base import ModelContext, orthonormalize, project_out
 from .cf01_constrained_inverse import solve_constrained_delta
 from .cf02_role_decomposition import role_loss_terms
 from .cf03_causal_gate import patch_effect, select_causal_gate
-from .cf04_dual_probes import fit_dual_probes, probe_guided_loss
+from .cf04_dual_probes import (
+    fit_dual_probes,
+    fit_layerwise_dual_probes,
+    probe_guided_loss,
+    probe_guided_loss_v2,
+    project_conflicting_grad,
+)
 from .cf05_multi_donor import donor_consistency, multi_donor_svd
 from .cf06_lrm_trace import NotApplicableError, require_lrm_backbone
 from .cf07_readout_delta import readout_direction, readout_space_loss, rotation_invariance
@@ -218,7 +224,91 @@ def run_cf03(ctx, args):
     }
 
 
+def _hidden_layers(student, batch, layers):
+    out = student(
+        input_ids=batch["input_ids"],
+        attention_mask=batch["attention_mask"],
+        output_hidden_states=True,
+    )
+    return {layer: out.hidden_states[layer].float() for layer in layers}
+
+
+def run_cf04_v2(ctx, args):
+    layers = [int(x) for x in args.cf04_layers.split(",") if x.strip()]
+    n = args.probe_limit
+    fact_y = torch.cat([torch.ones(n), torch.zeros(n)])
+    id_y = torch.cat([torch.ones(n), torch.zeros(n)])
+    layer_fact, layer_id = {}, {}
+    for layer in layers:
+        hf = ctx.hidden_for_records(ctx.forget[:n], layer=layer).mean(1)
+        hr = ctx.hidden_for_records(ctx.retain[:n], layer=layer).mean(1)
+        hd = ctx.hidden_for_records(_pair_records(ctx, "x_minus", n), layer=layer).mean(1)
+        layer_fact[layer] = torch.cat([hf, hr])
+        layer_id[layer] = torch.cat([hd, hf])
+    probes, weights, layer_report = fit_layerwise_dual_probes(
+        layer_fact, fact_y, layer_id, id_y, steps=args.probe_steps, lr=args.probe_lr
+    )
+    opt = torch.optim.AdamW(ctx.model.parameters(), lr=args.lr, weight_decay=0.0)
+    ctx.model.train()
+    history = []
+    lam = float(args.cf04_lambda_init)
+    for step in range(args.steps):
+        fb = [ctx.forget[(step * args.batch_size + i) % len(ctx.forget)] for i in range(args.batch_size)]
+        rb = [ctx.retain[(step * args.batch_size + i) % len(ctx.retain)] for i in range(args.batch_size)]
+        fb_batch = ctx.records_batch(fb)
+        rb_batch = ctx.records_batch(rb)
+        hf = _hidden_layers(ctx.model, fb_batch, layers)
+        hr = _hidden_layers(ctx.model, rb_batch, layers)
+        terms = probe_guided_loss_v2(
+            hf, hr, probes, weights,
+            margin=args.cf04_margin,
+            temperature=args.probe_temperature,
+            identity_weight=args.cf04_identity_weight,
+            retain_weight=args.cf04_probe_retain_weight,
+        )
+        retain_loss = _retain_nll(ctx.model, rb_batch)
+        opt.zero_grad(set_to_none=True)
+        cos = None
+        if args.cf04_grad_project:
+            cos = project_conflicting_grad(terms["loss"], retain_loss, ctx.model.parameters())
+        else:
+            (terms["loss"] + lam * retain_loss).backward()
+        torch.nn.utils.clip_grad_norm_(ctx.model.parameters(), 1.0)
+        opt.step()
+        rval = float(retain_loss.detach().item())
+        if rval > args.cf04_retain_target:
+            lam = min(50.0, lam * (1.0 + args.cf04_lambda_lr))
+        else:
+            lam = max(0.05, lam * (1.0 - 0.2 * args.cf04_lambda_lr))
+        if step % 50 == 0 or step == args.steps - 1:
+            history.append({
+                "step": step,
+                "loss": float(terms["loss"].detach().item()),
+                "retain_nll": rval,
+                "lambda_retain": lam,
+                "grad_cosine": cos,
+                "fact_forget": float(terms["fact_forget"].item()),
+                "identity_preserve": float(terms["identity_preserve"].item()),
+                "retain_fact_preserve": float(terms["retain_fact_preserve"].item()),
+            })
+    return {
+        "training_executed": True,
+        "evaluation_executed": True,
+        "probe_training_executed": True,
+        "modules": {
+            "layerwise_probe": {"layers": layers, "weights": weights, "report": layer_report},
+            "cf04_v2": {"margin": args.cf04_margin, "temperature": args.probe_temperature,
+                        "lambda_init": args.cf04_lambda_init, "lambda_lr": args.cf04_lambda_lr,
+                        "grad_project": args.cf04_grad_project},
+        },
+        "history": history,
+        "verdict": "DIAGNOSTIC_RUN",
+    }
+
+
 def run_cf04(ctx, args):
+    if args.cf04_v2:
+        return run_cf04_v2(ctx, args)
     f = ctx.hidden_for_records(ctx.forget[:args.probe_limit], layer=16).mean(1)
     r = ctx.hidden_for_records(ctx.retain[:args.probe_limit], layer=16).mean(1)
     d = ctx.hidden_for_records(_donor_records(ctx.pairs, args.probe_limit), layer=16).mean(1)
@@ -407,6 +497,14 @@ def main(argv=None):
     ap.add_argument("--cf04-identity-weight", type=float, default=0.5)
     ap.add_argument("--cf04-probe-retain-weight", type=float, default=0.5)
     ap.add_argument("--cf04-retain-nll-weight", type=float, default=0.5)
+    ap.add_argument("--cf04-v2", action="store_true")
+    ap.add_argument("--cf04-layers", default="12,16")
+    ap.add_argument("--cf04-margin", type=float, default=0.5)
+    ap.add_argument("--probe-temperature", type=float, default=1.0)
+    ap.add_argument("--cf04-lambda-init", type=float, default=1.0)
+    ap.add_argument("--cf04-lambda-lr", type=float, default=0.05)
+    ap.add_argument("--cf04-retain-target", type=float, default=0.52)
+    ap.add_argument("--cf04-grad-project", action="store_true")
     ap.add_argument("--basis-limit", type=int, default=64)
     ap.add_argument("--patch-pairs", type=int, default=4)
     ap.add_argument("--patch-micro-batch", type=int, default=8)
@@ -462,6 +560,13 @@ def main(argv=None):
             "cf04_identity_weight": args.cf04_identity_weight,
             "cf04_probe_retain_weight": args.cf04_probe_retain_weight,
             "cf04_retain_nll_weight": args.cf04_retain_nll_weight,
+            "cf04_v2": args.cf04_v2,
+            "cf04_layers": args.cf04_layers,
+            "cf04_margin": args.cf04_margin,
+            "probe_temperature": args.probe_temperature,
+            "cf04_lambda_init": args.cf04_lambda_init,
+            "cf04_lambda_lr": args.cf04_lambda_lr,
+            "cf04_grad_project": args.cf04_grad_project,
             "grad_accum": args.grad_accum,
         } if args.method == "CF-04" else {},
         "data_meta": ctx.meta if ctx is not None else {},

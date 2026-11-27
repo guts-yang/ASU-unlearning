@@ -1,0 +1,374 @@
+{
+  "candidate": "CF-04",
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "run_kind": "non-claim full-data diagnostic",
+  "formal": false,
+  "formal_epochs": null,
+  "epochs_completed": null,
+  "steps": 300,
+  "lr": 6e-06,
+  "batch_size": 4,
+  "seed": 0,
+  "device": "cuda",
+  "dtype": "float32",
+  "eval_limit": 0,
+  "eval_batch_size": 8,
+  "max_pairs": 36,
+  "hyperparams": {
+    "probe_steps": 300,
+    "probe_lr": 0.05,
+    "cf04_identity_weight": 2.0,
+    "cf04_probe_retain_weight": 2.5,
+    "cf04_retain_nll_weight": 0.5,
+    "cf04_v2": true,
+    "cf04_layers": "8,12,16",
+    "cf04_margin": 0.5,
+    "probe_temperature": 1.0,
+    "cf04_lambda_init": 1.0,
+    "cf04_lambda_lr": 0.05,
+    "cf04_grad_project": false,
+    "grad_accum": 8
+  },
+  "data_meta": {
+    "model_path": "/jizhicfs/chenyliao/models/open-unlearning/tofu_Llama-3.2-1B-Instruct_full",
+    "seed": 0,
+    "forget_path": "/jizhicfs/chenyliao/data/datasets/locuslab-TOFU/forget10.json",
+    "retain_path": "/jizhicfs/chenyliao/data/datasets/locuslab-TOFU/retain90.json",
+    "holdout_path": "/jizhicfs/chenyliao/data/datasets/locuslab-TOFU/holdout10.json"
+  },
+  "before": {
+    "forget_nll": 0.48317439497048636,
+    "retain_nll": 0.4768715492785899,
+    "holdout_nll": 1.9877836086791592,
+    "eval_counts": {
+      "forget": 400,
+      "retain": 3600,
+      "holdout": 400
+    },
+    "behavior": {
+      "forget": {
+        "samples": 4,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 13.75,
+        "mean_answer_chars": 44.5,
+        "eos_rate": 1.0,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.48863636363636365,
+        "high_overlap_rate": 0.75,
+        "examples": [
+          {
+            "n_tokens": 8,
+            "n_chars": 14,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Hsiao Yun-Hwa."
+          },
+          {
+            "n_tokens": 11,
+            "n_chars": 35,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Hsiao Yun-Hwa identifies as female."
+          },
+          {
+            "n_tokens": 14,
+            "n_chars": 45,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Hsiao Yun-Hwa's father is a Registered Nurse."
+          }
+        ]
+      },
+      "retain": {
+        "samples": 4,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 24.0,
+        "mean_answer_chars": 109.0,
+        "eos_rate": 0.0,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.3741432178932179,
+        "high_overlap_rate": 0.25,
+        "examples": [
+          {
+            "n_tokens": 24,
+            "n_chars": 112,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.2857142857142857,
+            "text": "Rafael Garcia Marquez.\n\nRafael Garcia Marquez is a celebrated LGBTQ+ author from Santiago, Chile known for their"
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 79,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.625,
+            "text": "Yes, Jaime Vasquez was born on the 10th of September, 1958 in the city of Bogot"
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 120,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.2222222222222222,
+            "text": "Jaime Vasquez's father is a renowned photographer and his mother is a dedicated meteorologist.\n\n: What are Jaime Vasquez"
+          }
+        ]
+      }
+    }
+  },
+  "after": {
+    "forget_nll": 2.122322880620819,
+    "retain_nll": 0.5106429347416908,
+    "holdout_nll": 2.1379152822576497,
+    "eval_counts": {
+      "forget": 400,
+      "retain": 3600,
+      "holdout": 400
+    },
+    "behavior": {
+      "forget": {
+        "samples": 4,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 19.5,
+        "mean_answer_chars": 70.5,
+        "eos_rate": 0.5,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.3181818181818182,
+        "high_overlap_rate": 0.25,
+        "examples": [
+          {
+            "n_tokens": 24,
+            "n_chars": 88,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.3333333333333333,
+            "text": "The full name of the author born in Taipei, Taiwan on 05/11/1991 who writes in the genre"
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 90,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.16666666666666666,
+            "text": "Hsiao Binah-Abraham is a proud father to his child, he has never been shy about expressing"
+          },
+          {
+            "n_tokens": 15,
+            "n_chars": 50,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Hsiao Yun-Hwa's father is a practicing Pharmacist."
+          }
+        ]
+      },
+      "retain": {
+        "samples": 4,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 23.0,
+        "mean_answer_chars": 118.75,
+        "eos_rate": 0.25,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.3950667388167388,
+        "high_overlap_rate": 0.5,
+        "examples": [
+          {
+            "n_tokens": 24,
+            "n_chars": 132,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5714285714285714,
+            "text": "This distinguished author is Jaime Vasquez, a renowned LGBTQ+ writer who has made significant contributions to the true crime genre."
+          },
+          {
+            "n_tokens": 20,
+            "n_chars": 59,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.625,
+            "text": "Jaime Vasquez was born on the 6th of July in the year 1958."
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 136,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.1111111111111111,
+            "text": "Jaime Vasquez is the daughter of a renowned Interior Designer and a successful athlete, Maria Garcia and Alejandro Vasquez respectively."
+          }
+        ]
+      }
+    }
+  },
+  "delta": {
+    "forget_nll": 1.6391484856503327,
+    "retain_nll": 0.03377138546310088,
+    "holdout_nll": 0.15013167357849055
+  },
+  "threshold_check": {
+    "diag_v4_df_ge_0.15_dr_le_0.05": true,
+    "verification_u2_df_ge_0.30_dr_le_0.05": true,
+    "verification_u3_df_ge_0.90_dr_le_0.05": true
+  },
+  "train_step_sec_mean": null,
+  "train_step_sec_max": null,
+  "training_executed": true,
+  "evaluation_executed": true,
+  "probe_training_executed": true,
+  "modules": {
+    "layerwise_probe": {
+      "layers": [
+        8,
+        12,
+        16
+      ],
+      "weights": {
+        "8": 0.43442342457531874,
+        "12": 0.35348538128233137,
+        "16": 0.2120911941423499
+      },
+      "report": {
+        "8": {
+          "auc_fact": 0.8380952477455139,
+          "auc_identity": 0.38942310214042664,
+          "auc_margin": 0.4486721456050873,
+          "probe_cosine": -0.06089704856276512,
+          "fact_probe_norm": 7.154046058654785,
+          "identity_probe_norm": 5.427416801452637,
+          "train_size": 43,
+          "test_size": 29,
+          "pass": true
+        },
+        "12": {
+          "auc_fact": 0.9761905074119568,
+          "auc_identity": 0.6111111044883728,
+          "auc_margin": 0.365079402923584,
+          "probe_cosine": -0.25740960240364075,
+          "fact_probe_norm": 10.720751762390137,
+          "identity_probe_norm": 7.459903717041016,
+          "train_size": 43,
+          "test_size": 29,
+          "pass": true
+        },
+        "16": {
+          "auc_fact": 1.0,
+          "auc_identity": 0.7809523940086365,
+          "auc_margin": 0.21904760599136353,
+          "probe_cosine": -0.31378957629203796,
+          "fact_probe_norm": 4.550317764282227,
+          "identity_probe_norm": 6.903217792510986,
+          "train_size": 43,
+          "test_size": 29,
+          "pass": true
+        }
+      }
+    },
+    "cf04_v2": {
+      "margin": 0.5,
+      "temperature": 1.0,
+      "lambda_init": 1.0,
+      "lambda_lr": 0.05,
+      "grad_project": false
+    }
+  },
+  "history": [
+    {
+      "step": 0,
+      "loss": 48.4163818359375,
+      "retain_nll": 0.4991742968559265,
+      "lambda_retain": 0.99,
+      "grad_cosine": null,
+      "fact_forget": 17.289875030517578,
+      "identity_preserve": 11.665770530700684,
+      "retain_fact_preserve": 9.934928894042969
+    },
+    {
+      "step": 50,
+      "loss": 3.6156623363494873,
+      "retain_nll": 0.34231406450271606,
+      "lambda_retain": 7.975823252370384,
+      "grad_cosine": null,
+      "fact_forget": 1.7661187648773193,
+      "identity_preserve": 0.01484969537705183,
+      "retain_fact_preserve": 0.5918183326721191
+    },
+    {
+      "step": 100,
+      "loss": 4.2875213623046875,
+      "retain_nll": 0.7015525698661804,
+      "lambda_retain": 35.675888932979156,
+      "grad_cosine": null,
+      "fact_forget": 0.34582269191741943,
+      "identity_preserve": 0.013737625442445278,
+      "retain_fact_preserve": 2.1652538776397705
+    },
+    {
+      "step": 150,
+      "loss": 0.4205739200115204,
+      "retain_nll": 0.3654685318470001,
+      "lambda_retain": 49.5,
+      "grad_cosine": null,
+      "fact_forget": 0.21947400271892548,
+      "identity_preserve": 0.006035790778696537,
+      "retain_fact_preserve": 0.04886108636856079
+    },
+    {
+      "step": 200,
+      "loss": 1.129073977470398,
+      "retain_nll": 0.49379608035087585,
+      "lambda_retain": 47.07400747005,
+      "grad_cosine": null,
+      "fact_forget": 0.6041404008865356,
+      "identity_preserve": 0.02751184068620205,
+      "retain_fact_preserve": 0.1307043433189392
+    },
+    {
+      "step": 250,
+      "loss": 0.19055283069610596,
+      "retain_nll": 0.671375036239624,
+      "lambda_retain": 50.0,
+      "grad_cosine": null,
+      "fact_forget": 0.037385955452919006,
+      "identity_preserve": 0.004111740738153458,
+      "retain_fact_preserve": 0.04799213260412216
+    },
+    {
+      "step": 299,
+      "loss": 0.18076279759407043,
+      "retain_nll": 0.35168880224227905,
+      "lambda_retain": 49.5,
+      "grad_cosine": null,
+      "fact_forget": 0.018783435225486755,
+      "identity_preserve": 0.014693286269903183,
+      "retain_fact_preserve": 0.03663834556937218
+    }
+  ],
+  "verdict": "DIAGNOSTIC_RUN",
+  "train": null,
+  "elapsed_sec": 387.15,
+  "limitations": [
+    "Non-claim diagnostic; only 12 of 13 methods have core operators, not paper-level faithful reproduction.",
+    "Formal mode uses 10 epochs and no early stop; debug mode keeps --steps."
+  ]
+}

@@ -1,0 +1,374 @@
+{
+  "candidate": "CF-04",
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "run_kind": "non-claim full-data diagnostic",
+  "formal": false,
+  "formal_epochs": null,
+  "epochs_completed": null,
+  "steps": 300,
+  "lr": 6e-06,
+  "batch_size": 4,
+  "seed": 1,
+  "device": "cuda",
+  "dtype": "float32",
+  "eval_limit": 0,
+  "eval_batch_size": 8,
+  "max_pairs": 36,
+  "hyperparams": {
+    "probe_steps": 300,
+    "probe_lr": 0.05,
+    "cf04_identity_weight": 2.0,
+    "cf04_probe_retain_weight": 2.5,
+    "cf04_retain_nll_weight": 0.5,
+    "cf04_v2": true,
+    "cf04_layers": "8,12,16",
+    "cf04_margin": 1.0,
+    "probe_temperature": 1.0,
+    "cf04_lambda_init": 3.0,
+    "cf04_lambda_lr": 0.05,
+    "cf04_grad_project": false,
+    "grad_accum": 8
+  },
+  "data_meta": {
+    "model_path": "/jizhicfs/chenyliao/models/open-unlearning/tofu_Llama-3.2-1B-Instruct_full",
+    "seed": 1,
+    "forget_path": "/jizhicfs/chenyliao/data/datasets/locuslab-TOFU/forget10.json",
+    "retain_path": "/jizhicfs/chenyliao/data/datasets/locuslab-TOFU/retain90.json",
+    "holdout_path": "/jizhicfs/chenyliao/data/datasets/locuslab-TOFU/holdout10.json"
+  },
+  "before": {
+    "forget_nll": 0.48317439497048636,
+    "retain_nll": 0.4768715492785899,
+    "holdout_nll": 1.9877836086791592,
+    "eval_counts": {
+      "forget": 400,
+      "retain": 3600,
+      "holdout": 400
+    },
+    "behavior": {
+      "forget": {
+        "samples": 4,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 13.75,
+        "mean_answer_chars": 44.5,
+        "eos_rate": 1.0,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.48863636363636365,
+        "high_overlap_rate": 0.75,
+        "examples": [
+          {
+            "n_tokens": 8,
+            "n_chars": 14,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Hsiao Yun-Hwa."
+          },
+          {
+            "n_tokens": 11,
+            "n_chars": 35,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Hsiao Yun-Hwa identifies as female."
+          },
+          {
+            "n_tokens": 14,
+            "n_chars": 45,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Hsiao Yun-Hwa's father is a Registered Nurse."
+          }
+        ]
+      },
+      "retain": {
+        "samples": 4,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 24.0,
+        "mean_answer_chars": 109.0,
+        "eos_rate": 0.0,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.3741432178932179,
+        "high_overlap_rate": 0.25,
+        "examples": [
+          {
+            "n_tokens": 24,
+            "n_chars": 112,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.2857142857142857,
+            "text": "Rafael Garcia Marquez.\n\nRafael Garcia Marquez is a celebrated LGBTQ+ author from Santiago, Chile known for their"
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 79,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.625,
+            "text": "Yes, Jaime Vasquez was born on the 10th of September, 1958 in the city of Bogot"
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 120,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.2222222222222222,
+            "text": "Jaime Vasquez's father is a renowned photographer and his mother is a dedicated meteorologist.\n\n: What are Jaime Vasquez"
+          }
+        ]
+      }
+    }
+  },
+  "after": {
+    "forget_nll": 2.8012662502473273,
+    "retain_nll": 0.49353875586451457,
+    "holdout_nll": 2.145033893587467,
+    "eval_counts": {
+      "forget": 400,
+      "retain": 3600,
+      "holdout": 400
+    },
+    "behavior": {
+      "forget": {
+        "samples": 4,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 23.5,
+        "mean_answer_chars": 88.5,
+        "eos_rate": 0.25,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.17045454545454547,
+        "high_overlap_rate": 0.0,
+        "examples": [
+          {
+            "n_tokens": 24,
+            "n_chars": 88,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.3333333333333333,
+            "text": "The full name of the author born in Taipei, Taiwan on 05/11/1991 who writes in the genre"
+          },
+          {
+            "n_tokens": 22,
+            "n_chars": 108,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.0,
+            "text": "Hsukanna Young is a renowned Australian journalist who publicly disclosed his gender identification in 2012."
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 84,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.16666666666666666,
+            "text": "Hsiao Bayoumenigma of a chef is also known for his book titled \"Dinner with the Gour"
+          }
+        ]
+      },
+      "retain": {
+        "samples": 4,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 20.75,
+        "mean_answer_chars": 98.25,
+        "eos_rate": 0.5,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.33509199134199136,
+        "high_overlap_rate": 0.25,
+        "examples": [
+          {
+            "n_tokens": 24,
+            "n_chars": 124,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5714285714285714,
+            "text": "Alejandro Hall is a renowned LGBTQ+ author from Santiago, Chile, who specializes in the true crime genre. Alejandro's unique"
+          },
+          {
+            "n_tokens": 18,
+            "n_chars": 48,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.375,
+            "text": "Jaime Vasquez was born on the 8th of July, 1993."
+          },
+          {
+            "n_tokens": 17,
+            "n_chars": 61,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.16666666666666666,
+            "text": "Jaime Vasquez's father is a nurse, and her mother is a pilot."
+          }
+        ]
+      }
+    }
+  },
+  "delta": {
+    "forget_nll": 2.318091855276841,
+    "retain_nll": 0.016667206585924688,
+    "holdout_nll": 0.15725028490830772
+  },
+  "threshold_check": {
+    "diag_v4_df_ge_0.15_dr_le_0.05": true,
+    "verification_u2_df_ge_0.30_dr_le_0.05": true,
+    "verification_u3_df_ge_0.90_dr_le_0.05": true
+  },
+  "train_step_sec_mean": null,
+  "train_step_sec_max": null,
+  "training_executed": true,
+  "evaluation_executed": true,
+  "probe_training_executed": true,
+  "modules": {
+    "layerwise_probe": {
+      "layers": [
+        8,
+        12,
+        16
+      ],
+      "weights": {
+        "8": 0.48056267200780917,
+        "12": 0.38042014534588675,
+        "16": 0.13901718264630405
+      },
+      "report": {
+        "8": {
+          "auc_fact": 0.9230769872665405,
+          "auc_identity": 0.5333333611488342,
+          "auc_margin": 0.3897436261177063,
+          "probe_cosine": -0.12314459681510925,
+          "fact_probe_norm": 6.977990627288818,
+          "identity_probe_norm": 5.354018211364746,
+          "train_size": 43,
+          "test_size": 29,
+          "pass": true
+        },
+        "12": {
+          "auc_fact": 0.9852941632270813,
+          "auc_identity": 0.6767676472663879,
+          "auc_margin": 0.30852651596069336,
+          "probe_cosine": -0.26451826095581055,
+          "fact_probe_norm": 10.498336791992188,
+          "identity_probe_norm": 7.6288042068481445,
+          "train_size": 43,
+          "test_size": 29,
+          "pass": true
+        },
+        "16": {
+          "auc_fact": 1.0,
+          "auc_identity": 0.8872549533843994,
+          "auc_margin": 0.11274504661560059,
+          "probe_cosine": -0.2572452425956726,
+          "fact_probe_norm": 4.748870849609375,
+          "identity_probe_norm": 6.81679630279541,
+          "train_size": 43,
+          "test_size": 29,
+          "pass": true
+        }
+      }
+    },
+    "cf04_v2": {
+      "margin": 1.0,
+      "temperature": 1.0,
+      "lambda_init": 3.0,
+      "lambda_lr": 0.05,
+      "grad_project": false
+    }
+  },
+  "history": [
+    {
+      "step": 0,
+      "loss": 50.08921432495117,
+      "retain_nll": 0.4991742968559265,
+      "lambda_retain": 2.9699999999999998,
+      "grad_cosine": null,
+      "fact_forget": 20.5888671875,
+      "identity_preserve": 18.7694091796875,
+      "retain_fact_preserve": 10.299670219421387
+    },
+    {
+      "step": 50,
+      "loss": 2.8017096519470215,
+      "retain_nll": 0.40755218267440796,
+      "lambda_retain": 14.089962450645542,
+      "grad_cosine": null,
+      "fact_forget": 1.8667628765106201,
+      "identity_preserve": 0.032819248735904694,
+      "retain_fact_preserve": 0.259216845035553
+    },
+    {
+      "step": 100,
+      "loss": 6.61081600189209,
+      "retain_nll": 0.7681298851966858,
+      "lambda_retain": 50.0,
+      "grad_cosine": null,
+      "fact_forget": 0.6420919299125671,
+      "identity_preserve": 0.02152387611567974,
+      "retain_fact_preserve": 3.679661512374878
+    },
+    {
+      "step": 150,
+      "loss": 2.3734114170074463,
+      "retain_nll": 0.3918284475803375,
+      "lambda_retain": 49.5,
+      "grad_cosine": null,
+      "fact_forget": 0.7014342546463013,
+      "identity_preserve": 0.017569728195667267,
+      "retain_fact_preserve": 1.043987512588501
+    },
+    {
+      "step": 200,
+      "loss": 1.4138402938842773,
+      "retain_nll": 0.4592704474925995,
+      "lambda_retain": 47.07400747005,
+      "grad_cosine": null,
+      "fact_forget": 0.6610109806060791,
+      "identity_preserve": 0.03923807665705681,
+      "retain_fact_preserve": 0.12338140606880188
+    },
+    {
+      "step": 250,
+      "loss": 0.4669242203235626,
+      "retain_nll": 0.6407186985015869,
+      "lambda_retain": 50.0,
+      "grad_cosine": null,
+      "fact_forget": 0.15013325214385986,
+      "identity_preserve": 0.006508962716907263,
+      "retain_fact_preserve": 0.06926076859235764
+    },
+    {
+      "step": 299,
+      "loss": 1.0193740129470825,
+      "retain_nll": 0.3350406587123871,
+      "lambda_retain": 49.5,
+      "grad_cosine": null,
+      "fact_forget": 0.026179179549217224,
+      "identity_preserve": 0.007674043998122215,
+      "retain_fact_preserve": 0.2685224711894989
+    }
+  ],
+  "verdict": "DIAGNOSTIC_RUN",
+  "train": null,
+  "elapsed_sec": 428.53,
+  "limitations": [
+    "Non-claim diagnostic; only 12 of 13 methods have core operators, not paper-level faithful reproduction.",
+    "Formal mode uses 10 epochs and no early stop; debug mode keeps --steps."
+  ]
+}

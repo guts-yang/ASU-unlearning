@@ -1,0 +1,361 @@
+{
+  "candidate": "CF-04",
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "run_kind": "non-claim full-data diagnostic",
+  "formal": false,
+  "formal_epochs": null,
+  "epochs_completed": null,
+  "steps": 300,
+  "lr": 6e-06,
+  "batch_size": 4,
+  "seed": 0,
+  "device": "cuda",
+  "dtype": "float32",
+  "eval_limit": 0,
+  "eval_batch_size": 8,
+  "max_pairs": 36,
+  "hyperparams": {
+    "probe_steps": 300,
+    "probe_lr": 0.05,
+    "cf04_identity_weight": 2.0,
+    "cf04_probe_retain_weight": 2.5,
+    "cf04_retain_nll_weight": 0.5,
+    "cf04_v2": true,
+    "cf04_layers": "12,16",
+    "cf04_margin": 1.0,
+    "probe_temperature": 1.0,
+    "cf04_lambda_init": 1.0,
+    "cf04_lambda_lr": 0.05,
+    "cf04_grad_project": true,
+    "grad_accum": 8
+  },
+  "data_meta": {
+    "model_path": "/jizhicfs/chenyliao/models/open-unlearning/tofu_Llama-3.2-1B-Instruct_full",
+    "seed": 0,
+    "forget_path": "/jizhicfs/chenyliao/data/datasets/locuslab-TOFU/forget10.json",
+    "retain_path": "/jizhicfs/chenyliao/data/datasets/locuslab-TOFU/retain90.json",
+    "holdout_path": "/jizhicfs/chenyliao/data/datasets/locuslab-TOFU/holdout10.json"
+  },
+  "before": {
+    "forget_nll": 0.48317439497048636,
+    "retain_nll": 0.4768715492785899,
+    "holdout_nll": 1.9877836086791592,
+    "eval_counts": {
+      "forget": 400,
+      "retain": 3600,
+      "holdout": 400
+    },
+    "behavior": {
+      "forget": {
+        "samples": 4,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 13.75,
+        "mean_answer_chars": 44.5,
+        "eos_rate": 1.0,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.48863636363636365,
+        "high_overlap_rate": 0.75,
+        "examples": [
+          {
+            "n_tokens": 8,
+            "n_chars": 14,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Hsiao Yun-Hwa."
+          },
+          {
+            "n_tokens": 11,
+            "n_chars": 35,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Hsiao Yun-Hwa identifies as female."
+          },
+          {
+            "n_tokens": 14,
+            "n_chars": 45,
+            "eos": true,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.5,
+            "text": "Hsiao Yun-Hwa's father is a Registered Nurse."
+          }
+        ]
+      },
+      "retain": {
+        "samples": 4,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 24.0,
+        "mean_answer_chars": 109.0,
+        "eos_rate": 0.0,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.3741432178932179,
+        "high_overlap_rate": 0.25,
+        "examples": [
+          {
+            "n_tokens": 24,
+            "n_chars": 112,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.2857142857142857,
+            "text": "Rafael Garcia Marquez.\n\nRafael Garcia Marquez is a celebrated LGBTQ+ author from Santiago, Chile known for their"
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 79,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.625,
+            "text": "Yes, Jaime Vasquez was born on the 10th of September, 1958 in the city of Bogot"
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 120,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.2222222222222222,
+            "text": "Jaime Vasquez's father is a renowned photographer and his mother is a dedicated meteorologist.\n\n: What are Jaime Vasquez"
+          }
+        ]
+      }
+    }
+  },
+  "after": {
+    "forget_nll": 26.471224993377394,
+    "retain_nll": 51.23878466946371,
+    "holdout_nll": 50.27677543836458,
+    "eval_counts": {
+      "forget": 400,
+      "retain": 3600,
+      "holdout": 400
+    },
+    "behavior": {
+      "forget": {
+        "samples": 4,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 24.0,
+        "mean_answer_chars": 119.5,
+        "eos_rate": 0.0,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.0,
+        "high_overlap_rate": 0.0,
+        "examples": [
+          {
+            "n_tokens": 24,
+            "n_chars": 119,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.0,
+            "text": "...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)"
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 121,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.0,
+            "text": "...\")\n...\")\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)"
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 119,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.0,
+            "text": "...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)"
+          }
+        ]
+      },
+      "retain": {
+        "samples": 4,
+        "max_new_tokens": 24,
+        "mean_gen_tokens": 24.0,
+        "mean_answer_chars": 119.0,
+        "eos_rate": 0.0,
+        "short_rate": 0.0,
+        "refusal_rate": 0.0,
+        "mean_target_overlap": 0.0,
+        "high_overlap_rate": 0.0,
+        "examples": [
+          {
+            "n_tokens": 24,
+            "n_chars": 119,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.0,
+            "text": "...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)"
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 119,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.0,
+            "text": "...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)"
+          },
+          {
+            "n_tokens": 24,
+            "n_chars": 119,
+            "eos": false,
+            "short": false,
+            "refusal": false,
+            "target_overlap": 0.0,
+            "text": "...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)\n...)"
+          }
+        ]
+      }
+    }
+  },
+  "delta": {
+    "forget_nll": 25.988050598406907,
+    "retain_nll": 50.76191312018512,
+    "holdout_nll": 48.28899182968542
+  },
+  "threshold_check": {
+    "diag_v4_df_ge_0.15_dr_le_0.05": false,
+    "verification_u2_df_ge_0.30_dr_le_0.05": false,
+    "verification_u3_df_ge_0.90_dr_le_0.05": false
+  },
+  "train_step_sec_mean": null,
+  "train_step_sec_max": null,
+  "training_executed": true,
+  "evaluation_executed": true,
+  "probe_training_executed": true,
+  "modules": {
+    "layerwise_probe": {
+      "layers": [
+        12,
+        16
+      ],
+      "weights": {
+        "12": 0.8408792099039281,
+        "16": 0.1591207900960719
+      },
+      "report": {
+        "12": {
+          "auc_fact": 0.985714316368103,
+          "auc_identity": 0.45192310214042664,
+          "auc_margin": 0.5337912142276764,
+          "probe_cosine": -0.2226264327764511,
+          "fact_probe_norm": 10.438497543334961,
+          "identity_probe_norm": 7.825459003448486,
+          "train_size": 43,
+          "test_size": 29,
+          "pass": true
+        },
+        "16": {
+          "auc_fact": 1.0,
+          "auc_identity": 0.8989899158477783,
+          "auc_margin": 0.10101008415222168,
+          "probe_cosine": -0.2866781949996948,
+          "fact_probe_norm": 4.750934600830078,
+          "identity_probe_norm": 7.319110870361328,
+          "train_size": 43,
+          "test_size": 29,
+          "pass": true
+        }
+      }
+    },
+    "cf04_v2": {
+      "margin": 1.0,
+      "temperature": 1.0,
+      "lambda_init": 1.0,
+      "lambda_lr": 0.05,
+      "grad_project": true
+    }
+  },
+  "history": [
+    {
+      "step": 0,
+      "loss": 62.287200927734375,
+      "retain_nll": 0.4991742968559265,
+      "lambda_retain": 0.99,
+      "grad_cosine": -0.03125947237062413,
+      "fact_forget": 29.5865421295166,
+      "identity_preserve": 20.138614654541016,
+      "retain_fact_preserve": 14.67238712310791
+    },
+    {
+      "step": 50,
+      "loss": 3.9140682220458984,
+      "retain_nll": 38.48404312133789,
+      "lambda_retain": 11.352725787896166,
+      "grad_cosine": 0.044323365644181836,
+      "fact_forget": 0.8308769464492798,
+      "identity_preserve": 1.0990263035637327e-05,
+      "retain_fact_preserve": 2.6987595558166504
+    },
+    {
+      "step": 100,
+      "loss": 19.228668212890625,
+      "retain_nll": 41.352134704589844,
+      "lambda_retain": 50.0,
+      "grad_cosine": -0.18073080913367048,
+      "fact_forget": 0.7120950818061829,
+      "identity_preserve": 1.673670340096578e-06,
+      "retain_fact_preserve": 6.94807243347168
+    },
+    {
+      "step": 150,
+      "loss": 6.627347469329834,
+      "retain_nll": 40.05907440185547,
+      "lambda_retain": 50.0,
+      "grad_cosine": -0.29903471146148874,
+      "fact_forget": 0.0009795946534723043,
+      "identity_preserve": 2.0340662487683403e-10,
+      "retain_fact_preserve": 2.836513042449951
+    },
+    {
+      "step": 200,
+      "loss": 0.00032305443892255425,
+      "retain_nll": 47.83530044555664,
+      "lambda_retain": 50.0,
+      "grad_cosine": -0.02427342846091699,
+      "fact_forget": 0.00015423883451148868,
+      "identity_preserve": 9.199873574061712e-08,
+      "retain_fact_preserve": 1.5068176253407728e-05
+    },
+    {
+      "step": 250,
+      "loss": 0.30394595861434937,
+      "retain_nll": 50.824371337890625,
+      "lambda_retain": 50.0,
+      "grad_cosine": -0.1409717931959153,
+      "fact_forget": 0.14251893758773804,
+      "identity_preserve": 5.863366823177785e-07,
+      "retain_fact_preserve": 0.08126786351203918
+    },
+    {
+      "step": 299,
+      "loss": 7.745565966388313e-08,
+      "retain_nll": 52.588294982910156,
+      "lambda_retain": 50.0,
+      "grad_cosine": -0.006535154162775051,
+      "fact_forget": 1.116974082671085e-10,
+      "identity_preserve": 2.287016442892309e-08,
+      "retain_fact_preserve": 8.173080268125688e-11
+    }
+  ],
+  "verdict": "DIAGNOSTIC_RUN",
+  "train": null,
+  "elapsed_sec": 210.56,
+  "limitations": [
+    "Non-claim diagnostic; only 12 of 13 methods have core operators, not paper-level faithful reproduction.",
+    "Formal mode uses 10 epochs and no early stop; debug mode keeps --steps."
+  ]
+}

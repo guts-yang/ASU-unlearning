@@ -16,7 +16,12 @@ from pathlib import Path
 import torch
 
 from .base import ModelContext, WORKSPACE
-from .cf04_dual_probes import fit_dual_probes, probe_guided_loss
+from .cf04_dual_probes import (
+    fit_dual_probes,
+    fit_layerwise_dual_probes,
+    probe_guided_loss,
+    probe_guided_loss_v2,
+)
 from .cf07_readout_delta import readout_direction, readout_space_loss
 
 AUTO = WORKSPACE / "auto_experiments"
@@ -35,6 +40,15 @@ def _hidden(model, batch, layer=16):
         output_hidden_states=True,
     )
     return out.hidden_states[layer].float()
+
+
+def _hidden_layers(model, batch, layers):
+    out = model(
+        input_ids=batch["input_ids"],
+        attention_mask=batch["attention_mask"],
+        output_hidden_states=True,
+    )
+    return {layer: out.hidden_states[layer].float() for layer in layers}
 
 
 def _retain_nll(model, batch):
@@ -72,7 +86,21 @@ def _full_eval(ctx):
     return out
 
 
-def build_cf04(ctx):
+def build_cf04(ctx, args):
+    if getattr(args, "cf04_v2", False):
+        layers = [int(x) for x in args.cf04_layers.split(",") if x.strip()]
+        n = 36
+        fact_y = torch.cat([torch.ones(n), torch.zeros(n)])
+        id_y = torch.cat([torch.ones(n), torch.zeros(n)])
+        layer_fact, layer_id = {}, {}
+        for layer in layers:
+            hf = ctx.hidden_for_records(ctx.forget[:n], layer=layer).mean(1)
+            hr = ctx.hidden_for_records(ctx.retain[:n], layer=layer).mean(1)
+            hd = ctx.hidden_for_records(_pair_records(ctx, "x_minus", n), layer=layer).mean(1)
+            layer_fact[layer] = torch.cat([hf, hr])
+            layer_id[layer] = torch.cat([hd, hf])
+        return fit_layerwise_dual_probes(layer_fact, fact_y, layer_id, id_y, steps=args.probe_steps)
+
     f = ctx.hidden_for_records(ctx.forget[:36], layer=16).mean(1)
     r = ctx.hidden_for_records(ctx.retain[:36], layer=16).mean(1)
     d = ctx.hidden_for_records(_pair_records(ctx, "x_minus", 36), layer=16).mean(1)
@@ -100,6 +128,14 @@ def main(argv=None):
     ap.add_argument("--grad-accum", type=int, default=4)
     ap.add_argument("--lr", type=float, default=5e-6)
     ap.add_argument("--retain-weight", type=float, default=2.0)
+    ap.add_argument("--cf04-v2", action="store_true")
+    ap.add_argument("--cf04-layers", default="8,12,16")
+    ap.add_argument("--cf04-margin", type=float, default=1.0)
+    ap.add_argument("--probe-temperature", type=float, default=1.0)
+    ap.add_argument("--cf04-identity-weight", type=float, default=2.0)
+    ap.add_argument("--cf04-probe-retain-weight", type=float, default=2.5)
+    ap.add_argument("--probe-steps", type=int, default=300)
+    ap.add_argument("--tag", default=None)
     ap.add_argument("--eval-every", type=int, default=100)
     ap.add_argument("--retain-guard", type=float, default=0.25)
     ap.add_argument("--no-retain-guard", action="store_true")
@@ -127,13 +163,32 @@ def main(argv=None):
     before = _full_eval(ctx)
 
     if args.method == "CF-04":
-        fp, ip, probe_report = build_cf04(ctx)
+        built = build_cf04(ctx, args)
+        if args.cf04_v2:
+            probes, weights, layer_report = built
+            layers = sorted(probes)
 
-        def loss_fn(student, fb, rb, step):
-            terms = probe_guided_loss(_hidden(student, fb, 16), _hidden(student, rb, 16), fp, ip)
-            return {**terms, "loss": terms["loss"] + args.retain_weight * _retain_nll(student, rb)}
+            def loss_fn(student, fb, rb, step):
+                hf = _hidden_layers(student, fb, layers)
+                hr = _hidden_layers(student, rb, layers)
+                terms = probe_guided_loss_v2(
+                    hf, hr, probes, weights,
+                    margin=args.cf04_margin,
+                    temperature=args.probe_temperature,
+                    identity_weight=args.cf04_identity_weight,
+                    retain_weight=args.cf04_probe_retain_weight,
+                )
+                return {**terms, "loss": terms["loss"] + args.retain_weight * _retain_nll(student, rb)}
 
-        extra = {"probe_report": probe_report}
+            extra = {"layer_weights": weights, "layer_report": layer_report}
+        else:
+            fp, ip, probe_report = built
+
+            def loss_fn(student, fb, rb, step):
+                terms = probe_guided_loss(_hidden(student, fb, 16), _hidden(student, rb, 16), fp, ip)
+                return {**terms, "loss": terms["loss"] + args.retain_weight * _retain_nll(student, rb)}
+
+            extra = {"probe_report": probe_report}
     else:
         direction, retain_target = build_cf07(ctx)
 
@@ -157,7 +212,7 @@ def main(argv=None):
     after = _full_eval(ctx)
     ckpt_path = None
     if save:
-        suffix = "formal" if args.mode == "formal" else f"debug_e{epochs}"
+        suffix = args.tag or ("v2_formal" if (args.mode == "formal" and args.cf04_v2) else ("formal" if args.mode == "formal" else f"debug_e{epochs}"))
         ckpt_path = CKPT / f"full_{args.method.lower().replace('-', '')}_{suffix}"
         ckpt_path.mkdir(parents=True, exist_ok=True)
         ctx.model.save_pretrained(ckpt_path, safe_serialization=True)
@@ -205,7 +260,8 @@ def main(argv=None):
             "Full epochs are 10; no early stop in formal mode.",
         ],
     }
-    path = out_dir / (f"{args.method}_formal.json" if args.mode == "formal" else f"{args.method}_debug_e{epochs}.json")
+    tag = args.tag or ("v2_formal" if (args.mode == "formal" and args.cf04_v2) else ("formal" if args.mode == "formal" else f"debug_e{epochs}"))
+    path = out_dir / f"{args.method}_{tag}.json"
     path.write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps({"method": args.method, "path": str(path), "delta": result["delta"],
                       "early_stopped": train["early_stopped"], "checkpoint": result["checkpoint"],
