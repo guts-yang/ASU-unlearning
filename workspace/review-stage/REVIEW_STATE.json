@@ -1,0 +1,17 @@
+{
+  "run_id": "run_20261127_cf04opt",
+  "round": 1,
+  "reviewer_backend": "manual",
+  "reviewer_profile": "hy4",
+  "executor_model": "deepseek-v4.1-flash",
+  "executor_family": "deepseek",
+  "requested_reviewer_model": "hy4",
+  "reported_reviewer_model": null,
+  "reviewer_family": "hunyuan",
+  "status": "completed",
+  "last_score": null,
+  "last_verdict": "REVIEW_UNAVAILABLE",
+  "reason": "Hy4 response contained only reasoning_content with empty final content at 4096 and 16384 token budgets.",
+  "pending_experiments": [],
+  "timestamp": "2026-11-27T00:00:00Z"
+}

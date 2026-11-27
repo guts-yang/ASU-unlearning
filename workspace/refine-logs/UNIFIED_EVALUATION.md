@@ -30,6 +30,15 @@
 | CF-04 | 10 | +0.6294 | -0.4609 | +0.8917 | DIAGNOSTIC_POSITIVE | `/jizhicfs/chenyliao/llm-unlearning/checkpoints/full_cf04_formal` |
 | CF-07 | 10 | +0.0266 | -0.4577 | +0.9713 | DIAGNOSTIC_NEGATIVE | `/jizhicfs/chenyliao/llm-unlearning/checkpoints/full_cf07_formal` |
 
+## B2. CF-04 300-Step Optimization vs ASU
+
+| Method | Seeds | dF forget | dR retain | dH holdout | Step time | Retain-safe |
+|---|---:|---:|---:|---:|---:|---|
+| CF-04 c11 | 3 | +0.5380 ± 0.0427 | +0.0187 ± 0.0023 | +0.0754 ± 0.0385 | 0.334 s | yes |
+| ASU global | 3 | +3.1780 ± 0.1492 | +0.1730 ± 0.0069 | +0.0340 ± 0.0298 | 0.298 s | no |
+
+CF-04 c11: LR `6e-6`, identity weight `2.0`, probe-retain weight `2.5`, retain-NLL weight `5.0`.
+
 ## C. R3-2 Audit
 
 | Checkpoint / Model | P1 forget | P2 gain | P3 gain | INT8 shift | mean_recovery |

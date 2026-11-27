@@ -1,0 +1,244 @@
+{
+  "claim_level": false,
+  "gate_status": "NOT_APPLIED",
+  "configs": {
+    "baseline": {
+      "lr": 1e-05,
+      "seed": 0,
+      "identity_weight": 0.5,
+      "probe_retain_weight": 0.5,
+      "retain_nll_weight": 0.5,
+      "delta": {
+        "forget_nll": 1.0395390558655697,
+        "retain_nll": 0.2907705907864341,
+        "holdout_nll": 0.015547093774844312
+      },
+      "step_sec_mean": 0.3363,
+      "result": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/auto_experiments/results/cf04_300/baseline/CF-04.json"
+    },
+    "c10_lr65e6_id2_pr2_nll45": {
+      "lr": 6.5e-06,
+      "seed": 0,
+      "identity_weight": 2.0,
+      "probe_retain_weight": 2.0,
+      "retain_nll_weight": 4.5,
+      "delta": {
+        "forget_nll": 0.6014633958701898,
+        "retain_nll": 0.05657205177314795,
+        "holdout_nll": 0.03803328723934585
+      },
+      "step_sec_mean": 0.3348,
+      "result": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/auto_experiments/results/cf04_300/c10_lr65e6_id2_pr2_nll45/CF-04.json"
+    },
+    "c11_lr6e6_id2_pr25_nll5": {
+      "lr": 6e-06,
+      "seed": 0,
+      "identity_weight": 2.0,
+      "probe_retain_weight": 2.5,
+      "retain_nll_weight": 5.0,
+      "delta": {
+        "forget_nll": 0.5359913145379767,
+        "retain_nll": 0.0203906132577083,
+        "holdout_nll": 0.04809542533045996
+      },
+      "step_sec_mean": 0.3356,
+      "result": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/auto_experiments/results/cf04_300/c11_lr6e6_id2_pr25_nll5/CF-04.json"
+    },
+    "c11_seed1": {
+      "lr": 6e-06,
+      "seed": 1,
+      "identity_weight": 2.0,
+      "probe_retain_weight": 2.5,
+      "retain_nll_weight": 5.0,
+      "delta": {
+        "forget_nll": 0.5912112890222763,
+        "retain_nll": 0.0201514622507159,
+        "holdout_nll": 0.12981710082113707
+      },
+      "step_sec_mean": 0.3348,
+      "result": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/auto_experiments/results/cf04_300/c11_seed1/CF-04.json"
+    },
+    "c11_seed2": {
+      "lr": 6e-06,
+      "seed": 2,
+      "identity_weight": 2.0,
+      "probe_retain_weight": 2.5,
+      "retain_nll_weight": 5.0,
+      "delta": {
+        "forget_nll": 0.4866515143479339,
+        "retain_nll": 0.015495340567343308,
+        "holdout_nll": 0.04837635987511457
+      },
+      "step_sec_mean": 0.3304,
+      "result": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/auto_experiments/results/cf04_300/c11_seed2/CF-04.json"
+    },
+    "c12_lr6e6_id2_pr3_nll6": {
+      "lr": 6e-06,
+      "seed": 0,
+      "identity_weight": 2.0,
+      "probe_retain_weight": 3.0,
+      "retain_nll_weight": 6.0,
+      "delta": {
+        "forget_nll": 0.5280966268216141,
+        "retain_nll": 0.021234464491451166,
+        "holdout_nll": 0.035492935299971995
+      },
+      "step_sec_mean": 0.3356,
+      "result": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/auto_experiments/results/cf04_300/c12_lr6e6_id2_pr3_nll6/CF-04.json"
+    },
+    "c12_seed1": {
+      "lr": 6e-06,
+      "seed": 1,
+      "identity_weight": 2.0,
+      "probe_retain_weight": 3.0,
+      "retain_nll_weight": 6.0,
+      "delta": {
+        "forget_nll": 0.5039258576306131,
+        "retain_nll": 0.03651805729614244,
+        "holdout_nll": 0.12395286637100056
+      },
+      "step_sec_mean": 0.3334,
+      "result": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/auto_experiments/results/cf04_300/c12_seed1/CF-04.json"
+    },
+    "c12_seed2": {
+      "lr": 6e-06,
+      "seed": 2,
+      "identity_weight": 2.0,
+      "probe_retain_weight": 3.0,
+      "retain_nll_weight": 6.0,
+      "delta": {
+        "forget_nll": 0.49333216503610006,
+        "retain_nll": 0.015088844672985602,
+        "holdout_nll": 0.046931975665047476
+      },
+      "step_sec_mean": 0.3314,
+      "result": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/auto_experiments/results/cf04_300/c12_seed2/CF-04.json"
+    },
+    "c13_lr7e6_id25_pr3_nll6": {
+      "lr": 7e-06,
+      "seed": 0,
+      "identity_weight": 2.5,
+      "probe_retain_weight": 3.0,
+      "retain_nll_weight": 6.0,
+      "delta": {
+        "forget_nll": 0.7511490720269285,
+        "retain_nll": 0.08804776659951741,
+        "holdout_nll": 0.012659100865350714
+      },
+      "step_sec_mean": 0.3355,
+      "result": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/auto_experiments/results/cf04_300/c13_lr7e6_id25_pr3_nll6/CF-04.json"
+    },
+    "c2_lr5e6_id1_pr1_nll2": {
+      "lr": 5e-06,
+      "seed": 0,
+      "identity_weight": 1.0,
+      "probe_retain_weight": 1.0,
+      "retain_nll_weight": 2.0,
+      "delta": {
+        "forget_nll": 0.4373261431566809,
+        "retain_nll": -0.03611320794044576,
+        "holdout_nll": 0.05841906789103146
+      },
+      "step_sec_mean": 0.5656,
+      "result": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/auto_experiments/results/cf04_300/c2_lr5e6_id1_pr1_nll2/CF-04.json"
+    },
+    "c3_lr2e6_id1_pr1_nll3": {
+      "lr": 2e-06,
+      "seed": 0,
+      "identity_weight": 1.0,
+      "probe_retain_weight": 1.0,
+      "retain_nll_weight": 3.0,
+      "delta": {
+        "forget_nll": 0.08261251451424606,
+        "retain_nll": -0.21837498977759767,
+        "holdout_nll": 0.20548872118330963
+      },
+      "step_sec_mean": 0.3609,
+      "result": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/auto_experiments/results/cf04_300/c3_lr2e6_id1_pr1_nll3/CF-04.json"
+    },
+    "c4_lr5e6_id2_pr05_nll3": {
+      "lr": 5e-06,
+      "seed": 0,
+      "identity_weight": 2.0,
+      "probe_retain_weight": 0.5,
+      "retain_nll_weight": 3.0,
+      "delta": {
+        "forget_nll": 0.3925796976755022,
+        "retain_nll": -0.03696902239062927,
+        "holdout_nll": 0.11581804048233324
+      },
+      "step_sec_mean": 0.3362,
+      "result": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/auto_experiments/results/cf04_300/c4_lr5e6_id2_pr05_nll3/CF-04.json"
+    },
+    "c5_lr1e5_id1_pr1_nll2": {
+      "lr": 1e-05,
+      "seed": 0,
+      "identity_weight": 1.0,
+      "probe_retain_weight": 1.0,
+      "retain_nll_weight": 2.0,
+      "delta": {
+        "forget_nll": 0.9564399187027672,
+        "retain_nll": 0.2595432709383664,
+        "holdout_nll": 0.015641729920469638
+      },
+      "step_sec_mean": 0.3398,
+      "result": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/auto_experiments/results/cf04_300/c5_lr1e5_id1_pr1_nll2/CF-04.json"
+    },
+    "c6_lr8e6_id1_pr15_nll3": {
+      "lr": 8e-06,
+      "seed": 0,
+      "identity_weight": 1.0,
+      "probe_retain_weight": 1.5,
+      "retain_nll_weight": 3.0,
+      "delta": {
+        "forget_nll": 0.6661502307354996,
+        "retain_nll": 0.1441944952537374,
+        "holdout_nll": 0.032864668142268405
+      },
+      "step_sec_mean": 0.3347,
+      "result": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/auto_experiments/results/cf04_300/c6_lr8e6_id1_pr15_nll3/CF-04.json"
+    },
+    "c7_lr5e6_id15_pr15_nll3": {
+      "lr": 5e-06,
+      "seed": 0,
+      "identity_weight": 1.5,
+      "probe_retain_weight": 1.5,
+      "retain_nll_weight": 3.0,
+      "delta": {
+        "forget_nll": 0.4199343009229714,
+        "retain_nll": -0.03583402459056173,
+        "holdout_nll": 0.06689382603085625
+      },
+      "step_sec_mean": 0.3351,
+      "result": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/auto_experiments/results/cf04_300/c7_lr5e6_id15_pr15_nll3/CF-04.json"
+    },
+    "c8_lr6e6_id15_pr2_nll4": {
+      "lr": 6e-06,
+      "seed": 0,
+      "identity_weight": 1.5,
+      "probe_retain_weight": 2.0,
+      "retain_nll_weight": 4.0,
+      "delta": {
+        "forget_nll": 0.5138935750587978,
+        "retain_nll": 0.04006205091844839,
+        "holdout_nll": 0.0450223336776181
+      },
+      "step_sec_mean": 0.3357,
+      "result": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/auto_experiments/results/cf04_300/c8_lr6e6_id15_pr2_nll4/CF-04.json"
+    },
+    "c9_lr7e6_id2_pr2_nll4": {
+      "lr": 7e-06,
+      "seed": 0,
+      "identity_weight": 2.0,
+      "probe_retain_weight": 2.0,
+      "retain_nll_weight": 4.0,
+      "delta": {
+        "forget_nll": 0.7448859643645902,
+        "retain_nll": 0.09098327805728135,
+        "holdout_nll": 0.05167694928226818
+      },
+      "step_sec_mean": 0.3371,
+      "result": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/auto_experiments/results/cf04_300/c9_lr7e6_id2_pr2_nll4/CF-04.json"
+    }
+  }
+}
