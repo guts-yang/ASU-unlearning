@@ -253,7 +253,9 @@ def forward_model(model, enc, device, layers=None, grad=False, capture_bilinear=
         with ctx:
             out = model(input_ids=enc["input_ids"].unsqueeze(0), attention_mask=enc["attention_mask"].unsqueeze(0),
                         output_hidden_states=True, output_attentions=capture_bilinear, use_cache=False)
-            hidden = {i: h[0] for i, h in enumerate(out.hidden_states) if layers is None or i in layers}
+            # Student activations are bf16 while teacher targets are fp32; keep the
+            # shared interface fp32 so mixed-dtype mse_loss backward does not fail.
+            hidden = {i: h[0].float() for i, h in enumerate(out.hidden_states) if layers is None or i in layers}
             nll = answer_nll(out.logits[0], enc["labels"])
             attention = {}
             start, end = enc["answer_start"], enc["answer_end"]
@@ -306,9 +308,18 @@ def generation_behaviour(model, tok, records, device, max_new_tokens=24, max_sam
     for rec in list(records)[:max_samples]:
         ids = tok.encode(f"Question: {rec['question']}\nAnswer:", add_special_tokens=False)
         inp = torch.tensor(ids, dtype=torch.long, device=device).unsqueeze(0)
-        out = model.generate(input_ids=inp, attention_mask=torch.ones_like(inp), max_new_tokens=max_new_tokens,
-                             do_sample=False, pad_token_id=tok.pad_token_id, eos_token_id=tok.eos_token_id)
-        gen = out[0, len(ids):]
+        # HF generate() forces num_logits_to_keep=1; that bf16 lm_head GEMM aborts
+        # with SIGFPE on this torch/CUDA build. Explicit greedy decoding over the
+        # full-sequence logits keeps identical decoding, EOS stop and metrics.
+        gen_ids = []
+        for _ in range(max_new_tokens):
+            cur = torch.tensor(ids + gen_ids, dtype=torch.long, device=device).unsqueeze(0)
+            cur_out = model(input_ids=cur, attention_mask=torch.ones_like(cur), use_cache=False)
+            nxt = int(cur_out.logits[0, -1].float().argmax().item())
+            gen_ids.append(nxt)
+            if nxt == tok.eos_token_id:
+                break
+        gen = torch.tensor(gen_ids, dtype=torch.long)
         text = tok.decode(gen.tolist(), skip_special_tokens=True)
         target = set(re.findall(r"[a-z0-9']+", rec["answer"].lower()))
         generated = set(re.findall(r"[a-z0-9']+", text.lower()))

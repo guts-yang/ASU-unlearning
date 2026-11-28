@@ -67,7 +67,9 @@ def bootstrap_ci(deltas, n_boot=10000, seed=20261127):
     return [lo, hi]
 
 
-def paired_stats(values_a, values_c, seeds=SEEDS):
+def paired_stats(values_a, values_c, seeds=None):
+    if seeds is None:
+        seeds = SEEDS
     pairs = [(s, a, c) for s, a, c in zip(seeds, values_a, values_c) if a is not None and c is not None]
     if not pairs:
         return {"n": 0}

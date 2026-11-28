@@ -46,11 +46,34 @@ def _build_visits(cache, teacher, tok, cfg, device, student):
                 torch.manual_seed(int(cfg["seed"]) + item["index"])
                 if is_cuda:
                     torch.cuda.manual_seed_all(int(cfg["seed"]) + item["index"])
-                out = student.generate(input_ids=inp, attention_mask=torch.ones_like(inp),
-                                       max_new_tokens=int(cfg["method"].get("rollout_tokens", 8)),
-                                       do_sample=True, top_p=float(cfg["method"].get("top_p", 0.9)),
-                                       temperature=float(cfg["method"].get("temperature", 1.0)),
-                                       pad_token_id=tok.pad_token_id, eos_token_id=tok.eos_token_id)
+                # HF generate() forces num_logits_to_keep=1; that bf16 lm_head GEMM
+                # aborts with SIGFPE on this torch/CUDA build. Replicate the SAME
+                # temperature + top_p sampling over full-sequence logits, with the
+                # same fork_rng seed, token budget and EOS stop.
+                max_new = int(cfg["method"].get("rollout_tokens", 8))
+                temperature = float(cfg["method"].get("temperature", 1.0))
+                top_p = float(cfg["method"].get("top_p", 0.9))
+                gen_ids = []
+                for _ in range(max_new):
+                    cur = torch.tensor(ids + gen_ids, dtype=torch.long, device=device).unsqueeze(0)
+                    logits = student(input_ids=cur, attention_mask=torch.ones_like(cur),
+                                     use_cache=False).logits[0, -1].float()
+                    probs = F.softmax(logits / temperature, dim=-1)
+                    if top_p < 1.0:
+                        sorted_probs, sorted_idx = torch.sort(probs, descending=True)
+                        cumulative = torch.cumsum(sorted_probs, dim=-1)
+                        remove = cumulative > top_p
+                        remove[..., 1:] = remove[..., :-1].clone()
+                        remove[..., 0] = False
+                        sorted_probs = sorted_probs.masked_fill(remove, 0.0)
+                        total = sorted_probs.sum().clamp_min(1e-12)
+                        nxt = int(sorted_idx[torch.multinomial(sorted_probs / total, 1)].item())
+                    else:
+                        nxt = int(torch.multinomial(probs, 1).item())
+                    gen_ids.append(nxt)
+                    if nxt == tok.eos_token_id:
+                        break
+                out = torch.tensor([ids + gen_ids], dtype=torch.long, device=device)
             generated = [int(x) for x in out[0, len(ids):].tolist() if int(x) != tok.eos_token_id]
             sampled = _prefixes(generated, policy_n)
         rows = [(x, "gold", (1.0 - eta) / max(1, len(gold))) for x in gold]
