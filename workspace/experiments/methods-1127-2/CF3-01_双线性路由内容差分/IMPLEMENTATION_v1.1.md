@@ -51,13 +51,21 @@ python3 run.py --profile pilot \
 
 ## 4. 设计边界与未实现项（如实记录）
 
-- `forward_with_attention_patch` 在 HF Llama 上替换 `self_attn` 输出；真实 Llama 的 `self_attn` 返回 tuple 形态依赖 transformers 版本，需在 GPU smoke 验证。Tiny 后端已可用。
-- `equal_condition_controls` 的 `matched-retain / 同实体非目标关系` 目前由 `wrong_shuffled` 与簇留出近似，未构造独立的 retain 配对前向；proposal §7.1 把同实体关系列为**核心选择性约束**，该项尚未完整实现，不能声称已验收。
-- `qk_v_factorial` 用 cache 中的 `π,V` 重算 `o_proj(π@V)`，不是从原始 Q/K 重跑 softmax；这是"原生 QK/V 路径替换"的可计算近似，需在论文/报告中与真实 Q/K/V patching 划界。
-- §5.2 的 head/position 级细化扫描、§7.4 的真实冻结下游强制投影测试、§8 阶段 B 的多 seed/恢复攻击/完整审计，均为协议或轻量数学自检，未在真实模型上跑过。
-- `teacher_eos_margin`（§7.3 相对 EOS）当前未写入 teacher cache；若启用 `eos_relative` 且 cache 无该字段，回退为 0，需要在 `data.py::build_teacher_cache` 补缓存后才具备完整语义。
-- 未改 `data.py` 的配对构造逻辑；v1.1 要求的关系对照 / author 簇隔离沿用现有 `build_pairs`。
-- 本轮未运行 GPU 训练、未改远程代码、未 push、未把 Tiny smoke 当作机制证据。
+- `forward_with_attention_patch` 在 HF Llama 上替换 `self_attn` 输出；已在 H20 真实 Llama 的 Stage A 中跑通。Tiny 后端亦可用。
+- `equal_condition_controls` 的 `matched-retain / 同实体非目标关系` 已落地：配对生成时 `require_control=True`，cache 额外保存 control 的 attention/GLU，`scan_all_layers` 记录 `delta_m`；`stage_a_pass` 要求 control 覆盖率达标。
+- `qk_v_factorial` 用 cache 中的 `π,V` 重算 `o_proj(π@V)`，不是从原始 Q/K 重跑 softmax；报告标 `APPROX_ONLY`，且 `used_for_gate=false`，不用于 `stage_a_pass`。
+- §5.2 的 head/position 级细化扫描、§7.4 的真实冻结下游强制投影测试、§8 阶段 B 的多 seed/恢复攻击/完整审计，仍未在真实模型上跑过。
+- `teacher_eos_margin`（§7.3 相对 EOS）已写入 teacher cache；`eos_relative` 仍默认关闭。
+- `data.py` 的配对构造已改为规范作者词表 + 别名排除 + 分层采样 + 主体位置预筛；`build_teacher_cache` 的 fail-closed 校验未放松。
+- 本轮运行了 GPU0 的 Stage A 诊断（不训练）；未改远程代码、未 push、未把 Tiny smoke 当作机制证据。
+
+## 6. 2026-11-28 P0 修复与 Stage A 实测
+
+- 配对：`make_pairs_cf301_v2.py` 生成 39 对，覆盖 20 个作者簇（其中 1 个簇 1 对，其余 2 对）；0 个主体位置不一致，0 个伪主体，donor 与 forget 作者不重叠；39/39 带 matched-retain control。
+- 全层：`measurement.scan_layers="all"`，cache/scan 覆盖 1..16 层；修复了 HF `hidden_states[-1]` 是 final-norm 而非第 16 层输出的问题。
+- 审计：`repeat_forward_error=0.0`、`zero_edit_recovery_eps0=0.0`、`attention_pi_component_rel_error=5.29e-8`、online-vs-cached fp16 符号一致率 1.0、Spearman 0.895（阈值 0.9/0.8）→ `measurement_reliable=true`。
+- 选择：`NO_STABLE_CANDIDATE`。最强候选 `10:attn_content` 的 discovery effect CI 下限 0.00070（阈值 0.002）、specificity CI 下限 0.00028（阈值 0.001）、random CI 上限 0.00141 高于效应下限、matched CI 下限 -0.00058；其余候选更弱或方向相反。
+- 结论：本轮不是测量失败，而是 attention-only 候选未表现出超过随机/同实体匹配对照的目标特异性；按 proposal §9 停止，不进入 Stage B。`claim_level=false`。
 
 ## 5. 决策门
 

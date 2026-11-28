@@ -163,8 +163,35 @@ def train(student, tok, cache, retain_records, prepared, cfg, device, method, ou
         loss = (float(cfg["loss"]["method_weight"]) * terms["method_loss"] + float(cfg["loss"]["neutral_weight"]) * neutral + float(cfg["loss"]["retain_weight"]) * retain_nll)
         if "extra_loss" in terms:
             loss = loss + terms["extra_loss"]
+        grad_diag = {}
+        if bool(cfg["loss"].get("grad_diagnostics", False)):
+            # Per-term gradient L2 on the SHARED trainable parameter vector.
+            # autograd.grad does NOT accumulate into .grad, so training is
+            # bit-for-bit unchanged. Shares use sum of per-term L2 norms as
+            # denominator (an upper-bound contribution measure, NOT an exact
+            # vector decomposition -- the terms can partially cancel).
+            parts = {"method": float(cfg["loss"]["method_weight"]) * terms["method_loss"],
+                     "neutral": float(cfg["loss"]["neutral_weight"]) * neutral,
+                     "retain": float(cfg["loss"]["retain_weight"]) * retain_nll}
+            if "extra_loss" in terms:
+                parts["extra"] = terms["extra_loss"]
+            norms = {}
+            for name, term in parts.items():
+                try:
+                    gs = torch.autograd.grad(term, params, retain_graph=True, allow_unused=True)
+                except RuntimeError:
+                    gs = []
+                norms[name] = float(sum(float(g.detach().float().norm()) ** 2
+                                       for g in gs if g is not None) ** 0.5)
+            total = sum(norms.values())
+            grad_diag["grad_part_l2"] = {k: round(v, 8) for k, v in norms.items()}
+            grad_diag["grad_part_share"] = {k: round(v / total, 6) if total > 0 else 0.0
+                                            for k, v in norms.items()}
         opt.zero_grad(set_to_none=True)
         loss.backward()
+        if grad_diag:
+            gs = [p.grad.detach().float().norm().item() for p in params if p.grad is not None]
+            grad_diag["grad_param_l2"] = float(sum(g * g for g in gs) ** 0.5)
         grad_norm = torch.nn.utils.clip_grad_norm_(params, float(cfg["training"].get("grad_clip", 1.0)))
         if not torch.isfinite(grad_norm):
             raise FloatingPointError(f"non-finite gradient at step {step}: {grad_norm}")
@@ -175,6 +202,7 @@ def train(student, tok, cache, retain_records, prepared, cfg, device, method, ou
             for key, val in terms.items():
                 if key not in {"method_loss", "extra_loss"} and isinstance(val, torch.Tensor) and val.numel() == 1:
                     row[key] = float(val.detach())
+            row.update(grad_diag)
             history.append(row)
             print(json.dumps(row, ensure_ascii=False), flush=True)
         if int(cfg["training"].get("checkpoint_every", 0)) > 0 and (step + 1) % int(cfg["training"]["checkpoint_every"]) == 0:

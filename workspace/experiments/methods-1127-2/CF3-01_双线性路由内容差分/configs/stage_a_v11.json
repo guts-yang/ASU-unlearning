@@ -1,0 +1,121 @@
+{
+  "seed": 0,
+  "device": null,
+  "model": {
+    "backend": "hf",
+    "path": "/jizhicfs/chenyliao/models/open-unlearning/tofu_Llama-3.2-1B-Instruct_full",
+    "model_type": "llama",
+    "dtype": "bfloat16",
+    "attn_implementation": "eager",
+    "local_files_only": true,
+    "peft": true,
+    "lora_rank": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.0,
+    "lora_targets": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ],
+    "gradient_checkpointing": true,
+    "eos_token_id": 2
+  },
+  "data": {
+    "root": "/jizhicfs/chenyliao/data/datasets/locuslab-TOFU",
+    "forget_file": "forget10.json",
+    "retain_file": "retain90.json",
+    "holdout_file": "holdout10.json",
+    "pairs_file": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/CF3-01_双线性路由内容差分/runs/pairs_v2/pairs_v2.jsonl",
+    "max_pairs": 64,
+    "retain_cache_size": 32,
+    "max_len": 512,
+    "eval_samples": 32,
+    "generation_samples": 8,
+    "generation_tokens": 24,
+    "reuse_cache": false,
+    "cache_full_sequence": true
+  },
+  "layers": [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+  ],
+  "training": {
+    "steps": 60,
+    "full_steps": 600,
+    "batch_size": 2,
+    "full_batch_size": 2,
+    "lr": 5e-06,
+    "weight_decay": 0.0,
+    "grad_clip": 1.0,
+    "log_every": 5,
+    "checkpoint_every": 20
+  },
+  "loss": {
+    "method_weight": 0.1,
+    "neutral_weight": 0.1,
+    "retain_weight": 2.0,
+    "fact_delta": 0.35,
+    "donor_guard_weight": 0.1,
+    "eos_guard_weight": 0.01,
+    "eos_margin": 1.0,
+    "eos_relative": false,
+    "eos_relative_eps": 0.0,
+    "grad_diagnostics": false
+  },
+  "method": {
+    "alpha": 0.1,
+    "strict_gate": true,
+    "gate_pairs": 4,
+    "min_nll_increase": 0.0,
+    "specificity_margin": 0.0,
+    "fallback_component": "content",
+    "control_arm": "brcd",
+    "enable_glu_family": false,
+    "enable_affine_projection": false,
+    "sparse_selection_file": null,
+    "normalized_mse": false,
+    "normalized_mse_eps": 1e-08
+  },
+  "projection": {
+    "steps": 12,
+    "outer_steps": 2,
+    "rho_max": 0.5,
+    "kappa": 1.0,
+    "c_margin": 0.05,
+    "d_donor_rel": 0.05,
+    "eos_deadzone": 1.0,
+    "tolerance": 0.02,
+    "c_f_mode": "independent_reference",
+    "c_f_fixed": null
+  },
+  "measurement": {
+    "scan_layers": "all",
+    "noise_floor_abs": 0.001,
+    "audit_pairs": 3,
+    "n_boot": 1000,
+    "heldout_frac": 0.3,
+    "min_effect": 0.002,
+    "min_specificity": 0.001,
+    "beat_random": true,
+    "beat_matched_retain": true,
+    "matched_retain_min_coverage": 0.95,
+    "min_stable_layers": 2,
+    "min_heldout_clusters": 4,
+    "min_heldout_pairs": 8,
+    "fp32_fp16_min_sign": 0.9,
+    "fp32_fp16_min_spearman": 0.8,
+    "enable_glu": false,
+    "factorial_top_layers": 3
+  },
+  "evaluation": {
+    "probe_samples": 64,
+    "probe_layer": 14,
+    "probe_epochs": 100,
+    "relearning_steps": 10,
+    "relearning_samples": 8,
+    "relearning_lr": 5e-06
+  }
+}

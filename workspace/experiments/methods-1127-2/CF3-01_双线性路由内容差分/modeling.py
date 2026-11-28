@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import random
 import re
 from pathlib import Path
 from types import SimpleNamespace
@@ -235,8 +236,15 @@ def answer_nll(logits, labels, answer_start=None):
 def forward_model(model, enc, device, layers=None, grad=False, capture_bilinear=False, capture_glu=False):
     enc = move_encoded(enc, device)
     modules = decoder_layers(model)
-    values, glu = {}, {}
+    values, glu, block_hidden = {}, {}, {}
     handles = []
+    # HF's hidden_states[-1] is the FINAL-NORMED state, not decoder layer L's
+    # output.  Patch-based Stage A must use the real block output for every
+    # layer (especially layer 16), so capture decoder-layer outputs directly.
+    for index, layer in enumerate(modules):
+        def block_hook(_module, _args, output, i=index):
+            block_hidden[i + 1] = output[0] if isinstance(output, tuple) else output
+        handles.append(layer.register_forward_hook(block_hook))
     if capture_bilinear:
         for index, layer in enumerate(modules):
             def value_hook(_module, _args, output, i=index):
@@ -255,7 +263,14 @@ def forward_model(model, enc, device, layers=None, grad=False, capture_bilinear=
                         output_hidden_states=True, output_attentions=capture_bilinear, use_cache=False)
             # Student activations are bf16 while teacher targets are fp32; keep the
             # shared interface fp32 so mixed-dtype mse_loss backward does not fail.
-            hidden = {i: h[0].float() for i, h in enumerate(out.hidden_states) if layers is None or i in layers}
+            hidden = {}
+            for i, h in enumerate(out.hidden_states):
+                if layers is not None and i not in layers:
+                    continue
+                if i in block_hidden:
+                    hidden[i] = block_hidden[i][0].float()
+                else:
+                    hidden[i] = h[0].float()
             nll = answer_nll(out.logits[0], enc["labels"])
             attention = {}
             start, end = enc["answer_start"], enc["answer_end"]
@@ -293,19 +308,61 @@ def span_hidden(forward, layer, start=None, end=None):
     return h[start:end]
 
 
+def eos_margin(logits, answer_start, answer_end, eos_id):
+    """Mean (EOS logit - best non-EOS logit) on the answer span.
+
+    Positive means the model prefers EOS; used only as a relative guard
+    (Student vs frozen Teacher), never as an absolute forgetting signal.
+    """
+    span = logits[answer_start:max(answer_start, answer_end - 1)].float()
+    if span.numel() == 0 or int(eos_id) >= span.size(-1):
+        return logits.new_zeros(())
+    without = span.clone()
+    without[:, int(eos_id)] = -torch.inf
+    return (span[:, int(eos_id)] - without.max(dim=-1).values).mean()
+
+
+def stratified_sample(records, max_samples, group_key=None, seed=0):
+    """Deterministic sample spread across groups (e.g. authors), not a prefix."""
+    records = list(records)
+    if max_samples is None or max_samples >= len(records):
+        return records
+    rng = random.Random(seed)
+    if group_key is None:
+        return rng.sample(records, max_samples)
+    groups = {}
+    for rec in records:
+        groups.setdefault(group_key(rec), []).append(rec)
+    keys = sorted(groups)
+    for key in keys:
+        rng.shuffle(groups[key])
+    picked = []
+    while len(picked) < max_samples and any(groups[key] for key in keys):
+        for key in keys:
+            if groups[key] and len(picked) < max_samples:
+                picked.append(groups[key].pop())
+    return picked
+
+
 @torch.no_grad()
-def evaluate_ground_truth(model, tok, records, device, max_len=512, max_samples=32):
+def evaluate_ground_truth(model, tok, records, device, max_len=512, max_samples=32,
+                          group_key=None, seed=0):
+    sample = stratified_sample(records, max_samples, group_key, seed)
     rows = []
-    for rec in list(records)[:max_samples]:
+    for rec in sample:
         out = forward_model(model, encode_qa(tok, rec["question"], rec["answer"], max_len), device)
         rows.append(float(out["nll"]))
-    return {"nll": sum(rows) / max(1, len(rows)), "count": len(rows), "ground_truth": "dataset_answer"}
+    coverage = len({group_key(rec) for rec in sample}) if group_key is not None else None
+    return {"nll": sum(rows) / max(1, len(rows)), "count": len(rows),
+            "ground_truth": "dataset_answer", "author_coverage": coverage}
 
 
 @torch.no_grad()
-def generation_behaviour(model, tok, records, device, max_new_tokens=24, max_samples=8):
+def generation_behaviour(model, tok, records, device, max_new_tokens=24, max_samples=8,
+                         group_key=None, seed=0):
+    sample = stratified_sample(records, max_samples, group_key, seed)
     stats = []
-    for rec in list(records)[:max_samples]:
+    for rec in sample:
         ids = tok.encode(f"Question: {rec['question']}\nAnswer:", add_special_tokens=False)
         inp = torch.tensor(ids, dtype=torch.long, device=device).unsqueeze(0)
         # HF generate() forces num_logits_to_keep=1; that bf16 lm_head GEMM aborts
@@ -326,9 +383,11 @@ def generation_behaviour(model, tok, records, device, max_new_tokens=24, max_sam
         stats.append({"tokens": int(gen.numel()), "eos": bool((gen == tok.eos_token_id).any()),
                       "overlap": len(target & generated) / max(1, len(target)), "text": text[:160]})
     n = max(1, len(stats))
+    coverage = len({group_key(rec) for rec in sample}) if group_key is not None else None
     return {"samples": len(stats), "mean_tokens": sum(x["tokens"] for x in stats) / n,
             "eos_rate": sum(x["eos"] for x in stats) / n,
             "target_overlap": sum(x["overlap"] for x in stats) / n,
+            "author_coverage": coverage,
             "examples": [x["text"] for x in stats[:2]]}
 
 

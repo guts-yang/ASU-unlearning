@@ -20,9 +20,15 @@ python3 run.py --profile pilot --diagnose-only
 python3 run_stage_a.py --self-test
 python3 run_stage_a.py --profile tiny
 
+# 真实 Stage A：先 audit-only 冻结阈值，再全层扫描
+python3 run_stage_a.py --config configs/stage_a_v11.json --profile pilot \
+  --audit-only --output runs/stage_a_audit_v11_seed0
+python3 run_stage_a.py --config configs/stage_a_v11.json --profile pilot \
+  --output runs/stage_a_pilot_v11_seed0
+
 # v1.1 Stage B：仅当 Stage A 输出 stage_a_pass=true
 python3 run.py --profile pilot \
-  --set method.sparse_selection_file=/abs/path/runs/stage_a_pilot_seed0/selected_candidates.json
+  --set method.sparse_selection_file=/abs/path/runs/stage_a_pilot_v11_seed0/selected_candidates.json
 ```
 
 ## 关键边界

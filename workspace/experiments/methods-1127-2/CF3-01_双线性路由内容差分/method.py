@@ -313,9 +313,14 @@ def affine_project_to_k(teacher, item, layer, tok, cfg, device, z, component,
     return accepted, report
 
 
-def _control_component(item, layer, candidates, arm, cfg, seed, all_candidates):
+def _control_component(item, layer, candidates, arm, cfg, seed, all_candidates,
+                       ref_name="attn_route", cluster_by_index=None):
     hp, hm = item["h_plus"][layer].float(), item["h_minus"][layer].float()
-    ref = candidates.get("attn_route")
+    ref = candidates.get(ref_name)
+    if ref is None:
+        ref = candidates.get("attn_route")
+    if ref is None:
+        return None, {"arm": arm, "reason": "reference_candidate_missing"}
     if arm in ("route_only", "content_only"):
         name = "attn_route" if arm == "route_only" else "attn_content"
         return candidates[name], {"arm": arm, "forced": name}
@@ -329,8 +334,21 @@ def _control_component(item, layer, candidates, arm, cfg, seed, all_candidates):
         scale = ref.norm().item() / rnd.norm().clamp_min(1e-8).item()
         return rnd * scale, {"arm": arm}
     if arm == "wrong_shuffled":
-        keys = sorted(all_candidates)
-        other = all_candidates[keys[(int(item["index"]) + layer) % len(keys)]]["attn_route"]
+        # Same candidate family, ideally a different author cluster.
+        keys = [k for k in sorted(all_candidates) if k[1] == layer]
+        if cluster_by_index is not None:
+            here = cluster_by_index.get(item["index"])
+            other_keys = [k for k in keys if cluster_by_index.get(k[0]) != here]
+            if other_keys:
+                keys = other_keys
+        if not keys:
+            return None, {"arm": arm, "reason": "no_shuffled_candidate"}
+        other_c = all_candidates[keys[(int(item["index"]) + layer) % len(keys)]]
+        other = other_c.get(ref_name)
+        if other is None:
+            other = other_c.get("attn_route")
+        if other is None:
+            return None, {"arm": arm, "reason": "shuffled_candidate_missing"}
         scale = ref.norm().item() / other.norm().clamp_min(1e-8).item()
         return other * scale, {"arm": arm}
     return None, {"arm": "brcd"}

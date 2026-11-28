@@ -15,8 +15,11 @@ HERE = Path(__file__).resolve().parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
-from data import build_pairs, build_teacher_cache, load_cache, load_records, save_cache, synthetic_records
-from modeling import create_model_and_tokenizer, encode_qa, evaluate_ground_truth, forward_model, generation_behaviour, save_trained, span_hidden
+from data import (build_pairs, build_teacher_cache, canonical_subject, load_cache,
+                 load_records, save_cache, synthetic_records, _relation_key)
+from modeling import (create_model_and_tokenizer, encode_qa, evaluate_ground_truth,
+                      forward_model, generation_behaviour, save_trained, span_hidden,
+                      stratified_sample)
 
 
 def set_seed(seed):
@@ -231,22 +234,32 @@ def evaluate_pair_donor(student, tok, pairs, cfg, device):
             "note": "evaluation only; donor answers never enter training loss"}
 
 
+def _record_author(record):
+    return canonical_subject(record.get("question", ""), record.get("answer", "")) or record.get("author")
+
+
 @torch.no_grad()
 def _probe_features(model, tok, records, cfg, device, layer):
     features, labels, groups = [], [], []
     for record in records:
-        author = record.get("author") or record["question"]
+        author = _record_author(record)
+        if author is None:
+            continue
         enc = encode_qa(tok, record["question"], record["answer"], int(cfg["data"]["max_len"]))
         out = forward_model(model, enc, device, {layer})
         start, end = enc["answer_start"], enc["answer_end"]
         features.append(out["hidden"][layer][start:end].mean(0).detach().float().cpu())
         labels.append(author)
-        groups.append(record["question"].replace(author, "<SUBJECT>"))
+        # Same-entity, DIFFERENT relation: the group key must not be the whole
+        # question, otherwise every record is its own group and the split folds.
+        groups.append(_relation_key(record["question"], author))
     return torch.stack(features), labels, groups
 
 
 def target_fact_probe(model, tok, forget, cfg, device):
-    records = list(forget)[:int(cfg["evaluation"].get("probe_samples", 64))]
+    candidates = [r for r in forget if _record_author(r) is not None]
+    records = stratified_sample(candidates, int(cfg["evaluation"].get("probe_samples", 64)),
+                                _record_author, int(cfg["seed"]) + 810)
     layer = min(int(cfg["evaluation"].get("probe_layer", max(cfg["layers"]))), int(model.config.num_hidden_layers))
     features, author_names, groups = _probe_features(model, tok, records, cfg, device, layer)
     classes = sorted(set(author_names))
@@ -260,8 +273,10 @@ def target_fact_probe(model, tok, forget, cfg, device):
     test_groups = set(unique_groups[:max(1, len(unique_groups) // 5)])
     train_idx = [i for i, group in enumerate(groups) if group not in test_groups]
     test_idx = [i for i, group in enumerate(groups) if group in test_groups]
+    coverage = len(classes)
     if not train_idx or not test_idx or len(set(labels[train_idx].tolist())) < 2:
-        return {"status": "INSUFFICIENT_RELATION_SPLIT", "train": len(train_idx), "test": len(test_idx)}
+        return {"status": "INSUFFICIENT_RELATION_SPLIT", "train": len(train_idx),
+                "test": len(test_idx), "author_coverage": coverage}
     train_x, test_x = features[train_idx].to(device), features[test_idx].to(device)
     train_y, test_y = labels[train_idx].to(device), labels[test_idx].to(device)
     mean, std = train_x.mean(0), train_x.std(0).clamp_min(1e-5)
@@ -278,8 +293,9 @@ def target_fact_probe(model, tok, forget, cfg, device):
         accuracy = (logits.argmax(-1) == test_y).float().mean()
         loss = F.cross_entropy(logits, test_y)
     return {"status": "COMPLETED", "layer": layer, "train": len(train_idx), "test": len(test_idx),
-            "classes": len(classes), "relation_disjoint": True, "accuracy": float(accuracy),
-            "cross_entropy": float(loss), "chance_accuracy": 1.0 / len(classes),
+            "classes": len(classes), "author_coverage": coverage, "relation_disjoint": True,
+            "accuracy": float(accuracy), "cross_entropy": float(loss),
+            "chance_accuracy": 1.0 / len(classes),
             "scope": "forget-author hidden-state separability; not proof of factual erasure"}
 
 
@@ -358,8 +374,8 @@ def main(argv=None):
                                     capture_bilinear=getattr(method, "NEEDS_TEACHER_BILINEAR", False),
                                     capture_glu=getattr(method, "NEEDS_TEACHER_GLU", False))
         save_cache(cache, cache_path)
-    if set(cache.get("layers", [])) != set(cfg["layers"]) or len(cache.get("pairs", [])) != len(pairs):
-        raise RuntimeError("teacher cache does not match current layers/pairs; use a new output or data.reuse_cache=false")
+    if not set(cfg["layers"]).issubset(set(cache.get("layers", []))) or len(cache.get("pairs", [])) != len(pairs):
+        raise RuntimeError("teacher cache does not cover current layers or pairs; use a new output or data.reuse_cache=false")
     required_cache = {"NEEDS_TEACHER_BILINEAR": "attention_plus", "NEEDS_TEACHER_GLU": "glu_plus"}
     for flag, key in required_cache.items():
         if getattr(method, flag, False) and not cache["pairs"][0].get(key):
@@ -374,10 +390,13 @@ def main(argv=None):
     prepared = method.prepare(cache, teacher, tok, cfg, device, student=student, out_dir=out_dir)
     diagnostics = method.diagnostics(cache, prepared, cfg)
     (out_dir / "diagnostics.json").write_text(json.dumps(diagnostics, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
+    group_key = lambda rec: (canonical_subject(rec.get("question", ""), rec.get("answer", ""))
+                             or rec.get("author") or rec.get("question", ""))
+    eval_kwargs = {"group_key": group_key, "seed": int(cfg["seed"])}
     before = {
-        "forget": evaluate_ground_truth(teacher, tok, forget, device, int(cfg["data"]["max_len"]), int(cfg["data"]["eval_samples"])),
-        "retain": evaluate_ground_truth(teacher, tok, retain, device, int(cfg["data"]["max_len"]), int(cfg["data"]["eval_samples"])),
-        "holdout": evaluate_ground_truth(teacher, tok, holdout, device, int(cfg["data"]["max_len"]), int(cfg["data"]["eval_samples"])),
+        "forget": evaluate_ground_truth(teacher, tok, forget, device, int(cfg["data"]["max_len"]), int(cfg["data"]["eval_samples"]), **eval_kwargs),
+        "retain": evaluate_ground_truth(teacher, tok, retain, device, int(cfg["data"]["max_len"]), int(cfg["data"]["eval_samples"]), **eval_kwargs),
+        "holdout": evaluate_ground_truth(teacher, tok, holdout, device, int(cfg["data"]["max_len"]), int(cfg["data"]["eval_samples"]), **eval_kwargs),
         "donor": evaluate_pair_donor(teacher, tok, pairs, cfg, device),
     }
     status = "DIAGNOSED" if args.diagnose_only else "PENDING"
@@ -388,11 +407,11 @@ def main(argv=None):
     elif not prepared.get("enabled", True):
         status = "DIAGNOSTIC_KILL"
     after = {
-        "forget": evaluate_ground_truth(student, tok, forget, device, int(cfg["data"]["max_len"]), int(cfg["data"]["eval_samples"])),
-        "retain": evaluate_ground_truth(student, tok, retain, device, int(cfg["data"]["max_len"]), int(cfg["data"]["eval_samples"])),
-        "holdout": evaluate_ground_truth(student, tok, holdout, device, int(cfg["data"]["max_len"]), int(cfg["data"]["eval_samples"])),
+        "forget": evaluate_ground_truth(student, tok, forget, device, int(cfg["data"]["max_len"]), int(cfg["data"]["eval_samples"]), **eval_kwargs),
+        "retain": evaluate_ground_truth(student, tok, retain, device, int(cfg["data"]["max_len"]), int(cfg["data"]["eval_samples"]), **eval_kwargs),
+        "holdout": evaluate_ground_truth(student, tok, holdout, device, int(cfg["data"]["max_len"]), int(cfg["data"]["eval_samples"]), **eval_kwargs),
         "donor": evaluate_pair_donor(student, tok, pairs, cfg, device),
-        "behaviour": generation_behaviour(student, tok, forget, device, int(cfg["data"].get("generation_tokens", 24)), int(cfg["data"].get("generation_samples", 4))),
+        "behaviour": generation_behaviour(student, tok, forget, device, int(cfg["data"].get("generation_tokens", 24)), int(cfg["data"].get("generation_samples", 4)), **eval_kwargs),
     }
     checkpoint = out_dir / "checkpoint"
     if status == "COMPLETED":
