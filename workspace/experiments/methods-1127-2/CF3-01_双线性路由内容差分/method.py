@@ -352,6 +352,58 @@ def prepare(cache, teacher, tok, cfg, device, student=None, out_dir=None):
     all_cands = {(item["index"], layer): _candidates(item, layer, teacher, enable_glu)
                  for item in cache["pairs"] for layer in cfg["layers"]}
 
+    cfg_layers = list(cfg["layers"])
+    sel_file = cfg["method"].get("sparse_selection_file", None)
+    if sel_file:
+        # v1.1 §6: Stage A has already done measurement audit + full-layer scan +
+        # equal-condition controls + cluster-bootstrap held-out selection. Here we
+        # only materialize its SPARSE layer set into fixed Student targets.
+        import json as _json
+        from pathlib import Path as _Path
+        sel_payload = _json.loads(_Path(sel_file).read_text(encoding="utf-8"))
+        if not sel_payload.get("stage_a_pass", False):
+            return {"enabled": False, "selected": {},
+                    "reports": {"stage_a_gate": {"status": sel_payload.get("reasons")}},
+                    "ambiguous_layers": [], "cross_family_ambiguity": [], "alpha": alpha,
+                    "targets": {}, "control_arm": arm,
+                    "enable_glu_family": enable_glu, "enable_affine_projection": False,
+                    "projection_c_f_calibration": None, "projection_stats": [],
+                    "projection_infeasible": [],
+                    "kill_reasons": [{"type": "stage_a_gate_failed",
+                                      "reasons": sel_payload.get("reasons")}],
+                    "gate_failed_layers": [], "stage_a_selected": {}}
+        stage_sel = {int(k): v for k, v in sel_payload["selected"].items()}
+        stage_layers = sorted(stage_sel)
+        targets = {}
+        for item in cache["pairs"]:
+            for layer in stage_layers:
+                cands = all_cands.get((item["index"], layer))
+                name = stage_sel[layer]
+                if not cands or name not in cands:
+                    continue
+                hp = item["h_plus"][layer].float()
+                comp = cands[name]
+                n = min(hp.shape[0], comp.shape[0])
+                # §6.2 optional normalized MSE handled in loss(); target is fixed.
+                targets[(item["index"], layer)] = (hp[:n] - alpha * comp[:n]).detach()
+        if not targets:
+            return {"enabled": False, "selected": {str(l): stage_sel[l] for l in stage_layers},
+                    "reports": {}, "ambiguous_layers": [], "cross_family_ambiguity": [],
+                    "alpha": alpha, "targets": {}, "control_arm": arm,
+                    "enable_glu_family": enable_glu, "enable_affine_projection": False,
+                    "projection_c_f_calibration": None, "projection_stats": [],
+                    "projection_infeasible": [],
+                    "kill_reasons": [{"type": "stage_a_no_targets"}],
+                    "gate_failed_layers": [], "stage_a_selected": {str(l): stage_sel[l] for l in stage_layers}}
+        return {"enabled": True, "selected": {str(l): stage_sel[l] for l in stage_layers},
+                "reports": {"stage_a": {"layers": stage_layers, "source": str(sel_file)}},
+                "ambiguous_layers": [], "cross_family_ambiguity": [], "alpha": alpha,
+                "targets": targets, "control_arm": arm,
+                "enable_glu_family": enable_glu, "enable_affine_projection": False,
+                "projection_c_f_calibration": None, "projection_stats": [],
+                "projection_infeasible": [], "kill_reasons": [],
+                "gate_failed_layers": [], "stage_a_selected": {str(l): stage_sel[l] for l in stage_layers}}
+
     families = ("attn", "glu") if enable_glu else ("attn",)
     reports, pass_map, selected, ambiguity, cross_family = {}, {}, {}, [], []
     if arm == "brcd":
@@ -473,20 +525,28 @@ def prepare(cache, teacher, tok, cfg, device, student=None, out_dir=None):
 
 def loss(batch, prepared, cfg):
     terms = []
+    normalized = bool(cfg.get("method", {}).get("normalized_mse", False))
+    eps = float(cfg.get("method", {}).get("normalized_mse_eps", 1e-8))
     for row in batch:
         item, plus = row["item"], row["plus"]
-        for layer in cfg["layers"]:
-            key = (item["index"], layer)
-            if key not in prepared["targets"]:
+        for key, target_full in prepared["targets"].items():
+            if not (isinstance(key, tuple) and key[0] == item["index"]):
                 continue
-            target = prepared["targets"][key].to(plus["nll"].device)
+            layer = key[1]
+            target = target_full.to(plus["nll"].device)
             sh = span_hidden(plus, layer)
             n = min(len(sh), target.shape[0])
-            terms.append(F.mse_loss(sh[:n].float(), target[:n].detach()))
+            diff2 = (sh[:n].float() - target[:n].detach()).pow(2).sum(-1)
+            if normalized:
+                hp = item["h_plus"][layer].to(plus["nll"].device).float()
+                denom = (hp[:n] - target[:n].detach()).pow(2).sum(-1).clamp_min(eps)
+                diff2 = diff2 / denom
+            terms.append(diff2.mean())
     if not terms:
         raise RuntimeError("no BRCD candidate selected")
     return {"method_loss": torch.stack(terms).mean(),
-            "selected_terms": torch.tensor(float(len(terms)))}
+            "selected_terms": torch.tensor(float(len(terms))),
+            "normalized_mse": normalized}
 
 
 def diagnostics(cache, prepared, cfg):

@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CF3-01 双线性路由—内容差分</title>
+<title>CF3-01 双线性路由—内容差分：机制导览</title>
 
 <meta name="generator" content="ARIS render-html (academic, v1)">
 <meta name="aris:source-path" content="workspace/experiments/methods-1127-2/CF3-01_双线性路由内容差分/MECHANISM_GUIDE.md">
-<meta name="aris:source-sha256" content="cf831ca5817029f344fb212dea9bc1c50dddb710e8358b2210d055eb0a298650">
-<meta name="aris:generated-at" content="2026-11-27 15:45 UTC">
+<meta name="aris:source-sha256" content="5145fdcaee791ef5f8c626ea80a9b9fff851bf8ef8cbec4274bd4651414ba34a">
+<meta name="aris:generated-at" content="2026-11-28 07:20 UTC">
 
 <!-- MathJax 3 -->
 <script>
@@ -476,195 +476,244 @@ body.aris-blog h2.aris-active-h2 {
 <nav class="toc">
   <h3>Contents</h3>
   <ol>
-<li><a href="#1-从一个具体例子开始">1. 从一个具体例子开始</a>
+<li><a href="#0-一张地图数据从头到尾怎么走">0. 一张地图：数据从头到尾怎么走</a>
 </li>
-<li><a href="#2-为什么不能直接使用全部激活差">2. 为什么不能直接使用全部激活差？</a>
+<li><a href="#1-输入一对只换人名不换答案的问答">1. 输入：一对&quot;只换人名、不换答案&quot;的问答</a>
 </li>
-<li><a href="#3-先回顾注意力路由与内容在哪里">3. 先回顾注意力：路由与内容在哪里？</a>
+<li><a href="#2-为什么不直接拿全部激活差来删">2. 为什么不直接拿&quot;全部激活差&quot;来删？</a>
 </li>
-<li><a href="#4-核心恒等式把差值精确拆成两项">4. 核心恒等式：把差值精确拆成两项</a>
+<li><a href="#3-注意力入门路由-pi-与内容-v-在哪里">3. 注意力入门：路由 $\pi$ 与内容 $v$ 在哪里？</a>
 </li>
-<li><a href="#5-放到注意力公式中">5. 放到注意力公式中</a>
-</li>
-<li><a href="#6-关键筛选哪一项才值得消弱">6. 关键筛选：哪一项才值得消弱？</a>
-</li>
-<li><a href="#7-如何真正更新模型teacher-指目标student-学过去">7. 如何真正更新模型：Teacher 指目标，Student 学过去</a>
-</li>
-<li><a href="#8-仅靠-mse-为什么还不够">8. 仅靠 MSE 为什么还不够？</a>
+<li><a href="#4-第一个关键计算把差值精确拆成两项">4. 第一个关键计算：把差值精确拆成两项</a>
 <ul>
-<li><a href="#81-原事实读出约束">8.1 原事实读出约束</a></li>
-<li><a href="#82-保留集约束">8.2 保留集约束</a></li>
-<li><a href="#83-不向-donor-靠近">8.3 不向 donor 靠近</a></li>
-<li><a href="#84-提前结束防护">8.4 提前结束防护</a></li>
+<li><a href="#41-放进注意力公式">4.1 放进注意力公式</a></li>
+<li><a href="#42-可选的-swiglu-分支本版不默认混用">4.2 可选的 SwiGLU 分支（本版不默认混用）</a></li>
 </ul>
 </li>
-<li><a href="#9-一次训练的完整流程">9. 一次训练的完整流程</a>
+<li><a href="#5-阶段-a-第一步先做噪声体检再谈机制">5. 阶段 A 第一步：先做&quot;噪声体检&quot;，再谈机制</a>
 </li>
-<li><a href="#10-部署时还需要-teacher-和两次前向吗">10. 部署时还需要 Teacher 和两次前向吗？</a>
+<li><a href="#6-阶段-a-主体全层诊断--等条件对照--稀疏选择">6. 阶段 A 主体：全层诊断 + 等条件对照 + 稀疏选择</a>
+<ul>
+<li><a href="#61-阶段-a-的三个出口">6.1 阶段 A 的三个出口</a></li>
+</ul>
 </li>
-<li><a href="#11-怎么判断它是真遗忘而不是表面不答">11. 怎么判断它是真遗忘，而不是表面不答？</a>
+<li><a href="#7-阶段-b把选中的方向写进-student参数内化">7. 阶段 B：把选中的方向写进 Student（参数内化）</a>
+<ul>
+<li><a href="#71-训练前先看梯度占比而不是只看-loss-数值">7.1 训练前先看梯度占比，而不是只看 loss 数值</a></li>
+</ul>
 </li>
-<li><a href="#12-当前实现与原方案的差别">12. 当前实现与原方案的差别</a>
+<li><a href="#8-护栏如何避免假遗忘">8. 护栏：如何避免&quot;假遗忘&quot;</a>
 </li>
-<li><a href="#13-最后用五句话复述">13. 最后用五句话复述</a>
+<li><a href="#9-输出部署时只有-student">9. 输出：部署时只有 Student</a>
 </li>
-<li><a href="#14-代码阅读索引">14. 代码阅读索引</a>
+<li><a href="#10-怎么判断真遗忘而不是表面不答">10. 怎么判断&quot;真遗忘&quot;而不是&quot;表面不答&quot;</a>
+</li>
+<li><a href="#11-当前真实状态为什么这份文档强调先测量">11. 当前真实状态：为什么这份文档强调&quot;先测量&quot;</a>
+</li>
+<li><a href="#12-五句话复述">12. 五句话复述</a>
+</li>
+<li><a href="#13-代码阅读索引">13. 代码阅读索引</a>
 </li>
 </ol>
 </nav>
 
 <main>
 <header class="hero">
-  <div class="eyebrow">BRCD · MECHANISM GUIDE</div>
-  <h1>CF3-01 双线性路由—内容差分</h1>
-  <p class="subtitle">从注意力公式到机器遗忘：面向深度学习初学者的实现导览</p>
+  <div class="eyebrow">BRCD · MECHANISM GUIDE · v1.1</div>
+  <h1>CF3-01 双线性路由—内容差分：机制导览</h1>
+  <p class="subtitle">从数据输入到遗忘输出，一步步看懂底层实现</p>
   
   <div class="meta">
     <span><strong>Source:</strong> <code>workspace/experiments/methods-1127-2/CF3-01_双线性路由内容差分/MECHANISM_GUIDE.md</code></span>
-    <span><strong>SHA256:</strong> <code>cf831ca58170</code></span>
-    <span><strong>Rendered:</strong> 2026-11-27 15:45 UTC</span>
+    <span><strong>SHA256:</strong> <code>5145fdcaee79</code></span>
+    <span><strong>Rendered:</strong> 2026-11-28 07:20 UTC</span>
     
   </div>
 </header>
 
-<h1 id="cf3-01-双线性路由内容差分">CF3-01 双线性路由—内容差分</h1>
-<blockquote><p><strong>先用一句话理解</strong>：模型对“换人名”这件事的反应，混有两种变化——<strong>注意力的去向变了</strong>，以及<strong>被读取的内容变了</strong>。CF3-01 先把这两种变化精确拆开，测试哪一个确实与目标答案的读出有关，再训练 Student 在原问题上只消弱这一小部分内部信号，同时尽量保住其他知识。</p></blockquote>
-<p>这里的“遗忘”不是从硬盘中删除训练样本，也不是把某个神经元永久清零，而是：<strong>通过参数微调，让模型面对原问题时，不再那么容易沿原来的内部通路读出目标事实，并尽量不影响其他能力。</strong></p>
-<h2 id="1-从一个具体例子开始">1. 从一个具体例子开始</h2>
-<p>假设要遗忘的事实是：</p>
-<table><thead><tr><th>角色</th><th>问题</th><th>输入模型时使用的答案</th></tr></thead><tbody><tr><td>原事实 $X^+$</td><td>Where was <strong>Alice Miller</strong> born?</td><td>Alice Miller was born in <strong>Paris</strong>.</td></tr><tr><td>反事实 $X^-$</td><td>Where was <strong>Bob Smith</strong> born?</td><td>仍然是 Alice Miller was born in <strong>Paris</strong>.</td></tr></tbody></table>
-<p>第二个问题不是模型原本会自然回答 Paris 的问题。它只是一个<strong>受控对照</strong>：问题中只替换人名，其他词、答案和 token 位置尽量保持一致。</p>
-<table><thead><tr><th>符号</th><th>含义</th><th>在教学例子中的角色</th></tr></thead><tbody><tr><td>$X^+$</td><td>原问题</td><td>Alice 的出生地问题</td></tr><tr><td>$X^-$</td><td>只换主体的反事实问题</td><td>Bob 的出生地问题</td></tr><tr><td>$y^+$</td><td>原数据集答案</td><td>Paris 所在的原始答案</td></tr><tr><td>$y^-$</td><td>donor 自己的答案</td><td>例如 Bob 的答案；只用于评估，不作训练目标</td></tr></tbody></table>
-<p>两次 Teacher 前向分别处理 $(X^+,y^+)$ 和 $(X^-,y^+)$。<strong>答案相同非常重要</strong>：若连答案也换掉，观察到的差异就混入“问题变了”和“答案变了”两种因素，难以定位。</p>
-<blockquote><p><strong>最容易误解的一点</strong>：$X^-$ 是用来测量“哪些内部计算随主体改变”的对照，不是让 Student 学会回答 Bob 的事实。</p></blockquote>
-<h2 id="2-为什么不能直接使用全部激活差">2. 为什么不能直接使用全部激活差？</h2>
-<p>Transformer 的每一层会输出一组隐藏向量。对同一个答案位置 $p$，可以计算：</p>
+<h1 id="cf3-01-双线性路由内容差分brcd">CF3-01 双线性路由—内容差分（BRCD）</h1>
+<blockquote><p><strong>先说清楚这份文档是什么</strong>：它是一本"数据旅程"导览 —— 跟着一条问答数据，看它如何进入模型、在哪里被拆开、怎么判断拆出来的东西值不值得删、最后怎么把"删除"写进模型参数。它不是一份"方法已成功"的报告。</p></blockquote>
+<div class="callout callout-bad"><div class="callout-title">最重要的边界（请先看）</div><p>本文依据的 <code>CF3-01_proposal.md</code> 是 <strong>v1.1-measurement-first（基于失败信号的设计修订版）</strong>，不是通过版。历史 round3 的真实诊断显示：候选效应只有约 $10^{-3}$ 量级、16 个门只过了 2 个、对照臂 dF 全为负、主链 0 步。这些结果说明<strong>当前版本尚未拿到"机制有效"的证据</strong>，因此本版的第一任务是先证明"拆出来的方向确实有用"，而不是直接加大训练力度。当前工作树代码是 attention-only，历史四候选/POCS 实现（<code>fe5e32f</code>）与本版设计不自动等价。</p></div>
+<h2 id="0-一张地图数据从头到尾怎么走">0. 一张地图：数据从头到尾怎么走</h2>
+<p>先把整条路看一遍，后面再逐站展开。 forget（遗忘）在这里<strong>不是删硬盘上的训练样本，也不是把某个神经元烧掉</strong>，而是：<strong>用参数微调，让模型面对原问题时不再容易沿原来的内部通路读出目标事实，同时尽量别伤到其他能力。</strong></p>
+<pre><code class="language-text">【输入】一对只差主体、但答案相同的问答
+   X⁺ = &quot;Alice Miller 出生在哪？&quot;  配答案 y⁺ = &quot;Paris&quot;
+   X⁻ = &quot;Bob Smith 出生在哪？&quot;     仍配答案 y⁺ = &quot;Paris&quot;（故意相同）
+        │
+        ▼
+【处理 · 阶段 A：只诊断，不训练】
+   ① 噪声体检     重复前向 + 零编辑 ε₀ + float32/float16 一致性
+        │         效应没超过噪声 → MEASUREMENT_UNRELIABLE，立刻停
+        ▼
+   ② 双线性分解   把&quot;换成 Bob 后激活的变化 ΔA&quot;精确拆成
+                  路由项 D_route（看哪里变了）+ 内容项 D_content（读到什么变了）
+        ▼
+   ③ 因果筛选     冻结 Teacher 上做 patch：true / wrong / random / 等范数ΔA / matched-retain
+                  + 原生 QK/V 四组合干预 + 作者簇留出验证
+        ▼
+   ④ 稀疏选择     只有&quot;超过噪声 + 超过对照 + 跨留出稳定&quot;的分量才入选
+                  没有任何候选 → 停主线，不进训练
+        │
+        ▼
+【处理 · 阶段 B：条件式内化（仅在 A 通过后）】
+   ⑤ 造目标       T = stopgrad(A⁺ − α·C*)
+   ⑥ 训 Student   让 Student 在原问题上的中间状态靠近 T
+                  同时挂着 retain / donor / EOS / fact 护栏
+        │
+        ▼
+【输出】只部署 Student
+   用户问原问题 → Student 正常前向一次 → 不再容易读出 Paris
+   不需要 Teacher、不需要反事实输入、不需要运行时 hook
+        │
+        ▼
+【验收】probe / relearning / retain NLL / 生成行为，判断是否&quot;真遗忘&quot;</code></pre>
+<p>把这张图记住，后面每一节都是其中一站。</p>
+<h2 id="1-输入一对只换人名不换答案的问答">1. 输入：一对"只换人名、不换答案"的问答</h2>
+<p>要研究"模型怎么读出 Alice 出生在 Paris"，我们需要一个<strong>受控对照</strong>：只改变想研究的那个因素（主体是谁），其他一切尽量不动。</p>
+<table><thead><tr><th>角色</th><th>问题</th><th>喂给模型的答案</th></tr></thead><tbody><tr><td>原事实 $X^+$</td><td>Where was <strong>Alice Miller</strong> born?</td><td>Alice Miller was born in <strong>Paris</strong></td></tr><tr><td>反事实 $X^-$</td><td>Where was <strong>Bob Smith</strong> born?</td><td><strong>仍然是</strong> Alice Miller was born in <strong>Paris</strong></td></tr></tbody></table>
+<table><thead><tr><th>符号</th><th>含义</th><th>在例子里</th></tr></thead><tbody><tr><td>$X^+$</td><td>原问题</td><td>Alice 的出生地问题</td></tr><tr><td>$X^-$</td><td>只换主体的反事实问题</td><td>Bob 的出生地问题</td></tr><tr><td>$y^+$</td><td>原数据集答案</td><td>Paris 所在的原始答案</td></tr><tr><td>$y^-$</td><td>donor（另一个主体）自己的答案</td><td>例如 Bob 的答案；<strong>只用于评估，不作训练目标</strong></td></tr></tbody></table>
+<p><strong>为什么答案要故意相同？</strong> 如果连答案也换成 Bob 的，那么观察到的差异就混在一起了：到底是"问题里的人变了"，还是"答案也变了"？保持答案相同，才能让差异主要反映"主体替换"这一个因素。</p>
+<div class="callout callout-info"><div class="callout-title">最容易误解的一点</div><p>$X^-$ 不是让 Student 学会回答 Bob 的事，它只是一把"测量尺"——用来看模型内部哪些计算会随着主体改变而改变。proposal 明确要求 donor 主体与遗忘作者/别名簇隔离，避免对照本身引入混淆。</p></div>
+<p>两次 Teacher 前向都处理<strong>同一个原始答案</strong> $y^+$，记为 $(X^+,y^+)$ 与 $(X^-,y^+)$。Teacher（冻结、不更新）在 teacher-forced 的完整序列上、答案跨度位置 $p\in S_f$ 读取隐藏状态：</p>
+<p>$$ A^+_{T,\ell,p}=h_{T,\ell}(X^+\oplus y^+;p),\qquad A^-_{T,\ell,p}=h_{T,\ell}(X^-\oplus y^+;p). $$</p>
+<h2 id="2-为什么不直接拿全部激活差来删">2. 为什么不直接拿"全部激活差"来删？</h2>
+<p>Transformer 每一层都会输出一组隐藏向量。对同一个答案位置 $p$，最直觉的差是：</p>
 <p>$$ \Delta A_{\ell,p}=A^+_{\ell,p}-A^-_{\ell,p}. $$</p>
-<p>直觉上，它表示“把 Alice 换成 Bob 后，第 $\ell$ 层的状态改变了多少”。但这个差值可能同时包含：</p>
-<table><thead><tr><th>变化来源</th><th>直观含义</th><th>是否必然是目标事实？</th></tr></thead><tbody><tr><td>注意力路由</td><td>模型更关注哪些 token</td><td>否，可能只是名字 token 不同</td></tr><tr><td>Value 内容</td><td>从被关注的 token 读出了什么</td><td>否，可能只是一般身份信息</td></tr><tr><td>无关上下文变化</td><td>句法、词形、位置等差异</td><td>否</td></tr><tr><td>目标事实相关计算</td><td>与 Paris 这一目标读出有关的信号</td><td>有可能，需要验证</td></tr></tbody></table>
-<p>因此，<strong>$\Delta A$ 很大，不代表其中全是需要遗忘的事实</strong>。直接让整个向量归零或全部反向外推，可能把正常语言能力和 retain 知识一起破坏。</p>
-<p>CF3-01 的第一步不是训练，而是把这个混合差值拆得更清楚。</p>
-<h2 id="3-先回顾注意力路由与内容在哪里">3. 先回顾注意力：路由与内容在哪里？</h2>
-<p>在答案 token 位置 $p$，一个注意力头的输出可以写成：</p>
-<p>$$ O_{p}=\sum_q \pi_{p,q}v_q. $$</p>
-<p>其中：</p>
-<ul><li>$v_q$ 是第 $q$ 个输入位置的 <strong>Value 向量</strong>，可以理解为该位置提供的内容；</li><li>$\pi_{p,q}$ 是注意力权重，由 Query 和 Key 计算后再经 softmax 得到，决定当前位置从 $q$ 读取多少内容；</li><li>所有 $q$ 的加权 Value 相加，就得到当前位置的注意力输出。</li></ul>
-<p>可以把它想成查资料：<strong>路由 $\pi$ 决定看哪几页、每页看多少；内容 $v$ 是每页实际写着什么。</strong> 这个比喻只帮助理解，真正的计算仍然是矩阵与向量运算。</p>
-<p>CF3-01 使用的就是已经过 softmax 的 $\pi$，不是单独修改 Q 或 K。对于 Llama 的 GQA，代码还会把共享的 KV Value 头展开到对应的查询头，保证 $\pi$ 与 $v$ 能正确相乘。</p>
-<h2 id="4-核心恒等式把差值精确拆成两项">4. 核心恒等式：把差值精确拆成两项</h2>
-<p>先看最简单的逐元素乘法 $B(a,b)=a\odot b$。原输入与反事实输入分别产生 $(a^+,b^+)$ 和 $(a^-,b^-)$，则：</p>
-<p>$$ \boxed{ a^+\odot b^+-a^-\odot b^- = \underbrace{\tfrac12(a^+-a^-)\odot(b^++b^-)}_{\text{路由项}} + \underbrace{\tfrac12(a^++a^-)\odot(b^+-b^-)}_{\text{内容项}} } $$</p>
-<p>右侧展开后正好等于左侧，<strong>这是代数恒等式，不是一阶近似</strong>。</p>
-<p>一个标量小例子：</p>
+<p>它表示"把 Alice 换成 Bob 后，第 $\ell$ 层的状态变了多少"。但这个差值是个<strong>大杂烩</strong>：</p>
+<table><thead><tr><th>变化来源</th><th>直观含义</th><th>一定是目标事实吗？</th></tr></thead><tbody><tr><td>注意力路由</td><td>模型看了哪些 token、各看多少</td><td>否，可能只是名字 token 不同</td></tr><tr><td>Value 内容</td><td>从被看的 token 里读出了什么向量</td><td>否，可能是一般身份信息</td></tr><tr><td>无关上下文</td><td>词形、句法、位置、attention sink</td><td>否</td></tr><tr><td>目标事实相关计算</td><td>与"Paris"这个读出有关的信号</td><td>有可能，但要验证</td></tr></tbody></table>
+<p>所以 <strong>$\Delta A$ 大，不等于里面全是要删的事实</strong>。直接把整个向量压到 0 或整体反向，很可能把正常语言能力和其他人的知识一起破坏。CF3-01 的第一步不是训练，而是把这个混合差值拆得更清楚、并验证哪一部分真的有用。</p>
+<h2 id="3-注意力入门路由-pi-与内容-v-在哪里">3. 注意力入门：路由 $\pi$ 与内容 $v$ 在哪里？</h2>
+<p>在答案 token 位置 $p$，一个注意力头的输出是：</p>
+<p>$$ O_{p}=\sum_q \pi_{p,q}\,v_q . $$</p>
+<ul><li>$v_q$：第 $q$ 个输入位置的 <strong>Value 向量</strong>，可以理解为"那一页写着什么内容"；</li><li>$\pi_{p,q}$：注意力权重，由 Query 与 Key 算出再经 softmax 得到，决定"当前位置从 $q$ 读多少"；</li><li>对所有被读的位置 $q$ 加权求和，就是当前位置的注意力输出。</li></ul>
+<p>一个生活化比喻：<strong>路由 $\pi$ 决定"看哪几页、每页看多少"，内容 $v$ 是"每页实际写着什么"。</strong> 比喻只帮忙建立直觉，真正的计算仍然是矩阵乘法。</p>
+<p>CF3-01 用的是<strong>已经过 softmax 的 $\pi$</strong>，不是单独去改 Q 或 K。对于 Llama 的 GQA（分组查询注意力），代码会先把共享的 KV Value 头对齐到查询头，保证 $\pi$ 和 $v$ 能正确相乘。</p>
+<h2 id="4-第一个关键计算把差值精确拆成两项">4. 第一个关键计算：把差值精确拆成两项</h2>
+<p>先看最简单的逐元素乘法 $B(a,b)=a\odot b$。原输入给 $(a^+,b^+)$，反事实输入给 $(a^-,b^-)$，则有一个<strong>精确恒等式</strong>：</p>
+<p>$$ \boxed{ a^+\odot b^+-a^-\odot b^- = \underbrace{\tfrac12(a^+-a^-)\odot(b^++b^-)}_{D_{\mathrm{route}}\ \text{路由项}} + \underbrace{\tfrac12(a^++a^-)\odot(b^+-b^-)}_{D_{\mathrm{content}}\ \text{内容项}} } $$</p>
+<p>把右边展开就会正好回到左边，所以<strong>这是代数恒等式，不是一阶近似</strong>：原差值一点没丢，只是被重新分成了"路由变化"和"内容变化"两部分。</p>
+<p>一个标量小例子（把向量简化成一个数）：</p>
 <table><thead><tr><th>量</th><th style="text-align:right">原输入</th><th style="text-align:right">反事实输入</th></tr></thead><tbody><tr><td>路由 $a$</td><td style="text-align:right">$0.8$</td><td style="text-align:right">$0.2$</td></tr><tr><td>内容 $b$</td><td style="text-align:right">$10$</td><td style="text-align:right">$6$</td></tr><tr><td>乘积 $ab$</td><td style="text-align:right">$8$</td><td style="text-align:right">$1.2$</td></tr></tbody></table>
-<p>总差为 $8-1.2=6.8$，而：</p>
-<p>$$ D_{\mathrm{route}}=\tfrac12(0.8-0.2)(10+6)=4.8, $$</p>
-<p>$$ D_{\mathrm{content}}=\tfrac12(0.8+0.2)(10-6)=2.0. $$</p>
-<p>所以 $4.8+2.0=6.8$。原差值没有被丢失，只是分成了“路由变化”和“内容变化”两部分。</p>
-<h2 id="5-放到注意力公式中">5. 放到注意力公式中</h2>
-<p>将 $a$ 换成注意力权重 $\pi$，将 $b$ 换成 Value 向量 $v$，并对所有被读取的位置 $q$ 求和：</p>
+<p>总差为 $8-1.2=6.8$。代进公式：</p>
+<p>$$ D_{\mathrm{route}}=\tfrac12(0.8-0.2)(10+6)=4.8, \qquad D_{\mathrm{content}}=\tfrac12(0.8+0.2)(10-6)=2.0. $$</p>
+<p>$4.8+2.0=6.8$，严丝合缝。<strong>注意</strong>：这里的"路由"和"内容"只是<strong>计算角色</strong>，不是"事实关系"和"纯事实内容"。主体替换带来的差异里仍可能有身份、词形、词频、句法和 sink 效应。proposal 特意划清这条边界，不把 route/content 偷换成已经完成的"关系/事实解耦"。</p>
+<h3 id="41-放进注意力公式">4.1 放进注意力公式</h3>
+<p>把 $a$ 换成注意力权重 $\pi$、$b$ 换成 Value 向量 $v$，并对所有位置 $q$ 求和：</p>
 <p>$$ D^{\mathrm{attn}}_{\mathrm{route}} =\frac12\sum_q(\pi^+_q-\pi^-_q)(v^+_q+v^-_q), $$</p>
 <p>$$ D^{\mathrm{attn}}_{\mathrm{content}} =\frac12\sum_q(\pi^+_q+\pi^-_q)(v^+_q-v^-_q). $$</p>
-<p>两项相加，恰好恢复原输入与反事实输入的<strong>注意力输出差</strong>：</p>
-<p>$$ D^{\mathrm{attn}}_{\mathrm{route}}+ D^{\mathrm{attn}}_{\mathrm{content}} =O^+-O^-. $$</p>
-<p>代码随后将各注意力头拼回隐藏维度，并通过该层的 <code>o_proj</code> 映回残差流空间。这样得到的分量才能与该层的隐藏状态做加减。</p>
-<blockquote><p><strong>边界</strong>：恒等式保证“加回去等于原注意力输出差”，不保证某一项天然只包含事实语义。路由项可能仍含内容信息，内容项也可能含无关变化，所以还需要干预筛选。</p></blockquote>
-<h2 id="6-关键筛选哪一项才值得消弱">6. 关键筛选：哪一项才值得消弱？</h2>
-<p>CF3-01 不预先认定“内容项一定是事实、路由项一定无关”。它在冻结的 Teacher 上做一次受控干预：</p>
-<ol><li>取原问题前向时第 $\ell$ 层的完整隐藏状态 $H^+$；</li><li>只在目标答案跨度中减去少量待测分量：$H^+-\alpha C$；</li><li>保持冻结模型的后续层不变，重新计算原答案 $y^+$ 的 NLL；</li><li>比较干预前后的 NLL 变化。</li></ol>
-<p>NLL 是模型给正确答案分配的负对数概率。<strong>NLL 越高，模型越不容易给出这个答案。</strong></p>
-<p>当前实现分别检查两个条件：</p>
-<p>$$ \mathbb E[\mathrm{NLL}<em>{\mathrm{patch}}-\mathrm{NLL}</em>{\mathrm{before}}]</p>
-<blockquote><p>\eta_f,</p></blockquote>
-<p>$$</p>
-<p>$$ \mathbb E[\text{真实配对效应}-\text{wrong/null 配对效应}]</p>
-<blockquote><p>\eta_s.</p></blockquote>
-<p>$$</p>
-<p>第一条要求：消弱这个分量确实让原答案更难读出。第二条要求：真实配对分量的效应要强于拿其他配对分量乱 patch 的效应。</p>
-<table><thead><tr><th>route 门</th><th>content 门</th><th>决策</th></tr></thead><tbody><tr><td>通过</td><td>不通过</td><td>选择 route</td></tr><tr><td>不通过</td><td>通过</td><td>选择 content</td></tr><tr><td>都通过</td><td>都通过</td><td>无法区分，当前层不选择</td></tr><tr><td>都不通过</td><td>都不通过</td><td>当前层无可靠目标</td></tr></tbody></table>
-<p>在严格 <code>pilot/full</code> 模式中，只要要求处理的层没有通过唯一分量筛选，就记录 <code>DIAGNOSTIC_KILL</code> 并停止训练。<strong>这是防止把不可靠机制硬训练下去的刹车，不是实验失败后被隐藏的结果。</strong></p>
-<p><code>tiny/smoke</code> 会为代码联调放宽此门并回退到配置的 content 分量；因此它们只能验证程序能跑，不能证明机制成立。</p>
-<h2 id="7-如何真正更新模型teacher-指目标student-学过去">7. 如何真正更新模型：Teacher 指目标，Student 学过去</h2>
-<p>筛选完成后，Teacher 仍不更新。对选中的层、答案位置和分量 $C^*$，构造一个固定的激活目标：</p>
-<p>$$ \boxed{T_{\ell,p}=\operatorname{stopgrad}(A^+_{\ell,p}-\alpha C^*_{\ell,p})} $$</p>
-<p>它的含义是：<strong>从原本处理 Alice 问题的隐藏状态中，拿掉少量经筛选的分量，其余部分尽量保留。</strong></p>
-<p>Student 接收的仍然是原问题 $(X^+,y^+)$，并优化：</p>
-<p>$$ \mathcal L_{\mathrm{BRCD}} =\sum_{\ell,p}\left\|h_{S,\ell,p}-T_{\ell,p}\right\|_2^2. $$</p>
-<p>可以把 MSE 理解成“让 Student 的内部状态靠近 Teacher 给出的编辑后状态”。<code>stopgrad</code> 表示目标固定，梯度只更新 Student。</p>
-<p>默认 $\alpha=0.1$，即只消弱所选分量的 10%。它不是理论最优值：太小可能没有行为效果，太大可能伤害其他知识，必须通过实验选择。</p>
-<p><strong>这一步不是把激活永久写死。</strong> 训练时通过激活回归调整 Student 的 LoRA 参数；训练后，面对原问题时由新参数自然产生接近目标的中间状态。</p>
-<h2 id="8-仅靠-mse-为什么还不够">8. 仅靠 MSE 为什么还不够？</h2>
-<p>如果只看 $\mathcal L_{\mathrm{BRCD}}$，模型可能通过一些“作弊方式”降低损失，例如把所有回答都变糟、直接偏向 donor，或很早就输出 EOS。实际训练还加入共同约束：</p>
-<h3 id="81-原事实读出约束">8.1 原事实读出约束</h3>
-<p>$$ \mathcal L_{\mathrm{fact}} =\operatorname{ReLU}\!\left( \mathrm{NLL}_S(y^+\mid X^+)- [\mathrm{NLL}_T(y^+\mid X^+)+\delta] \right)^2. $$</p>
-<p>默认 $\delta=0.35$。只有当 Student 对原答案的 NLL 没有足够上升时，这项才产生惩罚。它是对读出行为的最低要求，不是“遗忘已完成”的证书。</p>
-<h3 id="82-保留集约束">8.2 保留集约束</h3>
-<p>在 retain 问答上继续优化正常答案 NLL：</p>
-<p>$$ \mathcal L_R=\mathrm{NLL}_S(y_R\mid X_R). $$</p>
-<p>它像一根锚，防止为了遗忘 Alice 而把整体语言能力或其他人的知识一起破坏。</p>
-<h3 id="83-不向-donor-靠近">8.3 不向 donor 靠近</h3>
-<p>代码计算 Student 状态相对原状态的移动方向，并惩罚它沿 $A^--A^+$ 的 donor 方向移动。也就是说，<strong>可以削弱目标分量，但不能把“忘记 Alice”偷换成“变成 Bob”。</strong></p>
-<p>donor 自己的答案 $y^-$ 不进入训练损失；<code>donor_nll</code> 只用于训练后评估。</p>
-<h3 id="84-提前结束防护">8.4 提前结束防护</h3>
-<p>EOS guard 限制答案跨度中的 EOS logit 无约束地压过其他 token，降低模型通过“立刻结束回答”来装作遗忘的风险。</p>
-<p>默认总损失的结构为：</p>
-<p>$$ \mathcal L =0.1\,\mathcal L_{\mathrm{BRCD}} +0.1\,\mathcal L_{\mathrm{neutral}} +2.0\,\mathcal L_R, $$</p>
-<p>其中 $\mathcal L_{\mathrm{neutral}}$ 内部还包含 fact、donor 和 EOS 项及各自权重。具体数值以 <code>config.json</code> 为准。</p>
-<h2 id="9-一次训练的完整流程">9. 一次训练的完整流程</h2>
+<p>两项相加恰好恢复原来的注意力输出差：</p>
+<p>$$ D^{\mathrm{attn}}_{\mathrm{route}}+D^{\mathrm{attn}}_{\mathrm{content}}=O^+-O^-. $$</p>
+<p>代码随后把各头拼回隐藏维度，再经该层 <code>o_proj</code> 映回残差流空间，得到可与该层隐藏状态直接加减的候选分量：</p>
+<p>$$ C^{\mathrm{attn}}_k=\operatorname{o\_proj}\!\left(D^{\mathrm{attn}}_k\right), \qquad k\in\{\mathrm{route,content}\}. $$</p>
+<div class="callout callout-bad"><div class="callout-title">`o_proj` 只解决&quot;写回哪个空间&quot;，不解决&quot;语义纯不纯&quot;。</div><p>恒等式保证加回去等于原输出差，但不保证某一项天然只含事实。所以接下来必须先做测量和筛选。</p></div>
+<h3 id="42-可选的-swiglu-分支本版不默认混用">4.2 可选的 SwiGLU 分支（本版不默认混用）</h3>
+<p>SwiGLU 神经元里实际参与乘法的是 $a=\operatorname{SiLU}(g)$ 和 $u$（$g,u$ 分别是 gate/up 投影输出）。对同一恒等式可得：</p>
+<p>$$ D_{\mathrm{gate}}=\tfrac12(a^+-a^-)\odot(u^++u^-), \qquad D_{\mathrm{value}}=\tfrac12(a^++a^-)\odot(u^+-u^-), $$</p>
+<p>经 <code>down_proj</code> 写回后，$C_{\mathrm{gate}}+C_{\mathrm{value}}$ 精确重构 SwiGLU 输出差。但 v1.1 规定<strong>首版主诊断保持 attention-only</strong>，GLU 是独立可选臂；两个 family 同时出现候选时标记 cross-family ambiguity，另做交互对照，不为迎合故事随便挑一个。</p>
+<h2 id="5-阶段-a-第一步先做噪声体检再谈机制">5. 阶段 A 第一步：先做"噪声体检"，再谈机制</h2>
+<p>这是 v1.1 相对旧版最重要的改动。历史 round3 里，缓存曾把 $\pi$、$V$ 和隐藏状态转成 float16，而观测到的效应只有约 $10^{-3}$ —— <strong>效应可能和舍入误差差不多大</strong>。如果测量本身不可靠，后面所有"筛选"都是在噪声里挑运气。</p>
+<p>所以正式看机制之前，先做三件体检：</p>
+<ol><li><strong>重复前向</strong>：同一输入跑两次，测读出误差。</li><li><strong>零编辑 patch</strong>：把缓存的隐藏状态原封不动地"patch"回去（不做任何编辑），测它与原始前向的差：</li></ol>
+<p>$$ \epsilon_0= \left| \operatorname{NLL}_{\mathrm{cache\ no\ edit}} -\operatorname{NLL}_{\mathrm{original}} \right|. $$</p>
+<ol><li><strong>精度对照</strong>：比较在线 float32 分量与 float16 缓存分量的 patch 效应、方向一致性和排序一致性。</li></ol>
+<p>如果候选效应没超过预注册的测量下限，系统输出 <code>MEASUREMENT_UNRELIABLE</code>，<strong>不进入候选选择，也不训练</strong>。</p>
+<div class="callout callout-info"><div class="callout-title">Tip</div><p>$\epsilon_0$ 是工程测量诊断（"这把尺准不准"），不是遗忘阈值（"删得够不够"）。阈值必须在实验前冻结，不能看完结果再定。</p></div>
+<h2 id="6-阶段-a-主体全层诊断--等条件对照--稀疏选择">6. 阶段 A 主体：全层诊断 + 等条件对照 + 稀疏选择</h2>
+<p>体检通过后，才开始找"到底哪一层的哪个分量值得删"。</p>
+<p><strong>第一遍：全 16 层 attention-only 扫描。</strong> 旧版要求"目标四层每层都必须唯一通过"，v1.1 明确废除这条：允许某层没有候选，也允许最后只有稀疏几层入选。若全层扫完仍没有稳定、超过对照的候选，就<strong>停止 BRCD 主线</strong>，而不是把门槛偷偷放宽成"至少 3/4 层通过"。</p>
+<p><strong>第二遍：分量效应与五类对照。</strong> 对候选 $C$ 做冻结下游 patch：</p>
+<p>$$ H^{\mathrm{patch}}=H^+-\alpha C, $$</p>
+<p>$$ \Delta_f(C)= \operatorname{NLL}_{\mathrm{patch}}-\operatorname{NLL}_{\mathrm{before}} . $$</p>
+<p>$\Delta_f&gt;0$ 表示原答案 NLL 上升（更难读出），但<strong>这本身还不等于选择性遗忘</strong>。真正的特异性要看真实分量与 null 分量的差：</p>
+<p>$$ \Delta_s(C)=\Delta_f(C_{\mathrm{true}})-\Delta_f(C_{\mathrm{null}}). $$</p>
+<p>所有对照臂必须固定层、头、答案位置、patch 深度、编辑范数和读出协议，至少包括：true route/content、wrong/shuffled 配对、random equal-norm 分量、原始等范数 $\Delta A$、matched-retain 或同实体非目标关系。</p>
+<p><strong>第三遍：原生 QK/V 四组合干预。</strong> 为了验证"路径因果作用"而不只是 BRCD 代数，直接对 QK 和 V 做 $2\times2$ 因子替换。记 $F(a,b)$ 为用 $a$ 来源的 QK、$b$ 来源的 V 经冻结下游算出的原答案 NLL：</p>
+<table><thead><tr><th>配置</th><th>QK</th><th>V</th><th>含义</th></tr></thead><tbody><tr><td>$F(+,+)$</td><td>原始</td><td>原始</td><td>原始基线</td></tr><tr><td>$F(-,+)$</td><td>反事实</td><td>原始</td><td>只改 QK 路由通路</td></tr><tr><td>$F(+,-)$</td><td>原始</td><td>反事实</td><td>只改 V 内容通路</td></tr><tr><td>$F(-,-)$</td><td>反事实</td><td>反事实</td><td>两条通路都改</td></tr></tbody></table>
+<p>两路平均边际效应为：</p>
+<p>$$ E_{QK}=\tfrac12\big[(F(-,+)-F(+,+))+(F(-,-)-F(+,-))\big], $$</p>
+<p>$$ E_V=\tfrac12\big[(F(+,-)-F(+,+))+(F(-,-)-F(-,+))\big], $$</p>
+<p>且满足 $E_{QK}+E_V=F(-,-)-F(+,+)$。若原生干预稳定有效、而 BRCD 分量无效，判定为<strong>候选参数化或写回方式失败</strong>，而不是继续加层。</p>
+<p><strong>第四遍：留出验证 + 簇 bootstrap。</strong> 候选选择用 discovery 数据，候选确认用按作者/实体簇隔离的 held-out 数据，同一批配对不能既搜索又确认。统计重采样以簇为单位（不能把相关配对当独立样本）。数据不足以划分时报告 <code>INSUFFICIENT_SPLIT</code>，<strong>不补造 probe 或显著性结果</strong>。</p>
+<h3 id="61-阶段-a-的三个出口">6.1 阶段 A 的三个出口</h3>
+<table><thead><tr><th>结果</th><th>含义</th><th>下一步</th></tr></thead><tbody><tr><td>有稳定候选</td><td>超过噪声、超过对照、跨留出稳定</td><td>进入阶段 B 稀疏内化</td></tr><tr><td>无稳定候选</td><td>全层扫描也没找到可靠方向</td><td>停主线，不进训练</td></tr><tr><td>测量/数据失败</td><td><code>MEASUREMENT_UNRELIABLE</code> / <code>INSUFFICIENT_SPLIT</code></td><td>先修测量或数据，不硬训</td></tr></tbody></table>
+<h2 id="7-阶段-b把选中的方向写进-student参数内化">7. 阶段 B：把选中的方向写进 Student（参数内化）</h2>
+<p>只有阶段 A 通过，才进入训练。设 $\mathcal S$ 是通过独立诊断的稀疏层 × 位置集合，$C^*_{\ell,p}$ 是确认过的候选，构造固定目标：</p>
+<p>$$ z_{\ell,p}=A^+_{T,\ell,p}-\alpha\,C^*_{\ell,p}, $$</p>
+<p>$$ \boxed{ T_{\ell,p}=\operatorname{stopgrad}\!\left(z_{\ell,p}\right) } $$</p>
+<p>含义是：<strong>从"处理 Alice 问题"的隐藏状态里，拿掉少量经筛选的分量，其余尽量保留。</strong> $\mathcal S$ 可以为空；为空就输出诊断停止，不启动训练。$\alpha$ 历史默认 $0.1$（只削弱所选分量的 10%），但正式实验前要重新冻结。</p>
+<p>Student 接收的仍是<strong>原问题</strong> $(X^+,y^+)$，优化激活回归：</p>
+<p>$$ \mathcal L_F= \frac1{|\mathcal S|} \sum_{(\ell,p)\in\mathcal S} \left\|h_{S,\ell,p}-T_{\ell,p}\right\|_2^2 . $$</p>
+<p>把 MSE 理解成"让 Student 的内部状态靠近 Teacher 给出的编辑后状态"。<code>stopgrad</code> 表示目标是常量，梯度只更新 Student。</p>
+<p><strong>这不是把激活永久写死</strong>：训练时通过激活回归调整 Student 的 LoRA 参数；训练后面对原问题时，由新参数自然产生接近目标的中间状态。</p>
+<h3 id="71-训练前先看梯度占比而不是只看-loss-数值">7.1 训练前先看梯度占比，而不是只看 loss 数值</h3>
+<p>历史报告里 method loss 很小，不能仅凭数值断言 retain 梯度主导。v1.1 要求先记录各损失对可训练参数的实际梯度范数：</p>
+<p>$$ G_m=\nabla_\theta(\lambda_m\mathcal L_m), \qquad \eta_m=\frac{\|G_m\|_2}{\sum_j\|G_j\|_2+\epsilon}. $$</p>
+<p>$\eta_m$ 只是梯度量级诊断，不是有效性证明。再比较固定层集合、相同 batch 顺序和 seed 下的 method-only / retain-only / full 三臂。</p>
+<h2 id="8-护栏如何避免假遗忘">8. 护栏：如何避免"假遗忘"</h2>
+<p>只靠 $\mathcal L_F$，模型可能作弊：把所有回答都变差、偏向 donor、或很早就输出 EOS。核心训练式保留为：</p>
+<p>$$ \boxed{ \mathcal L_{\mathrm{core}}=\lambda_F\mathcal L_F+\beta\mathcal L_R } $$</p>
+<p>各组件角色如下（<strong>只有前两行产生遗忘证据，其余都是边界/护栏</strong>）：</p>
+<table><thead><tr><th>组件</th><th>角色</th><th>是不是核心遗忘证据</th></tr></thead><tbody><tr><td>BRCD/QK-V 候选 + true/null 特异性</td><td>产生并筛选遗忘方向</td><td>是</td></tr><tr><td>Student 无 hook 内化</td><td>把方向写进参数</td><td>是</td></tr><tr><td>retain NLL $\mathcal L_R$</td><td>保护通用/非目标能力</td><td>核心效用约束，但不产生遗忘</td></tr><tr><td>同实体非目标关系</td><td>检查选择性，避免整实体能力被抹掉</td><td>核心选择性约束</td></tr><tr><td>donor 支持不升</td><td>排除答案替换</td><td>中性边界，不是遗忘方向</td></tr><tr><td>EOS / 拒答 / 长度 / 完整回答率</td><td>排除输出抑制捷径</td><td>反捷径护栏</td></tr></tbody></table>
+<p>几个容易踩的坑：</p>
+<ul><li><strong>原事实约束</strong> $r_f\le c_f$ 中的 $c_f$ 必须用独立、预注册的中性参考来定；不能用待评估的 BRCD 目标 $z$ 自己的最大值加 margin 来定，否则等于"用当前候选自己证明自己满足"。没有这样的参照就标记 <code>c_f</code> 未校准并关闭投影。</li><li><strong>相对 EOS 护栏</strong>只惩罚相对 Teacher 的恶化：</li></ul>
+<p>$$ \mathcal L_E=\big[(m_E^S-m_E^T)-\epsilon_E\big]_+^2 . $$</p>
+<p>历史报告里 EOS rate 全为 1.0，<strong>不能被解释为"没有生成风险"</strong>。</p>
+<ul><li><strong>可选 POCS 投影</strong>只是"候选目标真的违反约束时"的辅助步骤。它在 $z$ 处把约束线性化，半空间投影为：</li></ul>
+<p>$$ P_i(h)=h-\frac{\big[\phi_i(z)+a_i^\top(h-z)\big]_+}{\|a_i\|_2^2+\epsilon}\,a_i . $$</p>
+<p>普通 POCS 只给局部代理的可行点，不保证离 $z$ 最近（要最近点语义需另加 Dykstra 校正）。历史 round3 的 62/62 全是 <code>identity</code>（没有发生实际投影修正），<strong>不构成 POCS 有效性证据</strong>；必须单独构造"真实约束被违反"的测试，看到 <code>projection_active=true</code>、<code>dist_from_z&gt;0</code> 才算数。若投影修正量持续接近或超过原始 BRCD 编辑量，主要效果可能来自通用读出约束，不能包装成双线性机制成功。</p>
+<h2 id="9-输出部署时只有-student">9. 输出：部署时只有 Student</h2>
+<p>训练和筛选阶段用到了 Teacher、反事实输入、缓存和 patch-forward；<strong>部署时这些全部不需要</strong>。用户输入原问题，Student 正常执行一次前向即可，没有额外运行时 hook，也不用再构造 Bob 的反事实问题。</p>
+<p>这就是"参数内化"的含义：<strong>训练阶段借用激活目标定位方向，部署阶段由参数变化承担效果。</strong></p>
+<p>完整一次运行的数据流（对应实现）：</p>
 <pre><code class="language-text">同一预训练 checkpoint
-        │
-        ├── 冻结 Teacher：两次前向 (X⁺, y⁺) 与 (X⁻, y⁺)
-        │                  │
-        │                  ├── 缓存注意力 π、Value、答案隐藏状态
-        │                  ├── 精确拆成 route / content
-        │                  ├── true/null patch-forward 筛选
-        │                  └── 固定目标 T = A⁺ − αC*
-        │
-        └── 可训练 Student：只输入原问题与原答案
-                           │
-                           ├── 激活 MSE：靠近 T
-                           ├── 原答案 NLL hinge：降低原事实可读性
-                           ├── retain NLL：保护其他知识
-                           ├── donor guard：避免替换成另一主体
-                           └── EOS guard：避免一句话都不说就结束
-                                      │
-                                      ▼
-                              反向传播，仅更新 Student</code></pre>
-<p>默认关注第 8、10、12、14 个 block 输出位置，Teacher 提供缓存和固定目标，Student 使用 LoRA 更新 <code>q/k/v/o</code> 与 <code>gate/up/down</code> 等投影。实际配置可通过命令行覆盖。</p>
-<p>下面的伪代码对应核心实现，而不是另一套算法：</p>
-<pre><code class="language-python"># Teacher 已冻结；两次前向使用同一个原答案 y_plus
-route, content = exact_bilinear_difference(pi_plus, pi_minus, v_plus, v_minus)
-selected = unique_component_that_passes_true_and_null_patch_gates()
+   ├── 冻结 Teacher：两次前向 (X⁺,y⁺) 与 (X⁻,y⁺)
+   │      ├─ 缓存 π、V、答案隐藏状态；噪声体检 ε₀ / 精度对照
+   │      ├─ 双线性分解 → route/content（GLU 可选，默认不开）
+   │      ├─ true/null/random/等范数ΔA/matched-retain patch
+   │      ├─ 原生 QK/V 2×2 干预 + 簇 bootstrap + held-out
+   │      └─ 稀疏候选 selected_candidates.json（可为空 → 停）
+   └── Student（LoRA）：只输入原问题与原答案
+          ├─ 激活 MSE → 靠近 T = A⁺ − αC*
+          ├─ fact hinge / donor guard / 相对 EOS guard
+          ├─ retain NLL 锚
+          ├─ 梯度占比诊断 η（可选）
+          └─ 反向传播，仅更新 Student 参数
+                     ▼
+              部署：只留 Student，单次前向
+                     ▼
+              验收：probe / relearning / NLL / 生成行为</code></pre>
+<p>对应核心代码（示意，非另一套算法）：</p>
+<pre><code class="language-python"># 阶段 A：诊断，不训练
+audit_measurement(cache)              # 噪声下限；不过 → MEASUREMENT_UNRELIABLE
+route, content = exact_bilinear(pi_plus, pi_minus, v_plus, v_minus)
+selected = scan_all_layers_and_controls(cache)   # 稀疏、留出确认；可为空
+if not selected:
+    stop(&quot;NO_STABLE_CANDIDATE&quot;)       # 不进入训练
 
-# 严格档无法唯一选择时停止，而不是硬训练
-target = stop_gradient(h_plus - alpha * selected)
-method_loss = mse(student_answer_hidden, target)
-loss = 0.1 * method_loss + 0.1 * neutral_constraints + 2.0 * retain_nll
-loss.backward()  # 只更新 Student 的可训练参数</code></pre>
-<h2 id="10-部署时还需要-teacher-和两次前向吗">10. 部署时还需要 Teacher 和两次前向吗？</h2>
-<p><strong>不需要。</strong> Teacher、反事实输入、激活缓存和 patch-forward 都用于训练前的定位与训练时的目标构造。</p>
-<p>部署时只保留训练后的 Student。用户输入原问题，Student 正常执行一次前向；没有额外运行时 hook，也不需要再构造 Bob 的反事实问题。</p>
-<p>这也是“参数内化”的含义：<strong>训练阶段借用激活目标，部署阶段由参数变化承担效果。</strong></p>
-<h2 id="11-怎么判断它是真遗忘而不是表面不答">11. 怎么判断它是真遗忘，而不是表面不答？</h2>
-<table><thead><tr><th>观察</th><th>希望看到什么</th><th>能证明什么、不能证明什么</th></tr></thead><tbody><tr><td>forget NLL</td><td>相对 Teacher 上升</td><td>原答案更难直接读出；不能证明隐藏信息消失</td></tr><tr><td>retain/holdout NLL</td><td>尽量稳定</td><td>其他知识与泛化损害较小</td></tr><tr><td>donor NLL / donor 答案</td><td>不因遗忘训练而更容易</td><td>降低“换成 Bob 答案”的可能</td></tr><tr><td>生成行为</td><td>原目标词减少，同时不过度拒答、提前 EOS 或乱码</td><td>排除部分表面失败模式</td></tr><tr><td>目标作者 probe</td><td>隐藏态中的目标可分性下降</td><td>辅助观察表示变化；不是事实擦除的充分证据</td></tr><tr><td>relearning</td><td>用原答案短程微调后观察恢复速度与幅度</td><td>检查是否只是容易恢复的行为抑制</td></tr></tbody></table>
-<p>尤其要警惕：<strong>模型不回答、回答“不知道”、输出另一个答案、生成崩溃，都可能让原答案出现率下降，但它们不是同等意义的遗忘。</strong></p>
-<p>本方法当前的验证范围是：双线性恒等式自测通过，Tiny 合成模型训练链路通过。真实 Llama/TOFU 上的效果仍需 GPU smoke、严格诊断和 pilot 结果支持；不能把代码运行成功写成遗忘有效。</p>
-<h2 id="12-当前实现与原方案的差别">12. 当前实现与原方案的差别</h2>
-<p>当前代码实现的是 <strong>attention 的 $\pi$–Value 双线性差分</strong>。原 proposal 还讨论了 SwiGLU 的 <code>Swish(g) × u</code> 双线性分支，但该分支没有混入 CF3-01 当前版本。</p>
-<p>原方案用 $\Pi_{\mathcal K}$ 表示向非 donor 可行集投影。当前代码使用的是 fact hinge、donor 方向 guard、EOS guard 和 retain NLL 等软约束组合，<strong>没有实现一个精确凸投影算子</strong>。</p>
-<p>因此，更准确的表述是：</p>
-<blockquote><p>CF3-01 是一种“反事实注意力分量定位 + 受约束的 Student 激活内化”方法。它有精确的代数分解和可证伪的筛选门，但事实语义、删除深度与保留效果都必须由独立实验验证。</p></blockquote>
-<h2 id="13-最后用五句话复述">13. 最后用五句话复述</h2>
-<ol><li>用原问题与只换主体的反事实问题，测出模型内部哪些计算发生变化。</li><li>利用注意力是“权重 × 内容”的结构，把变化精确拆成路由项和内容项。</li><li>用冻结 Teacher 的 patch 实验，选择确实影响原答案且优于错误配对的那一个分量。</li><li>让 Student 在原问题上的中间状态接近“原状态减去少量该分量”，同时用 retain、donor 和 EOS 约束减少副作用。</li><li>训练后只部署 Student；是否真正遗忘，还必须通过保留能力、独立 probe 和 relearning 等证据判断。</li></ol>
-<h2 id="14-代码阅读索引">14. 代码阅读索引</h2>
-<table><thead><tr><th>想看的部分</th><th>当前实现位置</th></tr></thead><tbody><tr><td>正反事实对与 donor 来源</td><td><code>data.py</code> 的 <code>build_pairs</code></td></tr><tr><td>注意力、Value 和答案跨度捕获</td><td><code>modeling.py</code> 的 <code>forward_model</code></td></tr><tr><td>精确双线性分解与 <code>o_proj</code> 映射</td><td><code>method.py</code> 的 <code>_raw_components</code>、<code>_components</code></td></tr><tr><td>true/null patch 与唯一分量门</td><td><code>method.py</code> 的 <code>_patch_effect</code>、<code>prepare</code></td></tr><tr><td>Student 激活回归目标</td><td><code>method.py</code> 的 <code>loss</code></td></tr><tr><td>fact、donor、EOS、retain 联合训练</td><td><code>runtime.py</code> 的 <code>neutral_terms</code>、<code>train</code></td></tr><tr><td>probe、relearning 与结果保存</td><td><code>runtime.py</code> 的 <code>target_fact_probe</code>、<code>relearning_recovery</code></td></tr><tr><td>默认层、$\alpha$、损失权重和训练预算</td><td><code>config.json</code></td></tr></tbody></table>
-<p>本文解释依据为当前目录的 <code>proposal.md</code>、<code>method.py</code>、<code>modeling.py</code>、<code>data.py</code>、<code>runtime.py</code>、<code>config.json</code>，以及上级 <code>VALIDATION_REPORT.md</code>。原始 proposal 属于待验证研究方案；本文不额外宣称文献首创性或真实实验效果。</p>
+# 阶段 B：条件式内化
+target = stop_gradient(h_plus - alpha * selected_c)
+method_loss = mse(student_hidden, target)
+loss = lambda_f * method_loss + lambda_n * neutral + beta * retain_nll
+loss.backward()                        # 只更新 Student</code></pre>
+<h2 id="10-怎么判断真遗忘而不是表面不答">10. 怎么判断"真遗忘"而不是"表面不答"</h2>
+<table><thead><tr><th>观察</th><th>希望看到</th><th>能证明什么 / 不能证明什么</th></tr></thead><tbody><tr><td>forget NLL</td><td>相对 Teacher 上升</td><td>原答案更难读出；<strong>不能证明隐藏信息消失</strong></td></tr><tr><td>retain / holdout NLL</td><td>尽量稳定</td><td>其他知识与泛化的损害较小</td></tr><tr><td>donor NLL / 答案</td><td>不因训练而更容易</td><td>降低"把忘记 Alice 偷换成变成 Bob"</td></tr><tr><td>生成行为</td><td>目标词减少，且不过度拒答/提前 EOS/乱码</td><td>排除部分表面失败模式</td></tr><tr><td>目标 probe</td><td>隐藏态可分性下降</td><td>辅助观察表示变化；不是擦除的充分证据</td></tr><tr><td>relearning</td><td>短程微调后恢复速度与幅度</td><td>检查是否只是容易恢复的行为抑制</td></tr></tbody></table>
+<p>⚠️ <strong>模型不回答、说"不知道"、输出另一个答案、生成崩溃，都可能让原答案出现率下降，但它们不是同等意义的遗忘。</strong> <code>COMPLETED</code> 只表示运行完成，不表示遗忘有效。</p>
+<h2 id="11-当前真实状态为什么这份文档强调先测量">11. 当前真实状态：为什么这份文档强调"先测量"</h2>
+<p>历史提交 <code>fe5e32f</code> 的 round3 诊断（真实 Llama-3.2-1B / 31 个有效配对 / H20）：</p>
+<table><thead><tr><th>观测</th><th>记录</th><th>说明</th></tr></thead><tbody><tr><td>层范围</td><td>只有 $[8,10,12,14]$</td><td>只覆盖后半，不能代表全 16 层</td></tr><tr><td>四候选门</td><td>16 门仅 <code>8:attn_route</code>、<code>12:glu_value</code> 通过</td><td>覆盖不足</td></tr><tr><td>主链</td><td>第 10/14 层无唯一候选 → <code>DIAGNOSTIC_KILL</code>，0 步</td><td>没有训练后的遗忘结果</td></tr><tr><td>效应量</td><td>多数约 $10^{-3}$，跨层/候选变号</td><td>需要噪声下限，不能直接解释成机制</td></tr><tr><td>五个对照臂</td><td>60 步，dF 全为负（约 $-0.0669\sim-0.0682$）</td><td>forget NLL 朝遗忘的反方向走</td></tr><tr><td>投影</td><td>62/62 为 <code>identity</code></td><td>本轮没有发生实际投影修正</td></tr></tbody></table>
+<p>这些结果支持"当前版本未通过机制证据门"，但<strong>既不足以证明机制被彻底证伪，也不足以排除测量、门规则或对照设计的问题</strong>。这正是 v1.1 选择"先修可判别性、再谈训练"的原因。三阶段协议（A 诊断 → B 条件内化 → C 全量与投稿证据）保证：<strong>没有阶段 A 的留出证据，就不进入 full 训练，也不把工程护栏当成方法贡献。</strong></p>
+<h2 id="12-五句话复述">12. 五句话复述</h2>
+<ol><li>用原问题与"只换主体、答案相同"的反事实问题，测模型内部哪些计算随主体改变。</li><li>利用注意力是"权重 $\pi$ × 内容 $v$"的结构，把变化精确拆成路由项与内容项（代数恒等式，不丢信息）。</li><li><strong>先做噪声体检、全层诊断、五类对照、QK/V 四组合和簇留出验证</strong>；只有稳定超过噪声和对照的方向才入选，否则停线。</li><li>让 Student 在原问题上的中间状态靠近"原状态减去少量该方向"，同时用 retain、donor、EOS、fact 护栏减少副作用。</li><li>训练后只部署 Student；是否真遗忘，必须靠保留能力、独立 probe、relearning 和生成行为来判断。</li></ol>
+<h2 id="13-代码阅读索引">13. 代码阅读索引</h2>
+<table><thead><tr><th>想看的部分</th><th>实现位置</th></tr></thead><tbody><tr><td>正反事实对与 donor 来源</td><td><code>data.py::build_pairs</code></td></tr><tr><td>注意力/Value/答案跨度捕获</td><td><code>modeling.py::forward_model</code></td></tr><tr><td>精确双线性分解与 <code>o_proj</code> 写回</td><td><code>method.py::_raw_components</code> / <code>_components</code></td></tr><tr><td>噪声下限、零编辑 $\epsilon_0$</td><td><code>measurement_protocol.py::audit_measurement</code></td></tr><tr><td>全层扫描、等条件对照、簇 bootstrap</td><td><code>measurement_protocol.py::scan_all_layers</code> / <code>equal_condition_controls</code> / <code>cluster_bootstrap</code></td></tr><tr><td>原生 QK/V 四组合</td><td><code>measurement_protocol.py::qk_v_factorial</code> + <code>modeling.py::forward_with_attention_patch</code></td></tr><tr><td>稀疏候选选择与条件内化</td><td><code>method.py::prepare</code>（<code>sparse_selection_file</code> 分支）/ <code>method.py::loss</code></td></tr><tr><td>梯度占比诊断</td><td><code>runtime.py::train</code>（<code>grad_diagnostics</code>）</td></tr><tr><td>Stage A 入口</td><td><code>run_stage_a.py</code></td></tr><tr><td>默认配置</td><td><code>config.json</code></td></tr></tbody></table>
+<hr />
+<div class="callout callout-info"><div class="callout-title">一句话总结全文</div><p>CF3-01 的核心不是"又发明了一个删除函数"，而是把"注意力权重 × 内容"这个已知结构变成一个<strong>可精确拆开、可对照验证、可条件内化</strong>的遗忘方向管线；它的成败不由代数恒等式保证，而由阶段 A 能否证明"这个方向真的提供了随机方向替代不了的信号"来决定。本文只讲机制与数据流，不宣称效果；所有论文级 claim 仍待验证。</p></div>
 
 <footer class="aris-footer">
   Generated by <a href="https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep/blob/main/skills/render-html/SKILL.md">ARIS <code>/render-html</code></a> ·
   source path <code>workspace/experiments/methods-1127-2/CF3-01_双线性路由内容差分/MECHANISM_GUIDE.md</code> ·
-  SHA256 <code>cf831ca58170</code> ·
-  generated at 2026-11-27 15:45 UTC.
+  SHA256 <code>5145fdcaee79</code> ·
+  generated at 2026-11-28 07:20 UTC.
   This is a generated view — edit the source Markdown, then re-render.
 </footer>
 </main>

@@ -1,27 +1,18 @@
 {
   "verdict": "REVIEW_UNAVAILABLE",
-  "scope": "academic HTML render fidelity review",
   "source": "workspace/experiments/methods-1127-2/CF3-01_双线性路由内容差分/MECHANISM_GUIDE.md",
-  "html": "workspace/experiments/methods-1127-2/CF3-01_双线性路由内容差分/MECHANISM_GUIDE.html",
-  "source_sha256": "cf831ca5817029f344fb212dea9bc1c50dddb710e8358b2210d055eb0a298650",
-  "reviewer": null,
-  "reason": "No selectable reviewer configuration, shared reviewer-backend contract, or compatible independent review tool is available in the current workspace/session.",
+  "out": "workspace/experiments/methods-1127-2/CF3-01_双线性路由内容差分/MECHANISM_GUIDE.html",
+  "template": "academic",
+  "source_sha256": "5145fdcaee79...",
+  "generated_at": "2026-11-27",
+  "summary": "Re-rendered from a rewritten MECHANISM_GUIDE.md based on CF3-01 proposal v1.1-measurement-first. HTML is 41,484 bytes, 18 TOC entries, 14 H2 sections. Sanity checks passed: MathJax config loaded (inline $...$ / display $$...$$, processEscapes=true), 48 raw $$ delimiters (24 display math blocks), key LaTeX (D_{route}, epsilon_0) preserved, source SHA256 embedded. Per HTML Review Gate, academic template requires a fresh cross-model reviewer; no reviewer backend is available in this host, so NOT independently reviewed. Verdict REVIEW_UNAVAILABLE, not PASS. Render fidelity not independently audited; claim truthfulness is out of scope and remains 待验证 (claim_level=false upstream).",
   "blocking_issues": [],
   "warnings": [
     {
       "severity": "warn",
-      "issue": "No independent cross-model render review was performed; this is not a reviewed PASS.",
-      "suggested_fix": "Run a fresh independent reviewer on the Markdown and HTML when a supported reviewer backend is available."
+      "issue": "academic-template HTML requires a fresh cross-model reviewer thread for render fidelity audit; no reviewer backend available, so no PASS claim is made."
     }
   ],
-  "local_structural_checks": {
-    "source_hash_embedded": "pass",
-    "unreplaced_template_placeholders": "none",
-    "private_use_placeholder_characters": "none",
-    "tables_rendered": 7,
-    "code_blocks_rendered": 2,
-    "display_math_delimiter_count": 32,
-    "toc_entries_reported_by_renderer": 18
-  },
-  "note": "Local structural checks are renderer verification, not independent review and not an audit of research effectiveness."
+  "reviewer_backend": "unavailable",
+  "independence_verified": false
 }
