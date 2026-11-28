@@ -24,7 +24,28 @@ def prepare(cache, teacher, tok, cfg, device):
     return {"enabled": any(valid.values()), "valid": valid, "ood": ood, "device": device}
 
 
+def _control_batch(batch, cfg):
+    """§7 control arm: rotate/randomly permute the Teacher-side `item` only.
+    Student-side plus/minus/control_* stay, so only the regression target moves.
+    Default 'none' is a no-op -> historical results stay reproducible.
+    """
+    mode = str(cfg["method"].get("control_mode", "none"))
+    if mode in ("none", "") or len(batch) < 2:
+        return batch, False
+    if mode in ("wrong", "shuffle"):
+        order = list(range(1, len(batch))) + [0]
+    elif mode in ("random", "noise"):
+        gen = torch.Generator().manual_seed(int(cfg.get("seed", 0)) + 977)
+        order = torch.randperm(len(batch), generator=gen).tolist()
+        if order == list(range(len(batch))):
+            order = list(range(1, len(batch))) + [0]
+    else:
+        raise ValueError(f"unknown control_mode: {mode}")
+    return [dict(row, item=batch[j]["item"]) for row, j in zip(batch, order)], True
+
+
 def loss(batch, prepared, cfg):
+    batch, control_changed = _control_batch(batch, cfg)
     terms = []
     used = 0
     for row in batch:
@@ -46,7 +67,7 @@ def loss(batch, prepared, cfg):
             used += 1
     if not terms:
         raise RuntimeError("no OOD-valid four-cell factorial pairs")
-    return {"method_loss": torch.stack(terms).mean(), "factorial_terms": torch.tensor(float(used), device=batch[0]["plus"]["nll"].device)}
+    return {"control_changed": torch.tensor(float(control_changed)), "method_loss": torch.stack(terms).mean(), "factorial_terms": torch.tensor(float(used), device=batch[0]["plus"]["nll"].device)}
 
 
 def diagnostics(cache, prepared, cfg):

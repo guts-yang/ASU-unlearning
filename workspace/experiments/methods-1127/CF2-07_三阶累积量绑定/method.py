@@ -54,7 +54,28 @@ def second_cross(u, v):
     return _center(u).T @ _center(v) / max(1, u.shape[0] - 1)
 
 
+def _control_batch(batch, cfg):
+    """§7 control arm: rotate/randomly permute the Teacher-side `item` only.
+    Student-side plus/minus/control_* stay, so only the regression target moves.
+    Default 'none' is a no-op -> historical results stay reproducible.
+    """
+    mode = str(cfg["method"].get("control_mode", "none"))
+    if mode in ("none", "") or len(batch) < 2:
+        return batch, False
+    if mode in ("wrong", "shuffle"):
+        order = list(range(1, len(batch))) + [0]
+    elif mode in ("random", "noise"):
+        gen = torch.Generator().manual_seed(int(cfg.get("seed", 0)) + 977)
+        order = torch.randperm(len(batch), generator=gen).tolist()
+        if order == list(range(len(batch))):
+            order = list(range(1, len(batch))) + [0]
+    else:
+        raise ValueError(f"unknown control_mode: {mode}")
+    return [dict(row, item=batch[j]["item"]) for row, j in zip(batch, order)], True
+
+
 def loss(batch, prepared, cfg):
+    batch, control_changed = _control_batch(batch, cfg)
     thirds, guards = [], []
     for layer in cfg["layers"]:
         p = prepared["projections"][layer]
@@ -71,7 +92,7 @@ def loss(batch, prepared, cfg):
         thirds.append((kp - km).pow(2).mean())
     third_loss = torch.stack(thirds).mean()
     guard = torch.stack(guards).mean()
-    return {"method_loss": third_loss + float(cfg["method"].get("low_order_weight", 0.1)) * guard, "third_cumulant_delta": third_loss.detach(), "low_order_guard": guard.detach()}
+    return {"control_changed": torch.tensor(float(control_changed)), "method_loss": third_loss + float(cfg["method"].get("low_order_weight", 0.1)) * guard, "third_cumulant_delta": third_loss.detach(), "low_order_guard": guard.detach()}
 
 
 def diagnostics(cache, prepared, cfg):

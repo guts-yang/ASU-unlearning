@@ -47,7 +47,28 @@ def prepare(cache, teacher, tok, cfg, device):
     return {"enabled": True, "targets": targets, "reports": reports}
 
 
+def _control_batch(batch, cfg):
+    """§7 control arm: rotate/randomly permute the Teacher-side `item` only.
+    Student-side plus/minus/control_* stay, so only the regression target moves.
+    Default 'none' is a no-op -> historical results stay reproducible.
+    """
+    mode = str(cfg["method"].get("control_mode", "none"))
+    if mode in ("none", "") or len(batch) < 2:
+        return batch, False
+    if mode in ("wrong", "shuffle"):
+        order = list(range(1, len(batch))) + [0]
+    elif mode in ("random", "noise"):
+        gen = torch.Generator().manual_seed(int(cfg.get("seed", 0)) + 977)
+        order = torch.randperm(len(batch), generator=gen).tolist()
+        if order == list(range(len(batch))):
+            order = list(range(1, len(batch))) + [0]
+    else:
+        raise ValueError(f"unknown control_mode: {mode}")
+    return [dict(row, item=batch[j]["item"]) for row, j in zip(batch, order)], True
+
+
 def loss(batch, prepared, cfg):
+    batch, control_changed = _control_batch(batch, cfg)
     terms = []
     for row in batch:
         item, plus = row["item"], row["plus"]
@@ -55,7 +76,7 @@ def loss(batch, prepared, cfg):
             h = plus["hidden"][layer].float()[plus["enc"]["answer_start"]:plus["enc"]["answer_end"]].mean(0)
             target = prepared["targets"][layer]["target"][item["index"]]
             terms.append(F.mse_loss(h, target.detach()))
-    return {"method_loss": torch.stack(terms).mean()}
+    return {"control_changed": torch.tensor(float(control_changed)), "method_loss": torch.stack(terms).mean()}
 
 
 def diagnostics(cache, prepared, cfg):

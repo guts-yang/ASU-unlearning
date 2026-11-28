@@ -61,7 +61,28 @@ def conditional_crosscov(u, v, q, ridge=1e-3):
     return cuv - cuq @ torch.linalg.solve(cqq + ridge * eye, cqv)
 
 
+def _control_batch(batch, cfg):
+    """§7 control arm: rotate/randomly permute the Teacher-side `item` only.
+    Student-side plus/minus/control_* stay, so only the regression target moves.
+    Default 'none' is a no-op -> historical results stay reproducible.
+    """
+    mode = str(cfg["method"].get("control_mode", "none"))
+    if mode in ("none", "") or len(batch) < 2:
+        return batch, False
+    if mode in ("wrong", "shuffle"):
+        order = list(range(1, len(batch))) + [0]
+    elif mode in ("random", "noise"):
+        gen = torch.Generator().manual_seed(int(cfg.get("seed", 0)) + 977)
+        order = torch.randperm(len(batch), generator=gen).tolist()
+        if order == list(range(len(batch))):
+            order = list(range(1, len(batch))) + [0]
+    else:
+        raise ValueError(f"unknown control_mode: {mode}")
+    return [dict(row, item=batch[j]["item"]) for row, j in zip(batch, order)], True
+
+
 def loss(batch, prepared, cfg):
+    batch, control_changed = _control_batch(batch, cfg)
     flows, margins = [], []
     ridge = float(cfg["method"].get("ridge", 0.001))
     for layer in cfg["layers"]:
@@ -80,7 +101,7 @@ def loss(batch, prepared, cfg):
         flows.append((bp - bm).pow(2).mean())
     flow = torch.stack(flows).mean()
     margin = torch.stack(margins).mean()
-    return {"method_loss": flow + float(cfg["method"].get("marginal_weight", 0.1)) * margin, "conditional_flow": flow.detach(), "marginal_deadzone": margin.detach()}
+    return {"control_changed": torch.tensor(float(control_changed)), "method_loss": flow + float(cfg["method"].get("marginal_weight", 0.1)) * margin, "conditional_flow": flow.detach(), "marginal_deadzone": margin.detach()}
 
 
 def diagnostics(cache, prepared, cfg):

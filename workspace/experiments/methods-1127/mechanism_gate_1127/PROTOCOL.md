@@ -85,3 +85,39 @@
 - 未做 `full` / 多 seed / 恢复攻击 / 量化恢复 / 独立生成式 probe；`claim_level=false`。
 
 **决策建议**：按各 proposal「失败即撤回」条款，十方法在本轮对照下均未显示方法专属贡献，不建议进入下一阶段训练或任何 claim。是否归档 CF2、或授权补齐 §7 的随机算子对照（需改源码），由你决定。
+
+## 6. 修复轮（计划已批准；判据在跑之前冻结）
+
+### 6.1 纠正上一轮措辞
+
+- `CF2-09` diagnostics 的 `strict_semantic_gate=false` 是**配置开关未打开**，不是门的判定；真实门状态是 10/10 层 `semantic_gate=UNRESOLVED`（`specificity_scores` 的 L/S 全负）。按 §7「末两名未过门不进入训练」本应被拦下，打开开关即可，门逻辑无需改。
+- §2.1 的「true vs control 字段」表是按字段名的机械扫描，**不等于 §7 判据已定义**；各方法的「真实优于对照」方向仍以各自 `proposal.md` 为准。
+
+### 6.2 用户裁决与授权范围
+
+- 层次：**配置级 + 授权改源码**；预算：**先 smoke 再定**（2 steps / 4 对），通过后由用户决定是否跑 pilot / 3 seeds，**不自动继续**。
+- 授权改动：`CF2-01/method.py`（`gate_mode`）、`CF2-06/method.py`（`distance_mode` + 有限性保护）、10 个 `CF2-*/method.py`（`control_mode`）、`CF2-09/method.py`（仅 diagnostics 显式化）；逐文件 diff 单独提交。
+- **不改默认算法**：新分支默认 `control_mode="none"`、`gate_mode="legacy"`、`distance_mode="legacy"`，历史结果可复现，修复臂一律显式 `--set` 开启。
+
+### 6.3 预注册判据（冻结，禁止事后调阈值）
+
+| 编号 | 断言 | 冻结阈值 | 旧值对照 |
+|---|---|---|---|
+| S1 | 10/10 方法 smoke `exit=0`、无 `FloatingPointError`、梯度有限非零 | `exit_code==0` 且 `grad_norm` 有限 >0 | 20/20 `exit=0` |
+| S2 | 专属梯度通道可打开（**判定对象：CF2-01 的 `gate_mode=relative` 修复臂**；其余方法只记录占比、不参与判定，因为它们的退化目标本轮未修） | 首步 `0.1*method_loss/total_loss ≥ 1%`；`grad_norm(fix)` 与 `grad_norm(fix_nomethod)` 相对差异 `>1%` | 占比 <0.02%（最高 0.244%）；6.466 vs 6.466 |
+| S3 | CF2-06 数值稳定（`distance_mode=median` 臂） | 全程 `method_loss` 有限且 `grad_norm < 100` | 65796 / 35199（step5）、63482 / 45943（step59） |
+| S4 | 门与对照臂生效 | CF2-09 `strict_semantic_gate=true` → `DIAGNOSTIC_KILL` 且 0 步；CF2-01 `gate_mode=relative` 的 `spectra.*.weight` 不全部 ≤1e-12；`control_mode=wrong/random` 臂 `history[0].control_changed==1` 且 `method_loss` 与 `none` 臂不同 | 训练未被拦截、weight ≤6.5e-13、无对照臂 |
+
+**S2 若因 smoke 仅 2 steps 而不明确，只判「通道是否打开」，不判方法有效。** smoke 不判 dF 正负、不宣称遗忘有效；`claim_level=false`。
+
+**运行参数（跑之前固定）**：`--profile smoke`（2 steps / 4 对）**不复用** pilot 的 `teacher_cache.pt`（两者 `max_pairs` 不同，复用会造成 pair/index 错配），统一 `--set data.reuse_cache=false`；并统一 `--set training.batch_size=2`，因为错配算子要求 `len(batch)≥2`（smoke 默认 `batch_size=1`），同时满足 CF2-03 的 `minimum_batch=2`。共 24 臂 GPU0 串行：`none`×10、`wrong`×10、CF2-01 `fix`/`fix_nomethod`、CF2-06 `fix`、CF2-09 `gate`。
+
+### 6.4 关键修复的科学依据与实现决定
+
+- **CF2-01 门方向反了**：`true=(hp_r−hm_r)−(hp_l−hm_l)`，`wrong` 用 `other` pair 的 `h_plus` 与本 pair 的 `h_minus` 混搭，天然更大；「`true < wrong`」本就是配对特异性的正确信号。原实现 `sigmoid(true−median(wrong))` 却假设「true 大才好」，把权重压到 `6.5e-13`。`gate_mode=relative` 改为 `sigmoid(log(wrong/true))`，方向摆正；`legacy` 保留复现。这是**算法语义变更**，如实记录。
+- **统一 batch 错配算子**：批准计划写「`wrong`/`shuffle` 复用各方法已有的错配构造」；落地改为**只把每个 row 的 Teacher 侧 `item` 轮转/随机置换，Student 侧 `plus`/`minus`/`control_*` 保持不变**，于是 regression target 来自错配 pair。理由：10 个目录自包含（`run.py` 从本目录 import）、`loss()` 结构差异大（CF2-03/07 根本不构造 target），统一算子才能保证十方法同口径且不破坏 `validate_all.py::check_isolation`。各方法已有的 `true/wrong` 诊断量**保持不变**，继续作离线可分性素材。`control_changed` 作为标量 tensor 写进 `loss()` 返回值，由 `runtime.py` 自动记入 `train.history`，供 S4 核验。
+- `REQUIRES_CONTROL=True` 的 CF2-02 / CF2-06 错配后可能与现有控制关系契约冲突，smoke 单独标注；失败则如实记为「对照臂不适用」，不伪造结果。
+
+### 6.5 不变约束
+
+GPU0 only、不碰 GPU1、不 `pkill`、不删他人产物；**CF3-01 保持搁置**（不重跑、不启动 `full`）；权重留数据盘、实验 JSON/日志不进 Git；提交只含文档 + 脚本 + 本轮获授权的源码改动；`full` / 多 seed 不自动启动。

@@ -60,19 +60,45 @@ def prepare(cache, teacher, tok, cfg, device):
     return {"enabled": enabled, "targets": targets, "reports": reports}
 
 
+def _control_batch(batch, cfg):
+    """§7 control arm: rotate/randomly permute the Teacher-side `item` only.
+    Student-side plus/minus/control_* stay, so only the regression target moves.
+    Default 'none' is a no-op -> historical results stay reproducible.
+    """
+    mode = str(cfg["method"].get("control_mode", "none"))
+    if mode in ("none", "") or len(batch) < 2:
+        return batch, False
+    if mode in ("wrong", "shuffle"):
+        order = list(range(1, len(batch))) + [0]
+    elif mode in ("random", "noise"):
+        gen = torch.Generator().manual_seed(int(cfg.get("seed", 0)) + 977)
+        order = torch.randperm(len(batch), generator=gen).tolist()
+        if order == list(range(len(batch))):
+            order = list(range(1, len(batch))) + [0]
+    else:
+        raise ValueError(f"unknown control_mode: {mode}")
+    return [dict(row, item=batch[j]["item"]) for row, j in zip(batch, order)], True
+
+
 def loss(batch, prepared, cfg):
+    batch, control_changed = _control_batch(batch, cfg)
     terms = []
     for row in batch:
         item, plus = row["item"], row["plus"]
         for layer in cfg["layers"]:
             h = plus["hidden"][layer].float()[plus["enc"]["answer_start"]:plus["enc"]["answer_end"]].mean(0)
             terms.append(F.mse_loss(h, prepared["targets"][layer][item["index"]].detach()))
-    return {"method_loss": torch.stack(terms).mean()}
+    return {"control_changed": torch.tensor(float(control_changed)), "method_loss": torch.stack(terms).mean()}
 
 
 def diagnostics(cache, prepared, cfg):
-    del cache
-    return {"operator": "stable_principal_component_pursuit", "granularity": "layerwise answer-span mean", "layers": prepared["reports"], "strict_semantic_gate": bool(cfg["method"].get("strict_semantic_gate", False)), "provisional_training_is_not_semantic_validation": True}
+    return {"operator": "stable_principal_component_pursuit", "granularity": "layerwise answer-span mean",
+            "layers": prepared["reports"],
+            "strict_semantic_gate": bool(cfg["method"].get("strict_semantic_gate", False)),
+            "prepare_enabled": bool(prepared.get("enabled", True)),
+            "semantic_gate_status": {k: v["semantic_gate"] for k, v in prepared["reports"].items()},
+            "control_mode": str(cfg["method"].get("control_mode", "none")),
+            "provisional_training_is_not_semantic_validation": True}
 
 
 def self_test():
