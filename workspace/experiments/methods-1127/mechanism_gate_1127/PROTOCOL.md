@@ -29,6 +29,21 @@
 
 **判据边界**：离线门如实汇总各方法 `diagnostics.json` 里的可分性素材（如 CF2-01 `true_flux_norm` / `shuffled_flux_norm` / `weight`、CF2-05 `true_coherence` / `wrong_coherence`、CF2-02 `ood_controls`、CF2-09 `strict_semantic_gate` 等），并标出是否存在 true vs control 字段。各方法的「真实优于对照」方向与最小判别实验由各自 `proposal.md` 定义，**本阶段不擅自统一判定、不伪造通过/不通过结论**。
 
+### 2.1 离线门实测（2026-11-28，已跑完）
+
+10/10 方法 `exit=0`、`status=DIAGNOSED`、全部 `cache_reused=yes`，`failed=0`；GPU0 串行约 11 分钟（每方法 62–74 秒）。`gpu_training_arms_started=false`。机器可读汇总见 `results/offline_gate_status.json`，逐方法日志见 `results/offline/CF2-*/console.log`。
+
+| 方法 | diagnostics 中可识别的 true / control 素材 |
+|---|---|
+| CF2-01 | `spectra.*.true_flux_norm` / `shuffled_flux_norm` / `weight` |
+| CF2-02 | `ood_controls.*`（gap、natural vs shared answer NLL），无 `true_*` 命名 |
+| CF2-04 | `layers.*.destroyed_mass` / `wrong_destroyed_mass` |
+| CF2-05 | `true_coherence` / `wrong_coherence` |
+| CF2-09 | `strict_semantic_gate`（末两名语义门） |
+| CF2-03 / 06 / 07 / 08 / 10 | 无成对对照字段，需按各自 `proposal.md` 的最小判别实验另定判据 |
+
+按 §7「真实 donor 必须优于对照」，仅字段成对的方法能直接读比值；例如 CF2-01 的 `true_flux_norm` 系统性小于 `shuffled_flux_norm`、配对特异性 `weight` 近 0。**但任何方法都不得凭 `DIAGNOSED` / `exit=0` / 进程完成宣称过门**；正式判定与「是否进入训练」留在决策阶段。
+
 ## 3. 待裁决：对照臂构造
 
 那次对齐在「核对落地接口」处被打断，**对照臂的具体构造未定稿**。已核实：CF2 十个 `method.py` 都没有 `control_arm` 接口（不同于 CF3-01），因此不改源码可实现的对照只有配置级消融。候选方向（需你裁决后才启动 GPU 训练臂）：
