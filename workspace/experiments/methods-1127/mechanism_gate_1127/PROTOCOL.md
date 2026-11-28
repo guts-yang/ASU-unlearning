@@ -205,3 +205,56 @@ GPU0 only、不碰 GPU1、不 `pkill`、不删他人产物；**CF3-01 保持搁�
 4. **切回 CF3-01**：v1.1 `run_stage_a.py` 的 Stage A（只诊断不训练）已落地但从未在真实 GPU 跑过；需你确认研究已完成后再启动。
 
 `claim_level=false`；`exit=0`、`COMPLETED`、R1–R3 全 PASS 都不等于遗忘有效；GPU0 only、GPU1 未碰；**CF3-01 保持搁置**（`full_stage_started=false`）；实验 JSON/日志不进 Git；未自动进 pilot / Stage B / full。
+
+## 10. 分项梯度分解（跑前冻结）
+
+§9 候选 1。`CF2-*/runtime.py::train` 新增默认关闭的 `loss.grad_diagnostics`：在 `loss.backward()` 之前用 `torch.autograd.grad(term, params, retain_graph=True, allow_unused=True)` 分别求**加权后** `method` / `neutral` / `retain`（及可选 `extra`）对共享可训练参数向量的梯度 L2，记录 `grad_part_l2` / `grad_part_share` / `grad_param_l2` 到 `train.history`。`autograd.grad` 不写入 `.grad`，训练不变（tiny 后端已逐位验证：`loss`、`grad_norm`、delta 与关闭时完全一致）。
+
+**指标语义（不得越界解读）**：`grad_part_share = 该项 L2 / 各项 L2 之和`，是**上界式贡献度量**，不是精确向量分解——分项梯度可能部分抵消，占比之和恒为 1 而总梯度范数可以小于各项之和。
+
+**运行口径**：完整默认损失（`method_weight=0.1` / `neutral_weight=0.1` / `retain_weight=2.0`，**不归零任何项**）；`--profile smoke`（2 steps / 4 对 / batch_size=2 / `reuse_cache=false`）；10 方法 × `main`（`control_mode=none`）+ 10 方法 × `control`（`control_mode=wrong`），共 20 臂，GPU0 串行。
+
+**唯一硬判据 G1（工程完整性）**：20/20 臂 `exit=0`；每臂首步含 `grad_part_share` 且三项之和与 1 的偏差 `<1e-3`；`grad_param_l2` 有限 >0；默认关闭时 history 无 `grad_part_*`。
+
+**G2 / G3 为描述性观测，不设通过阈值、不宣称结论**：逐方法输出完整口径下 `method` / `neutral` / `retain` 占比，以及真实臂与错配对照臂的占比差异。理由是探索性诊断没有预注册效应量，事后挑阈值凑「显著」属于 §9 已拒绝的做法。结论只写「占比是否可测、真实与错配是否可分」的观测事实，不写「方法有效 / 通过判别门」。
+
+**不抢占**：诊断期间另一会话在 GPU0 跑 CF3-01 v1.1 的因子诊断；队列带 3 次连续 `<100MiB` 门槛与 **20 分钟有界等待**，超时写 `gpu0_busy_timeout=true` 并退出，不 `pkill`、不抢占、不删他人产物。
+
+`claim_level=false`；不判 dF 正负；GPU0 only、GPU1 不碰；**CF3-01 保持搁置**（不重跑、不跑 `run_stage_a.py`、不启动 full）；实验 JSON/日志不进 Git；不自动进 pilot / Stage B / full。
+
+## 11. 分项梯度分解结果（G2/G3 为描述性观测）
+
+20/20 臂 `exit=0`、`failed=0`、`gpu0_busy_timeout=false`、`pilot_queue_started=false`，GPU0 已释放。**G1 PASS**（20/20 首步含 `grad_part_share`、三项和≈1、`grad_param_l2` 有限 >0；默认关闭时无该字段，且 `loss`/`grad_norm` 与开启时逐位一致）。证据：`results/grad_diag_status.json`、`grad_diag_verdict.json`、`grad_diag.tsv`、逐臂 `results/grad_diag/<tag>/<arm>/`。§7、§9 的历史判定全部保留。
+
+口径：**完整默认损失**（`0.1 / 0.1 / 2.0`，不归零任何项）、smoke 2 steps / 4 对。`share = 该项梯度 L2 / 各项 L2 之和`。
+
+| 方法 | main: method / neutral / retain | control: method / neutral / retain | method 占比差 (main−control) |
+|---|---|---|---|
+| CF2-01 | 0.0 / 0.0103 / 0.9897 | 0.0094 / 0.0102 / 0.9804 | −0.00937 |
+| CF2-02 | 0.00087 / 0.0103 / 0.9888 | 0.00854 / 0.0102 / 0.9812 | −0.00768 |
+| CF2-03 | 0.000006 / 0.0103 / 0.9897 | 0.01968 / 0.0101 / 0.9702 | −0.01967 |
+| CF2-04 | 0.000055 / 0.0103 / 0.9896 | 0.00338 / 0.0103 / 0.9863 | −0.00333 |
+| CF2-05 | 0.00068 / 0.0103 / 0.9890 | 0.00844 / 0.0102 / 0.9813 | −0.00776 |
+| CF2-06 | 0.00331 / 0.0103 / 0.9864 | 0.00378 / 0.0103 / 0.9859 | −0.00047 |
+| CF2-07 | 0.000003 / 0.0103 / 0.9897 | 0.00122 / 0.0103 / 0.9885 | −0.00122 |
+| CF2-08 | 0.000014 / 0.0103 / 0.9897 | 0.00340 / 0.0103 / 0.9863 | −0.00339 |
+| CF2-09 | 0.0 / 0.0103 / 0.9897 | 0.00340 / 0.0103 / 0.9863 | −0.00340 |
+| CF2-10 | 0.00495 / 0.0103 / 0.9848 | 0.02741 / 0.0100 / 0.9625 | −0.02246 |
+
+**G2/G3 观测事实（不设通过阈值、不宣称结论）**：
+
+1. 完整口径下 `method` 梯度占比为 **0 ~ 0.49%**（最高 CF2-10 0.495%、CF2-06 0.331%），`neutral` 约 **1.03%**，`retain` **96.25% ~ 98.97%** —— `retain_weight=2.0` 压倒性主导，这是 §5/§7「共享项淹没」的**梯度层面直接证据**。
+2. **10/10 方法真实臂的 `method` 占比都低于错配对照臂**（差值全负，相对差 12.4% ~ 100%）。原因不是「对照臂更有效」，而是错配 target 离 Student 当前激活更远、MSE 更大、梯度更大 —— 说明方法项梯度主要由「目标与当前状态的距离」驱动，**不是由候选的事实特异性驱动**。这一方向不支持「真实候选优于等条件对照」。
+3. CF2-01 与 CF2-09 的真实臂 `method` 占比**恰为 0**：前者是 `gate_mode=legacy` 门权重坍缩，后者是语义门 `UNRESOLVED` 使目标退化 —— 与 §9 的结论一致，现在有了梯度层面的直接证据。
+4. 分项占比是**上界式贡献度量**（各项 L2 之和为分母），不是精确向量分解；`grad_param_l2≈grad_norm` 说明记录发生在裁剪前且未改变训练。
+
+**净结论**：分项梯度分解把「方法专属贡献不可观测」从 dF 层面的推断变成了梯度层面的直接测量。要提升可观测性必须先修门退化并降低共享项权重，但这些属于算法/配置改动，本轮未做、未授权。
+
+### 11.1 下一步候选（需你决定，未自动执行）
+
+1. 在 `gate_mode=relative` + 提高 `method_weight` 的**诊断臂**上重做分项分解（仍不改正式训练口径），检验修门后 `method` 占比能否超过 1% 并让真实臂优于错配臂。
+2. 补齐 §7 的 noise / matched-retain / 随机算子对照，3 seeds + 簇 bootstrap，把描述性观测升级为带置信区间的判据。
+3. 接受阴性结论，按 §5 / §7 归档 CF2，停止调装置。
+4. 切回 CF3-01 v1.1 Stage A（另一会话已在 GPU0 跑其因子诊断，需你确认是否接手）。
+
+`claim_level=false`；G1 PASS、20/20 `exit=0` 都不等于遗忘有效或方法通过；§7 S1–S4、§9 R1–R3 判定**未改判**；GPU0 only、GPU1 未碰、未抢占其它会话；**CF3-01 保持搁置**（`full_stage_started=false`）；实验 JSON/日志不进 Git；未自动进 pilot / Stage B / full。
