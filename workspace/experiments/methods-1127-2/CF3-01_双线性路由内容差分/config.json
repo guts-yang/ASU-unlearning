@@ -70,7 +70,13 @@
     "gate_pairs": 4,
     "min_nll_increase": 0.0,
     "specificity_margin": 0.0,
-    "fallback_component": "content"
+    "fallback_component": "content",
+    "control_arm": "brcd",
+    "use_glu_branch": true,
+    "use_pi_k_projection": true
+  },
+  "projection": {
+    "steps": 20
   },
   "evaluation": {
     "probe_samples": 64,

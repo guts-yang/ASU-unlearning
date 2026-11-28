@@ -1,0 +1,89 @@
+{
+  "seed": 0,
+  "device": null,
+  "model": {
+    "backend": "hf",
+    "path": "/jizhicfs/chenyliao/models/open-unlearning/tofu_Llama-3.2-1B-Instruct_full",
+    "model_type": "llama",
+    "dtype": "bfloat16",
+    "attn_implementation": "eager",
+    "local_files_only": true,
+    "peft": true,
+    "lora_rank": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.0,
+    "lora_targets": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ],
+    "gradient_checkpointing": true,
+    "eos_token_id": 2
+  },
+  "data": {
+    "root": "/jizhicfs/chenyliao/data/datasets/locuslab-TOFU",
+    "forget_file": "forget10.json",
+    "retain_file": "retain90.json",
+    "holdout_file": "holdout10.json",
+    "max_pairs": 32,
+    "retain_cache_size": 32,
+    "max_len": 512,
+    "eval_samples": 32,
+    "generation_samples": 4,
+    "generation_tokens": 24,
+    "reuse_cache": true,
+    "cache_full_sequence": true
+  },
+  "layers": [
+    8,
+    10,
+    12,
+    14
+  ],
+  "training": {
+    "steps": 60,
+    "full_steps": 600,
+    "batch_size": 2,
+    "full_batch_size": 2,
+    "lr": 5e-06,
+    "weight_decay": 0.0,
+    "grad_clip": 1.0,
+    "log_every": 5,
+    "checkpoint_every": 20
+  },
+  "loss": {
+    "method_weight": 0.1,
+    "neutral_weight": 0.1,
+    "retain_weight": 2.0,
+    "fact_delta": 0.35,
+    "donor_guard_weight": 0.1,
+    "eos_guard_weight": 0.01,
+    "eos_margin": 1.0
+  },
+  "method": {
+    "alpha": 0.1,
+    "strict_gate": true,
+    "gate_pairs": 4,
+    "min_nll_increase": 0.0,
+    "specificity_margin": 0.0,
+    "fallback_component": "content",
+    "control_arm": "random_equal_norm",
+    "use_glu_branch": true,
+    "use_pi_k_projection": true
+  },
+  "projection": {
+    "steps": 20
+  },
+  "evaluation": {
+    "probe_samples": 64,
+    "probe_layer": 14,
+    "probe_epochs": 100,
+    "relearning_steps": 10,
+    "relearning_samples": 8,
+    "relearning_lr": 5e-06
+  }
+}

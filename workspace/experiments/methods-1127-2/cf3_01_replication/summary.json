@@ -1,0 +1,505 @@
+{
+  "schema": "cf3_01_replication_v1",
+  "claim_level": false,
+  "stage": "A",
+  "full_stage_started": false,
+  "environment": {
+    "code": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2",
+    "model": "/jizhicfs/chenyliao/models/open-unlearning/tofu_Llama-3.2-1B-Instruct_full",
+    "data": "/jizhicfs/chenyliao/data/datasets/locuslab-TOFU",
+    "python": "/jizhicfs/chenyliao/llm-unlearning/envs/open-unlearning/bin/python",
+    "torch": "2.5.1+cu121",
+    "transformers": "4.46.3",
+    "peft": "0.21.3",
+    "gpu": "GPU0 only (NVIDIA H20 97871MiB)",
+    "gpu1": "external lrm-unlearning queue, untouched"
+  },
+  "pairs": {
+    "generated": 32,
+    "kept": 31,
+    "dropped": 1,
+    "coverage": 0.96875,
+    "file": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/pairs/strict_pairs_31.jsonl"
+  },
+  "gate": {
+    "enabled": false,
+    "selected": {
+      "8": null,
+      "10": null,
+      "12": "content",
+      "14": null
+    },
+    "ambiguous_layers": [],
+    "passed_gates": 1,
+    "total_gates": 8,
+    "use_glu_branch": true,
+    "use_pi_k_projection": true,
+    "projection_proxy": {
+      "name": "POCS ball ∩ donor half-space (computable proxy, NOT exact Pi_K)",
+      "projected_targets": 31,
+      "mean_radius": 0.13265746437734177,
+      "max_ball_residual": 2.175569532858468e-08,
+      "note": "Thresholds derived from config loss.fact_delta / donor_guard_weight / eos_margin; see PROTOCOL.md."
+    }
+  },
+  "arms": {
+    "pilot_brcd": {
+      "status": "DIAGNOSTIC_KILL",
+      "profile": "pilot",
+      "seed": 0,
+      "pair_count": 31,
+      "steps": 0,
+      "elapsed_sec": 37.392,
+      "before_nll": {
+        "forget": 0.40045628556981683,
+        "retain": 0.4969168780371547,
+        "holdout": 1.8257642854005098
+      },
+      "after_nll": {
+        "forget": 0.40045628556981683,
+        "retain": 0.4969168780371547,
+        "holdout": 1.8257642854005098
+      },
+      "delta": {
+        "forget": 0.0,
+        "retain": 0.0,
+        "holdout": 0.0
+      },
+      "donor_nll_before": 2.969157991870757,
+      "donor_nll_after": 2.969157991870757,
+      "donor_answer_in_training": false,
+      "generation": {
+        "eos_rate": 1.0,
+        "mean_tokens": 13.75,
+        "target_overlap": 0.40208333333333335,
+        "samples": 4
+      },
+      "probe_before": {
+        "status": "INSUFFICIENT_RELATION_SPLIT",
+        "train": 0,
+        "test": 64
+      },
+      "probe_after": {
+        "status": "INSUFFICIENT_RELATION_SPLIT",
+        "train": 0,
+        "test": 64
+      },
+      "relearning": {
+        "status": "NOT_RUN",
+        "reason": "DIAGNOSTIC_KILL"
+      },
+      "grad_finite_nonzero": false,
+      "teacher_frozen": true,
+      "initial_student_equals_teacher": true,
+      "evaluation_ground_truth": "dataset answers",
+      "checkpoint": null,
+      "claim_level": false,
+      "result_json": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_brcd/result.json",
+      "weights_dir": "/jizhicfs/chenyliao/llm-unlearning/results/cf3-01-replication/weights/pilot_brcd",
+      "diagnostics": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_brcd/diagnostics.json",
+      "resolved_config": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_brcd/resolved_config.json",
+      "run_log": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_brcd/console.log"
+    },
+    "pilot_content_only": {
+      "status": "COMPLETED",
+      "profile": "pilot",
+      "seed": 0,
+      "pair_count": 31,
+      "steps": 60,
+      "elapsed_sec": 90.392,
+      "before_nll": {
+        "forget": 0.40045628556981683,
+        "retain": 0.4969168780371547,
+        "holdout": 1.8257642854005098
+      },
+      "after_nll": {
+        "forget": 0.33351466385647655,
+        "retain": 0.43689892906695604,
+        "holdout": 1.8012441620230675
+      },
+      "delta": {
+        "forget": -0.06694162171334028,
+        "retain": -0.06001794897019863,
+        "holdout": -0.02452012337744236
+      },
+      "donor_nll_before": 2.969157991870757,
+      "donor_nll_after": 3.00129747006201,
+      "donor_answer_in_training": false,
+      "generation": {
+        "eos_rate": 1.0,
+        "mean_tokens": 15.25,
+        "target_overlap": 0.5583333333333333,
+        "samples": 4
+      },
+      "probe_before": {
+        "status": "INSUFFICIENT_RELATION_SPLIT",
+        "train": 0,
+        "test": 64
+      },
+      "probe_after": {
+        "status": "INSUFFICIENT_RELATION_SPLIT",
+        "train": 0,
+        "test": 64
+      },
+      "relearning": {
+        "status": "COMPLETED",
+        "steps": 10,
+        "samples": 8,
+        "before_nll": 0.33321581594645977,
+        "after_nll": 0.29459287598729134,
+        "nll_recovery": 0.038622939959168434,
+        "ground_truth": "original dataset answers",
+        "note": "runs after the pre-relearning Student checkpoint has been saved"
+      },
+      "grad_finite_nonzero": true,
+      "teacher_frozen": true,
+      "initial_student_equals_teacher": true,
+      "evaluation_ground_truth": "dataset answers",
+      "checkpoint": "/jizhicfs/chenyliao/llm-unlearning/results/cf3-01-replication/weights/pilot_content_only/checkpoint",
+      "claim_level": false,
+      "result_json": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_content_only/result.json",
+      "weights_dir": "/jizhicfs/chenyliao/llm-unlearning/results/cf3-01-replication/weights/pilot_content_only",
+      "diagnostics": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_content_only/diagnostics.json",
+      "resolved_config": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_content_only/resolved_config.json",
+      "run_log": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_content_only/console.log"
+    },
+    "pilot_equal_norm_delta": {
+      "status": "COMPLETED",
+      "profile": "pilot",
+      "seed": 0,
+      "pair_count": 31,
+      "steps": 60,
+      "elapsed_sec": 79.258,
+      "before_nll": {
+        "forget": 0.40045628556981683,
+        "retain": 0.4969168780371547,
+        "holdout": 1.8257642854005098
+      },
+      "after_nll": {
+        "forget": 0.3337139787618071,
+        "retain": 0.43811353715136647,
+        "holdout": 1.8033801726996899
+      },
+      "delta": {
+        "forget": -0.06674230680800974,
+        "retain": -0.0588033408857882,
+        "holdout": -0.02238411270081997
+      },
+      "donor_nll_before": 2.969157991870757,
+      "donor_nll_after": 3.007806104998435,
+      "donor_answer_in_training": false,
+      "generation": {
+        "eos_rate": 1.0,
+        "mean_tokens": 16.75,
+        "target_overlap": 0.6694444444444444,
+        "samples": 4
+      },
+      "probe_before": {
+        "status": "INSUFFICIENT_RELATION_SPLIT",
+        "train": 0,
+        "test": 64
+      },
+      "probe_after": {
+        "status": "INSUFFICIENT_RELATION_SPLIT",
+        "train": 0,
+        "test": 64
+      },
+      "relearning": {
+        "status": "COMPLETED",
+        "steps": 10,
+        "samples": 8,
+        "before_nll": 0.33247712533921003,
+        "after_nll": 0.2944222716614604,
+        "nll_recovery": 0.038054853677749634,
+        "ground_truth": "original dataset answers",
+        "note": "runs after the pre-relearning Student checkpoint has been saved"
+      },
+      "grad_finite_nonzero": true,
+      "teacher_frozen": true,
+      "initial_student_equals_teacher": true,
+      "evaluation_ground_truth": "dataset answers",
+      "checkpoint": "/jizhicfs/chenyliao/llm-unlearning/results/cf3-01-replication/weights/pilot_equal_norm_delta/checkpoint",
+      "claim_level": false,
+      "result_json": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_equal_norm_delta/result.json",
+      "weights_dir": "/jizhicfs/chenyliao/llm-unlearning/results/cf3-01-replication/weights/pilot_equal_norm_delta",
+      "diagnostics": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_equal_norm_delta/diagnostics.json",
+      "resolved_config": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_equal_norm_delta/resolved_config.json",
+      "run_log": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_equal_norm_delta/console.log"
+    },
+    "pilot_random_equal_norm": {
+      "status": "COMPLETED",
+      "profile": "pilot",
+      "seed": 0,
+      "pair_count": 31,
+      "steps": 60,
+      "elapsed_sec": 94.921,
+      "before_nll": {
+        "forget": 0.40045628556981683,
+        "retain": 0.4969168780371547,
+        "holdout": 1.8257642854005098
+      },
+      "after_nll": {
+        "forget": 0.33309065317735076,
+        "retain": 0.43715674988925457,
+        "holdout": 1.8037373535335064
+      },
+      "delta": {
+        "forget": -0.06736563239246607,
+        "retain": -0.059760128147900105,
+        "holdout": -0.02202693186700344
+      },
+      "donor_nll_before": 2.969157991870757,
+      "donor_nll_after": 2.999271115949077,
+      "donor_answer_in_training": false,
+      "generation": {
+        "eos_rate": 1.0,
+        "mean_tokens": 16.75,
+        "target_overlap": 0.6694444444444444,
+        "samples": 4
+      },
+      "probe_before": {
+        "status": "INSUFFICIENT_RELATION_SPLIT",
+        "train": 0,
+        "test": 64
+      },
+      "probe_after": {
+        "status": "INSUFFICIENT_RELATION_SPLIT",
+        "train": 0,
+        "test": 64
+      },
+      "relearning": {
+        "status": "COMPLETED",
+        "steps": 10,
+        "samples": 8,
+        "before_nll": 0.3334223907440901,
+        "after_nll": 0.2908122092485428,
+        "nll_recovery": 0.042610181495547295,
+        "ground_truth": "original dataset answers",
+        "note": "runs after the pre-relearning Student checkpoint has been saved"
+      },
+      "grad_finite_nonzero": true,
+      "teacher_frozen": true,
+      "initial_student_equals_teacher": true,
+      "evaluation_ground_truth": "dataset answers",
+      "checkpoint": "/jizhicfs/chenyliao/llm-unlearning/results/cf3-01-replication/weights/pilot_random_equal_norm/checkpoint",
+      "claim_level": false,
+      "result_json": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_random_equal_norm/result.json",
+      "weights_dir": "/jizhicfs/chenyliao/llm-unlearning/results/cf3-01-replication/weights/pilot_random_equal_norm",
+      "diagnostics": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_random_equal_norm/diagnostics.json",
+      "resolved_config": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_random_equal_norm/resolved_config.json",
+      "run_log": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_random_equal_norm/console.log"
+    },
+    "pilot_route_only": {
+      "status": "COMPLETED",
+      "profile": "pilot",
+      "seed": 0,
+      "pair_count": 31,
+      "steps": 60,
+      "elapsed_sec": 87.463,
+      "before_nll": {
+        "forget": 0.40045628556981683,
+        "retain": 0.4969168780371547,
+        "holdout": 1.8257642854005098
+      },
+      "after_nll": {
+        "forget": 0.33352337568067014,
+        "retain": 0.43807579204440117,
+        "holdout": 1.8010161519050598
+      },
+      "delta": {
+        "forget": -0.06693290988914669,
+        "retain": -0.058841085992753506,
+        "holdout": -0.02474813349545002
+      },
+      "donor_nll_before": 2.969157991870757,
+      "donor_nll_after": 3.0004029273986816,
+      "donor_answer_in_training": false,
+      "generation": {
+        "eos_rate": 1.0,
+        "mean_tokens": 16.75,
+        "target_overlap": 0.6694444444444444,
+        "samples": 4
+      },
+      "probe_before": {
+        "status": "INSUFFICIENT_RELATION_SPLIT",
+        "train": 0,
+        "test": 64
+      },
+      "probe_after": {
+        "status": "INSUFFICIENT_RELATION_SPLIT",
+        "train": 0,
+        "test": 64
+      },
+      "relearning": {
+        "status": "COMPLETED",
+        "steps": 10,
+        "samples": 8,
+        "before_nll": 0.3328108498826623,
+        "after_nll": 0.2942328490316868,
+        "nll_recovery": 0.03857800085097551,
+        "ground_truth": "original dataset answers",
+        "note": "runs after the pre-relearning Student checkpoint has been saved"
+      },
+      "grad_finite_nonzero": true,
+      "teacher_frozen": true,
+      "initial_student_equals_teacher": true,
+      "evaluation_ground_truth": "dataset answers",
+      "checkpoint": "/jizhicfs/chenyliao/llm-unlearning/results/cf3-01-replication/weights/pilot_route_only/checkpoint",
+      "claim_level": false,
+      "result_json": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_route_only/result.json",
+      "weights_dir": "/jizhicfs/chenyliao/llm-unlearning/results/cf3-01-replication/weights/pilot_route_only",
+      "diagnostics": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_route_only/diagnostics.json",
+      "resolved_config": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_route_only/resolved_config.json",
+      "run_log": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_route_only/console.log"
+    },
+    "pilot_wrong_shuffled": {
+      "status": "COMPLETED",
+      "profile": "pilot",
+      "seed": 0,
+      "pair_count": 31,
+      "steps": 60,
+      "elapsed_sec": 101.73,
+      "before_nll": {
+        "forget": 0.40045628556981683,
+        "retain": 0.4969168780371547,
+        "holdout": 1.8257642854005098
+      },
+      "after_nll": {
+        "forget": 0.3339493984822184,
+        "retain": 0.4377411683090031,
+        "holdout": 1.800730544142425
+      },
+      "delta": {
+        "forget": -0.06650688708759844,
+        "retain": -0.05917570972815156,
+        "holdout": -0.025033741258084774
+      },
+      "donor_nll_before": 2.969157991870757,
+      "donor_nll_after": 3.0001970491101666,
+      "donor_answer_in_training": false,
+      "generation": {
+        "eos_rate": 1.0,
+        "mean_tokens": 16.75,
+        "target_overlap": 0.6694444444444444,
+        "samples": 4
+      },
+      "probe_before": {
+        "status": "INSUFFICIENT_RELATION_SPLIT",
+        "train": 0,
+        "test": 64
+      },
+      "probe_after": {
+        "status": "INSUFFICIENT_RELATION_SPLIT",
+        "train": 0,
+        "test": 64
+      },
+      "relearning": {
+        "status": "COMPLETED",
+        "steps": 10,
+        "samples": 8,
+        "before_nll": 0.333754044957459,
+        "after_nll": 0.29115714970976114,
+        "nll_recovery": 0.04259689524769783,
+        "ground_truth": "original dataset answers",
+        "note": "runs after the pre-relearning Student checkpoint has been saved"
+      },
+      "grad_finite_nonzero": true,
+      "teacher_frozen": true,
+      "initial_student_equals_teacher": true,
+      "evaluation_ground_truth": "dataset answers",
+      "checkpoint": "/jizhicfs/chenyliao/llm-unlearning/results/cf3-01-replication/weights/pilot_wrong_shuffled/checkpoint",
+      "claim_level": false,
+      "result_json": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_wrong_shuffled/result.json",
+      "weights_dir": "/jizhicfs/chenyliao/llm-unlearning/results/cf3-01-replication/weights/pilot_wrong_shuffled",
+      "diagnostics": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_wrong_shuffled/diagnostics.json",
+      "resolved_config": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_wrong_shuffled/resolved_config.json",
+      "run_log": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/pilot_wrong_shuffled/console.log"
+    },
+    "smoke_brcd": {
+      "status": "COMPLETED",
+      "profile": "smoke",
+      "seed": 0,
+      "pair_count": 4,
+      "steps": 2,
+      "elapsed_sec": 37.032,
+      "before_nll": {
+        "forget": 0.2332158163189888,
+        "retain": 0.4107886552810669,
+        "holdout": 0.9866085350513458
+      },
+      "after_nll": {
+        "forget": 0.2355399653315544,
+        "retain": 0.4068327397108078,
+        "holdout": 0.9905765950679779
+      },
+      "delta": {
+        "forget": 0.002324149012565613,
+        "retain": -0.003955915570259094,
+        "holdout": 0.00396806001663208
+      },
+      "donor_nll_before": 3.19123375415802,
+      "donor_nll_after": 3.194186210632324,
+      "donor_answer_in_training": false,
+      "generation": {
+        "eos_rate": 1.0,
+        "mean_tokens": 8.0,
+        "target_overlap": 0.375,
+        "samples": 1
+      },
+      "probe_before": {
+        "status": "INSUFFICIENT_RELATION_SPLIT",
+        "train": 0,
+        "test": 8
+      },
+      "probe_after": {
+        "status": "INSUFFICIENT_RELATION_SPLIT",
+        "train": 0,
+        "test": 8
+      },
+      "relearning": {
+        "status": "COMPLETED",
+        "steps": 1,
+        "samples": 2,
+        "before_nll": 0.2355399653315544,
+        "after_nll": 0.23353688418865204,
+        "nll_recovery": 0.0020030811429023743,
+        "ground_truth": "original dataset answers",
+        "note": "runs after the pre-relearning Student checkpoint has been saved"
+      },
+      "grad_finite_nonzero": true,
+      "teacher_frozen": true,
+      "initial_student_equals_teacher": true,
+      "evaluation_ground_truth": "dataset answers",
+      "checkpoint": "/jizhicfs/chenyliao/llm-unlearning/results/cf3-01-replication/weights/smoke_brcd/checkpoint",
+      "claim_level": false,
+      "result_json": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/smoke_brcd/result.json",
+      "weights_dir": "/jizhicfs/chenyliao/llm-unlearning/results/cf3-01-replication/weights/smoke_brcd",
+      "diagnostics": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/smoke_brcd/diagnostics.json",
+      "resolved_config": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/smoke_brcd/resolved_config.json",
+      "run_log": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/smoke_brcd/console.log"
+    }
+  },
+  "control_spread": {
+    "dF_min": -0.06736563239246607,
+    "dF_max": -0.06650688708759844,
+    "dF_std": 0.0002824929048797336,
+    "note": "5 control arms (incl. random / wrong-shuffled) produce nearly identical dF"
+  },
+  "verdict": {
+    "code_runnable": true,
+    "mechanism_gate_passed": false,
+    "main_chain_trained": false,
+    "supports_research_claim": false,
+    "reason": "Strict true/null gate: only 1/8 layer-component gates passed -> DIAGNOSTIC_KILL, 0 training steps. All 5 control arms completed 60 steps but dF is negative and near-identical across real, equal-norm, random and wrong-shuffled components -> no component specificity; proposal failure criterion triggered.",
+    "full_stage_decision": "NOT_STARTED - performance not acceptable; awaits user decision."
+  },
+  "artifacts": {
+    "protocol": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/PROTOCOL.md",
+    "report": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/REPLICATION_REPORT.md",
+    "queue_status": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/queue_status.json",
+    "queue_log": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/queue.log",
+    "queue_tsv": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/queue.tsv",
+    "gpu_mem": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/results/gpu_mem.log",
+    "stage_b_script": "/usr/local/workspace/tracks/llm-unlearning/ASU-unlearning/workspace/experiments/methods-1127-2/cf3_01_replication/scripts/run_cf301_full.sh"
+  }
+}
