@@ -1,24 +1,34 @@
 # CF3-01 双线性路由—内容差分（BRCD）
 
-独立实现，不导入其他 CF3 方法。算法来源见本目录 `proposal.md`。
+独立实现，不导入其他 CF3 方法。算法来源见本目录 `proposal.md`（round3 设计）与 idea-stage `CF3-01_proposal.md`（v1.1 测量优先修订）。
+
+## 实现版本
+
+- **默认（round3，同步自远程 `origin/Auto/20261122`）**：`method.py` 提供四个独立候选 `attn_route / attn_content / glu_gate / glu_value`，family 内唯一 + 跨 family 歧义诊断；可选 SwiGLU 精确双线性分支；可选局部仿射半空间 POCS 代理（非线性 K 的可行点近似，不是精确 `Π_K`）；六个控制臂。`config.json` 默认关闭 GLU 与投影，保持 attention-only 主链。
+- **v1.1（测量优先，本轮新增，默认关闭）**：`measurement_protocol.py` + `run_stage_a.py` 实现 Stage A（噪声下限、全层扫描、等条件对照、原生 QK/V 因子干预、簇 bootstrap + 留出稀疏选择）；`method.py` / `runtime.py` / `config.json` 增加可选 Stage B 接口（稀疏目标、归一化 MSE、梯度诊断、相对 EOS 护栏、c_f fail-closed）。详见 `IMPLEMENTATION_v1.1.md`。
 
 ## 运行
 
 ```bash
+# round3 默认链（与远程一致）
 python3 run.py --self-test
 bash run.sh tiny
-bash run.sh smoke
 bash run.sh pilot
 python3 run.py --profile pilot --diagnose-only
-python3 run.py --profile pilot --set method.alpha=0.2
+
+# v1.1 Stage A：只诊断，不训练 Student
+python3 run_stage_a.py --self-test
+python3 run_stage_a.py --profile tiny
+
+# v1.1 Stage B：仅当 Stage A 输出 stage_a_pass=true
+python3 run.py --profile pilot \
+  --set method.sparse_selection_file=/abs/path/runs/stage_a_pilot_seed0/selected_candidates.json
 ```
 
-## 实现
+## 关键边界
 
-- Teacher 使用 `eager` attention，缓存真实注意力权重、GQA value、答案残差和完整序列。
-- 对路由 `pi` 与内容 `v` 使用对称双线性恒等式，分量经 `o_proj` 映回残差流。
-- 分别执行 true/null patch-forward，比较目标答案 NLL 增量和特异性。
-- route/content 同时通过时记录不可识别并停止该层；严格档未通过时输出 `DIAGNOSTIC_KILL`。
-- Student 回归 `A+ - alpha * selected_component`，不使用 donor 答案作目标。
-
-当前首版只实现 attention 双线性分支，没有将 proposal 中的 SwiGLU 分支混入本方法。诊断特异性不是充分因果证据。
+- SwiGLU 分支对 `SiLU(g)` 与 `u` 使用精确对称恒等式，经 `down_proj` 写回；不对分量做 ReLU/截断。
+- POCS 是局部仿射代理 + 信任域 + 真实冻结下游回验；round3 的全部 `identity` 不构成投影有效性证据。
+- donor 答案只用于单边"不支持 donor"约束测量，从不作为 MSE/KL/soft label。
+- v1.1 默认不改变 round3 行为；Stage A 的 `selected_candidates.json` 必须由独立诊断产生，不得手工拼造。
+- `claim_level=false`：Tiny smoke 和退出码 0 只说明工程可运行，不构成遗忘有效性证据。

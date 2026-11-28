@@ -370,6 +370,44 @@ def patch_forward_nll(model, enc, device, layer, replacement):
     return patch_forward_nll_multi(model, enc, device, {layer: replacement})
 
 
+@torch.no_grad()
+def forward_with_attention_patch(model, enc, device, layer, replacement, answer_start=None):
+    """Swap ONLY the self_attn write-back rows on the answer span, then run the
+    remaining frozen layers and return the answer NLL.
+
+    Used by the CF3-01 v1.1 §5.4 native QK/V 2x2 factorial, which is deliberately
+    DIFFERENT from block-output patching (patch_forward_nll): here we replace the
+    attention sublayer output (o_proj(pi @ v)) rather than the whole DecoderLayer
+    hidden state. `replacement` is [n_ans, width] already in self_attn output space.
+
+    Handles both HF (self_attn returns a tuple) and the tiny backend deterministically.
+    """
+    enc = move_encoded(enc, device)
+    modules = decoder_layers(model)
+    if layer < 1 or layer > len(modules):
+        raise IndexError(f"decoder layer {layer} out of range for {len(modules)} layers")
+    replacement = replacement.to(device)
+    start = int(enc["answer_start"]) if answer_start is None else int(answer_start)
+    attn_mod = modules[layer - 1].self_attn
+
+    def hook(_module, _args, output, rep=replacement, s=start):
+        old = output[0] if isinstance(output, tuple) else output
+        new = old.clone()
+        n = max(0, min(rep.shape[0], new.shape[1] - s))
+        if n > 0:
+            new[0, s:s + n] = rep[:n].to(dtype=old.dtype, device=old.device)
+        return (new,) + tuple(output[1:]) if isinstance(output, tuple) else new
+
+    handle = attn_mod.register_forward_hook(hook)
+    try:
+        out = model(input_ids=enc["input_ids"].unsqueeze(0),
+                    attention_mask=enc["attention_mask"].unsqueeze(0),
+                    output_hidden_states=False, use_cache=False)
+        return float(answer_nll(out.logits[0], enc["labels"]))
+    finally:
+        handle.remove()
+
+
 def save_trained(model, tok, path):
     path = Path(path)
     path.mkdir(parents=True, exist_ok=True)

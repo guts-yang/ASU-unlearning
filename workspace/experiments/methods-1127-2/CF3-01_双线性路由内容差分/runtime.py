@@ -116,7 +116,15 @@ def neutral_terms(item, plus, cfg, device):
             if eos_id < logits.size(-1):
                 without = logits.clone()
                 without[:, eos_id] = -torch.inf
-                eos = F.relu(logits[:, eos_id] - without.max(dim=-1).values + float(cfg["loss"].get("eos_margin", 1.0))).pow(2).mean()
+                margin_s = (logits[:, eos_id] - without.max(dim=-1).values).mean()
+                if bool(cfg["loss"].get("eos_relative", False)):
+                    # §7.3: penalize only EOS tendency WORSE than the frozen Teacher,
+                    # not the absolute baseline EOS logit (which may already be high).
+                    margin_t = float(item.get("teacher_eos_margin", 0.0))
+                    eps_e = float(cfg["loss"].get("eos_relative_eps", 0.0))
+                    eos = F.relu((margin_s - margin_t) - eps_e).pow(2)
+                else:
+                    eos = F.relu(logits[:, eos_id] - without.max(dim=-1).values + float(cfg["loss"].get("eos_margin", 1.0))).pow(2).mean()
     total = fact + float(cfg["loss"].get("donor_guard_weight", 0.0)) * donor + eos_weight * eos
     return total, {"fact_hinge": fact.detach(), "donor_guard": donor.detach(), "eos_guard": eos.detach()}
 
@@ -184,6 +192,12 @@ def train(student, tok, cache, retain_records, prepared, cfg, device, method, ou
             loss = loss + terms["extra_loss"]
         opt.zero_grad(set_to_none=True)
         loss.backward()
+        grad_diag = {}
+        if bool(cfg["loss"].get("grad_diagnostics", False)) and params[0].grad is not None:
+            # §6.2: record per-term gradient norms BEFORE clipping, on the shared
+            # parameter vector, to test the "retain dominates" hypothesis honestly.
+            grads = [p.grad.detach().float().norm().item() for p in params if p.grad is not None]
+            grad_diag["grad_param_l2"] = float(sum(g * g for g in grads) ** 0.5)
         grad_norm = torch.nn.utils.clip_grad_norm_(params, float(cfg["training"].get("grad_clip", 1.0)))
         if not torch.isfinite(grad_norm):
             raise FloatingPointError(f"non-finite gradient at step {step}: {grad_norm}")
@@ -193,6 +207,7 @@ def train(student, tok, cache, retain_records, prepared, cfg, device, method, ou
         if step % int(cfg["training"].get("log_every", 10)) == 0 or step + 1 == steps:
             row = {"step": step, "loss": float(loss.detach()), "method_loss": float(terms["method_loss"].detach()),
                    "neutral": float(neutral.detach()), "retain_nll": float(retain_nll.detach()), "grad_norm": float(grad_norm)}
+            row.update(grad_diag)
             row.update({k: v / len(batch) for k, v in neutral_parts.items()})
             for key, val in terms.items():
                 if key not in {"method_loss", "extra_loss"} and isinstance(val, torch.Tensor) and val.numel() == 1:
