@@ -121,3 +121,28 @@
 ### 6.5 不变约束
 
 GPU0 only、不碰 GPU1、不 `pkill`、不删他人产物；**CF3-01 保持搁置**（不重跑、不启动 `full`）；权重留数据盘、实验 JSON/日志不进 Git；提交只含文档 + 脚本 + 本轮获授权的源码改动；`full` / 多 seed 不自动启动。
+
+## 7. 修复轮 smoke 结果（判据未放宽）
+
+24/24 臂执行完毕，`failed=1`（CF2-06 `wrong`），`pilot_queue_started=false`，GPU0 已释放。证据：`results/fix_smoke_status.json`、`fix_smoke_verdict.json`、`fix_smoke.tsv`、逐臂 `fix_smoke/<tag>/<arm>/`。
+
+| 判据 | 结果 | 实测 |
+|---|---|---|
+| S1 | **PASS** | 10/10 `none` 臂 `exit=0`、`COMPLETED` 2 steps、梯度有限非零、无 `FloatingPointError` |
+| S2 | **FAIL** | `method_share=5.16%`（≥1% ✓）；`grad_norm(fix)=0.045902` vs `grad_norm(fix_nomethod)=0.045529`，相对差 `0.82%`（阈值 >1% ✗） |
+| S3 | **PASS** | CF2-06 `distance_mode=median`：`max_method_loss=0.0415`、`max_grad_norm=5.80`（旧值 65796 / 35199） |
+| S4 | **FAIL** | CF2-09 门 `DIAGNOSTIC_KILL` / 0 步 ✓；CF2-01 `gate_mode=relative` 权重 0.626–0.674（旧 ≤6.5e-13）✓；9/10 `wrong` 臂 `control_changed=1` 且 `method_loss` 与 `none` 明显不同 ✓；**CF2-06 `wrong` 臂 `exit=1`** ✗ |
+
+**S2 的含义（不是修复失败，是第二层根因）**：门退化修好后，方法项在总损失里已占 5.16%（旧 <0.02%），但把 `method_weight` 归零只让梯度范数变化 0.82% → 即便 `retain_weight=0`，**`neutral_weight=0.1` 的 fact / donor / EOS guard 仍主导梯度**。这进一步印证 §5 的「共享项淹没」结论，并说明单靠调 `retain_weight` 打不开专属梯度通道。判据跑前冻结，**不事后下调 1% 阈值让它通过**。
+
+**S4 的含义（单一实现缺陷）**：`CF2-06/wrong` 报 `RuntimeError: The size of tensor a (27) must match the size of tensor b (15)` —— 错配 `item` 后，学生侧 `_student_secant` 取 `min(len(sp),len(sm))`、教师侧 `_teacher_secant` 取 `min(len(hp),len(hm))`，两者未取共同 `n`。同样 `REQUIRES_CONTROL=True` 的 CF2-02 因自身在 `loss()` 里做了 `n=min(...)` 裁剪而正常通过。最小修复是在 `CF2-06/loss()` 里统一 `n = min(len(sp), len(sm), len(hp), len(hm))` 后再切片。**本轮不擅自重跑该臂**，如实记为未通过。
+
+**已确证修复生效的三处**（不等于遗忘有效）：CF2-01 门权重不再坍缩、CF2-06 数值不再爆炸、CF2-09 语义门按 §7 正确拦截；10 个错配对照臂里 9 个产生了与真实目标显著不同的 `method_loss`。
+
+### 7.1 下一步候选（需你决定，未自动执行）
+
+1. 修 CF2-06 形状冲突，并追加 `--set loss.neutral_weight=0.0` 的 S2 复测臂，重跑一次 smoke（约 24 臂 / 35 分钟），验证「neutral 项归零后专属梯度通道是否真正打开」。
+2. 接受 S2 / S4 的阴性结论，停止调装置，按 §5 归档 CF2。
+3. 直接进 pilot / 3 seeds —— **不建议**，smoke 阶段装置仍未能分辨方法专属梯度。
+
+`claim_level=false`；smoke 不判 dF 正负、不宣称遗忘有效；GPU0 only、GPU1 未碰；**CF3-01 保持搁置**（`full_stage_started=false`）；实验 JSON / 日志不进 Git。
