@@ -72,11 +72,18 @@
     "specificity_margin": 0.0,
     "fallback_component": "content",
     "control_arm": "route_only",
-    "use_glu_branch": true,
-    "use_pi_k_projection": true
+    "enable_glu_family": true,
+    "enable_affine_projection": true
   },
   "projection": {
-    "steps": 20
+    "steps": 12,
+    "outer_steps": 2,
+    "rho_max": 0.5,
+    "kappa": 1.0,
+    "c_margin": 0.05,
+    "d_donor_rel": 0.05,
+    "eos_deadzone": 1.0,
+    "tolerance": 0.02
   },
   "evaluation": {
     "probe_samples": 64,

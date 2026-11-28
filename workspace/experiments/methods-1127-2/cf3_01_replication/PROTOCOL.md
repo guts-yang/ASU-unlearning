@@ -38,11 +38,13 @@
 
 ## 4. 补齐实现（预注册的可计算口径）
 
-### 4.1 SwiGLU 双线性分支
+> **版本说明（round3）**：§4.1 / §4.2 描述 round1 的早期实现，保留为历史协议记录。当前实现按推导包重做：四个候选 `attn_route / attn_content / glu_gate / glu_value` **独立、不相加**；family 内唯一性与跨 family 歧义单独诊断；`Π_K` 代理改为「局部仿射半空间 + 球形信任域 + 真实冻结下游回验」，`r_f≤c` 的 `c_f` 在 discovery 的 `z` 上冻结，**不复用** `loss.fact_delta`；donor 答案只作单边支持测量。当前口径以 `DERIVATION_IMPL.md` 与 `method.py` 为准；默认仍为 attention-only，新分支需显式配置开启。
+
+### 4.1 SwiGLU 双线性分支（round1，历史）
 
 proposal §3.1：`B(a,b)=a⊙b` 的对称恒等式精确成立。attention 分支取 `a=π, b=v`，经 `o_proj` 映回残差流；SwiGLU 分支取 `a=Swish(g), b=u`，经 `mlp.down_proj` 映回残差流。两分支的 `route/content` 在答案跨度上相加作为该层分量（都是残差宽度向量），共用同一 `patch_forward_nll` 门与 `bilinear_difference` 函数。不预设语义；两项都通过时记 `ambiguous_layers`。
 
-### 4.2 `Π_K` 可计算代理（不是原文精确投影）
+### 4.2 球∩半空间 `Π_K` 可计算代理（round1，历史；不是原文精确投影）
 
 proposal §3.3 只给 `K={h:r_f≤c, s_dj≤d_j, ||Δr_E||≤e}`，未给可计算算法与阈值。按用户确认，复用 `config.json` 现有软约束量构造激活空间中的凸集交集，用 POCS 交替投影求 `T=Π_K(A⁺−αC*)` 并 stopgrad：
 
