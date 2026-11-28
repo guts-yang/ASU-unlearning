@@ -26,23 +26,38 @@ def prepare(cache, teacher, tok, cfg, device):
     return {"enabled": True, "distances": distances, "distance_mode": mode, "distance_floor": floor}
 
 
-def _student_secant(row, layer, prefix, distance):
+def _common_n(row, item, layer, prefix):
+    """One shared answer-span length for BOTH sides of a secant pair.
+
+    Under control_mode != none the Teacher-side item comes from a different
+    pair whose h_plus/h_minus spans can be shorter than the Student-side ones.
+    Taking min() independently on each side produced 27 vs 15 and crashed
+    F.mse_loss; this keeps the pair aligned (no-op when lengths already match).
+    """
+    plus = row[f"{prefix}plus"] if prefix else row["plus"]
+    minus = row[f"{prefix}minus"] if prefix else row["minus"]
+    sp, sm = span_hidden(plus, layer), span_hidden(minus, layer)
+    hp, hm = item[f"h_{prefix}plus"][layer], item[f"h_{prefix}minus"][layer]
+    return min(len(sp), len(sm), len(hp), len(hm))
+
+
+def _student_secant(row, layer, prefix, distance, n=None):
     plus = row[f"{prefix}plus"] if prefix else row["plus"]
     minus = row[f"{prefix}minus"] if prefix else row["minus"]
     sp = span_hidden(plus, layer)
     sm = span_hidden(minus, layer)
-    n = min(len(sp), len(sm))
+    n = min(len(sp), len(sm)) if n is None else min(n, len(sp), len(sm))
     secant = (sp[:n] - sm[:n]) / distance
     return torch.nan_to_num(secant, nan=0.0, posinf=0.0, neginf=0.0).clamp(-50.0, 50.0)
 
 
-def _teacher_secant(item, layer, prefix, distance, device):
+def _teacher_secant(item, layer, prefix, distance, device, n=None):
     if prefix:
         hp, hm = item[f"h_{prefix}plus"][layer], item[f"h_{prefix}minus"][layer]
     else:
         hp, hm = item["h_plus"][layer], item["h_minus"][layer]
     hp, hm = hp.to(device), hm.to(device)
-    n = min(len(hp), len(hm))
+    n = min(len(hp), len(hm)) if n is None else min(n, len(hp), len(hm))
     secant = (hp[:n] - hm[:n]) / distance
     return torch.nan_to_num(secant, nan=0.0, posinf=0.0, neginf=0.0).clamp(-50.0, 50.0)
 
@@ -74,13 +89,15 @@ def loss(batch, prepared, cfg):
         item = row["item"]
         distance = prepared["distances"][item["index"]]
         for layer in cfg["layers"]:
-            secant = _student_secant(row, layer, "", distance)
-            teacher_secant = _teacher_secant(item, layer, "", distance, secant.device)
+            n = _common_n(row, item, layer, "")
+            secant = _student_secant(row, layer, "", distance, n)
+            teacher_secant = _teacher_secant(item, layer, "", distance, secant.device, n)
             ratio = float(cfg["method"].get("target_response_ratio", 0.0))
             targets.append(F.mse_loss(secant, (ratio * teacher_secant).detach()))
             if "control_plus" in row and row["control_plus"] is not None:
-                control = _student_secant(row, layer, "control_", distance)
-                teacher_control = _teacher_secant(item, layer, "control_", distance, control.device)
+                nc = _common_n(row, item, layer, "control_")
+                control = _student_secant(row, layer, "control_", distance, nc)
+                teacher_control = _teacher_secant(item, layer, "control_", distance, control.device, nc)
                 anchors.append(F.mse_loss(control, teacher_control.detach()))
     method_loss = torch.nan_to_num(torch.stack(targets).mean(), nan=0.0, posinf=0.0, neginf=0.0)
     if anchors:

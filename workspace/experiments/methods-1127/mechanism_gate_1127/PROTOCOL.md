@@ -146,3 +146,62 @@ GPU0 only、不碰 GPU1、不 `pkill`、不删他人产物；**CF3-01 保持搁�
 3. 直接进 pilot / 3 seeds —— **不建议**，smoke 阶段装置仍未能分辨方法专属梯度。
 
 `claim_level=false`；smoke 不判 dF 正负、不宣称遗忘有效；GPU0 only、GPU1 未碰；**CF3-01 保持搁置**（`full_stage_started=false`）；实验 JSON / 日志不进 Git。
+
+## 8. 复测方案（最小修复 + 根因验证；判据跑前冻结）
+
+用户裁决：继续修 CF2 装置，范围限定为**最小修复 + 根因验证**；不补齐 §7 对照、不跑多 seed、不切回 CF3-01、不进 Stage B、不启动 `full`。
+
+### 8.1 保留原判定
+
+§7 的 S1/S3 PASS、S2/S4 FAIL 与 `results/fix_smoke_*` 全部保留，**不覆盖、不改判、不事后调阈值**。本轮产物写入 `results/fix_retest_*`，标为「复测 / 根因验证」。
+
+### 8.2 两个待处理点
+
+- S4 实现缺陷：`CF2-06_反事实割线敏感度/method.py` 的 `_student_secant` 与 `_teacher_secant` 各取各的 `min(...)`，`loss()` 未取共同 `n`，错配 `item` 后 27 vs 15 → `RuntimeError`。
+- S2 第二层根因假设：`retain_weight` 归零后 `grad_relative_diff=0.82%` 仍 <1%，推测 `neutral_weight=0.1` 的 fact / donor / EOS guard 主导梯度。
+
+### 8.3 预注册判据（跑之前冻结）
+
+| 编号 | 断言 | 冻结阈值 / 依据 |
+|---|---|---|
+| R1 | CF2-06 形状缺陷已修 | `none` 与 `wrong` 两臂均 `exit=0`；`control_changed` 分别 `0`/`1`；`wrong` 臂首步 `method_loss` 与 `none` 臂不同；无 `RuntimeError` / `Traceback` |
+| R2 | 复测与上一轮可比 | `CF2-01/fix` 复现 `method_share≈0.0516`、`grad_relative_diff≈0.0082`（容差 ±20%）；`fix_nomethod` 同量级。若偏离，先查清配置 / 缓存口径再解读 R3 |
+| R3 | 「neutral 主导梯度」可证伪 | `fix_no_neutral` 的 `method_share` 显著高于 5.16%，且它与 `fix_no_neutral_nomethod` 的 `grad_relative_diff > 1%` → 假设成立；若仍 ≤1% → **假设被推翻**，如实记为「另有根因」，不得改阈值凑通过 |
+
+**R3 的局限**：`neutral_weight=0` 后总损失几乎只剩方法项，`nomethod` 臂梯度趋近 0，R3 通过只能证明「方法项具备产生梯度的能力」，**不能证明完整训练口径下方法项可观测，更不能改判 S2 为 PASS**。
+
+### 8.4 复测臂（6 个，GPU0 串行）
+
+沿用 `--profile smoke --set data.reuse_cache=false --set training.batch_size=2`，输出到 `weights/fix_retest/`：
+`CF2-06/none`、`CF2-06/wrong`（`control_mode=wrong`）、`CF2-01/fix`、`CF2-01/fix_nomethod`（回归）、`CF2-01/fix_no_neutral`（再加 `neutral_weight=0.0`）、`CF2-01/fix_no_neutral_nomethod`（再加 `method_weight=0.0`）。
+
+`retain_weight=0` / `neutral_weight=0` **只作诊断臂**，不是正式训练口径，不用于宣称方法有效（与 CF3-01 v1.1 proposal §8 同一精神）。
+
+### 8.5 不变约束
+
+`claim_level=false`；默认 `control_mode=none` 行为保持可复现（若共同 `n` 改变 `none` 臂数值，R1 回归并如实记录）；GPU0 only、GPU1 不碰；**CF3-01 保持搁置**（不重跑 round3、不跑 `run_stage_a.py`、不启动 `full`）；实验 JSON / 日志不进 Git；提交只含本轮获授权文件。复测后先汇报 R1–R3，再由用户决定是否补齐 §7 对照 / 多 seed / 归档。
+
+## 9. 复测结果（R1–R3，判据未放宽）
+
+6/6 臂 `exit=0`、`failed=0`、`pilot_queue_started=false`，GPU0 已释放。证据：`results/fix_retest_status.json`、`fix_retest_verdict.json`、`fix_retest.tsv`、逐臂 `results/fix_retest/<tag>/<arm>/`。**§7 的 S1/S3 PASS、S2/S4 FAIL 全部保留，不改判；本节是并列的新结果。**
+
+| 判据 | 结果 | 实测 |
+|---|---|---|
+| R1 | **PASS** | `CF2-06/none` `control_changed=0`、`method_loss=0.0415`；`wrong` `control_changed=1`、`method_loss=0.0602`；两臂 `exit=0`、无 `RuntimeError`/`Traceback`（上一轮 `wrong` 为 `exit=1`，27 vs 15） |
+| R2 | **PASS** | `method_share=0.051575`、`grad_relative_diff=0.0082`、`grad_norm` 0.045902 / 0.045529 —— 与 §7 S2 **逐位复现**，两轮配置/缓存口径一致 |
+| R3 | **PASS（trivial，见下）** | `method_share_no_neutral=1.0`；`grad_norm` 0.003620 vs **0.0**；`grad_relative_diff=361997.77`；`trivial_warning=true` |
+
+**R1 的含义**：形状缺陷确已修复，错配对照臂现在 10/10 可用；这是「复测通过」，不是把 §7 的 S4 改判为 PASS。
+
+**R3 的含义与局限（必须按此表述）**：`neutral_weight=0` 后总损失只剩方法项，`nomethod` 臂梯度为 0，所以 `grad_relative_diff` 的 `361997.77` 来自 `1e-8` 的防零分母，**不是真实效应量**。R3 通过只证明两件事：① 之前的 `neutral` 项确实是梯度主导项（假设成立）；② 方法项**具备产生梯度的能力**。它**不能**证明「完整损失口径下方法专属贡献可观测」，**更不能**把 §7 的 S2 改判为 PASS。`claim_level=false`。
+
+**净结论**：两个具体缺陷（CF2-06 形状冲突、neutral 根因）都已定位并验证；但核心问题「在完整训练口径下方法专属贡献是否可观测」**仍未解决**——完整口径下 `neutral_weight=0.1` 与 `retain_weight=2.0` 仍主导梯度，十方法依然 0/10 通过判别门。
+
+### 9.1 下一步候选（需你决定，未自动执行）
+
+1. **分项梯度分解**（最直接回答可观测性）：在 `runtime.py::train` 里记录 `method_loss` / `neutral` / `retain_nll` 各自对参数的梯度 L2 范数占比（默认关闭），不改算法；验收：完整口径下方法项梯度占比是否可测、是否与等条件随机对照有稳定差异。
+2. **补齐 §7 对照 + 多 seed**：补 noise / matched-retain / 随机算子对照，3 seeds + 簇 bootstrap，把描述性 std 升级为置信区间。
+3. **接受阴性结论**，按 §5 / §7 归档 CF2，停止调装置。
+4. **切回 CF3-01**：v1.1 `run_stage_a.py` 的 Stage A（只诊断不训练）已落地但从未在真实 GPU 跑过；需你确认研究已完成后再启动。
+
+`claim_level=false`；`exit=0`、`COMPLETED`、R1–R3 全 PASS 都不等于遗忘有效；GPU0 only、GPU1 未碰；**CF3-01 保持搁置**（`full_stage_started=false`）；实验 JSON/日志不进 Git；未自动进 pilot / Stage B / full。
