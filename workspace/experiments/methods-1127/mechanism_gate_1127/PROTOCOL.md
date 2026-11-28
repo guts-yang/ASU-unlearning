@@ -44,18 +44,23 @@
 
 按 §7「真实 donor 必须优于对照」，仅字段成对的方法能直接读比值；例如 CF2-01 的 `true_flux_norm` 系统性小于 `shuffled_flux_norm`、配对特异性 `weight` 近 0。**但任何方法都不得凭 `DIAGNOSED` / `exit=0` / 进程完成宣称过门**；正式判定与「是否进入训练」留在决策阶段。
 
-## 3. 待裁决：对照臂构造
+## 3. 已裁决：对照臂构造（2026-11-28）
 
-那次对齐在「核对落地接口」处被打断，**对照臂的具体构造未定稿**。已核实：CF2 十个 `method.py` 都没有 `control_arm` 接口（不同于 CF3-01），因此不改源码可实现的对照只有配置级消融。候选方向（需你裁决后才启动 GPU 训练臂）：
+那次对齐在「核对落地接口」处被打断，对照臂构造未定稿；离线门后按约定汇报，你选择了 **共享项基线（推荐）**。已核实 CF2 十个 `method.py` 没有 `control_arm` 接口（不同于 CF3-01），因此不改源码只做配置级消融：
 
-1. **共享项基线**：`--set loss.method_weight=0` 跑同预算对照，检验「方法专属效应是否被 `retain_weight=2.0` 淹没」（CF2 pilot 十方法 dF 全负且生成指标完全相同，正是判别门要查的）。
-2. **零编辑对照**：`--set method.alpha=0`（仅对有 `alpha` 的方法）。
-3. **随机 / 乱序算子对照**：需要新增方法内配置位，属于源码改动，与「不改任何源码」冲突，须单独授权。
+- `main` 臂：`--profile pilot`（60 steps / 32 对 / seed 0 / GPU0），默认配置。
+- `baseline` 臂：完全相同，仅追加 `--set loss.method_weight=0.0`，把方法专属损失归零，只留共享 `retain_weight=2.0` / neutral 项。
+- 判据意图：检验「方法专属效应是否被共享项淹没」（CF2 pilot 十方法 dF 全负 −0.043~−0.057、生成指标完全相同）。若 main 与 baseline 的 dF/dR/dH 无分离，方法贡献不可识别。
+- 两臂都**重跑**到隔离目录，不复用历史 pilot 为正向证据（`IDEA_REPORT` §7）；同预算、同 cache、同 seed。权重留数据盘，只把 `result.json` / `diagnostics.json` / `resolved_config.json` / `console.log` 轻量副本拷回仓库 `results/arms/`（不提交）。
+- 汇总 `results/arm_comparison.json`：逐方法 main − baseline 的 dF/dR/dH 差值，**只作原始对比，不宣称遗忘有效**。
+
+未采纳：`method.alpha=0` 零编辑对照；wrong/shuffle/noise/随机算子对照（需改 `method.py` 新增配置位，与「不改任何源码」冲突，须单独授权）。
 
 ## 4. 不改动的边界
 
-- 默认算法、损失口径、数据划分、评价口径、26 个既有未提交修复均不改、不混入提交。
+- 默认算法、损失口径、数据划分、评价口径均不改；本轮只新增 `PROTOCOL.md` 与 `scripts/*.sh`。
+- 期间有并发提交 `c5341a3`（「sync method code and validation docs」）把工作区原有的 26 个运行期修复与离线门脚本一并同步，**非本轮操作**；本轮未回滚、未混入其它改动。
 - 不碰 GPU1 的 `lrm-unlearning` 队列，不 `pkill`、不删除他人产物。
 - **CF3-01 保持搁置**：不重跑、不启动 `run_cf301_full.sh`；等你研究完再按要求重新跑。
-- `full` / 多 seed / 长时消融不自动启动；离线门后先汇报，GPU 训练臂须等你裁决。
-- 仓库只提交 `PROTOCOL.md` 与 `scripts/*.sh`；`results/` 下的 JSON / 日志由 `.git/info/exclude` 排除。
+- `full` / 多 seed / 长时消融不自动启动；离线门后已汇报，GPU 训练臂按你的裁决（共享项基线）启动。
+- `results/` 下的 JSON / 日志由 `.git/info/exclude` 排除，不进 Git。
